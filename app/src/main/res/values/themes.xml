@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="BlueTheme" parent="Theme.Material3.Dark">
+
+        <item name="android:colorBackground">@color/BlueTheme_Background</item>
+        <item name="colorPrimary">@color/BlueTheme_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/BlueTheme_colorPrimary</item>
+        <item name="colorAccent">@color/BlueTheme_colorAccent</item>
+        <item name="android:textColor">@color/TextColor</item>
+        <item name="android:navigationBarColor">@color/BlueTheme_colorPrimary</item>
+        <item name="android:textColorSecondary">@color/BlueTheme_textColorSecondary</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
+        <!--  Needed for Bottom Navigation Menu selected item color  -->
+        <item name="colorSecondaryContainer">@android:color/white</item>
+
+        <item name="buttonStyle">@style/BlueTheme_Button</item>
+        <item name="editTextStyle">@style/BlueTheme_EditText</item>
+        <item name="toolbarStyle">@style/BlueTheme_Toolbar</item>
+        <item name="alertDialogTheme">@style/BlueTheme_AlertDialog</item>
+        <item name="drawerArrowStyle">@style/BlueTheme_DrawerArrowToggle</item>
+        <item name="snackbarStyle">@style/BlueTheme_SnackBar</item>
+
+
+    </style>
+
+    <style name="BlueTheme_Button" parent="Widget.Material3.Button">
+        <item name="android:background">@color/BlueTheme_ButtonColor</item>
+        <item name="color">@color/BlueTheme_ButtonColor</item>
+        <item name="android:textColor">@color/TextColor</item>
+        <item name="cornerSize">15dp</item>
+
+    </style>
+
+    <style name="BlueTheme_EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/TextColor</item>
+        <item name="android:textColorHint">@color/TextColor</item>
+    </style>
+
+    <style name="BlueTheme_Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:colorPrimary">@color/TextColor</item>
+        <item name="android:background">@color/BlueTheme_colorPrimaryDark</item>
+    </style>
+
+    <style name="BlueTheme_DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="android:background">@color/TextColor</item>
+        <item name="color">@color/TextColor</item>
+
+    </style>
+
+    <style name="BlueTheme_AlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <!--  This theme needs for ListPreference background  -->
+        <item name="android:colorBackground">@color/BlueTheme_Background</item>
+        <item name="textColorAlertDialogListItem">@color/TextColor</item>
+        <item name="color">@color/BlueTheme_Background</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+    </style>
+
+    <style name="BlueTheme_SnackBar" parent="Widget.Design.Snackbar">
+        <item name="backgroundTint">@color/BlueTheme_colorPrimary</item>
+    </style>
+
+    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/TextColor</item>
+    </style>
+
+    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/TextColor</item>
+    </style>
+
+</resources>

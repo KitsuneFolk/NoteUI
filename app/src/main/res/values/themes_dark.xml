@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="DarkTheme" parent="Theme.Material3.Dark">
+
+        <item name="android:colorBackground">@color/DarkTheme_Background</item>
+        <item name="colorPrimary">@color/DarkTheme_colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/DarkTheme_colorPrimaryDark</item>
+        <item name="colorAccent">@color/DarkTheme_colorAccent</item>
+        <item name="android:textColor">@color/DarkTheme_TextColor</item>
+        <item name="android:textColorSecondary">@color/DarkTheme_textColorSecondary</item>
+        <item name="android:textColorHint">@color/DarkTheme_TextColor</item>
+        <item name="android:navigationBarColor">@color/DarkTheme_colorPrimary</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
+        <!--  Needed for Bottom Navigation Menu selected item color  -->
+        <item name="colorSecondaryContainer">@android:color/white</item>
+
+        <item name="buttonStyle">@style/DarkTheme_Button</item>
+        <item name="editTextStyle">@style/DarkTheme_EditText</item>
+        <item name="toolbarStyle">@style/DarkTheme_Toolbar</item>
+        <item name="drawerArrowStyle">@style/DarkTheme_DrawerArrowToggle</item>
+        <item name="alertDialogTheme">@style/DarkTheme_AlertDialog</item>
+        <item name="snackbarStyle">@style/DarkTheme_SnackBar</item>
+
+
+    </style>
+
+    <style name="DarkTheme_Button" parent="Widget.AppCompat.Button">
+        <item name="android:background">@color/DarkTheme_ButtonColor</item>
+        <item name="color">@color/DarkTheme_ButtonColor</item>
+        <item name="android:textColor">@color/TextColor</item>
+    </style>
+    <style name="DarkTheme_EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColorHint">@color/DarkTheme_TextColor</item>
+        <item name="android:textColor">@color/DarkTheme_TextColor</item>
+        <item name="android:textColorHighlight">@color/DarkTheme_TextColor</item>
+    </style>
+    <style name="DarkTheme_Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:textColor">@color/DarkTheme_TextColor</item>
+        <item name="android:background">@color/DarkTheme_colorPrimaryDark</item>
+        <item name="actionMenuTextColor">@color/TextColor</item>
+
+    </style>
+    <style name="DarkTheme_DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/DarkTheme_TextColor</item>
+
+    </style>
+
+    <style name="DarkTheme_AlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <!--  This theme needs for ListPreference background  -->
+        <item name="android:colorBackground">@color/DarkTheme_Background</item>
+        <item name="android:textColorSecondary">#FFFFFF</item>
+        <item name="textColorAlertDialogListItem">@color/DarkTheme_TextColor</item>
+        <item name="color">@color/DarkTheme_Background</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+    </style>
+    <style name="DarkTheme_SnackBar" parent="Widget.Design.Snackbar">
+        <item name="backgroundTint">@color/DarkTheme_ButtonColor</item>
+    </style>
+
+</resources>

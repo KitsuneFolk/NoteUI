@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- BlueTheme -->
+    <color name="BlueTheme_colorPrimary">#3232FF</color>
+    <color name="BlueTheme_colorPrimaryDark">#3232FF</color>
+    <color name="BlueTheme_colorAccent">#FF1FF4</color>
+    <color name="BlueTheme_Background">#4B68FF</color>
+    <color name="BlueTheme_ButtonColor">#3232FF</color>
+    <color name="BlueTheme_textColorSecondary">#F0DBD8</color>
+    <color name="BlueTheme_NavigationBar">#90CAF9</color>
+
+    <!--  DarkTheme  -->
+    <color name="DarkTheme_colorPrimary">#0F0F0F</color>
+    <color name="DarkTheme_colorPrimaryDark">#070707</color>
+    <color name="DarkTheme_colorAccent">#FFCC80</color>
+    <color name="DarkTheme_Background">#141414</color>
+    <color name="DarkTheme_ActionBar">#FFFFFF</color>
+    <color name="DarkTheme_ButtonColor">#0A0A0A</color>
+    <color name="DarkTheme_TextColor">#FFFFFF</color>
+    <color name="DarkTheme_textColorSecondary">#DAB1B1</color>
+    <color name="DarkTheme_NavigationBar">#0F0F0F</color>
+
+    <!--  RedTheme  -->
+    <color name="RedTheme_colorPrimary">#DC0000</color>
+    <color name="RedTheme_colorPrimaryDark">#DC0000</color>
+    <color name="RedTheme_colorAccent">#FCA727</color>
+    <color name="RedTheme_Background">#DC3232</color>
+    <color name="RedTheme_ActionBar">#E57373</color>
+    <color name="RedTheme_ButtonColor">#DC0000</color>
+    <color name="RedTheme_textColorSecondary">#CCA9A5</color>
+    <color name="RedTheme_NavigationBar">#F50000</color>
+
+    <!--  Another  -->
+    <color name="TextColor">#FFFFFF</color>
+    <color name="Red">#FF0000</color>
+    <color name="Yellow">#FFEB3B</color>
+
+
+</resources>
+
