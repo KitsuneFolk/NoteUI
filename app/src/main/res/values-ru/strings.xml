@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Preference Titles -->
+    <string name="settings">Настройки</string>
+    <string name="design">Внешний вид</string>
+    <string name="Language_text">Язык</string>
+    <string name="Theme_text">Тема</string>
+    <string name="version">Версия</string>
+    <string name="another">Другое</string>
+
+    <string name="settings_theme_default_value">blue</string>
+    <string name="settings_theme_summary">Синяя</string>
+    <string name="settings_language_default_value">ru</string>
+    <string name="settings_language_summary">Русский</string>
+
+</resources>

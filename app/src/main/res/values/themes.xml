@@ -7,9 +7,12 @@
         <item name="colorPrimary">@color/BlueTheme_colorPrimary</item>
         <item name="colorPrimaryDark">@color/BlueTheme_colorPrimary</item>
         <item name="colorAccent">@color/BlueTheme_colorAccent</item>
-        <item name="android:textColor">@color/TextColor</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:navigationBarColor">@color/BlueTheme_colorPrimary</item>
         <item name="android:textColorSecondary">@color/BlueTheme_textColorSecondary</item>
+        <!--  White color for back arrow  -->
+        <item name="colorControlNormal">@color/white</item>
+<!--        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>-->
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
 
         <!--  Needed for Bottom Navigation Menu selected item color  -->
@@ -28,31 +31,31 @@
     <style name="BlueTheme_Button" parent="Widget.Material3.Button">
         <item name="android:background">@color/BlueTheme_ButtonColor</item>
         <item name="color">@color/BlueTheme_ButtonColor</item>
-        <item name="android:textColor">@color/TextColor</item>
+        <item name="android:textColor">@color/white</item>
         <item name="cornerSize">15dp</item>
 
     </style>
 
     <style name="BlueTheme_EditText" parent="Widget.AppCompat.EditText">
-        <item name="android:textColor">@color/TextColor</item>
-        <item name="android:textColorHint">@color/TextColor</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/white</item>
     </style>
 
     <style name="BlueTheme_Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:colorPrimary">@color/TextColor</item>
+        <item name="android:colorPrimary">@color/white</item>
         <item name="android:background">@color/BlueTheme_colorPrimaryDark</item>
     </style>
 
     <style name="BlueTheme_DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="android:background">@color/TextColor</item>
-        <item name="color">@color/TextColor</item>
+        <item name="android:background">@color/white</item>
+        <item name="color">@color/white</item>
 
     </style>
 
     <style name="BlueTheme_AlertDialog" parent="Theme.AppCompat.Dialog.Alert">
         <!--  This theme needs for ListPreference background  -->
         <item name="android:colorBackground">@color/BlueTheme_Background</item>
-        <item name="textColorAlertDialogListItem">@color/TextColor</item>
+        <item name="textColorAlertDialogListItem">@color/white</item>
         <item name="color">@color/BlueTheme_Background</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
@@ -63,11 +66,18 @@
     </style>
 
     <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/TextColor</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/TextColor</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
+    <!-- This code are supposted to set the fade in animation
+    for activities that are gonna be finished, but it removes open animation, idk why,
+    but I left it here to make app faster. -->
+<!--    <style name="WindowAnimationTransition">-->
+<!--        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>-->
+<!--        <item name="android:windowExitAnimation">@android:anim/fade_out</item>-->
+<!--    </style>-->
 </resources>

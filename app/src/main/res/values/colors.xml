@@ -31,7 +31,7 @@
     <color name="RedTheme_NavigationBar">#F50000</color>
 
     <!--  Another  -->
-    <color name="TextColor">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="Red">#FF0000</color>
     <color name="Yellow">#FFEB3B</color>
 

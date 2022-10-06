@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/design">
+
+        <ListPreference
+            android:defaultValue="@string/settings_theme_default_value"
+            android:icon="@drawable/ic_settings_themes"
+            app:entries="@array/Themes"
+            app:entryValues="@array/Themes_values"
+            app:key="Themes"
+            app:summary="%s"
+            app:title="@string/Theme_text" />
+        <ListPreference
+            android:defaultValue="@string/settings_language_default_value"
+            android:icon="@drawable/ic_settings_language"
+            android:summary="%s"
+            app:entries="@array/Languages"
+            app:entryValues="@array/Languages_values"
+            app:key="Languages"
+            app:title="@string/Language_text"/>
+
+
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/another">
+        <Preference
+            android:icon="@drawable/ic_settings_version"
+            app:key="Version" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

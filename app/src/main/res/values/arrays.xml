@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="Themes">
+        <item>Blue</item>
+        <item>Dark</item>
+        <item>Red</item>
+    </string-array>
+    <string-array name="Themes_values">
+        <item>blue</item>
+        <item>dark</item>
+        <item>red</item>
+    </string-array>
+
+    <string-array name="Languages">
+        <item>Русский</item>
+        <item>English</item>
+        <item>Українська</item>
+    </string-array>
+    <string-array name="Languages_values">
+        <item>ru</item>
+        <item>en</item>
+        <item>uk</item>
+    </string-array>
+
+</resources>
