@@ -14,4 +14,8 @@
     <string name="settings_language_default_value">en</string>
     <string name="settings_language_summary">English</string>
 
+    <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in.</string>
+    <!--    Search strings-->
+    <string name="search">Search</string>
+    <string name="search_hint">Search a note…</string>
 </resources>

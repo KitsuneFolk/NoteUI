@@ -10,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pandacorp.notesui.DBHelper
 import com.pandacorp.notesui.R
 
+
 class CustomAdapter(
     private var context: Context,
-    private var notes: MutableList<ListItem>
+    private var notesList: MutableList<ListItem>
 ) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
     private val TAG = "MyLogs"
     private val table = DBHelper.NOTES_TABLE
@@ -32,23 +33,32 @@ class CustomAdapter(
     }
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val note = notes[position]
+        val note = notesList[position]
         
         holder.header.text = note.header
         holder.content.text = note.content
         
     }
     
-    override fun getItemCount() = notes.size
+    override fun getItemCount() = notesList.size
     
     fun removeItem(position: Int) {
-        notes.removeAt(position)
+        notesList.removeAt(position)
         
         notifyItemRemoved(position)
-        notifyItemRangeChanged(position, notes.size)
+        notifyItemRangeChanged(position, notesList.size)
         
     }
     
+    // method for filtering our recyclerview items.
+    fun filterList(filterlist: ArrayList<ListItem>) {
+        // below line is to add our filtered
+        // list in our course array list.
+        notesList = filterlist
+        // below line is to notify our adapter
+        // as change in recycler view data.
+        notifyDataSetChanged()
+    }
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val header = itemView.findViewById<TextView>(R.id.list_item_header_textView)
         val content = itemView.findViewById<TextView>(R.id.list_item_content_textview)

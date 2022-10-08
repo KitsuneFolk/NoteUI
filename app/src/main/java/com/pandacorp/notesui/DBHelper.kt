@@ -52,21 +52,18 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     
     fun getDatabaseItemIdByRecyclerViewItemId(table: String, id: Int): Int? {
         val cursor = getCursor(table)
-        //var of Id number in Timer_Table to understand how much there elements is
+        //var of Id number in Table to understand how many there is elements
         var numberOfIds = 0
         //var of position of the deleted item
-        var deletedPosition: Int?
+        val deletedPosition: Int?
         
-        if (cursor!!.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             val ID_COL = cursor.getColumnIndex(DBHelper.ID_COL)
             do {
                 numberOfIds++
                 if (numberOfIds == id + 1) {
                     
                     deletedPosition = cursor.getInt(ID_COL)
-                    if (deletedPosition == null) {
-                        throw Exception("deletedPosition cannot be null!")
-                    }
                     return deletedPosition
                 }
             } while (cursor.moveToNext())
@@ -79,23 +76,20 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     fun getDatabaseItems(): MutableList<ListItem> {
         val notesList = mutableListOf<ListItem>()
         
-        //Creating WritableDatabase object
         
-        //Creating Cursor object
         val cursor = getCursor(NOTES_TABLE)
         
-        //Uploading the timers when opening the app
         val HEADER_COL = cursor.getColumnIndex(DBHelper.HEADER_COL)
         val CONTENT_COL = cursor.getColumnIndex(DBHelper.CONTENT_COL)
         if (cursor.moveToFirst()) {
             do {
-                val stopwatch = ListItem(
+                val note = ListItem(
                         cursor.getString(HEADER_COL),
                         cursor.getString(CONTENT_COL)
                 
                 )
                 
-                notesList.add(stopwatch)
+                notesList.add(note)
                 
                 
             } while (cursor.moveToNext())

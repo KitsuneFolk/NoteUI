@@ -13,5 +13,7 @@
     <string name="settings_theme_summary">Синяя</string>
     <string name="settings_language_default_value">ru</string>
     <string name="settings_language_summary">Русский</string>
+    <string name="search">Найти</string>
+    <string name="search_hint">Найти заметку…</string>
 
 </resources>
