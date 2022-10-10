@@ -2,6 +2,7 @@ package com.pandacorp.notesui.adapter
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,11 +14,9 @@ import com.pandacorp.notesui.R
 
 class CustomAdapter(
     private var context: Context,
-    private var notesList: MutableList<ListItem>
+    private var notesList: MutableList<ListItem>,
 ) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
-    private val TAG = "MyLogs"
-    private val table = DBHelper.NOTES_TABLE
-    
+    private val TAG = "CustomAdapter"
     private lateinit var db: DBHelper
     private lateinit var wdb: SQLiteDatabase
     
@@ -50,18 +49,17 @@ class CustomAdapter(
         
     }
     
-    // method for filtering our recyclerview items.
-    fun filterList(filterlist: ArrayList<ListItem>) {
-        // below line is to add our filtered
-        // list in our course array list.
-        notesList = filterlist
-        // below line is to notify our adapter
-        // as change in recycler view data.
+    fun filterList(filterList: ArrayList<ListItem>) {
+        Log.d(TAG, "filterList: ") //-
+        notesList = filterList
         notifyDataSetChanged()
     }
+    
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val TAG = "ViewHolder"
         val header = itemView.findViewById<TextView>(R.id.list_item_header_textView)
         val content = itemView.findViewById<TextView>(R.id.list_item_content_textview)
+        
     }
     
 }
