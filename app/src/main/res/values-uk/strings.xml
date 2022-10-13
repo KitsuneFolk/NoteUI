@@ -13,7 +13,12 @@
     <string name="settings_theme_default_value">blue</string>
     <string name="settings_language_default_value">uk</string>
     <string name="settings_language_summary">Українська</string>
+
+    <!--    Search strings-->
     <string name="search">Знайти</string>
     <string name="search_hint">Знайти нотаток…</string>
 
+    <!-- Select strings -->
+    <string name="delete">Удалить</string>
+    <string name="select_all">Выбрать всё</string>
 </resources>

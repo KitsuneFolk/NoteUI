@@ -13,17 +13,14 @@
         <item name="android:navigationBarColor">@color/RedTheme_colorPrimary</item>
         <!--  White color for back arrow  -->
         <item name="colorControlNormal">@color/white</item>
-<!--        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>-->
+        <!--  This color used for Material Action Mode background  -->
+        <item name="colorSurface">@color/RedTheme_colorPrimary</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
-
-        <!--  Needed for Bottom Navigation Menu selected item color  -->
-        <item name="colorSecondaryContainer">@android:color/white</item>
 
         <item name="buttonStyle">@style/RedTheme_Button</item>
         <item name="editTextStyle">@style/RedTheme_EditText</item>
         <item name="drawerArrowStyle">@style/RedTheme_DrawerArrowToggle</item>
         <item name="alertDialogTheme">@style/RedTheme_AlertDialog</item>
-        <item name="snackbarStyle">@style/RedTheme_SnackBar</item>
         <item name="actionBarStyle">@style/RedTheme_ActionBar</item>
 
 
@@ -61,10 +58,6 @@
         <item name="color">@color/RedTheme_Background</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
-    </style>
-
-    <style name="RedTheme_SnackBar" parent="Widget.Design.Snackbar">
-        <item name="backgroundTint">@color/RedTheme_ButtonColor</item>
     </style>
 
 

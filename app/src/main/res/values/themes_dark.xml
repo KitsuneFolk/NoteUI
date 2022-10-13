@@ -12,7 +12,8 @@
         <item name="android:navigationBarColor">@color/DarkTheme_colorPrimary</item>
         <!--  White color for back arrow  -->
         <item name="colorControlNormal">@color/white</item>
-<!--        <item name="android:windowAnimationStyle">@style/WindowAnimationTransition</item>-->
+        <!--  This color used for Material Action Mode background  -->
+        <item name="colorSurface">@color/DarkTheme_colorPrimary</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
 
         <!--  Needed for Bottom Navigation Menu selected item color  -->
@@ -23,7 +24,6 @@
         <item name="toolbarStyle">@style/DarkTheme_Toolbar</item>
         <item name="drawerArrowStyle">@style/DarkTheme_DrawerArrowToggle</item>
         <item name="alertDialogTheme">@style/DarkTheme_AlertDialog</item>
-        <item name="snackbarStyle">@style/DarkTheme_SnackBar</item>
 
 
     </style>
@@ -57,9 +57,6 @@
         <item name="color">@color/DarkTheme_Background</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
-    </style>
-    <style name="DarkTheme_SnackBar" parent="Widget.Design.Snackbar">
-        <item name="backgroundTint">@color/DarkTheme_ButtonColor</item>
     </style>
 
 </resources>

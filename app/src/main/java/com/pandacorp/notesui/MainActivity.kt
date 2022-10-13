@@ -6,8 +6,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -29,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var addFloatingActionButton: FloatingActionButton
     private lateinit var dbHelper: DBHelper
     private lateinit var notesList: MutableList<ListItem>
+    private var actionModeCallback: ActionModeCallback = ActionModeCallback()
+    private var actionMode: ActionMode? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,14 +69,25 @@ class MainActivity : AppCompatActivity() {
     
     private fun initRecyclerView() {
         notesList = dbHelper.getDatabaseItems()
-        val testString: String = resources.getString(R.string.lorem_ipsum)
-        notesList.add(ListItem("This text is very large, isn't it?", testString))
-        notesList.add(ListItem("Test", "TestContent"))
         customAdapter = CustomAdapter(this, notesList)
+        customAdapter.setOnClickListener(object : CustomAdapter.OnClickListener {
+            override fun onItemClick(view: View?, item: ListItem, pos: Int) {
+                if (customAdapter.getSelectedItemCount() > 0) {
+                    enableActionMode(pos)
+                } else {
+                    // val item: ListItem = customAdapter.getItem(pos)
+                    
+                }
+            }
+            
+            override fun onItemLongClick(view: View?, item: ListItem, pos: Int) {
+                enableActionMode(pos)
+            }
+        })
         recyclerView.adapter = customAdapter
         registerForContextMenu(recyclerView)
         
-    
+        
     }
     
     private var searchJob: Job? = null
@@ -105,33 +120,28 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun filter(text: String) {
-        // creating a new array list to filter our data.
-        val filteredlist: ArrayList<ListItem> = ArrayList<ListItem>()
+        val filteredList: ArrayList<ListItem> = ArrayList<ListItem>()
         
-        // running a for loop to compare elements.
         for (item in notesList) {
-            // checking if the entered string matched with any item of our recycler view.
             if (item.header.lowercase().contains(text.lowercase(Locale.getDefault()))) {
-                // if the item is matched we are
-                // adding it to our filtered list.
-                filteredlist.add(item)
+                filteredList.add(item)
             }
         }
-        if (filteredlist.isEmpty()) {
-            // if no item is added in filtered list we are
-            
+        if (filteredList.isEmpty()) {
+        
         } else {
-            // at last we are passing that filtered
-            // list to our adapter class.
-            customAdapter.filterList(filteredlist)
+            customAdapter.filterList(filteredList)
         }
     }
     
-    var resultLauncher = registerForActivityResult(
+    private val resultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
-        overridePendingTransition(0, 0)
+        if (it.resultCode == RESULT_OK) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            overridePendingTransition(0, 0)
+        }
+        
         
     }
     
@@ -141,10 +151,74 @@ class MainActivity : AppCompatActivity() {
                 resultLauncher.launch(Intent(this, SettingsActivity::class.java))
                 
             }
-           
+            
         }
         
         return true
+    }
+    
+    private fun enableActionMode(position: Int) {
+        if (actionMode == null) {
+            actionMode = startSupportActionMode(actionModeCallback)
+        }
+        toggleSelection(position)
+    }
+    
+    private fun toggleSelection(position: Int) {
+        customAdapter.toggleSelection(position)
+        val count: Int = customAdapter.getSelectedItemCount()
+        if (count == 0) {
+            actionMode!!.finish()
+        } else {
+            actionMode!!.title = count.toString()
+            actionMode!!.invalidate()
+        }
+    }
+    
+    private fun removeSelectedItems() {
+        val selectedItemPositions: List<Int> = customAdapter.getSelectedItems()
+        if (selectedItemPositions.isEmpty()) return
+        for (i in selectedItemPositions.indices.reversed()) {
+            customAdapter.removeItem(selectedItemPositions[i])
+            dbHelper.removeById(DBHelper.NOTES_TABLE, selectedItemPositions[i])
+        }
+        customAdapter.notifyDataSetChanged()
+    }
+    
+    //This class needed for creating multiselect on RecyclerView
+    inner class ActionModeCallback : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+            mode.menuInflater.inflate(R.menu.recyclerview_select_menu, menu)
+            
+            return true
+        }
+        
+        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean {
+            
+            return false
+        }
+        
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+            val id = item.itemId
+            if (id == R.id.recyclerview_menu_delete) {
+                removeSelectedItems()
+                mode.finish()
+                return true
+            }
+            if (id == R.id.recyclerview_menu_select_all) {
+                customAdapter.selectAllItems()
+                val count: Int = customAdapter.getSelectedItemCount()
+                actionMode!!.title = count.toString()
+                actionMode!!.invalidate()
+            }
+            return false
+        }
+        
+        override fun onDestroyActionMode(mode: ActionMode) {
+            customAdapter.clearSelections()
+            actionMode = null
+            
+        }
     }
     
     

@@ -13,7 +13,13 @@
     <string name="settings_theme_summary">Синяя</string>
     <string name="settings_language_default_value">ru</string>
     <string name="settings_language_summary">Русский</string>
+
+    <!--    Search strings-->
     <string name="search">Найти</string>
     <string name="search_hint">Найти заметку…</string>
+
+    <!-- Select strings -->
+    <string name="delete">Удалить</string>
+    <string name="select_all">Выбрать всё</string>
 
 </resources>

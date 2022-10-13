@@ -8,13 +8,11 @@
     >
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/list_item_cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="?colorPrimary"
         app:cardCornerRadius="15dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/selectableItemBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +26,7 @@
 
             <TextView
                 android:id="@+id/list_item_header_textView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:ellipsize="end"
@@ -36,7 +34,7 @@
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/list_item_select_check_image"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Android studio test" />
@@ -56,6 +54,18 @@
                 app:layout_constraintStart_toStartOf="@+id/list_item_header_textView"
                 app:layout_constraintTop_toBottomOf="@+id/list_item_header_textView"
                 tools:text="@string/lorem_ipsum" />
+
+            <ImageView
+                android:id="@+id/list_item_select_check_image"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_checked"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/list_item_header_textView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/list_item_header_textView"
+                app:layout_constraintVertical_bias="0.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

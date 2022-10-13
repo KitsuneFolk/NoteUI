@@ -18,4 +18,8 @@
     <!--    Search strings-->
     <string name="search">Search</string>
     <string name="search_hint">Search a note…</string>
+
+    <!-- Select strings -->
+    <string name="delete">Delete</string>
+    <string name="select_all">Select all</string>
 </resources>

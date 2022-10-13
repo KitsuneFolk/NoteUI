@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity() {
+    private val TAG = "SettingsActivity"
     private lateinit var sp: SharedPreferences
     private lateinit var edit: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +41,6 @@ class SettingsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                setResult(RESULT_OK)
                 finish()
             }
             
@@ -51,6 +51,7 @@ class SettingsActivity : AppCompatActivity() {
     
     class SettingsFragment : PreferenceFragmentCompat(),
         OnPreferenceChangeListener {
+        private val TAG = "SettingsActivity"
         var language: String? = null
         var theme: String? = null
         var sp: SharedPreferences? = null
@@ -85,12 +86,13 @@ class SettingsActivity : AppCompatActivity() {
         
         
         override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-            val TAG = "MyLogs"
             language = sp!!.getString("Languages", "")
             theme = sp!!.getString("Themes", "")
+            requireActivity().setResult(RESULT_OK)
             requireActivity().startActivity(Intent(context, SettingsActivity::class.java))
             requireActivity().finish()
             requireActivity().overridePendingTransition(0, 0)
+            
             return true
         }
     }
