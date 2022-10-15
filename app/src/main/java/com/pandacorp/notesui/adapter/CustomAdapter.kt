@@ -13,7 +13,8 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.util.size
 import androidx.recyclerview.widget.RecyclerView
-import com.pandacorp.notesui.DBHelper
+import com.pandacorp.data.database.DBHelper
+import com.pandacorp.domain.models.ListItem
 import com.pandacorp.notesui.R
 
 

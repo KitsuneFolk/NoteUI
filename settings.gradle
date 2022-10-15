@@ -18,3 +18,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "NotesUI"
 include ':app'
+include ':data'
+include ':domain'
