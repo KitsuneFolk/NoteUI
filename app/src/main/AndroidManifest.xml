@@ -4,6 +4,7 @@
     package="com.pandacorp.notesui">
 
     <application
+        android:name=".app.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="true"
@@ -29,7 +30,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name="com.pandacorp.notesui.presentation.settings.SettingsActivity"
             android:screenOrientation="portrait" />
     </application>
 

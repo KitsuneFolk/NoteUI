@@ -1,4 +1,4 @@
-package com.pandacorp.notesui.settings
+package com.pandacorp.notesui.presentation.settings
 
 import android.content.Intent
 import android.content.SharedPreferences

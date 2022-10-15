@@ -14,20 +14,19 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pandacorp.data.database.DBHelper
-import com.pandacorp.data.repositories.DataRepository
 import com.pandacorp.domain.models.ListItem
 import com.pandacorp.domain.usecases.AddToDatabaseUseCase
-import com.pandacorp.domain.usecases.GetDatabaseItemIdByPosition
 import com.pandacorp.domain.usecases.GetDatabaseItemsUseCase
 import com.pandacorp.domain.usecases.RemoveFromDatabaseByIdUseCase
 import com.pandacorp.notesui.R
-import com.pandacorp.notesui.adapter.CustomAdapter
-import com.pandacorp.notesui.settings.SettingsActivity
+import com.pandacorp.notesui.presentation.adapter.CustomAdapter
+import com.pandacorp.notesui.presentation.settings.SettingsActivity
 import com.pandacorp.notesui.utils.ThemeHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import java.util.*
 
 
@@ -46,11 +45,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dbHelper: DBHelper
     
     //Clean Architecture
-    private val dataRepository by lazy { DataRepository(dbHelper) }
-    private val addToDatabaseUseCase by lazy { AddToDatabaseUseCase(dataRepository) }
-    private val getDatabaseItemIdByPosition by lazy { GetDatabaseItemIdByPosition(dataRepository) }
-    private val getDatabaseItemsUseCase by lazy { GetDatabaseItemsUseCase(dataRepository) }
-    private val removeFromDatabaseByIdUseCase by lazy { RemoveFromDatabaseByIdUseCase(dataRepository) }
+    private val addToDatabaseUseCase: AddToDatabaseUseCase by inject()
+        // private val getDatabaseItemIdByPosition : GetDatabaseItemIdByPosition by inject()
+    private val getDatabaseItemsUseCase: GetDatabaseItemsUseCase by inject()
+    private val removeFromDatabaseByIdUseCase: RemoveFromDatabaseByIdUseCase by inject()
+    
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,4 +1,4 @@
-package com.pandacorp.notesui.adapter
+package com.pandacorp.notesui.presentation.adapter
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
