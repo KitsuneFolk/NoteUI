@@ -1,9 +1,9 @@
 package com.pandacorp.notesui.di
 
 import com.pandacorp.domain.usecases.AddToDatabaseUseCase
-import com.pandacorp.domain.usecases.GetDatabaseItemIdByPosition
+import com.pandacorp.domain.usecases.GetDatabaseItemByAdapterPositionUseCase
 import com.pandacorp.domain.usecases.GetDatabaseItemsUseCase
-import com.pandacorp.domain.usecases.RemoveFromDatabaseByIdUseCase
+import com.pandacorp.domain.usecases.RemoveFromDatabaseUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
@@ -11,12 +11,12 @@ val domainModule = module {
         AddToDatabaseUseCase(get())
     }
     factory{
-        GetDatabaseItemIdByPosition(get())
-    }
-    factory{
         GetDatabaseItemsUseCase(get())
     }
     factory{
-        RemoveFromDatabaseByIdUseCase(get())
+        RemoveFromDatabaseUseCase(get())
+    }
+    factory{
+        GetDatabaseItemByAdapterPositionUseCase(get())
     }
 }

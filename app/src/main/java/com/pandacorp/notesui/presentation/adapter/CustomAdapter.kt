@@ -1,7 +1,6 @@
 package com.pandacorp.notesui.presentation.adapter
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
@@ -13,7 +12,6 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.util.size
 import androidx.recyclerview.widget.RecyclerView
-import com.pandacorp.data.database.DBHelper
 import com.pandacorp.domain.models.ListItem
 import com.pandacorp.notesui.R
 
@@ -23,8 +21,6 @@ class CustomAdapter(
     private var itemsList: MutableList<ListItem>
 ) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
     private val TAG = "CustomAdapter"
-    private lateinit var db: DBHelper
-    private lateinit var wdb: SQLiteDatabase
     
     private var onClickListener: OnClickListener? = null
     
@@ -32,10 +28,6 @@ class CustomAdapter(
     private var currentSelectedIndex = -1
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        //Creating DBHelper object
-        db = DBHelper(parent.context, null)
-        
-        wdb = db.writableDatabase
         
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.list_item, parent, false)
@@ -51,23 +43,24 @@ class CustomAdapter(
         
         holder.header.text = item.header
         holder.content.text = item.content
-    
+        
         holder.cardView.setActivated(selectedItemsList.get(position, false))
-    
+        
         holder.cardView.setOnClickListener(View.OnClickListener { v ->
             if (onClickListener == null) return@OnClickListener
             onClickListener!!.onItemClick(v, item, position)
         })
-    
+        
         holder.cardView.setOnLongClickListener(OnLongClickListener { v ->
             if (onClickListener == null) return@OnLongClickListener false
             onClickListener!!.onItemLongClick(v, item, position)
             true
         })
-    
+        
         toggleCheckedIcon(holder, position)
         
     }
+    
     private fun toggleCheckedIcon(holder: ViewHolder, position: Int) {
         if (selectedItemsList.get(position, false)) {
             holder.checkedImage.setVisibility(View.VISIBLE)
@@ -77,6 +70,7 @@ class CustomAdapter(
             if (currentSelectedIndex == position) resetCurrentIndex()
         }
     }
+    
     private fun resetCurrentIndex() {
         currentSelectedIndex = -1
     }
@@ -107,9 +101,10 @@ class CustomAdapter(
         }
         return items
     }
-    fun selectAllItems(){
+    
+    fun selectAllItems() {
         Log.d(TAG, "selectAllItems: start selectedItemsList.size = ${selectedItemsList.size}")
-        if (selectedItemsList.size == itemsList.size){
+        if (selectedItemsList.size == itemsList.size) {
             //Unselect all
             Log.d(TAG, "selectAllItems: Unselect all")
             selectedItemsList.clear()
@@ -117,15 +112,16 @@ class CustomAdapter(
             //Select all
             Log.d(TAG, "selectAllItems: Select all")
             selectedItemsList.clear()
-            for(i in 0 until itemsList.size){
+            for (i in 0 until itemsList.size) {
                 selectedItemsList.put(i, true)
             }
         }
         notifyDataSetChanged()
         Log.d(TAG, "selectAllItems: end selectedItemsList.size = ${selectedItemsList.size}")
-    
-    
+        
+        
     }
+    
     fun removeItem(position: Int) {
         itemsList.removeAt(position)
         
@@ -139,6 +135,7 @@ class CustomAdapter(
         itemsList = filterList
         notifyDataSetChanged()
     }
+    
     fun setOnClickListener(onClickListener: OnClickListener?) {
         this.onClickListener = onClickListener
     }

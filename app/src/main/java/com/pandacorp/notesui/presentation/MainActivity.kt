@@ -13,11 +13,11 @@ import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.pandacorp.data.database.DBHelper
 import com.pandacorp.domain.models.ListItem
 import com.pandacorp.domain.usecases.AddToDatabaseUseCase
+import com.pandacorp.domain.usecases.GetDatabaseItemByAdapterPositionUseCase
 import com.pandacorp.domain.usecases.GetDatabaseItemsUseCase
-import com.pandacorp.domain.usecases.RemoveFromDatabaseByIdUseCase
+import com.pandacorp.domain.usecases.RemoveFromDatabaseUseCase
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.presentation.adapter.CustomAdapter
 import com.pandacorp.notesui.presentation.settings.SettingsActivity
@@ -32,7 +32,6 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
-    private val table = DBHelper.NOTES_TABLE
     
     private lateinit var recyclerView: RecyclerView
     lateinit var customAdapter: CustomAdapter
@@ -42,50 +41,51 @@ class MainActivity : AppCompatActivity() {
     
     private lateinit var addFloatingActionButton: FloatingActionButton
     
-    private lateinit var dbHelper: DBHelper
     
     //Clean Architecture
     private val addToDatabaseUseCase: AddToDatabaseUseCase by inject()
-        // private val getDatabaseItemIdByPosition : GetDatabaseItemIdByPosition by inject()
+    
+    private val getDatabaseItemByAdapterPositionUseCase: GetDatabaseItemByAdapterPositionUseCase by inject()
     private val getDatabaseItemsUseCase: GetDatabaseItemsUseCase by inject()
-    private val removeFromDatabaseByIdUseCase: RemoveFromDatabaseByIdUseCase by inject()
+    private val removeFromDatabaseUseCase: RemoveFromDatabaseUseCase by inject()
     
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ThemeHandler.load(this)
         setContentView(R.layout.activity_main)
-        
         initViews()
+        
     }
     
     private fun initViews() {
         recyclerView = findViewById(R.id.recycler_view)
-        dbHelper = DBHelper(this, null)
         
     }
     
     override fun onResume() {
         super.onResume()
-        initRecyclerView()
-        initAddFloatingActionButton()
-        
+        CoroutineScope(Dispatchers.Main).launch {
+            
+            initRecyclerView()
+            initAddFloatingActionButton()
+        }
     }
     
     private fun initAddFloatingActionButton() {
         addFloatingActionButton = findViewById(R.id.addFloatingActionButton)
         addFloatingActionButton.setOnClickListener {
-            val listItem = ListItem("Header", "Content")
+            val listItem = ListItem(content = "Header", header = "Content")
             val position = 0
             notesList.add(position, listItem)
             customAdapter.notifyItemInserted(position)
             customAdapter.notifyItemRangeChanged(position, notesList.size)
-            addToDatabaseUseCase.execute(table, ListItem("Header", "Content"))
+            addToDatabaseUseCase(listItem)
         }
     }
     
-    private fun initRecyclerView() {
-        notesList = getDatabaseItemsUseCase.execute(table)
+    private suspend fun initRecyclerView() {
+        notesList = getDatabaseItemsUseCase()
         customAdapter = CustomAdapter(this, notesList)
         customAdapter.setOnClickListener(object : CustomAdapter.OnClickListener {
             override fun onItemClick(view: View?, item: ListItem, pos: Int) {
@@ -197,7 +197,12 @@ class MainActivity : AppCompatActivity() {
         if (selectedItemPositions.isEmpty()) return
         for (i in selectedItemPositions.indices.reversed()) {
             customAdapter.removeItem(selectedItemPositions[i])
-            removeFromDatabaseByIdUseCase.execute(DBHelper.NOTES_TABLE, selectedItemPositions[i])
+            CoroutineScope(Dispatchers.IO).launch {
+                val listItem =
+                    getDatabaseItemByAdapterPositionUseCase(selectedItemPositions[i])
+                removeFromDatabaseUseCase(listItem)
+                
+            }
         }
         customAdapter.notifyDataSetChanged()
     }
@@ -219,6 +224,7 @@ class MainActivity : AppCompatActivity() {
             val id = item.itemId
             if (id == R.id.recyclerview_menu_delete) {
                 removeSelectedItems()
+                
                 mode.finish()
                 return true
             }

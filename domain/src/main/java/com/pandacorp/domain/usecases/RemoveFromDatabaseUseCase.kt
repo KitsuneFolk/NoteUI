@@ -6,10 +6,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AddToDatabaseUseCase(private val dataRepositoryInterface: DataRepositoryInterface) {
+class RemoveFromDatabaseUseCase(private val dataRepositoryInterface: DataRepositoryInterface) {
     operator fun invoke(listItem: ListItem) {
         CoroutineScope(Dispatchers.IO).launch {
-            dataRepositoryInterface.add(listItem)
+            dataRepositoryInterface.remove(listItem)
             
         }
     }
