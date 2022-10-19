@@ -5,8 +5,7 @@ import androidx.room.RoomDatabase
 import com.pandacorp.domain.models.ListItem
 
 @Database(entities = [ListItem::class], version = 1, exportSchema = false)
-abstract class NoteDatabase : RoomDatabase() {
+abstract class Database : RoomDatabase() {
     abstract fun noteDao(): NoteDao
-    
     
 }

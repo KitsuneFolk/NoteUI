@@ -152,8 +152,8 @@ class CustomAdapter(
     }
     
     interface OnClickListener {
-        fun onItemClick(view: View?, item: ListItem, pos: Int)
-        fun onItemLongClick(view: View?, item: ListItem, pos: Int)
+        fun onItemClick(view: View?, item: ListItem, position: Int)
+        fun onItemLongClick(view: View?, item: ListItem, position: Int)
     }
     
 }

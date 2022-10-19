@@ -1,9 +1,6 @@
 package com.pandacorp.data.database
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.pandacorp.domain.models.ListItem
 
 @Dao
@@ -13,6 +10,9 @@ interface NoteDao {
     
     @Query("SELECT * FROM listItem WHERE id IN (:userIds)")
     fun loadAllByIds(userIds: IntArray): List<ListItem>
+    
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun update(listItem: ListItem)
     
     @Insert
     fun insert(listItem: ListItem)

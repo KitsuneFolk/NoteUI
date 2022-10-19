@@ -9,6 +9,10 @@ class DataRepository(private val noteDao: NoteDao) : DataRepositoryInterface {
         return noteDao.getAll()
     }
     
+    override fun update(listItem: ListItem) {
+        noteDao.update(listItem)
+    }
+    
     override fun add(listItem: ListItem) {
         noteDao.insert(listItem)
     }

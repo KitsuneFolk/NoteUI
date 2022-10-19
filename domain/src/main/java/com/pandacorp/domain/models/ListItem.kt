@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class ListItem(
-    @PrimaryKey(autoGenerate = true) val id: Int=0,
-    @ColumnInfo(name = "header") val header: String,
-    @ColumnInfo(name = "content") val content: String)
+    @PrimaryKey(autoGenerate = true) var id: Int=0,
+    @ColumnInfo(name = "header") var header: String,
+    @ColumnInfo(name = "content") var content: String)

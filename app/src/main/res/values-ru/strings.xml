@@ -22,4 +22,8 @@
     <string name="delete">Удалить</string>
     <string name="select_all">Выбрать всё</string>
 
+    <!-- NoteActivity strings -->
+    <string name="header">Заголовок…</string>
+    <string name="content">Содержание…</string>
+
 </resources>

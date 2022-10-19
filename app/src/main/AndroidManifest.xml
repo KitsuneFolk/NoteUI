@@ -15,6 +15,9 @@
         android:theme="@style/BlueTheme"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.NoteActivity"
+            android:exported="false" />
+        <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
@@ -30,7 +33,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.pandacorp.notesui.presentation.settings.SettingsActivity"
+            android:name=".presentation.settings.SettingsActivity"
             android:screenOrientation="portrait" />
     </application>
 

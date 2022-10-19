@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -39,16 +40,38 @@ class MainActivity : AppCompatActivity() {
     private var actionModeCallback: ActionModeCallback = ActionModeCallback()
     private var actionMode: ActionMode? = null
     
-    private lateinit var addFloatingActionButton: FloatingActionButton
-    
+    private lateinit var addFAB: FloatingActionButton
+    private var clickedItemPosition = -1
     
     //Clean Architecture
     private val addToDatabaseUseCase: AddToDatabaseUseCase by inject()
-    
     private val getDatabaseItemByAdapterPositionUseCase: GetDatabaseItemByAdapterPositionUseCase by inject()
     private val getDatabaseItemsUseCase: GetDatabaseItemsUseCase by inject()
     private val removeFromDatabaseUseCase: RemoveFromDatabaseUseCase by inject()
     
+    private val updateCustomAdapterLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+        if (clickedItemPosition == -1) throw Exception("clickedItemPosition cannot be -1")
+        val header = it.data!!.getStringExtra(NoteActivity.intentNoteHeader)
+        val content = it.data!!.getStringExtra(NoteActivity.intentNoteContent)
+        notesList[clickedItemPosition].header = header!!
+        notesList[clickedItemPosition].content = content!!
+        Log.d(TAG, "updateCustomAdapterLauncher: note.header = $header")
+        Log.d(TAG, "updateCustomAdapterLauncher: note.content = $content")
+        customAdapter.notifyItemChanged(clickedItemPosition)
+        
+        
+    }
+    private val resultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+            overridePendingTransition(0, 0)
+        }
+        
+        
+    }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,28 +82,33 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun initViews() {
-        recyclerView = findViewById(R.id.recycler_view)
-        
-    }
-    
-    override fun onResume() {
-        super.onResume()
         CoroutineScope(Dispatchers.Main).launch {
-            
+            recyclerView = findViewById(R.id.recycler_view)
             initRecyclerView()
             initAddFloatingActionButton()
         }
+        
     }
     
     private fun initAddFloatingActionButton() {
-        addFloatingActionButton = findViewById(R.id.addFloatingActionButton)
-        addFloatingActionButton.setOnClickListener {
-            val listItem = ListItem(content = "Header", header = "Content")
+        addFAB = findViewById(R.id.addFAB)
+        addFAB.setOnClickListener {
+            val listItem = ListItem(content = "", header = "")
             val position = 0
+            clickedItemPosition = position
             notesList.add(position, listItem)
             customAdapter.notifyItemInserted(position)
             customAdapter.notifyItemRangeChanged(position, notesList.size)
-            addToDatabaseUseCase(listItem)
+            CoroutineScope(Dispatchers.IO).launch {
+                addToDatabaseUseCase(listItem)
+                
+            }
+            val intent = Intent(this, NoteActivity::class.java)
+            Log.d(TAG, "initAddFloatingActionButton: notesList.size = ${notesList.size}")
+            intent.putExtra(NoteActivity.intentNotePosition, notesList.size - 1)
+            updateCustomAdapterLauncher.launch(intent)
+            
+            
         }
     }
     
@@ -88,17 +116,20 @@ class MainActivity : AppCompatActivity() {
         notesList = getDatabaseItemsUseCase()
         customAdapter = CustomAdapter(this, notesList)
         customAdapter.setOnClickListener(object : CustomAdapter.OnClickListener {
-            override fun onItemClick(view: View?, item: ListItem, pos: Int) {
+            override fun onItemClick(view: View?, item: ListItem, position: Int) {
                 if (customAdapter.getSelectedItemCount() > 0) {
-                    enableActionMode(pos)
+                    enableActionMode(position)
                 } else {
-                    // val item: ListItem = customAdapter.getItem(pos)
+                    clickedItemPosition = position
+                    val intent = Intent(this@MainActivity, NoteActivity::class.java)
+                    intent.putExtra(NoteActivity.intentNotePosition, position)
+                    updateCustomAdapterLauncher.launch(intent)
                     
                 }
             }
             
-            override fun onItemLongClick(view: View?, item: ListItem, pos: Int) {
-                enableActionMode(pos)
+            override fun onItemLongClick(view: View?, item: ListItem, position: Int) {
+                enableActionMode(position)
             }
         })
         recyclerView.adapter = customAdapter
@@ -149,17 +180,6 @@ class MainActivity : AppCompatActivity() {
         } else {
             customAdapter.filterList(filteredList)
         }
-    }
-    
-    private val resultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == RESULT_OK) {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-            overridePendingTransition(0, 0)
-        }
-        
-        
     }
     
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
