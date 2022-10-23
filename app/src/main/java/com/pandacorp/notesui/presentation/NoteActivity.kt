@@ -32,8 +32,8 @@ class NoteActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNoteBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        actionBar?.setHomeButtonEnabled(true)
-        actionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setHomeButtonEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         CoroutineScope(Dispatchers.Main).launch {
             initViews()
             
@@ -43,13 +43,13 @@ class NoteActivity : AppCompatActivity() {
     }
     
     private suspend fun initViews() {
-        notePositionInAdapter = intent.getIntExtra(intentNotePosition, -1)
-        if (notePositionInAdapter == -1) throw Error("Value cannot be -1!")
-        
-        Log.d(TAG, "onCreate: notePositionInAdapter = $notePositionInAdapter")
         databaseList = withContext(Dispatchers.IO) {
             getDatabaseItemsUseCase()
         }
+        val lastNote = databaseList.size-1
+        notePositionInAdapter = intent.getIntExtra(intentNotePositionInAdapter, lastNote)
+        
+        Log.d(TAG, "onCreate: notePositionInAdapter = $notePositionInAdapter")
         
         note = databaseList[notePositionInAdapter!!]
         binding.noteHeaderEditText.setText(note.header)
@@ -58,43 +58,37 @@ class NoteActivity : AppCompatActivity() {
     
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
+            setIntentResult()
+            CoroutineScope(Dispatchers.IO).launch {
+                updateItemInDatabaseUseCase(note)
+            }
             finish()
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
     
-    override fun onDestroy() {
-        //before super.onDestroy()
-        setIntentResult()
-        super.onDestroy()
-        
-        CoroutineScope(Dispatchers.IO).launch {
-            updateItemInDatabaseUseCase(note)
-        }
-        
-        
-        
-    }
     private fun setIntentResult(){
         //This function sets result and puts data about note: Header and Content,
         //So in MainActivity we can update the note.
         note.header = binding.noteHeaderEditText.text.toString()
         note.content = binding.noteContentEditText.text.toString()
-        
+        Log.d(TAG, "setIntentResult: notePositionInAdapter = $notePositionInAdapter")
         val resultIntent = Intent()
+        resultIntent.putExtra(intentNotePositionInAdapter, notePositionInAdapter)
         resultIntent.putExtra(intentNoteHeader, note.header)
         resultIntent.putExtra(intentNoteContent, note.content)
         setResult(RESULT_OK, resultIntent)
     
     }
     override fun onBackPressed() {
+        Log.d(TAG, "onBackPressed: ")
         setIntentResult()
         super.onBackPressed()
         
     }
     
     companion object {
-        const val intentNotePosition = "notePositionInDatabase"
+        const val intentNotePositionInAdapter = "notePositionInAdapter"
         const val intentNoteHeader = "noteHeader"
         const val intentNoteContent = "intentNoteContent"
         

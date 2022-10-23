@@ -25,5 +25,6 @@
     <!-- NoteActivity strings -->
     <string name="header">Заголовок…</string>
     <string name="content">Содержание…</string>
+    <string name="addFabDescription">Добавить новую заметку</string>
 
 </resources>

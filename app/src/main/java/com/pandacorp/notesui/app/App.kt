@@ -1,6 +1,7 @@
 package com.pandacorp.notesui.app
 
 import android.app.Application
+import com.pandacorp.notesui.di.appModule
 import com.pandacorp.notesui.di.dataModule
 import com.pandacorp.notesui.di.domainModule
 import org.koin.android.ext.koin.androidContext
@@ -15,7 +16,7 @@ class App: Application() {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@App)
-            modules(listOf(dataModule, domainModule))
+            modules(listOf(appModule, dataModule, domainModule))
         }
     }
 }

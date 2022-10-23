@@ -15,10 +15,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.pandacorp.domain.models.ListItem
-import com.pandacorp.domain.usecases.AddToDatabaseUseCase
-import com.pandacorp.domain.usecases.GetDatabaseItemByAdapterPositionUseCase
-import com.pandacorp.domain.usecases.GetDatabaseItemsUseCase
-import com.pandacorp.domain.usecases.RemoveFromDatabaseUseCase
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.presentation.adapter.CustomAdapter
 import com.pandacorp.notesui.presentation.settings.SettingsActivity
@@ -27,8 +23,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,29 +33,38 @@ class MainActivity : AppCompatActivity() {
     
     private lateinit var recyclerView: RecyclerView
     lateinit var customAdapter: CustomAdapter
-    private lateinit var notesList: MutableList<ListItem>
     private var actionModeCallback: ActionModeCallback = ActionModeCallback()
     private var actionMode: ActionMode? = null
     
     private lateinit var addFAB: FloatingActionButton
-    private var clickedItemPosition = -1
     
     //Clean Architecture
-    private val addToDatabaseUseCase: AddToDatabaseUseCase by inject()
-    private val getDatabaseItemByAdapterPositionUseCase: GetDatabaseItemByAdapterPositionUseCase by inject()
-    private val getDatabaseItemsUseCase: GetDatabaseItemsUseCase by inject()
-    private val removeFromDatabaseUseCase: RemoveFromDatabaseUseCase by inject()
+    private val vm: MainViewModel by viewModel()
     
     private val updateCustomAdapterLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
-        if (clickedItemPosition == -1) throw Exception("clickedItemPosition cannot be -1")
-        val header = it.data!!.getStringExtra(NoteActivity.intentNoteHeader)
-        val content = it.data!!.getStringExtra(NoteActivity.intentNoteContent)
-        notesList[clickedItemPosition].header = header!!
-        notesList[clickedItemPosition].content = content!!
-        Log.d(TAG, "updateCustomAdapterLauncher: note.header = $header")
-        Log.d(TAG, "updateCustomAdapterLauncher: note.content = $content")
-        customAdapter.notifyItemChanged(clickedItemPosition)
+        
+        try {
+            //Here we update changed note.
+            vm.update()
+            customAdapter.notifyDataSetChanged()
+            // val clickedItemPosition =
+            //     it.data!!.getIntExtra(NoteActivity.intentNotePositionInAdapter, -1)
+            // if (clickedItemPosition == -1) throw Exception("clickedItemPosition cannot be -1")
+            // val header = it.data!!.getStringExtra(NoteActivity.intentNoteHeader)
+            // val content = it.data!!.getStringExtra(NoteActivity.intentNoteContent)
+            // vm.update(clickedItemPosition, header!!, content!!)
+            // customAdapter.notifyItemChanged(clickedItemPosition)
+            
+            // Log.d(TAG, "updateCustomAdapterLauncher: note.header = $header")
+            // Log.d(TAG, "updateCustomAdapterLauncher: note.content = $content")
+            
+            
+        } catch (e: Exception) {
+            //If NoteActivity screen was rotated and user backed to MainActivity
+            // then we do nothing, we don't notify adapter about changes because in OnCreate
+            // it will be created again.
+        }
         
         
     }
@@ -75,6 +81,7 @@ class MainActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ExceptionHandler.setupExceptionHandler()
         ThemeHandler.load(this)
         setContentView(R.layout.activity_main)
         initViews()
@@ -83,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     
     private fun initViews() {
         CoroutineScope(Dispatchers.Main).launch {
-            recyclerView = findViewById(R.id.recycler_view)
+            
             initRecyclerView()
             initAddFloatingActionButton()
         }
@@ -94,35 +101,31 @@ class MainActivity : AppCompatActivity() {
         addFAB = findViewById(R.id.addFAB)
         addFAB.setOnClickListener {
             val listItem = ListItem(content = "", header = "")
-            val position = 0
-            clickedItemPosition = position
-            notesList.add(position, listItem)
-            customAdapter.notifyItemInserted(position)
-            customAdapter.notifyItemRangeChanged(position, notesList.size)
+            // val position = 0
+            // customAdapter.notifyItemInserted(position)
+            // val listSize = vm.notesList.value!!.size
+            // customAdapter.notifyItemRangeChanged(position, listSize)
             CoroutineScope(Dispatchers.IO).launch {
-                addToDatabaseUseCase(listItem)
+                this@MainActivity.vm.addNote(listItem)
                 
             }
             val intent = Intent(this, NoteActivity::class.java)
-            Log.d(TAG, "initAddFloatingActionButton: notesList.size = ${notesList.size}")
-            intent.putExtra(NoteActivity.intentNotePosition, notesList.size - 1)
             updateCustomAdapterLauncher.launch(intent)
             
             
         }
     }
     
-    private suspend fun initRecyclerView() {
-        notesList = getDatabaseItemsUseCase()
-        customAdapter = CustomAdapter(this, notesList)
+    private fun initRecyclerView() {
+        recyclerView = findViewById(R.id.recycler_view)
+        customAdapter = CustomAdapter(this, mutableListOf<ListItem>())
         customAdapter.setOnClickListener(object : CustomAdapter.OnClickListener {
             override fun onItemClick(view: View?, item: ListItem, position: Int) {
                 if (customAdapter.getSelectedItemCount() > 0) {
                     enableActionMode(position)
                 } else {
-                    clickedItemPosition = position
                     val intent = Intent(this@MainActivity, NoteActivity::class.java)
-                    intent.putExtra(NoteActivity.intentNotePosition, position)
+                    intent.putExtra(NoteActivity.intentNotePositionInAdapter, position)
                     updateCustomAdapterLauncher.launch(intent)
                     
                 }
@@ -130,10 +133,15 @@ class MainActivity : AppCompatActivity() {
             
             override fun onItemLongClick(view: View?, item: ListItem, position: Int) {
                 enableActionMode(position)
+                
             }
         })
         recyclerView.adapter = customAdapter
         registerForContextMenu(recyclerView)
+        vm.notesList.observe(this) {
+            customAdapter.setList(it)
+            
+        }
         
         
     }
@@ -168,18 +176,24 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun filter(text: String) {
+        
         val filteredList: ArrayList<ListItem> = ArrayList<ListItem>()
-        
-        for (item in notesList) {
-            if (item.header.lowercase().contains(text.lowercase(Locale.getDefault()))) {
-                filteredList.add(item)
+
+        vm.notesList.observe(this){
+            for (item in it) {
+                if (item.header.lowercase().contains(text.lowercase(Locale.getDefault()))) {
+                    filteredList.add(item)
+                }
             }
-        }
-        if (filteredList.isEmpty()) {
+            if (filteredList.isEmpty()) {
+                customAdapter.filterList(filteredList)
         
-        } else {
-            customAdapter.filterList(filteredList)
+            } else {
+                customAdapter.filterList(filteredList)
+            }
+            
         }
+        
     }
     
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -214,15 +228,13 @@ class MainActivity : AppCompatActivity() {
     
     private fun removeSelectedItems() {
         val selectedItemPositions: List<Int> = customAdapter.getSelectedItems()
+        Log.d(
+                TAG,
+                "removeSelectedItems: selectedItemPositions.size = ${selectedItemPositions.size}")
         if (selectedItemPositions.isEmpty()) return
-        for (i in selectedItemPositions.indices.reversed()) {
-            customAdapter.removeItem(selectedItemPositions[i])
-            CoroutineScope(Dispatchers.IO).launch {
-                val listItem =
-                    getDatabaseItemByAdapterPositionUseCase(selectedItemPositions[i])
-                removeFromDatabaseUseCase(listItem)
-                
-            }
+        for (i in selectedItemPositions) {
+            vm.removeNote(customAdapter.getItem(i))
+            
         }
         customAdapter.notifyDataSetChanged()
     }
@@ -244,7 +256,6 @@ class MainActivity : AppCompatActivity() {
             val id = item.itemId
             if (id == R.id.recyclerview_menu_delete) {
                 removeSelectedItems()
-                
                 mode.finish()
                 return true
             }
@@ -263,6 +274,17 @@ class MainActivity : AppCompatActivity() {
             
         }
         
+    }
+    
+    object ExceptionHandler {
+        fun setupExceptionHandler() {
+            val defaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
+            Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+                val message = "Uncaught exception in thread ${thread.name}:\n"
+                Log.e("AndroidRuntime", message, throwable)
+                defaultUncaughtExceptionHandler?.uncaughtException(thread, throwable)
+            }
+        }
     }
     
 }

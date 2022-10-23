@@ -26,4 +26,5 @@
     <!-- NoteActivity strings -->
     <string name="header">Header…</string>
     <string name="content">Content…</string>
+    <string name="addFabDescription">Add new note</string>
 </resources>

@@ -63,10 +63,10 @@ class CustomAdapter(
     
     private fun toggleCheckedIcon(holder: ViewHolder, position: Int) {
         if (selectedItemsList.get(position, false)) {
-            holder.checkedImage.setVisibility(View.VISIBLE)
+            holder.checkedImage.visibility = View.VISIBLE
             if (currentSelectedIndex == position) resetCurrentIndex()
         } else {
-            holder.checkedImage.setVisibility(View.GONE)
+            holder.checkedImage.visibility = View.INVISIBLE
             if (currentSelectedIndex == position) resetCurrentIndex()
         }
     }
@@ -96,6 +96,7 @@ class CustomAdapter(
     
     fun getSelectedItems(): List<Int> {
         val items: MutableList<Int> = ArrayList(selectedItemsList.size())
+        Log.d(TAG, "getSelectedItems: selectedItemsList.size = ${selectedItemsList.size()}")
         for (i in 0 until selectedItemsList.size()) {
             items.add(selectedItemsList.keyAt(i))
         }
@@ -139,7 +140,10 @@ class CustomAdapter(
     fun setOnClickListener(onClickListener: OnClickListener?) {
         this.onClickListener = onClickListener
     }
-    
+    fun setList(itemsList: MutableList<ListItem>){
+        this.itemsList = itemsList
+        notifyDataSetChanged()
+    }
     
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val TAG = "ViewHolder"
