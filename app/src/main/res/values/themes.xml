@@ -12,7 +12,7 @@
         <item name="android:textColorSecondary">@color/BlueTheme_textColorSecondary</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeBackground">@color/BlueTheme_colorPrimary</item>
-        <!--  White color for back arrow  -->
+        <!--  white color for back arrow  -->
         <item name="colorControlNormal">@color/white</item>
         <!--  This color used for Material Action Mode background  -->
         <item name="colorSurface">@color/BlueTheme_colorPrimary</item>
@@ -26,7 +26,7 @@
         <item name="toolbarStyle">@style/BlueTheme_Toolbar</item>
         <item name="alertDialogTheme">@style/BlueTheme_AlertDialog</item>
         <item name="drawerArrowStyle">@style/BlueTheme_DrawerArrowToggle</item>
-
+        <item name="snackbarStyle">@style/SnackBarStyle</item>
     </style>
 
     <style name="BlueTheme_Button" parent="Widget.Material3.Button">
@@ -62,6 +62,9 @@
         <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
     </style>
 
+    <style name="SnackBarStyle" parent="Widget.Design.Snackbar">
+        <item name="backgroundTint">?android:attr/colorPrimary</item>
+    </style>
     <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
         <item name="android:textColor">@color/white</item>
     </style>
@@ -70,12 +73,4 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-
-    <!-- This code are supposted to set the fade in animation
-    for activities that are gonna be finished, but it removes open animation, idk why,
-    but I left it here to make app faster. -->
-<!--    <style name="WindowAnimationTransition">-->
-<!--        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>-->
-<!--        <item name="android:windowExitAnimation">@android:anim/fade_out</item>-->
-<!--    </style>-->
 </resources>

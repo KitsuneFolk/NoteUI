@@ -27,4 +27,8 @@
     <string name="content">Зміст…</string>
     <string name="addFabDescription">Добавити новий нотаток</string>
 
+    <!-- MainActivity strings  -->
+    <string name="snackbar_undo_title">Було видалено нотаткiв: </string>
+    <string name="snackbar_undo">Вiдмiнити видалення</string>
+
 </resources>

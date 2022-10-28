@@ -32,8 +32,9 @@
 
     <!--  Another  -->
     <color name="white">#FFFFFF</color>
-    <color name="Red">#FF0000</color>
-    <color name="Yellow">#FFEB3B</color>
+    <color name="red">#FF0000</color>
+    <color name="blue">#1A12F1</color>
+    <color name="yellow">#FFEB3B</color>
 
 
 </resources>

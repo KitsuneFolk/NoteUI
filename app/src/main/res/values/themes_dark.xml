@@ -10,7 +10,7 @@
         <item name="android:textColorSecondary">@color/DarkTheme_textColorSecondary</item>
         <item name="android:textColorHint">@color/DarkTheme_TextColor</item>
         <item name="android:navigationBarColor">@color/DarkTheme_colorPrimary</item>
-        <!--  White color for back arrow  -->
+        <!--  white color for back arrow  -->
         <item name="colorControlNormal">@color/white</item>
         <!--  This color used for Material Action Mode background  -->
         <item name="colorSurface">@color/DarkTheme_colorPrimary</item>
@@ -24,7 +24,7 @@
         <item name="toolbarStyle">@style/DarkTheme_Toolbar</item>
         <item name="drawerArrowStyle">@style/DarkTheme_DrawerArrowToggle</item>
         <item name="alertDialogTheme">@style/DarkTheme_AlertDialog</item>
-
+        <item name="snackbarStyle">@style/SnackBarStyle</item>
 
     </style>
 

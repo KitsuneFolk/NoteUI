@@ -1,6 +1,7 @@
 package com.pandacorp.notesui.presentation.adapter
 
 import android.content.Context
+import android.text.Html
 import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
@@ -41,16 +42,19 @@ class CustomAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemsList[position]
         
-        holder.header.text = item.header
-        holder.content.text = item.content
-        
+        holder.header.text = Html.fromHtml(item.header)
+        holder.content.text = Html.fromHtml(item.content)
+        Log.d(TAG, "onBindViewHolder: header.text = ${holder.header.text}")
+        Log.d(TAG, "onBindViewHolder: content.text = ${holder.content.text}")
+    
         holder.cardView.setActivated(selectedItemsList.get(position, false))
         
         holder.cardView.setOnClickListener(View.OnClickListener { v ->
             if (onClickListener == null) return@OnClickListener
             onClickListener!!.onItemClick(v, item, position)
         })
-        
+    
+    
         holder.cardView.setOnLongClickListener(OnLongClickListener { v ->
             if (onClickListener == null) return@OnLongClickListener false
             onClickListener!!.onItemLongClick(v, item, position)

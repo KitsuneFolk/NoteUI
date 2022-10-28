@@ -41,8 +41,97 @@
             app:layout_constraintEnd_toEndOf="@+id/note_header_editText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/note_header_editText"
-            tools:text="@string/lorem_ipsum" />
+            tools:text="@string/lorem_ipsumX2" />
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/noteActionCardView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:backgroundTint="?android:attr/colorPrimary"
+            android:visibility="visible"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <LinearLayout
+                android:id="@+id/noteActionLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/noteActionChangeForegroundTextColor"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_note_change_text_foreground"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/noteActionChangeTextBackgroundColor"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="50dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_note_change_text_background"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/noteActionColorsLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:visibility="gone">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/noteActionColorsWhiteCardView"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:backgroundTint="@color/white"
+                    app:cardCornerRadius="10dp" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/noteActionColorsRedCardView"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="50dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:backgroundTint="@color/red"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/noteActionColorsBlueCardView"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="50dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:backgroundTint="@color/blue"
+                    app:cardCornerRadius="10dp" />
+
+                <ImageButton
+                    android:id="@+id/noteActionColorsCloseImageButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_baseline_close_24" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

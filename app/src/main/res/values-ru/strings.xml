@@ -27,4 +27,8 @@
     <string name="content">Содержание…</string>
     <string name="addFabDescription">Добавить новую заметку</string>
 
+    <!-- MainActivity strings  -->
+    <string name="snackbar_undo_title">Было удалено заметок: </string>
+    <string name="snackbar_undo">Отменить удаление</string>
+
 </resources>

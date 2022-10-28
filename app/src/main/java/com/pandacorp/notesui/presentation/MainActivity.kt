@@ -12,10 +12,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import com.pandacorp.domain.models.ListItem
 import com.pandacorp.notesui.R
+import com.pandacorp.notesui.databinding.ActivityMainBinding
 import com.pandacorp.notesui.presentation.adapter.CustomAdapter
 import com.pandacorp.notesui.presentation.settings.SettingsActivity
 import com.pandacorp.notesui.utils.ThemeHandler
@@ -27,16 +28,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 
-
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var binding: ActivityMainBinding
+    
     lateinit var customAdapter: CustomAdapter
     private var actionModeCallback: ActionModeCallback = ActionModeCallback()
     private var actionMode: ActionMode? = null
-    
-    private lateinit var addFAB: FloatingActionButton
     
     //Clean Architecture
     private val vm: MainViewModel by viewModel()
@@ -45,25 +44,18 @@ class MainActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()) {
         
         try {
-            //Here we update changed note.
+            Log.d(TAG, "resultLauncher: ")
             vm.update()
             customAdapter.notifyDataSetChanged()
-            // val clickedItemPosition =
-            //     it.data!!.getIntExtra(NoteActivity.intentNotePositionInAdapter, -1)
-            // if (clickedItemPosition == -1) throw Exception("clickedItemPosition cannot be -1")
-            // val header = it.data!!.getStringExtra(NoteActivity.intentNoteHeader)
-            // val content = it.data!!.getStringExtra(NoteActivity.intentNoteContent)
-            // vm.update(clickedItemPosition, header!!, content!!)
-            // customAdapter.notifyItemChanged(clickedItemPosition)
-            
-            // Log.d(TAG, "updateCustomAdapterLauncher: note.header = $header")
-            // Log.d(TAG, "updateCustomAdapterLauncher: note.content = $content")
             
             
         } catch (e: Exception) {
-            //If NoteActivity screen was rotated and user backed to MainActivity
-            // then we do nothing, we don't notify adapter about changes because in OnCreate
-            // it will be created again.
+            /**
+             * If NoteActivity screen was rotated and user backed to MainActivity
+             * then we do nothing, we don't notify adapter about changes because in OnCreate
+             * it will be created again.
+             *
+             **/
         }
         
         
@@ -83,14 +75,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         ExceptionHandler.setupExceptionHandler()
         ThemeHandler.load(this)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initViews()
         
     }
     
     private fun initViews() {
         CoroutineScope(Dispatchers.Main).launch {
-            
             initRecyclerView()
             initAddFloatingActionButton()
         }
@@ -98,8 +90,7 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun initAddFloatingActionButton() {
-        addFAB = findViewById(R.id.addFAB)
-        addFAB.setOnClickListener {
+        binding.addFAB.setOnClickListener {
             val listItem = ListItem(content = "", header = "")
             // val position = 0
             // customAdapter.notifyItemInserted(position)
@@ -117,8 +108,7 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun initRecyclerView() {
-        recyclerView = findViewById(R.id.recycler_view)
-        customAdapter = CustomAdapter(this, mutableListOf<ListItem>())
+        customAdapter = CustomAdapter(this, mutableListOf())
         customAdapter.setOnClickListener(object : CustomAdapter.OnClickListener {
             override fun onItemClick(view: View?, item: ListItem, position: Int) {
                 if (customAdapter.getSelectedItemCount() > 0) {
@@ -132,17 +122,17 @@ class MainActivity : AppCompatActivity() {
             }
             
             override fun onItemLongClick(view: View?, item: ListItem, position: Int) {
+                Log.d(TAG, "onItemLongClick: position = $position")
                 enableActionMode(position)
                 
             }
         })
-        recyclerView.adapter = customAdapter
-        registerForContextMenu(recyclerView)
+        binding.recyclerView.adapter = customAdapter
+        registerForContextMenu(binding.recyclerView)
         vm.notesList.observe(this) {
             customAdapter.setList(it)
             
         }
-        
         
     }
     
@@ -178,8 +168,8 @@ class MainActivity : AppCompatActivity() {
     private fun filter(text: String) {
         
         val filteredList: ArrayList<ListItem> = ArrayList<ListItem>()
-
-        vm.notesList.observe(this){
+        
+        vm.notesList.observe(this) {
             for (item in it) {
                 if (item.header.lowercase().contains(text.lowercase(Locale.getDefault()))) {
                     filteredList.add(item)
@@ -187,7 +177,7 @@ class MainActivity : AppCompatActivity() {
             }
             if (filteredList.isEmpty()) {
                 customAdapter.filterList(filteredList)
-        
+                
             } else {
                 customAdapter.filterList(filteredList)
             }
@@ -226,17 +216,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
     
-    private fun removeSelectedItems() {
+    private fun removeSelectedItems(): Int {
         val selectedItemPositions: List<Int> = customAdapter.getSelectedItems()
         Log.d(
                 TAG,
                 "removeSelectedItems: selectedItemPositions.size = ${selectedItemPositions.size}")
-        if (selectedItemPositions.isEmpty()) return
+        if (selectedItemPositions.isEmpty()) {
+            return 0
+        }
         for (i in selectedItemPositions) {
             vm.removeNote(customAdapter.getItem(i))
             
         }
         customAdapter.notifyDataSetChanged()
+        return selectedItemPositions.size
     }
     
     //This class needed for creating multiselect on RecyclerView
@@ -255,7 +248,7 @@ class MainActivity : AppCompatActivity() {
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             val id = item.itemId
             if (id == R.id.recyclerview_menu_delete) {
-                removeSelectedItems()
+                initSnackBar()
                 mode.finish()
                 return true
             }
@@ -274,8 +267,33 @@ class MainActivity : AppCompatActivity() {
             
         }
         
+        private fun initSnackBar() {
+            removeSelectedItems()
+            val removedItemsCount = removeSelectedItems()
+            if (removedItemsCount == 0) return
+            val snackbar_undo_title = resources.getText(R.string.snackbar_undo_title)
+                .toString() + removedItemsCount.toString()
+            // val snackbar_undo_button_title = resources.getText(R.string.snackbar_undo)
+            val snackBarDuration = 4_000
+            val snackBar = Snackbar.make(
+                    binding.addFAB,
+                    snackbar_undo_title,
+                    snackBarDuration)
+            
+            // snackBar.setAction(snackbar_undo_button_title) {
+            //
+            // }
+            snackBar.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
+            val colorAccent = ContextCompat.getColor(
+                    this@MainActivity,
+                    ThemeHandler.getThemeColor(this@MainActivity, ThemeHandler.ACCENT_COLOR))
+            snackBar.setActionTextColor(colorAccent)
+            snackBar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
+            snackBar.show()
+        }
     }
     
+    //This class needed for coroutines logs work on Xiaomi devices
     object ExceptionHandler {
         fun setupExceptionHandler() {
             val defaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
