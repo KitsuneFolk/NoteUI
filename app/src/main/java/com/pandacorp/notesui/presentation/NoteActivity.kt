@@ -6,39 +6,49 @@ import android.text.Spannable
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
-import android.view.Gravity
-import android.view.MenuItem
-import android.view.View
-import androidx.annotation.ColorRes
+import android.view.*
+import androidx.annotation.ColorInt
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.toSpannable
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
-import com.pandacorp.domain.models.ListItem
-import com.pandacorp.domain.usecases.GetDatabaseItemByAdapterPositionUseCase
-import com.pandacorp.domain.usecases.GetDatabaseItemsUseCase
-import com.pandacorp.domain.usecases.UpdateItemInDatabaseUseCase
+import com.pandacorp.domain.models.ColorItem
+import com.pandacorp.domain.models.NoteItem
+import com.pandacorp.domain.usecases.notes.GetNotesUseCase
+import com.pandacorp.domain.usecases.notes.UpdateNoteUseCase
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.databinding.ActivityNoteBinding
+import com.pandacorp.notesui.presentation.adapter.ColorsRecyclerAdapter
+import com.pandacorp.notesui.utils.ThemeHandler
+import com.pandacorp.notesui.utils.Utils
+import com.pandacorp.notesui.viewModels.NoteViewModel
+import com.skydoves.colorpickerview.ColorPickerDialog
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class NoteActivity : AppCompatActivity() {
     private val TAG = "NoteActivity"
     private lateinit var binding: ActivityNoteBinding
     
-    private val getDatabaseItemByAdapterPositionUseCase: GetDatabaseItemByAdapterPositionUseCase by inject()
-    private val getDatabaseItemsUseCase: GetDatabaseItemsUseCase by inject()
-    private val updateItemInDatabaseUseCase: UpdateItemInDatabaseUseCase by inject()
+    private val getNotesUseCase: GetNotesUseCase by inject()
+    private val updateNoteUseCase: UpdateNoteUseCase by inject()
     
-    private lateinit var databaseList: MutableList<ListItem>
-    private lateinit var note: ListItem
+    private val vm: NoteViewModel by viewModel()
+    
+    private lateinit var databaseList: MutableList<NoteItem>
+    private lateinit var note: NoteItem
     private var notePositionInAdapter: Int? = null
+    
+    lateinit var colorsRecyclerAdapter: ColorsRecyclerAdapter
+    private var colorsList = mutableListOf<ColorItem>()
     
     private enum class ClickedActionButtonState {
         NULL,
@@ -51,7 +61,9 @@ class NoteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNoteBinding.inflate(layoutInflater)
+        ThemeHandler.load(this)
         setContentView(binding.root)
+        Utils.setupExceptionHandler()
         supportActionBar!!.setHomeButtonEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         CoroutineScope(Dispatchers.Main).launch {
@@ -63,14 +75,18 @@ class NoteActivity : AppCompatActivity() {
     }
     
     private suspend fun initViews() {
+        // Change action menu linear layout background tint, don't change background,
+        // there is drawable with corners.
+        binding.noteActionParent.backgroundTintList = ResourcesCompat.getColorStateList(
+                resources,
+                ThemeHandler.getThemeColor(this, ThemeHandler.PRIMARY_COLOR),
+                null)
         databaseList = withContext(Dispatchers.IO) {
-            getDatabaseItemsUseCase()
+            getNotesUseCase()
         }
+        //Here we get note by position, which we get from intent.
         val lastNote = databaseList.size - 1
         notePositionInAdapter = intent.getIntExtra(intentNotePositionInAdapter, lastNote)
-        
-        Log.d(TAG, "onCreate: notePositionInAdapter = $notePositionInAdapter")
-        
         note = databaseList[notePositionInAdapter!!]
         
         initEditTexts()
@@ -79,8 +95,9 @@ class NoteActivity : AppCompatActivity() {
     }
     
     private fun initEditTexts() {
-        binding.noteHeaderEditText.setText(Html.fromHtml(note.header))
-        Log.d(TAG, "initViews: note.content = ${Html.fromHtml(note.content)}")
+        val headerTextWithoutNewLines = correctHTML(note.header)
+        binding.noteHeaderEditText.setText(Html.fromHtml(headerTextWithoutNewLines))
+        Log.d(TAG, "initEditTexts: headerTextWithoutNewLines = $headerTextWithoutNewLines")
         binding.noteContentEditText.setText(Html.fromHtml(note.content))
         
         initActionBottomMenu()
@@ -89,15 +106,17 @@ class NoteActivity : AppCompatActivity() {
     }
     
     private fun initActionBottomMenu() {
+        initRecyclerView()
         binding.noteActionChangeForegroundTextColor.setOnClickListener {
             clickedActionButtonState = ClickedActionButtonState.FOREGROUND_COLOR
-    
+            
             //Slide Animation
             val animation = Slide(Gravity.BOTTOM)
             animation.duration = 400
             animation.addTarget(R.id.noteActionLinearLayout)
             animation.addTarget(R.id.noteActionColorsLinearLayout)
-            TransitionManager.beginDelayedTransition(binding.noteActionCardView, animation)
+            animation.addTarget(R.id.noteActionColorsRecyclerView)
+            TransitionManager.beginDelayedTransition(binding.noteActionParent, animation)
             binding.noteActionLinearLayout.visibility = View.GONE
             binding.noteActionColorsLinearLayout.visibility = View.VISIBLE
             
@@ -110,55 +129,30 @@ class NoteActivity : AppCompatActivity() {
             animation.duration = 400
             animation.addTarget(R.id.noteActionLinearLayout)
             animation.addTarget(R.id.noteActionColorsLinearLayout)
-            TransitionManager.beginDelayedTransition(binding.noteActionCardView, animation)
+            animation.addTarget(R.id.noteActionColorsRecyclerView)
+            TransitionManager.beginDelayedTransition(binding.noteActionParent, animation)
             binding.noteActionLinearLayout.visibility = View.GONE
             binding.noteActionColorsLinearLayout.visibility = View.VISIBLE
-    
             
             
         }
         
-        binding.noteActionColorsWhiteCardView.setOnClickListener {
+        binding.noteActionColorsRemoveImageView.setOnClickListener {
             val startSelection = binding.noteContentEditText.selectionStart
-            val endSelection: Int = binding.noteContentEditText.selectionEnd
+            val endSelection = binding.noteContentEditText.selectionEnd
             when (clickedActionButtonState) {
                 ClickedActionButtonState.NULL ->
                     throw Exception("clickedActionButtonState cannot be null when color buttons were clicked.")
                 ClickedActionButtonState.FOREGROUND_COLOR ->
-                    changeTextForegroundColor(R.color.white, startSelection, endSelection)
+                    //Null color means remove
+                    changeTextForegroundColor(null, startSelection, endSelection)
                 ClickedActionButtonState.BACKGROUND_COLOR ->
-                    changeTextBackgroundColor(R.color.white, startSelection, endSelection)
+                    //Null color means remove
+                    changeTextBackgroundColor(null, startSelection, endSelection)
                 
             }
+            binding.noteContentEditText.setSelection(startSelection, endSelection)
             
-            
-        }
-        binding.noteActionColorsRedCardView.setOnClickListener {
-            val startSelection = binding.noteContentEditText.selectionStart
-            val endSelection: Int = binding.noteContentEditText.selectionEnd
-            when (clickedActionButtonState) {
-                ClickedActionButtonState.NULL ->
-                    throw Exception("clickedActionButtonState cannot be null when color buttons were clicked.")
-                ClickedActionButtonState.FOREGROUND_COLOR ->
-                    changeTextForegroundColor(R.color.red, startSelection, endSelection)
-                ClickedActionButtonState.BACKGROUND_COLOR ->
-                    changeTextBackgroundColor(R.color.red, startSelection, endSelection)
-                
-            }
-            
-        }
-        binding.noteActionColorsBlueCardView.setOnClickListener {
-            val startSelection = binding.noteContentEditText.selectionStart
-            val endSelection: Int = binding.noteContentEditText.selectionEnd
-            when (clickedActionButtonState) {
-                ClickedActionButtonState.NULL ->
-                    throw Exception("clickedActionButtonState cannot be null when color buttons were clicked.")
-                ClickedActionButtonState.FOREGROUND_COLOR ->
-                    changeTextForegroundColor(R.color.blue, startSelection, endSelection)
-                ClickedActionButtonState.BACKGROUND_COLOR ->
-                    changeTextBackgroundColor(R.color.blue, startSelection, endSelection)
-                
-            }
             
         }
         binding.noteActionColorsCloseImageButton.setOnClickListener {
@@ -169,9 +163,80 @@ class NoteActivity : AppCompatActivity() {
             animation.duration = 400
             animation.addTarget(R.id.noteActionLinearLayout)
             animation.addTarget(R.id.noteActionColorsLinearLayout)
-            TransitionManager.beginDelayedTransition(binding.noteActionCardView, animation)
+            animation.addTarget(R.id.noteActionColorsRecyclerView)
+            TransitionManager.beginDelayedTransition(binding.noteActionParent, animation)
             binding.noteActionColorsLinearLayout.visibility = View.GONE
             binding.noteActionLinearLayout.visibility = View.VISIBLE
+            
+        }
+        
+    }
+    
+    private fun initRecyclerView() {
+        colorsRecyclerAdapter = ColorsRecyclerAdapter(this, mutableListOf())
+        colorsRecyclerAdapter.setOnClickListener(object : ColorsRecyclerAdapter.OnClickListener {
+            override fun onItemClick(view: View?, colorItem: ColorItem, position: Int) {
+                val startPosition = binding.noteContentEditText.selectionStart
+                val endPosition = binding.noteContentEditText.selectionEnd
+                if (colorItem.type == ColorItem.ADD) {
+                    //Add button clicked
+                    ColorPickerDialog.Builder(this@NoteActivity)
+                        .setTitle(resources.getString(R.string.alert_dialog_add_color))
+                        .setPreferenceName("MyColorPickerDialog")
+                        .setPositiveButton(R.string.select,
+                                ColorEnvelopeListener { envelope, fromUser ->
+                                    val newColorItem = ColorItem(color = envelope.color)
+                                    vm.addColor(newColorItem)
+                                    Log.d(TAG, "onItemClick: colorItem.id = ${newColorItem.id}")
+                                    
+                                })
+                        .setNegativeButton(
+                                getString(android.R.string.cancel)
+                        ) { dialogInterface, i -> dialogInterface.dismiss() }
+                        .attachAlphaSlideBar(true)
+                        .attachBrightnessSlideBar(true)
+                        .setBottomSpace(12) // set a bottom space between the last slidebar and buttons.
+                        .show()
+                    binding.noteContentEditText.setSelection(startPosition, endPosition)
+                    return
+                }
+                when (clickedActionButtonState) {
+                    ClickedActionButtonState.NULL -> {}
+                    ClickedActionButtonState.FOREGROUND_COLOR -> {
+                        changeTextForegroundColor(colorItem.color, startPosition, endPosition)
+                    }
+                    ClickedActionButtonState.BACKGROUND_COLOR -> {
+                        changeTextBackgroundColor(colorItem.color, startPosition, endPosition)
+                    }
+                }
+                binding.noteContentEditText.setSelection(startPosition, endPosition)
+                
+            }
+            
+            override fun onItemLongClick(view: View?, colorItem: ColorItem, position: Int) {
+                Log.d(TAG, "onItemLongClick: color id = ${colorItem.id}")
+                if (colorItem.type != ColorItem.COLOR) return
+                AlertDialog.Builder(this@NoteActivity)
+                    .setTitle(R.string.confirm_color_remove)
+                    .setPositiveButton(R.string.remove) { dialog, which ->
+                        Log.d(TAG, "onItemLongClick: colorItem.id = ${colorItem.id}")
+                        vm.removeColor(colorItem)
+                        colorsRecyclerAdapter.notifyDataSetChanged()
+                        
+                        
+                    }
+                    .setNegativeButton(getString(android.R.string.cancel)) { dialog, which ->
+                        dialog.dismiss()
+                        
+                    }
+                    .show()
+                
+            }
+        })
+        
+        binding.noteActionColorsRecyclerView.adapter = colorsRecyclerAdapter
+        vm.colorsList.observe(this@NoteActivity) {
+            colorsRecyclerAdapter.setList(it)
             
         }
         
@@ -181,14 +246,11 @@ class NoteActivity : AppCompatActivity() {
      * This method changes selected text foreground color of noteContentEditText
      */
     private fun changeTextForegroundColor(
-        @ColorRes foregroundResColor: Int,
+        @ColorInt foregroundColor: Int?,
         startPosition: Int,
         endPosition: Int
     ) {
         val resultText: Spannable = binding.noteContentEditText.text.toSpannable()
-        
-        val foregroundColor = ContextCompat.getColor(this, foregroundResColor)
-        
         
         /*
           Here we get spanned text of resultText by startPosition and endPosition and then
@@ -200,14 +262,14 @@ class NoteActivity : AppCompatActivity() {
                 startPosition, endPosition,
                 ForegroundColorSpan::class.java)
         repeat(spans.count()) {
-            Log.d(TAG, "changeTextColor: removed span at position $it")
-            Log.d(TAG, "changeTextColor: removed span = ${spans[it]}")
             resultText.removeSpan(spans[it])
         }
         
-        // Here we check if foregroundResColor != R.color.white then create span,
-        // else do nothing.
-        if (foregroundResColor != R.color.white) {
+        /**
+         * Here we check if foregroundResColor != R.color.white then create span,
+         * else do nothing.
+         */
+        if (foregroundColor != null) {
             resultText.setSpan(
                     ForegroundColorSpan(foregroundColor),
                     startPosition,
@@ -215,7 +277,6 @@ class NoteActivity : AppCompatActivity() {
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             
         }
-        Log.d(TAG, "changeTextColor: html = ${Html.toHtml(resultText)}")
         binding.noteContentEditText.setText(resultText)
         
     }
@@ -224,13 +285,11 @@ class NoteActivity : AppCompatActivity() {
      * This method changes selected text background color of noteContentEditText
      */
     private fun changeTextBackgroundColor(
-        @ColorRes backgroundResColor: Int,
+        @ColorInt backgroundColor: Int?,
         startPosition: Int,
         endPosition: Int
     ) {
         val resultText: Spannable = binding.noteContentEditText.text.toSpannable()
-        
-        val backgroundColor = ContextCompat.getColor(this, backgroundResColor)
         
         /*
          Here we get spanned text of resultText by startPosition and endPosition and then
@@ -243,8 +302,6 @@ class NoteActivity : AppCompatActivity() {
                 startPosition, endPosition,
                 BackgroundColorSpan::class.java)
         repeat(spans.count()) {
-            Log.d(TAG, "changeBackgroundTextColor: removed span at position $it")
-            Log.d(TAG, "changeBackgroundTextColor: removed span = ${spans[it]}")
             resultText.removeSpan(spans[it])
         }
         /**
@@ -252,7 +309,7 @@ class NoteActivity : AppCompatActivity() {
          * else do nothing.
          *
          **/
-        if (backgroundResColor != R.color.white) {
+        if (backgroundColor != null) {
             resultText.setSpan(
                     BackgroundColorSpan(backgroundColor),
                     startPosition,
@@ -260,49 +317,90 @@ class NoteActivity : AppCompatActivity() {
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             
         }
-        Log.d(TAG, "changeTextColor: html = ${Html.toHtml(resultText)}")
         binding.noteContentEditText.setText(resultText)
         
     }
     
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            updateNote()
             finish()
         }
         return true
+    }
+    
+    /**
+     * @param rawHTML HTML with spaces and new lines.
+     * @return HTML String without <p> tag, without <u> tag,
+     * without space at the end of the String.
+     * @exception e if there is no tags, that need to replace.
+     */
+    private fun correctHTML(rawHTML: String): String {
+        val newLineFirstExpressionToRemove = "<p dir=\"ltr\">"
+        val newLineSecondExpressionToRemove = "</p>"
+        val underLineFirstExpressionToRemove = "<u>"
+        val underLineSecondExpressionToRemove = "</u>"
+        val b = StringBuilder(rawHTML)
+        
+        try {
+            b.replace(
+                    rawHTML.lastIndexOf(underLineFirstExpressionToRemove),
+                    rawHTML.lastIndexOf(underLineFirstExpressionToRemove) + underLineFirstExpressionToRemove.length,
+                    "")
+            
+        } catch (e: Exception) {
+        }
+        try {
+            b.replace(
+                    b.toString().lastIndexOf(underLineSecondExpressionToRemove),
+                    b.toString()
+                        .lastIndexOf(underLineSecondExpressionToRemove) + underLineSecondExpressionToRemove.length,
+                    "")
+        } catch (e: Exception) {
+        }
+        try {
+            b.replace(
+                    b.toString().lastIndexOf(newLineFirstExpressionToRemove),
+                    b.toString()
+                        .lastIndexOf(newLineFirstExpressionToRemove) + newLineFirstExpressionToRemove.length,
+                    "")
+            
+        } catch (e: Exception) {
+        }
+        try {
+            b.replace(
+                    b.toString().lastIndexOf(newLineSecondExpressionToRemove),
+                    b.toString()
+                        .lastIndexOf(newLineSecondExpressionToRemove) + newLineSecondExpressionToRemove.length,
+                    "")
+        } catch (e: Exception) {
+        }
+        
+        
+        return b.toString().trim()
+        
     }
     
     private fun updateNote() {
         val headerSpannableText = binding.noteHeaderEditText.text.toSpannable()
         val contentSpannableText = binding.noteContentEditText.text.toSpannable()
         
-        note.header = Html.toHtml(headerSpannableText)
-        note.content = Html.toHtml(contentSpannableText)
+        note.header = correctHTML(Html.toHtml(headerSpannableText))
+        note.content = correctHTML(Html.toHtml(contentSpannableText))
         
-        Log.d(TAG, "setIntentResult: notePositionInAdapter = $notePositionInAdapter")
-        Log.d(TAG, "updateNote: header = ${note.header} ")
-        Log.d(TAG, "updateNote: content = ${note.content} ")
+        
         CoroutineScope(Dispatchers.IO).launch {
-            Log.d(TAG, "updateNote: item.header = ${note.header}")
-            Log.d(TAG, "updateNote: item.content = ${note.content}")
-            updateItemInDatabaseUseCase(note)
+            updateNoteUseCase(note)
             
         }
         
-    }
-    
-    override fun onBackPressed() {
-        Log.d(TAG, "onBackPressed: ")
-        updateNote()
-        super.onBackPressed()
         
     }
     
-    override fun onDestroy() {
-        Log.d(TAG, "onDestroy: ")
+    override fun onPause() {
+        Log.d(TAG, "onPause: ")
+        binding.noteHeaderEditText.isSelected = false
         updateNote()
-        super.onDestroy()
+        super.onPause()
     }
     
     companion object {

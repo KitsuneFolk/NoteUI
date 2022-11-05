@@ -1,22 +1,19 @@
 package com.pandacorp.data.database
 
 import androidx.room.*
-import com.pandacorp.domain.models.ListItem
+import com.pandacorp.domain.models.NoteItem
 
 @Dao
 interface NoteDao {
-    @Query("SELECT * FROM listItem")
-    fun getAll(): MutableList<ListItem>
-    
-    @Query("SELECT * FROM listItem WHERE id IN (:userIds)")
-    fun loadAllByIds(userIds: IntArray): List<ListItem>
+    @Query("SELECT * FROM noteItem")
+    fun getAll(): MutableList<NoteItem>
     
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun update(listItem: ListItem)
+    fun update(noteItem: NoteItem)
     
     @Insert
-    fun insert(listItem: ListItem)
+    fun insert(noteItem: NoteItem)
     
     @Delete
-    fun remove(listItem: ListItem)
+    fun remove(noteItem: NoteItem)
 }

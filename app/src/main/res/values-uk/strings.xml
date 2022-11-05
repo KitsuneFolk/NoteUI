@@ -26,9 +26,14 @@
     <string name="header">Заголовок…</string>
     <string name="content">Зміст…</string>
     <string name="addFabDescription">Добавити новий нотаток</string>
+    <string name="alert_dialog_add_color">Додати новий колір</string>
+    <string name="remove">Видалити</string>
+    <string name="confirm_color_remove">Ви впевненi що хочете видалити колiр?</string>
 
     <!-- MainActivity strings  -->
     <string name="snackbar_undo_title">Було видалено нотаткiв: </string>
     <string name="snackbar_undo">Вiдмiнити видалення</string>
 
+    <string name="dismiss">Вiдхилити</string>
+    <string name="select">Обрати</string>
 </resources>

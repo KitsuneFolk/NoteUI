@@ -13,15 +13,15 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.util.size
 import androidx.recyclerview.widget.RecyclerView
-import com.pandacorp.domain.models.ListItem
+import com.pandacorp.domain.models.NoteItem
 import com.pandacorp.notesui.R
 
 
-class CustomAdapter(
+class NotesRecyclerAdapter(
     private var context: Context,
-    private var itemsList: MutableList<ListItem>
-) : RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
-    private val TAG = "CustomAdapter"
+    private var itemsList: MutableList<NoteItem>
+) : RecyclerView.Adapter<NotesRecyclerAdapter.ViewHolder>() {
+    private val TAG = "NotesRecyclerAdapter"
     
     private var onClickListener: OnClickListener? = null
     
@@ -31,30 +31,30 @@ class CustomAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         
         val itemView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_item, parent, false)
+            .inflate(R.layout.note_item, parent, false)
         return ViewHolder(itemView)
     }
     
     override fun getItemCount() = itemsList.size
     
-    fun getItem(position: Int): ListItem = itemsList[position]
+    fun getItem(position: Int): NoteItem = itemsList[position]
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemsList[position]
         
         holder.header.text = Html.fromHtml(item.header)
+        
         holder.content.text = Html.fromHtml(item.content)
         Log.d(TAG, "onBindViewHolder: header.text = ${holder.header.text}")
         Log.d(TAG, "onBindViewHolder: content.text = ${holder.content.text}")
-    
-        holder.cardView.setActivated(selectedItemsList.get(position, false))
+        
+        holder.cardView.isActivated = selectedItemsList.get(position, false)
         
         holder.cardView.setOnClickListener(View.OnClickListener { v ->
             if (onClickListener == null) return@OnClickListener
             onClickListener!!.onItemClick(v, item, position)
         })
-    
-    
+        
         holder.cardView.setOnLongClickListener(OnLongClickListener { v ->
             if (onClickListener == null) return@OnLongClickListener false
             onClickListener!!.onItemLongClick(v, item, position)
@@ -65,6 +65,7 @@ class CustomAdapter(
         
     }
     
+    //Selection methods
     private fun toggleCheckedIcon(holder: ViewHolder, position: Int) {
         if (selectedItemsList.get(position, false)) {
             holder.checkedImage.visibility = View.VISIBLE
@@ -74,11 +75,9 @@ class CustomAdapter(
             if (currentSelectedIndex == position) resetCurrentIndex()
         }
     }
-    
     private fun resetCurrentIndex() {
         currentSelectedIndex = -1
     }
-    
     fun toggleSelection(pos: Int) {
         currentSelectedIndex = pos
         if (selectedItemsList.get(pos, false)) {
@@ -88,16 +87,13 @@ class CustomAdapter(
         }
         notifyItemChanged(pos)
     }
-    
     fun clearSelections() {
         selectedItemsList.clear()
         notifyDataSetChanged()
     }
-    
     fun getSelectedItemCount(): Int {
         return selectedItemsList.size()
     }
-    
     fun getSelectedItems(): List<Int> {
         val items: MutableList<Int> = ArrayList(selectedItemsList.size())
         Log.d(TAG, "getSelectedItems: selectedItemsList.size = ${selectedItemsList.size()}")
@@ -106,7 +102,6 @@ class CustomAdapter(
         }
         return items
     }
-    
     fun selectAllItems() {
         Log.d(TAG, "selectAllItems: start selectedItemsList.size = ${selectedItemsList.size}")
         if (selectedItemsList.size == itemsList.size) {
@@ -127,16 +122,7 @@ class CustomAdapter(
         
     }
     
-    fun removeItem(position: Int) {
-        itemsList.removeAt(position)
-        
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, itemsList.size)
-        currentSelectedIndex = -1
-        
-    }
-    
-    fun filterList(filterList: ArrayList<ListItem>) {
+    fun filterList(filterList: ArrayList<NoteItem>) {
         itemsList = filterList
         notifyDataSetChanged()
     }
@@ -144,7 +130,8 @@ class CustomAdapter(
     fun setOnClickListener(onClickListener: OnClickListener?) {
         this.onClickListener = onClickListener
     }
-    fun setList(itemsList: MutableList<ListItem>){
+    
+    fun setList(itemsList: MutableList<NoteItem>) {
         this.itemsList = itemsList
         notifyDataSetChanged()
     }
@@ -160,8 +147,8 @@ class CustomAdapter(
     }
     
     interface OnClickListener {
-        fun onItemClick(view: View?, item: ListItem, position: Int)
-        fun onItemLongClick(view: View?, item: ListItem, position: Int)
+        fun onItemClick(view: View?, item: NoteItem, position: Int)
+        fun onItemLongClick(view: View?, item: NoteItem, position: Int)
     }
     
 }

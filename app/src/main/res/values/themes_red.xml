@@ -4,61 +4,27 @@
     <style name="RedTheme" parent="Theme.Material3.Dark">
 
         <item name="android:colorBackground">@color/RedTheme_Background</item>
-        <item name="colorPrimary">@color/RedTheme_colorPrimaryDark</item>
+        <item name="colorPrimary">@color/RedTheme_colorPrimary</item>
         <item name="colorPrimaryDark">@color/RedTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/RedTheme_colorAccent</item>
+        <item name="android:statusBarColor">@color/RedTheme_colorPrimary</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorSecondary">@color/RedTheme_textColorSecondary</item>
         <item name="android:textColorHint">@color/white</item>
         <item name="android:navigationBarColor">@color/RedTheme_colorPrimary</item>
         <!--  white color for back arrow  -->
         <item name="colorControlNormal">@color/white</item>
-        <!--  This color used for Material Action Mode background  -->
+        <!--  This color is used for Material Action Mode background  -->
         <item name="colorSurface">@color/RedTheme_colorPrimary</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
 
-        <item name="buttonStyle">@style/RedTheme_Button</item>
-        <item name="editTextStyle">@style/RedTheme_EditText</item>
-        <item name="drawerArrowStyle">@style/RedTheme_DrawerArrowToggle</item>
-        <item name="alertDialogTheme">@style/RedTheme_AlertDialog</item>
-        <item name="actionBarStyle">@style/RedTheme_ActionBar</item>
+        <item name="buttonStyle">@style/Button</item>
+        <item name="editTextStyle">@style/EditText</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowToggle</item>
+        <item name="alertDialogTheme">@style/MaterialAlertDialog</item>
+        <item name="toolbarStyle">@style/Toolbar</item>
         <item name="snackbarStyle">@style/SnackBarStyle</item>
 
     </style>
-
-    <style name="RedTheme_Button" parent="Widget.AppCompat.Button">
-        <item name="android:background">@color/RedTheme_ButtonColor</item>
-        <item name="color">@color/RedTheme_ButtonColor</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="cornerSize">15dp</item>
-    </style>
-
-    <style name="RedTheme_EditText" parent="Widget.AppCompat.EditText">
-        <item name="android:textColorHint">@color/white</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textColorHighlight">@color/white</item>
-    </style>
-
-    <style name="RedTheme_DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="android:background">@color/white</item>
-        <item name="color">@color/white</item>
-
-    </style>
-
-    <style name="RedTheme_ActionBar" parent="Widget.AppCompat.ActionBar">
-        <item name="android:textColor">@color/white</item>
-        <item name="background">@color/RedTheme_colorPrimaryDark</item>
-    </style>
-
-    <style name="RedTheme_AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <!--  This theme needs for ListPreference background  -->
-        <item name="android:colorBackground">@color/RedTheme_Background</item>
-        <item name="android:textColorSecondary">#FFFFFF</item>
-        <item name="textColorAlertDialogListItem">@color/white</item>
-        <item name="color">@color/RedTheme_Background</item>
-        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
-        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
-    </style>
-
 
 </resources>

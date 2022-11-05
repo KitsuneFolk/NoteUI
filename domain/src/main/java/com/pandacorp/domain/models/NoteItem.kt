@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class ListItem(
-    @PrimaryKey(autoGenerate = true) var id: Int=0,
+data class NoteItem(
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
     @ColumnInfo(name = "header") var header: String,
     @ColumnInfo(name = "content") var content: String)

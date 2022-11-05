@@ -29,9 +29,14 @@
     <string name="header">Header…</string>
     <string name="content">Content…</string>
     <string name="addFabDescription">Add new note</string>
+    <string name="alert_dialog_add_color">Add new color</string>
+    <string name="remove">Remove</string>
+    <string name="confirm_color_remove">Are you sure you want to remove the color?</string>
 
     <!-- MainActivity strings  -->
     <string name="snackbar_undo_title">were removed notes: </string>
     <string name="snackbar_undo">Undo deleting</string>
 
+    <string name="dismiss">Dismiss</string>
+    <string name="select">Select</string>
 </resources>

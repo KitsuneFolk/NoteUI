@@ -17,8 +17,8 @@
             android:layout_weight="0"
             android:gravity="center"
             android:hint="@string/header"
-            android:inputType="textPersonName"
-            android:maxLines="1"
+            android:inputType="text"
+            android:maxLines="12"
             android:minHeight="48dp"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,13 +43,14 @@
             app:layout_constraintTop_toBottomOf="@+id/note_header_editText"
             tools:text="@string/lorem_ipsumX2" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/noteActionCardView"
+        <LinearLayout
+            android:id="@+id/noteActionParent"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:backgroundTint="?android:attr/colorPrimary"
+            android:background="@drawable/linear_layout_rounded_background"
+            android:backgroundTint="?android:colorPrimary"
+            android:orientation="horizontal"
             android:visibility="visible"
-            app:cardCornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -62,7 +63,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="visible">
+                tools:visibility="gone">
 
                 <ImageView
                     android:id="@+id/noteActionChangeForegroundTextColor"
@@ -74,14 +75,14 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <ImageView
                     android:id="@+id/noteActionChangeTextBackgroundColor"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginStart="50dp"
                     android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_note_change_text_background"
-                    />
+                    android:src="@drawable/ic_note_change_text_background" />
             </LinearLayout>
 
             <LinearLayout
@@ -94,44 +95,38 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="gone">
+                tools:visibility="visible">
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/noteActionColorsWhiteCardView"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                <ImageView
+                    android:id="@+id/noteActionColorsRemoveImageView"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="10dp"
                     android:background="?selectableItemBackgroundBorderless"
-                    android:backgroundTint="@color/white"
-                    app:cardCornerRadius="10dp" />
+                    android:src="@drawable/ic_note_action_remove" />
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/noteActionColorsRedCardView"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="50dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:backgroundTint="@color/red"
-                    app:cardCornerRadius="10dp"
-                    app:cardElevation="0dp" />
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/noteActionColorsBlueCardView"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="50dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:backgroundTint="@color/blue"
-                    app:cardCornerRadius="10dp" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/noteActionColorsRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="10"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/color_item" />
 
                 <ImageButton
                     android:id="@+id/noteActionColorsCloseImageButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_baseline_close_24" />
+
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

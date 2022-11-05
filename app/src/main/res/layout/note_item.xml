@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    >
+    android:layout_margin="10dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/list_item_cardView"
@@ -22,23 +21,25 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            >
+            android:layout_margin="5dp">
 
             <TextView
                 android:id="@+id/list_item_header_textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:maxLines="1"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
                 android:textSize="18sp"
+                android:transitionName="headerTextView"
                 app:layout_constraintEnd_toStartOf="@+id/list_item_select_check_image"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Android studio test CATdsmofmosmofmoasrdssdsdsf" />
+                tools:text="Android studio test 1234567891011123414243" />
 
             <TextView
                 android:id="@+id/list_item_content_textview"
@@ -48,10 +49,11 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:ellipsize="end"
-
                 android:gravity="start"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:textSize="14sp"
+                android:transitionName="contentTextView"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/list_item_header_textView"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/list_item_header_textView"
