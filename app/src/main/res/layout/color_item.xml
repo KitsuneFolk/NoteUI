@@ -6,13 +6,13 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/color_item_cardView"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_marginStart="30dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?selectableItemBackgroundBorderless"
-        app:cardCornerRadius="15dp"
+        app:cardCornerRadius="25dp"
         app:cardElevation="0dp" />
 
 </FrameLayout>

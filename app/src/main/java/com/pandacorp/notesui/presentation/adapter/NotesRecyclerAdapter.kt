@@ -1,7 +1,6 @@
 package com.pandacorp.notesui.presentation.adapter
 
 import android.content.Context
-import android.text.Html
 import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
@@ -15,6 +14,7 @@ import androidx.core.util.size
 import androidx.recyclerview.widget.RecyclerView
 import com.pandacorp.domain.models.NoteItem
 import com.pandacorp.notesui.R
+import com.pandacorp.notesui.utils.Utils
 
 
 class NotesRecyclerAdapter(
@@ -41,10 +41,10 @@ class NotesRecyclerAdapter(
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemsList[position]
+    
+        holder.header.text = Utils.jsonToSpannable(item.header)
         
-        holder.header.text = Html.fromHtml(item.header)
-        
-        holder.content.text = Html.fromHtml(item.content)
+        holder.content.text = Utils.jsonToSpannable(item.content)
         Log.d(TAG, "onBindViewHolder: header.text = ${holder.header.text}")
         Log.d(TAG, "onBindViewHolder: content.text = ${holder.content.text}")
         

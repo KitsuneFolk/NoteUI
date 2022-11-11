@@ -1,10 +1,7 @@
 package com.pandacorp.notesui.app
 
 import android.app.Application
-import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
-import com.pandacorp.domain.models.ColorItem
-import com.pandacorp.notesui.R
 import com.pandacorp.notesui.di.appModule
 import com.pandacorp.notesui.di.dataModule
 import com.pandacorp.notesui.di.domainModule
@@ -32,20 +29,8 @@ class App : Application() {
     
     private fun checkIsFirstTime() {
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isFirstTime", true)) {
-            //On first time opened add 3 default colors and add button.
-            val addColorItem =
-                ColorItem(color = R.drawable.ic_add_baseline, type = ColorItem.ADD)
-            val yellowColorItem = ColorItem(
-                    color = ContextCompat.getColor(this, R.color.yellow))
-            val blueColorItem = ColorItem(
-                    color = ContextCompat.getColor(this, R.color.blue))
-            val redColorItem = ColorItem(
-                    color = ContextCompat.getColor(this, R.color.red))
-            vm.addColor(addColorItem)
-            vm.addColor(yellowColorItem)
-            vm.addColor(blueColorItem)
-            vm.addColor(redColorItem)
             
+            vm.addBasicColors(this)
             
             PreferenceManager.getDefaultSharedPreferences(this).edit()
                 .putBoolean("isFirstTime", false).apply()

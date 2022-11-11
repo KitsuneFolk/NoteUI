@@ -18,14 +18,15 @@
         <!--  This color are used for Material Action Mode background  -->
         <item name="colorSurface">@color/BlueTheme_colorPrimary</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
-
         <item name="colorButton">@color/BlueTheme_ButtonColor</item>
+
         <item name="buttonStyle">@style/Button</item>
         <item name="editTextStyle">@style/EditText</item>
         <item name="toolbarStyle">@style/Toolbar</item>
         <item name="alertDialogTheme">@style/MaterialAlertDialog</item>
         <item name="drawerArrowStyle">@style/DrawerArrowToggle</item>
         <item name="snackbarStyle">@style/SnackBarStyle</item>
+
     </style>
 
     <style name="Button" parent="Widget.Material3.Button">
@@ -39,7 +40,6 @@
     <style name="EditText" parent="Widget.AppCompat.EditText">
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorHint">@color/white</item>
-        <item name="android:textColorHighlight">@color/white</item>
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
@@ -67,6 +67,7 @@
 
     <style name="MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog.Centered">
         <item name="android:colorBackground">?android:attr/colorPrimary</item>
+        <item name="background">@drawable/alert_dialog_background</item>
         <item name="textColorAlertDialogListItem">@color/white</item>
         <item name="color">?android:attr/colorPrimary</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>

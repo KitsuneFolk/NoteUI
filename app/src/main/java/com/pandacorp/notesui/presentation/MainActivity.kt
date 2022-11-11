@@ -116,8 +116,8 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     val intent = Intent(this@MainActivity, NoteActivity::class.java)
                     intent.putExtra(NoteActivity.intentNotePositionInAdapter, position)
-                    
                     updateCustomAdapterLauncher.launch(intent)
+                    // overridePendingTransition(R.anim.slide_out_up, R.anim.slide_in_up)
                     
                 }
             }

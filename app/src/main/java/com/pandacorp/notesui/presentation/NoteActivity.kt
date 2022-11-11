@@ -2,12 +2,16 @@ package com.pandacorp.notesui.presentation
 
 import android.os.Bundle
 import android.text.Html
+import android.text.Layout
 import android.text.Spannable
+import android.text.style.AlignmentSpan
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.*
+import android.widget.EditText
 import androidx.annotation.ColorInt
+import androidx.annotation.GravityInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
@@ -47,7 +51,7 @@ class NoteActivity : AppCompatActivity() {
     private lateinit var note: NoteItem
     private var notePositionInAdapter: Int? = null
     
-    lateinit var colorsRecyclerAdapter: ColorsRecyclerAdapter
+    private lateinit var colorsRecyclerAdapter: ColorsRecyclerAdapter
     private var colorsList = mutableListOf<ColorItem>()
     
     private enum class ClickedActionButtonState {
@@ -76,37 +80,78 @@ class NoteActivity : AppCompatActivity() {
     
     private suspend fun initViews() {
         // Change action menu linear layout background tint, don't change background,
-        // there is drawable with corners.
+        // there is a drawable with corners.
         binding.noteActionParent.backgroundTintList = ResourcesCompat.getColorStateList(
                 resources,
                 ThemeHandler.getThemeColor(this, ThemeHandler.PRIMARY_COLOR),
                 null)
+        
         databaseList = withContext(Dispatchers.IO) {
             getNotesUseCase()
         }
-        //Here we get note by position, which we get from intent.
+        //Here we get note by position what we get from intent.
         val lastNote = databaseList.size - 1
         notePositionInAdapter = intent.getIntExtra(intentNotePositionInAdapter, lastNote)
         note = databaseList[notePositionInAdapter!!]
         
         initEditTexts()
+        initActionBottomMenu()
         
         
     }
     
     private fun initEditTexts() {
-        val headerTextWithoutNewLines = correctHTML(note.header)
-        binding.noteHeaderEditText.setText(Html.fromHtml(headerTextWithoutNewLines))
-        Log.d(TAG, "initEditTexts: headerTextWithoutNewLines = $headerTextWithoutNewLines")
-        binding.noteContentEditText.setText(Html.fromHtml(note.content))
         
-        initActionBottomMenu()
+        val headerSpannable = Utils.jsonToSpannable(note.header)
+        
+        val contentSpannable = Utils.jsonToSpannable(note.content)
+        binding.noteHeaderEditText.setText(headerSpannable)
+        binding.noteContentEditText.setText(contentSpannable)
         
         
     }
     
     private fun initActionBottomMenu() {
         initRecyclerView()
+        
+        binding.noteActionGravityLeftImageView.setOnClickListener {
+            val startSelection = binding.noteContentEditText.selectionStart
+            val endSelection = binding.noteContentEditText.selectionEnd
+            changeTextGravity(
+                    Gravity.LEFT,
+                    binding.noteContentEditText.selectionStart)
+            binding.noteContentEditText.setSelection(startSelection, endSelection)
+        }
+        binding.noteActionGravityCenterImageView.setOnClickListener {
+            val startSelection = binding.noteContentEditText.selectionStart
+            val endSelection = binding.noteContentEditText.selectionEnd
+            changeTextGravity(
+                    Gravity.CENTER,
+                    binding.noteContentEditText.selectionStart)
+            binding.noteContentEditText.setSelection(startSelection, endSelection)
+            
+        }
+        binding.noteActionGravityRightImageView.setOnClickListener {
+            val startSelection = binding.noteContentEditText.selectionStart
+            val endSelection = binding.noteContentEditText.selectionEnd
+            changeTextGravity(
+                    Gravity.RIGHT,
+                    binding.noteContentEditText.selectionStart)
+            binding.noteContentEditText.setSelection(startSelection, endSelection)
+            
+        }
+        binding.noteActionGravityCloseImageButton.setOnClickListener {
+            //Slide Animation
+            val animation = Slide(Gravity.BOTTOM)
+            animation.duration = 400
+            animation.addTarget(R.id.noteActionLinearLayout)
+            animation.addTarget(R.id.noteActionGravityLinearLayout)
+            TransitionManager.beginDelayedTransition(binding.noteActionParent, animation)
+            binding.noteActionGravityLinearLayout.visibility = View.GONE
+            binding.noteActionLinearLayout.visibility = View.VISIBLE
+            
+        }
+        
         binding.noteActionChangeForegroundTextColor.setOnClickListener {
             clickedActionButtonState = ClickedActionButtonState.FOREGROUND_COLOR
             
@@ -115,10 +160,20 @@ class NoteActivity : AppCompatActivity() {
             animation.duration = 400
             animation.addTarget(R.id.noteActionLinearLayout)
             animation.addTarget(R.id.noteActionColorsLinearLayout)
-            animation.addTarget(R.id.noteActionColorsRecyclerView)
             TransitionManager.beginDelayedTransition(binding.noteActionParent, animation)
             binding.noteActionLinearLayout.visibility = View.GONE
             binding.noteActionColorsLinearLayout.visibility = View.VISIBLE
+            
+        }
+        binding.noteActionChangeTextGravity.setOnClickListener {
+            //Slide Animation
+            val animation = Slide(Gravity.BOTTOM)
+            animation.duration = 400
+            animation.addTarget(R.id.noteActionLinearLayout)
+            animation.addTarget(R.id.noteActionGravityLinearLayout)
+            TransitionManager.beginDelayedTransition(binding.noteActionParent, animation)
+            binding.noteActionLinearLayout.visibility = View.GONE
+            binding.noteActionGravityLinearLayout.visibility = View.VISIBLE
             
         }
         binding.noteActionChangeTextBackgroundColor.setOnClickListener {
@@ -187,7 +242,6 @@ class NoteActivity : AppCompatActivity() {
                                 ColorEnvelopeListener { envelope, fromUser ->
                                     val newColorItem = ColorItem(color = envelope.color)
                                     vm.addColor(newColorItem)
-                                    Log.d(TAG, "onItemClick: colorItem.id = ${newColorItem.id}")
                                     
                                 })
                         .setNegativeButton(
@@ -214,12 +268,10 @@ class NoteActivity : AppCompatActivity() {
             }
             
             override fun onItemLongClick(view: View?, colorItem: ColorItem, position: Int) {
-                Log.d(TAG, "onItemLongClick: color id = ${colorItem.id}")
                 if (colorItem.type != ColorItem.COLOR) return
-                AlertDialog.Builder(this@NoteActivity)
+                AlertDialog.Builder(this@NoteActivity, R.style.MaterialAlertDialog)
                     .setTitle(R.string.confirm_color_remove)
                     .setPositiveButton(R.string.remove) { dialog, which ->
-                        Log.d(TAG, "onItemLongClick: colorItem.id = ${colorItem.id}")
                         vm.removeColor(colorItem)
                         colorsRecyclerAdapter.notifyDataSetChanged()
                         
@@ -230,6 +282,8 @@ class NoteActivity : AppCompatActivity() {
                         
                     }
                     .show()
+                    .window!!.decorView.setBackgroundResource(R.drawable.alert_dialog_background)
+                
                 
             }
         })
@@ -321,6 +375,60 @@ class NoteActivity : AppCompatActivity() {
         
     }
     
+    /**
+     * This method changes text gravity.
+     */
+    private fun changeTextGravity(
+        @GravityInt gravity: Int,
+        selectionStart: Int
+    ) {
+        val selectedLinePositions =
+            getEditTextSelectedLineTextBySelection(binding.noteContentEditText, selectionStart)
+        
+        val selectedLineStart = selectedLinePositions.first
+        val selectedLineEnd = selectedLinePositions.second
+        
+        val resultText: Spannable = binding.noteContentEditText.text.toSpannable()
+        val spans: Array<AlignmentSpan> = resultText.getSpans(
+                selectedLineStart, selectedLineEnd,
+                AlignmentSpan::class.java)
+        repeat(spans.count()) {
+            resultText.removeSpan(spans[it])
+        }
+        
+        
+        when (gravity) {
+            Gravity.LEFT -> {
+                // If gravity == LEFT, then remove spans and back to normal state, we remove spans
+                // at start, so this should be empty.
+                resultText.setSpan(
+                        AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL),
+                        selectedLineStart,
+                        selectedLineEnd,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+            
+            Gravity.CENTER -> {
+                resultText.setSpan(
+                        (AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER)),
+                        selectedLineStart,
+                        selectedLineEnd,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+            Gravity.RIGHT -> {
+                resultText.setSpan(
+                        AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE),
+                        selectedLineStart,
+                        selectedLineEnd,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                binding.noteContentEditText.setText(resultText)
+            }
+        }
+        Log.d(TAG, "changeTextGravity: span with gravity = ${Html.toHtml(resultText)}")
+        binding.noteContentEditText.setText(resultText)
+    }
+    
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             finish()
@@ -329,77 +437,56 @@ class NoteActivity : AppCompatActivity() {
     }
     
     /**
+     * @return pair of int with start text of line and.
+     */
+    private fun getEditTextSelectedLineTextBySelection(
+        editText: EditText,
+        selectionStart: Int
+    ): Pair<Int, Int> {
+        var selectedLineStart = -1
+        var selectedLineEnd = -1
+        if (selectionStart != -1) {
+            val selectedLine = editText.layout.getLineForOffset(selectionStart)
+            selectedLineStart = editText.layout.getLineStart(selectedLine)
+            selectedLineEnd = editText.layout.getLineEnd(selectedLine)
+        }
+        return Pair(selectedLineStart, selectedLineEnd)
+    }
+    
+    /**
      * @param rawHTML HTML with spaces and new lines.
      * @return HTML String without <p> tag, without <u> tag,
      * without space at the end of the String.
      * @exception e if there is no tags, that need to replace.
      */
-    private fun correctHTML(rawHTML: String): String {
-        val newLineFirstExpressionToRemove = "<p dir=\"ltr\">"
-        val newLineSecondExpressionToRemove = "</p>"
-        val underLineFirstExpressionToRemove = "<u>"
-        val underLineSecondExpressionToRemove = "</u>"
-        val b = StringBuilder(rawHTML)
-        
-        try {
-            b.replace(
-                    rawHTML.lastIndexOf(underLineFirstExpressionToRemove),
-                    rawHTML.lastIndexOf(underLineFirstExpressionToRemove) + underLineFirstExpressionToRemove.length,
-                    "")
-            
-        } catch (e: Exception) {
-        }
-        try {
-            b.replace(
-                    b.toString().lastIndexOf(underLineSecondExpressionToRemove),
-                    b.toString()
-                        .lastIndexOf(underLineSecondExpressionToRemove) + underLineSecondExpressionToRemove.length,
-                    "")
-        } catch (e: Exception) {
-        }
-        try {
-            b.replace(
-                    b.toString().lastIndexOf(newLineFirstExpressionToRemove),
-                    b.toString()
-                        .lastIndexOf(newLineFirstExpressionToRemove) + newLineFirstExpressionToRemove.length,
-                    "")
-            
-        } catch (e: Exception) {
-        }
-        try {
-            b.replace(
-                    b.toString().lastIndexOf(newLineSecondExpressionToRemove),
-                    b.toString()
-                        .lastIndexOf(newLineSecondExpressionToRemove) + newLineSecondExpressionToRemove.length,
-                    "")
-        } catch (e: Exception) {
-        }
-        
-        
-        return b.toString().trim()
-        
-    }
-    
     private fun updateNote() {
         val headerSpannableText = binding.noteHeaderEditText.text.toSpannable()
         val contentSpannableText = binding.noteContentEditText.text.toSpannable()
         
-        note.header = correctHTML(Html.toHtml(headerSpannableText))
-        note.content = correctHTML(Html.toHtml(contentSpannableText))
+        val jsonHeader = Utils.spannableToJson(headerSpannableText)
+        val jsonContent = Utils.spannableToJson(contentSpannableText)
+        note.header = jsonHeader
+        note.content = jsonContent
         
+        Log.d(TAG, "updateNote: jsonHeader = $jsonHeader")
+        Log.d(TAG, "updateNote: jsonContent = $jsonContent")
         
         CoroutineScope(Dispatchers.IO).launch {
             updateNoteUseCase(note)
             
         }
         
-        
     }
     
+    
     override fun onPause() {
-        Log.d(TAG, "onPause: ")
-        binding.noteHeaderEditText.isSelected = false
-        updateNote()
+        try {
+            updateNote()
+            
+        } catch (e: UninitializedPropertyAccessException) {
+            //When app was stopped, and then user rotates the phone in another app, it can cause
+            //Exception.
+        }
         super.onPause()
     }
     
