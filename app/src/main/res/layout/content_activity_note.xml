@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/activityNoteContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:id="@+id/noteBackgroundScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/noteBackgroundImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"/>
+        </ScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/headerEditText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="0"
+                android:background="@null"
+                android:gravity="center"
+                android:hint="@string/header"
+                android:inputType="text"
+                android:maxLines="12"
+                android:minHeight="48dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/contentEditText"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="top|start"
+                android:hint="@string/content"
+                android:inputType="textMultiLine"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/headerEditText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/headerEditText"
+                tools:text="@string/lorem_ipsumX3" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/actionMenuParent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/actionMenuParentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:background="@drawable/linear_layout_rounded_background"
+                android:backgroundTint="?android:colorPrimary"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/actionMenuLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/actionMenuButtonChangeTextForegroundColor"
+                        android:layout_width="37dp"
+                        android:layout_height="37dp"
+                        android:layout_marginStart="10dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_note_change_text_foreground" />
+
+                    <ImageView
+                        android:id="@+id/actionMenuButtonChangeTextGravity"
+                        android:layout_width="37dp"
+                        android:layout_height="37dp"
+                        android:layout_marginStart="50dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_note_change_text_gravity" />
+
+                    <ImageView
+                        android:id="@+id/actionMenuButtonChangeTextBackgroundColor"
+                        android:layout_width="37dp"
+                        android:layout_height="37dp"
+                        android:layout_marginStart="50dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_note_change_text_background" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/actionMenuColorsLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/actionMenuColorsRemoveImageView"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginStart="10dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_note_action_remove" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/actionMenuColorsRecyclerView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="10"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        tools:listitem="@layout/color_item" />
+
+                    <ImageButton
+                        android:id="@+id/noteActionColorsCloseImageButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_baseline_close_24" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/actionMenuGravityLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/actionMenuGravityLeftImageView"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginStart="10dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_note_change_text_gravity_left" />
+
+                    <ImageView
+                        android:id="@+id/actionMenuGravityCenterImageView"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginStart="50dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_note_change_text_gravity_center" />
+
+                    <ImageView
+                        android:id="@+id/actionMenuGravityRightImageView"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginStart="50dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_note_change_text_gravity_right" />
+
+                    <ImageView
+                        android:id="@+id/actionMenuGravityCloseImageView"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginStart="50dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_baseline_close_24" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

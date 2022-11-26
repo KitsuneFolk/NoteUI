@@ -10,13 +10,16 @@ import java.util.*
 class ThemeHandler {
     companion object {
         private const val TAG = "ThemeHandler"
+        
         const val Theme_Blue = "blue"
         const val Theme_Dark = "dark"
         const val Theme_Red = "red"
+        
         const val BACKGROUND_COLOR = "BACKGROUND_COLOR"
         const val ACCENT_COLOR = "ACCENT_COLOR"
         const val PRIMARY_COLOR = "PRIMARY_COLOR"
-        fun getThemeColor(context: Context?, color: String): Int {
+        
+        fun getThemeColor(context: Context?, colorType: String): Int {
             val sp = PreferenceManager.getDefaultSharedPreferences(context)
             val background_color: Int
             val accent_color: Int
@@ -42,9 +45,9 @@ class ThemeHandler {
                                 "Themes",
                                 "blue"))
             }
-            if (color == BACKGROUND_COLOR) return background_color
-            if (color == ACCENT_COLOR) return accent_color
-            return if (color == PRIMARY_COLOR) primary_color else -1
+            if (colorType == BACKGROUND_COLOR) return background_color
+            if (colorType == ACCENT_COLOR) return accent_color
+            return if (colorType == PRIMARY_COLOR) primary_color else -1
         }
         
         fun getTheme(context: Context?): Int {

@@ -5,6 +5,7 @@ import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.di.appModule
 import com.pandacorp.notesui.di.dataModule
 import com.pandacorp.notesui.di.domainModule
+import com.pandacorp.notesui.di.noteActivityControllersModule
 import com.pandacorp.notesui.viewModels.NoteViewModel
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
@@ -20,7 +21,7 @@ class App : Application() {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@App)
-            modules(listOf(appModule, dataModule, domainModule))
+            modules(listOf(appModule, dataModule, domainModule, noteActivityControllersModule))
         }
         // Here check is app started first time, and if Yes - add basic colors.
         // I do it here to avoid bug when not all ColorItems could load.

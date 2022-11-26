@@ -31,11 +31,14 @@ class NoteViewModel(
     }
     
     fun addColor(colorItem: ColorItem) {
-        addColorUseCase(colorItem)
-        viewModelScope.launch {
-            colorsList.postValue(getColorsListUseCase())
+        CoroutineScope(Dispatchers.IO).launch {
+            addColorUseCase(colorItem)
+            viewModelScope.launch {
+                colorsList.postValue(getColorsListUseCase())
+            }
             
         }
+        
     }
     
     fun removeColor(colorItem: ColorItem) {
@@ -47,7 +50,8 @@ class NoteViewModel(
             
         }
     }
-    fun addBasicColors(context: Context){
+    
+    fun addBasicColors(context: Context) {
         //On first time opened add add button and 3 default colors.
         val addColorItem =
             ColorItem(color = R.drawable.ic_add_baseline, type = ColorItem.ADD)
@@ -65,10 +69,10 @@ class NoteViewModel(
             addColorUseCase(redColorItem)
             viewModelScope.launch {
                 colorsList.postValue(getColorsListUseCase())
-        
+                
             }
         }
-       
+        
         
     }
 }

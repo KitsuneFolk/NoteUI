@@ -14,7 +14,7 @@
     <string name="settings_language_default_value">uk</string>
     <string name="settings_language_summary">Українська</string>
 
-    <!--    Search strings-->
+    <!-- Search strings -->
     <string name="search">Знайти</string>
     <string name="search_hint">Знайти нотаток…</string>
 
@@ -22,13 +22,49 @@
     <string name="delete">Удалить</string>
     <string name="select_all">Выбрать всё</string>
 
-    <!-- NoteActivity strings -->
+    <!-- activity_note strings -->
     <string name="header">Заголовок…</string>
     <string name="content">Зміст…</string>
     <string name="addFabDescription">Добавити новий нотаток</string>
     <string name="alert_dialog_add_color">Додати новий колір</string>
     <string name="remove">Видалити</string>
     <string name="confirm_color_remove">Ви впевненi що хочете видалити колiр?</string>
+
+    <!-- Note drawer menu strings -->
+    <string name="note">Нотаток</string>
+    <string name="changeBackground">Змiнити заднiй фон</string>
+    <string name="show_transparent_actionbar_statusbar_navigationbar">Показувати прозорими actionBar, statusBar та navigationBar</string>
+    <string name="findImage">Знайти зображення…</string>
+    <string name="selectColor">Обрати колiр</string>
+    <string name="reset">Скинути</string>
+    <string name="color">Колiр</string>
+    <string name="image">Зображення</string>
+    <string name="selectImage">Обрати зображення</string>
+    <string name="embeddedImages">Вбудованi зображення</string>
+    <string name="colors">Цвета</string>
+
+    <!-- ImagePicker strings  -->
+    <string name="title_choose_image_provider">Обрати</string>
+    <string name="action_cancel">Вiдмiнити</string>
+    <string name="title_gallery">Галерея</string>
+    <string name="title_camera">Камера</string>
+    <string name="permission_camera_denied">
+        <![CDATA[Дозвiл для камери необхiдний для створення снiмкiв. Будь ласка дайте дозвiл у Налаштування -> Дозволи.]]></string>
+    <string name="error_failed_to_create_camera_image_file">Не вдалося зробити знімок</string>
+    <string name="error_failed_pick_gallery_image">Не вдалося обрати зображення з галереї</string>
+    <string name="error_failed_to_crop_image">Не вдалося обрізати зображення</string>
+    <string name="error_failed_to_compress_image">Не вдалося стиснути зображення</string>
+    <string name="error_task_cancelled">Завдання скасовано</string>
+    <string name="error_camera_app_not_found">Застосунок Камера не була знайдена</string>
+
+    <!-- uCrop string resource start -->
+    <string name="ucrop_label_original">Оригiнал</string>
+    <string name="ucrop_label_edit_photo">Редагувати фото</string>
+    <string name="ucrop_menu_crop">Обрізати</string>
+    <string name="ucrop_rotate">Перевернути</string>
+    <string name="ucrop_scale">Масштабувати</string>
+    <string name="ucrop_crop">Обрiзати</string>
+
 
     <!-- MainActivity strings  -->
     <string name="snackbar_undo_title">Було видалено нотаткiв: </string>

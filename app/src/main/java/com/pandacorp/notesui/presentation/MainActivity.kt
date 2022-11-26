@@ -13,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.pandacorp.domain.models.NoteItem
 import com.pandacorp.notesui.R
-import com.pandacorp.notesui.databinding.ActivityMainBinding
+import com.pandacorp.notesui.presentation.activity_note.NoteActivity
 import com.pandacorp.notesui.presentation.adapter.NotesRecyclerAdapter
 import com.pandacorp.notesui.presentation.settings.SettingsActivity
 import com.pandacorp.notesui.utils.ThemeHandler
@@ -32,9 +34,11 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var addFAB: FloatingActionButton
+    private lateinit var notesRecyclerView: RecyclerView
     
     lateinit var notesRecyclerAdapter: NotesRecyclerAdapter
+    
     private var actionModeCallback: ActionModeCallback = ActionModeCallback()
     private var actionMode: ActionMode? = null
     
@@ -51,7 +55,7 @@ class MainActivity : AppCompatActivity() {
             
         } catch (e: Exception) {
             /**
-             * If NoteActivity screen was rotated and user backed to MainActivity
+             * If activity_note screen was rotated and user backed to MainActivity
              * then we do nothing, we don't notify adapter about changes because in onCreate
              * it will be created again.
              *
@@ -75,8 +79,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Utils.setupExceptionHandler()
         ThemeHandler.load(this)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
         initViews()
         
     }
@@ -90,8 +93,10 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun initAddFloatingActionButton() {
-        binding.addFAB.setOnClickListener {
-            val noteItem = NoteItem(content = "", header = "")
+        addFAB = findViewById(R.id.addFAB)
+        addFAB.setOnClickListener {
+            val colorBackground = ContextCompat.getColor(this, ThemeHandler.getThemeColor(this, ThemeHandler.BACKGROUND_COLOR))
+            val noteItem = NoteItem(content = "", header = "", background = colorBackground.toString())
             // val position = 0
             // notesRecyclerAdapter.notifyItemInserted(position)
             // val listSize = vm.notesList.value!!.size
@@ -108,6 +113,7 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun initRecyclerView() {
+        notesRecyclerView = findViewById(R.id.recycler_view)
         notesRecyclerAdapter = NotesRecyclerAdapter(this, mutableListOf())
         notesRecyclerAdapter.setOnClickListener(object : NotesRecyclerAdapter.OnClickListener {
             override fun onItemClick(view: View?, item: NoteItem, position: Int) {
@@ -128,8 +134,8 @@ class MainActivity : AppCompatActivity() {
                 
             }
         })
-        binding.recyclerView.adapter = notesRecyclerAdapter
-        registerForContextMenu(binding.recyclerView)
+        notesRecyclerView.adapter = notesRecyclerAdapter
+        registerForContextMenu(notesRecyclerView)
         vm.notesList.observe(this) {
             notesRecyclerAdapter.setList(it)
             
@@ -277,7 +283,7 @@ class MainActivity : AppCompatActivity() {
             // val snackbar_undo_button_title = resources.getText(R.string.snackbar_undo)
             val snackBarDuration = 4_000
             val snackBar = Snackbar.make(
-                    binding.addFAB,
+                    addFAB,
                     snackbar_undo_title,
                     snackBarDuration)
             

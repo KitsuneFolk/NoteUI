@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="RedTheme" parent="Theme.Material3.Dark">
+    <style name="RedTheme" parent="BaseTheme">
 
         <item name="android:colorBackground">@color/RedTheme_Background</item>
         <item name="colorPrimary">@color/RedTheme_colorPrimary</item>
         <item name="colorPrimaryDark">@color/RedTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/RedTheme_colorAccent</item>
         <item name="android:statusBarColor">@color/RedTheme_colorPrimary</item>
-        <item name="android:textColor">@color/white</item>
         <item name="android:textColorSecondary">@color/RedTheme_textColorSecondary</item>
         <item name="android:textColorHint">@color/white</item>
         <item name="android:navigationBarColor">@color/RedTheme_colorPrimary</item>
@@ -17,13 +16,6 @@
         <!--  This color is used for Material Action Mode background  -->
         <item name="colorSurface">@color/RedTheme_colorPrimary</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
-
-        <item name="buttonStyle">@style/Button</item>
-        <item name="editTextStyle">@style/EditText</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowToggle</item>
-        <item name="alertDialogTheme">@style/MaterialAlertDialog</item>
-        <item name="toolbarStyle">@style/Toolbar</item>
-        <item name="snackbarStyle">@style/SnackBarStyle</item>
 
     </style>
 

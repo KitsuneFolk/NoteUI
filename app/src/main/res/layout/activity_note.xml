@@ -1,184 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.NoteActivity">
 
-        <EditText
-            android:id="@+id/note_header_editText"
+        tools:context=".presentation.activity_note.NoteActivity">
+
+        <androidx.drawerlayout.widget.DrawerLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:hint="@string/header"
-            android:inputType="text"
-            android:maxLines="12"
-            android:minHeight="48dp"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <EditText
-            android:id="@+id/note_content_editText"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
-            android:background="@null"
-            android:gravity="top|start"
-            android:hint="@string/content"
-            android:inputType="textMultiLine"
-            app:layout_constraintBottom_toTopOf="@id/noteActionParent"
-            app:layout_constraintEnd_toEndOf="@+id/note_header_editText"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/note_header_editText"
-            tools:text="@string/lorem_ipsumX2" />
-
-        <LinearLayout
-            android:id="@+id/noteActionParent"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:background="@drawable/linear_layout_rounded_background"
-            android:backgroundTint="?android:colorPrimary"
-            android:orientation="horizontal"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <LinearLayout
-                android:id="@+id/noteActionLinearLayout"
-                android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include
+                android:id="@+id/contentActivityInclude" layout="@layout/content_activity_note" />
+            <ScrollView
+                android:layout_width="240dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="gone">
+                android:layout_gravity="end"
+                android:background="?android:attr/colorBackground">
 
-                <ImageView
-                    android:id="@+id/noteActionChangeForegroundTextColor"
-                    android:layout_width="37dp"
-                    android:layout_height="37dp"
-                    android:layout_marginStart="10dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_note_change_text_foreground" />
+                <include
+                    android:id="@+id/drawerMenuInclude" layout="@layout/menu_drawer_end" />
+            </ScrollView>
+        </androidx.drawerlayout.widget.DrawerLayout>
 
-                <ImageView
-                    android:id="@+id/noteActionChangeTextGravity"
-                    android:layout_width="37dp"
-                    android:layout_height="37dp"
-                    android:layout_marginStart="50dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_note_change_text_gravity" />
-
-                <ImageView
-                    android:id="@+id/noteActionChangeTextBackgroundColor"
-                    android:layout_width="37dp"
-                    android:layout_height="37dp"
-                    android:layout_marginStart="50dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_note_change_text_background" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/noteActionColorsLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="gone">
-
-                <ImageView
-                    android:id="@+id/noteActionColorsRemoveImageView"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginStart="10dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_note_action_remove" />
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/noteActionColorsRecyclerView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="10"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/color_item" />
-
-                <ImageButton
-                    android:id="@+id/noteActionColorsCloseImageButton"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_baseline_close_24" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/noteActionGravityLinearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/noteActionGravityLeftImageView"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginStart="10dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_note_change_text_gravity_left" />
-
-                <ImageView
-                    android:id="@+id/noteActionGravityCenterImageView"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginStart="50dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_note_change_text_gravity_center" />
-
-                <ImageView
-                    android:id="@+id/noteActionGravityRightImageView"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginStart="50dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_note_change_text_gravity_right" />
-
-                <ImageView
-                    android:id="@+id/noteActionGravityCloseImageButton"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="50dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_baseline_close_24" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </LinearLayout>
 </layout>

@@ -1,26 +1,24 @@
-plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-}
+apply plugin: 'com.android.application'
+apply plugin: 'org.jetbrains.kotlin.android'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdk 32
-
+    compileSdkVersion 32
+    buildToolsVersion "31.0.0"
     defaultConfig {
         applicationId "com.pandacorp.notesui"
-        minSdk 21
-        targetSdk 32
+        minSdkVersion 21
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -34,9 +32,7 @@ android {
     dataBinding {
         enabled true
     }
-
 }
-
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.8.0'
@@ -45,11 +41,16 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.preference:preference:1.1.1'
     implementation "com.github.skydoves:colorpickerview:2.2.4"
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation "com.github.cachapa:expandablelayout:2.9.2"
+    // Select Image library and dependence to it.
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+    implementation 'com.github.yalantis:ucrop:2.2.2'
 
     // Koin
     implementation "io.insert-koin:koin-core:3.2.2"
     implementation "io.insert-koin:koin-android:3.2.2"
+
+    implementation 'androidx.test:core-ktx:1.4.0'
 
     // Room Database
     def room_version = "2.4.3"
@@ -61,4 +62,7 @@ dependencies {
     implementation project(path: ':domain')
 
 
+}
+repositories {
+    mavenCentral()
 }

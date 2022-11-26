@@ -22,13 +22,49 @@
     <string name="delete">Удалить</string>
     <string name="select_all">Выбрать всё</string>
 
-    <!-- NoteActivity strings -->
+    <!-- activity_note strings -->
     <string name="header">Заголовок…</string>
     <string name="content">Содержание…</string>
     <string name="addFabDescription">Добавить новую заметку</string>
     <string name="alert_dialog_add_color">Добавить новый цвет</string>
     <string name="remove">Удалить</string>
     <string name="confirm_color_remove">Вы уверены что хотите удалить цвет?</string>
+
+    <!-- Note drawer menu strings -->
+    <string name="note">Заметка</string>
+    <string name="changeBackground">Поменять задний фон</string>
+    <string name="show_transparent_actionbar_statusbar_navigationbar">Показывать прозрачными actionBar, statusBar и navigationBar</string>
+    <string name="findImage">Найти изображение…</string>
+    <string name="selectColor">Выбрать цвет</string>
+    <string name="reset">Сбросить</string>
+    <string name="color">Цвет</string>
+    <string name="image">Изображение</string>
+    <string name="selectImage">Выбрать изображение</string>
+    <string name="embeddedImages">Встроенные изображения</string>
+    <string name="colors">Цвета</string>
+
+    <!-- ImagePicker strings  -->
+    <string name="title_choose_image_provider">Выбрать</string>
+    <string name="action_cancel">Отменить</string>
+    <string name="title_gallery">Галерея</string>
+    <string name="title_camera">Камера</string>
+    <string name="permission_camera_denied">
+        <![CDATA[Разрешение для камеры необходимо для создания снимкова. Пожалуйста дайте разрешение в Настройки -> Разрешения.]]></string>
+    <string name="error_failed_to_create_camera_image_file">Не удалось сделать снимок</string>
+    <string name="error_failed_pick_gallery_image">Не удалось выбрать изображение из галереи</string>
+    <string name="error_failed_to_crop_image">Не удалось обрезать изображение</string>
+    <string name="error_failed_to_compress_image">Не удалось сжать изображение</string>
+    <string name="error_task_cancelled">Задача отменена</string>
+    <string name="error_camera_app_not_found">Приложение Камера не была найдена</string>
+
+    <!-- uCrop string resource start -->
+    <string name="ucrop_label_original">Оригинал</string>
+    <string name="ucrop_label_edit_photo">Редактировать фото</string>
+    <string name="ucrop_menu_crop">Обрезать</string>
+    <string name="ucrop_rotate">Перевернуть</string>
+    <string name="ucrop_scale">Масштабировать</string>
+    <string name="ucrop_crop">Обрезать</string>
+
 
     <!-- MainActivity strings  -->
     <string name="snackbar_undo_title">Было удалено заметок: </string>

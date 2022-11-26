@@ -8,16 +8,26 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.Gravity
+import com.pandacorp.notesui.R
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
 
 class Utils {
-   
     
-    //This class is needed for coroutines logs work on Xiaomi devices.
     companion object {
+        
+        //Images that user can choose to set note background.
+        val backgroundImagesIds = listOf(
+                R.drawable.image_android,
+                R.drawable.image_river,
+                R.drawable.image_field,
+                R.drawable.image_moon,
+                R.drawable.image_flower,
+                R.drawable.image_skyscrapers)
+        
+        //This function is needed for coroutines logs work on Xiaomi devices.
         fun setupExceptionHandler() {
             Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
                 throw(throwable)
@@ -79,13 +89,13 @@ class Utils {
                 backgroundSpansJsonArray.put(backgroundSpansJO)
             }
             json.put(backgroundSpansText, backgroundSpansJsonArray)
-    
+            
             val alignmentSpansJsonArray = JSONArray()
             val alignmentSpans = spannable.getSpans(
                     0, spannable.length,
                     AlignmentSpan::class.java)
             for (alignmentSpan in alignmentSpans) {
-                val alignmentInt = when (alignmentSpan.alignment){
+                val alignmentInt = when (alignmentSpan.alignment) {
                     Alignment.ALIGN_NORMAL -> Gravity.START
                     Alignment.ALIGN_CENTER -> Gravity.CENTER
                     Alignment.ALIGN_OPPOSITE -> Gravity.END
@@ -99,7 +109,7 @@ class Utils {
                 alignmentSpansJsonArray.put(alignmentSpansJO)
             }
             json.put(alignmentSpansText, alignmentSpansJsonArray)
-    
+            
             return json.toString()
         }
         
@@ -111,7 +121,7 @@ class Utils {
                 json = JSONObject(jsonString)
                 
             } catch (jsonException: JSONException) {
-                Log.d("NoteActivity", "jsonToSpannable: ${jsonException.message}")
+                Log.d("activity_note", "jsonToSpannable: ${jsonException.message}")
                 return null
             }
             val spannableString = SpannableString(json.getString(textText))
@@ -130,9 +140,9 @@ class Utils {
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             } catch (e: Exception) {
-                Log.d("NoteActivity", "jsonToSpannable: ${e.message}")
+                Log.d("activity_note", "jsonToSpannable: ${e.message}")
             }
-    
+            
             try {
                 //Check if backgroundSpansJsonArray != null
                 val backgroundSpansJsonArray = json.getJSONArray(backgroundSpansText)
@@ -148,8 +158,8 @@ class Utils {
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             } catch (e: Exception) {
-                Log.d("NoteActivity", "jsonToSpannable: ${e.message}")
-    
+                Log.d("activity_note", "jsonToSpannable: ${e.message}")
+                
             }
             try {
                 //Check if alignmentSpansJsonArray != null
@@ -160,7 +170,9 @@ class Utils {
                         Gravity.START -> Alignment.ALIGN_NORMAL
                         Gravity.CENTER -> Alignment.ALIGN_CENTER
                         Gravity.END -> Alignment.ALIGN_OPPOSITE
-                        else -> {Alignment.ALIGN_NORMAL}
+                        else -> {
+                            Alignment.ALIGN_NORMAL
+                        }
                     }
                     val alignmentStart = alignmentSpan.getInt(alignmentStartText)
                     val alignmentEnd = alignmentSpan.getInt(alignmentEndText)
@@ -171,10 +183,10 @@ class Utils {
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
             } catch (e: Exception) {
-                Log.d("NoteActivity", "jsonToSpannable: ${e.message}")
-    
+                Log.d("activity_note", "jsonToSpannable: ${e.message}")
+                
             }
-    
+            
             return spannableString
         }
     }

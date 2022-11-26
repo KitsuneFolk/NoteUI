@@ -34,12 +34,13 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 android:transitionName="headerTextView"
                 app:layout_constraintEnd_toStartOf="@+id/list_item_select_check_image"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Android studio test 1234567891011123414243" />
+                tools:text="Android studio" />
 
             <TextView
                 android:id="@+id/list_item_content_textview"

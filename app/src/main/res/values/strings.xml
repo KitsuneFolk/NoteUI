@@ -16,6 +16,7 @@
 
     <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in.</string>
     <string name="lorem_ipsumX2" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in.</string>
+    <string name="lorem_ipsumX3" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in</string>
 
     <!--  Search strings -->
     <string name="search">Search</string>
@@ -25,7 +26,7 @@
     <string name="delete">Delete</string>
     <string name="select_all">Select all</string>
 
-    <!-- NoteActivity strings -->
+    <!-- activity_note strings -->
     <string name="header">Header…</string>
     <string name="content">Content…</string>
     <string name="addFabDescription">Add new note</string>
@@ -33,9 +34,46 @@
     <string name="remove">Remove</string>
     <string name="confirm_color_remove">Are you sure you want to remove the color?</string>
 
+    <!-- Note drawer menu strings -->
+    <string name="note">Note</string>
+    <string name="changeBackground">Change background</string>
+    <string name="show_transparent_actionbar_statusbar_navigationbar">Show transparent actionBar, statusBar and navigationBar</string>
+    <string name="findImage">Find image…</string>
+    <string name="selectColor">Select color</string>
+    <string name="reset">Reset</string>
+    <string name="color">Color</string>
+    <string name="image">Image</string>
+    <string name="selectImage">Select image</string>
+    <string name="embeddedImages">Embedded images</string>
+    <string name="colors">Colors</string>
+
     <!-- MainActivity strings  -->
     <string name="snackbar_undo_title">were removed notes: </string>
     <string name="snackbar_undo">Undo deleting</string>
+
+    <!-- ImagePicker strings  -->
+    <string name="title_choose_image_provider">Choose</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="title_gallery">Gallery</string>
+    <string name="title_camera">Camera</string>
+
+    <string name="permission_camera_denied">
+        <![CDATA[Camera permission is needed to take a picture. Please allow permission from Settings > Permissions.]]></string>
+
+    <string name="error_failed_to_create_camera_image_file">Failed to create Camera image file</string>
+    <string name="error_failed_pick_gallery_image">Failed to pick Gallery image</string>
+    <string name="error_failed_to_crop_image">Failed to crop image</string>
+    <string name="error_failed_to_compress_image">Failed to compress image</string>
+    <string name="error_task_cancelled">Task Cancelled</string>
+    <string name="error_camera_app_not_found">Camera app not found</string>
+
+    <!-- uCrop string resource start -->
+    <string name="ucrop_label_original">Original</string>
+    <string name="ucrop_label_edit_photo">Edit Photo</string>
+    <string name="ucrop_menu_crop">Crop</string>
+    <string name="ucrop_rotate">Rotate</string>
+    <string name="ucrop_scale">Scale</string>
+    <string name="ucrop_crop">Crop</string>
 
     <string name="dismiss">Dismiss</string>
     <string name="select">Select</string>
