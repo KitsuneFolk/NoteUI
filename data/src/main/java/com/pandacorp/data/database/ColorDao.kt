@@ -16,4 +16,7 @@ interface ColorDao {
     
     @Delete
     fun remove(colorItem: ColorItem)
+    
+    @Query("DELETE FROM colorItem")
+    fun removeAll()
 }

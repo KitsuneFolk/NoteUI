@@ -2,6 +2,7 @@ package com.pandacorp.notesui.di
 
 import com.pandacorp.domain.usecases.colors.AddColorUseCase
 import com.pandacorp.domain.usecases.colors.GetColorsUseCase
+import com.pandacorp.domain.usecases.colors.RemoveAllColorsUseCase
 import com.pandacorp.domain.usecases.colors.RemoveColorUseCase
 import com.pandacorp.domain.usecases.notes.AddNoteUseCase
 import com.pandacorp.domain.usecases.notes.GetNotesUseCase
@@ -10,26 +11,29 @@ import com.pandacorp.domain.usecases.notes.UpdateNoteUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
-    factory {
+    single {
         AddNoteUseCase(get())
     }
-    factory {
+    single {
         RemoveNoteUseCase(get())
     }
-    factory {
+    single {
         UpdateNoteUseCase(get())
     }
-    factory {
+    single {
         GetNotesUseCase(get())
     }
     
-    factory {
+    single {
         AddColorUseCase(get())
     }
-    factory {
+    single {
         RemoveColorUseCase(get())
     }
-    factory {
+    single {
+        RemoveAllColorsUseCase(get())
+    }
+    single {
         GetColorsUseCase(get())
     }
     

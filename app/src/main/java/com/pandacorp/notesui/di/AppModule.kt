@@ -10,6 +10,6 @@ val appModule = module{
         MainViewModel(get(), get(), get())
     }
     viewModel<NoteViewModel>{
-        NoteViewModel(get(), get(), get())
+        NoteViewModel(get(), get(), get(), get())
     }
 }

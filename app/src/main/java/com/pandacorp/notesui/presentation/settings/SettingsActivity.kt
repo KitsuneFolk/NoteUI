@@ -12,6 +12,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.utils.ThemeHandler
+import com.pandacorp.notesui.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,8 +23,10 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var edit: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ThemeHandler.load(this)
+        ThemeHandler(this).load()
+        Utils.setupExceptionHandler()
         setContentView(R.layout.activity_settings)
+        setSupportActionBar(findViewById(R.id.toolbar))
         
         supportFragmentManager
             .beginTransaction()
@@ -77,12 +80,12 @@ class SettingsActivity : AppCompatActivity() {
             themes_listPreference.onPreferenceChangeListener = this
             languages_listPreference = findPreference("Languages")!!
             languages_listPreference.onPreferenceChangeListener = this
-            //Тут происходит добавление загаловка в виде версии к пункту настроек.
+            //Here we add version title to the preference.
             version_Preference = findPreference("Version")!!
-            val version_name = requireContext().packageManager
+            val version = requireContext().packageManager
                 .getPackageInfo(requireContext().packageName, 0).versionName
             version_Preference.title =
-                resources.getString(R.string.version) + " " + version_name
+                resources.getString(R.string.version) + " " + version
         }
         
         

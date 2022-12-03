@@ -9,6 +9,7 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical">
+
         <Button
             android:id="@+id/expandChangeBackgroundButton"
             android:layout_width="match_parent"
@@ -17,7 +18,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:text="@string/changeBackground"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
+
         <net.cachapa.expandablelayout.ExpandableLayout
             android:id="@+id/changeBackgroundExpandableLayout"
             android:layout_width="match_parent"
@@ -25,12 +27,14 @@
             app:el_duration="500"
             app:el_expanded="false"
             app:el_parallax="0.5"
-            tools:el_expanded="true">
+            tools:el_expanded="false">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
+
                 <Button
                     android:id="@+id/drawerMenuSelectButton"
                     android:layout_width="wrap_content"
@@ -68,6 +72,26 @@
 
             </LinearLayout>
         </net.cachapa.expandablelayout.ExpandableLayout>
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp">
+            <TextView
+                android:id="@+id/switchTransparentActionBarTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="10"
+                android:text="@string/show_transparent_actionbar_statusbar_navigationbar"/>
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchTransparentActionBarSwitchCompat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:checked="true" />
+        </LinearLayout>
+
+    </LinearLayout>
 </layout>

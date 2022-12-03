@@ -10,16 +10,16 @@ import com.pandacorp.domain.usecases.notes.RemoveNoteUseCase
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val getListItemsUseCase: GetNotesUseCase,
+    private val getNotesUseCase: GetNotesUseCase,
     private val addNoteUseCase: AddNoteUseCase,
-    private val removeFromDatabaseUseCase: RemoveNoteUseCase
+    private val removeNoteUseCase: RemoveNoteUseCase
 ) :
     ViewModel() {
     var notesList = MutableLiveData<MutableList<NoteItem>>()
     
     init {
         viewModelScope.launch {
-            notesList.postValue(getListItemsUseCase())
+            notesList.postValue(getNotesUseCase())
             
             
         }
@@ -29,17 +29,16 @@ class MainViewModel(
         addNoteUseCase(noteItem)
         
         viewModelScope.launch {
-            notesList.postValue(getListItemsUseCase())
+            notesList.postValue(getNotesUseCase())
             
         }
     }
     
     fun removeNote(noteItem: NoteItem) {
-        removeFromDatabaseUseCase(noteItem)
+        removeNoteUseCase(noteItem)
         
         viewModelScope.launch {
-            notesList.postValue(getListItemsUseCase())
-            
+            notesList.postValue(getNotesUseCase())
             
         }
     }
@@ -47,7 +46,7 @@ class MainViewModel(
     fun update() {
         viewModelScope.launch {
             notesList.value?.clear()
-            notesList.postValue(getListItemsUseCase()) }
+            notesList.postValue(getNotesUseCase()) }
     }
     
     

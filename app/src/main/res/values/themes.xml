@@ -2,29 +2,31 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <attr name="colorButton" format="color" />
 
-    <style name="BaseTheme" parent="Theme.Material3.Dark">
+    <style name="BaseTheme" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:textColor">@color/white</item>
         <item name="android:fitsSystemWindows">true</item>
-        <item name="switchStyle">@style/Switch</item>
+        <item name="windowActionModeOverlay">true</item>
         <item name="buttonStyle">@style/Button</item>
         <item name="editTextStyle">@style/EditText</item>
         <item name="toolbarStyle">@style/Toolbar</item>
         <item name="alertDialogTheme">@style/MaterialAlertDialog</item>
         <item name="drawerArrowStyle">@style/DrawerArrowToggle</item>
         <item name="snackbarStyle">@style/SnackBarStyle</item>
+        <item name="switchStyle">@style/Switch</item>
 
     </style>
 
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
     <style name="BlueTheme" parent="BaseTheme">
 
-        <item name="android:colorBackground">@color/BlueTheme_Background</item>
+        <item name="android:colorBackground">@color/BlueTheme_colorBackground</item>
         <item name="colorPrimary">@color/BlueTheme_colorPrimary</item>
         <item name="colorPrimaryDark">@color/BlueTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/BlueTheme_colorAccent</item>
         <item name="android:statusBarColor">@color/BlueTheme_colorPrimary</item>
         <item name="android:navigationBarColor">@color/BlueTheme_colorPrimary</item>
         <item name="android:textColorSecondary">@color/BlueTheme_textColorSecondary</item>
-        <item name="windowActionModeOverlay">true</item>
         <item name="actionModeBackground">@color/BlueTheme_colorPrimary</item>
         <!--  white color for back arrow  -->
         <item name="colorControlNormal">@color/white</item>
@@ -73,7 +75,7 @@
 
     <style name="MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog.Centered">
         
-        <item name="android:colorBackground">?android:attr/colorPrimary</item>
+        <item name="android:colorBackground">?android:attr/colorPrimaryDark</item>
         <item name="background">@drawable/alert_dialog_background</item>
         <item name="textColorAlertDialogListItem">@color/white</item>
         <item name="color">?android:attr/colorPrimary</item>
@@ -83,8 +85,7 @@
     </style>
     
     <style name="Switch" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="background">?colorAccent</item>
-        <item name="colorSwitchThumbNormal">?colorPrimary</item>
+        <item name="thumbTint">@color/white</item>
     </style>
-    
+
 </resources>

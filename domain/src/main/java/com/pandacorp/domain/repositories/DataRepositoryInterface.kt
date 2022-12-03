@@ -13,4 +13,5 @@ interface DataRepositoryInterface {
     fun updateColor(colorItem: ColorItem)
     fun addColor(colorItem: ColorItem)
     fun removeColor(colorItem: ColorItem)
+    fun removeAllColors()
 }

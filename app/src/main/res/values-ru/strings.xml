@@ -29,6 +29,7 @@
     <string name="alert_dialog_add_color">Добавить новый цвет</string>
     <string name="remove">Удалить</string>
     <string name="confirm_color_remove">Вы уверены что хотите удалить цвет?</string>
+    <string name="confirm_colors_reset">Вы уверены что хотите сбросить цвета?</string>
 
     <!-- Note drawer menu strings -->
     <string name="note">Заметка</string>

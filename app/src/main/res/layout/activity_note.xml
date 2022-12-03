@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
 
-        tools:context=".presentation.activity_note.NoteActivity">
+        tools:context=".presentation.NoteActivity">
+        <include android:id="@+id/noteToolbarInclude" layout="@layout/toolbar" />
 
         <androidx.drawerlayout.widget.DrawerLayout
+            android:id="@+id/drawerMenu"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <include
-                android:id="@+id/contentActivityInclude" layout="@layout/content_activity_note" />
+
+            <!-- This is my custom class to create animation on slide,
+            it extends MotionLayout -->
+            <com.pandacorp.notesui.utils.MotionDrawerLayout
+                android:id="@+id/contentMotionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutDescription="@xml/drawer_layout_motion_scene">
+
+                <include
+                    android:id="@+id/contentActivityInclude"
+                    layout="@layout/content_activity_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.pandacorp.notesui.utils.MotionDrawerLayout>
+
             <ScrollView
                 android:layout_width="240dp"
                 android:layout_height="match_parent"
@@ -20,9 +38,11 @@
                 android:background="?android:attr/colorBackground">
 
                 <include
-                    android:id="@+id/drawerMenuInclude" layout="@layout/menu_drawer_end" />
+                    android:id="@+id/drawerMenuInclude"
+                    layout="@layout/menu_drawer_end" />
             </ScrollView>
         </androidx.drawerlayout.widget.DrawerLayout>
+
 
     </LinearLayout>
 </layout>

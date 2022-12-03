@@ -3,7 +3,7 @@
 
     <style name="RedTheme" parent="BaseTheme">
 
-        <item name="android:colorBackground">@color/RedTheme_Background</item>
+        <item name="android:colorBackground">@color/RedTheme_colorBackground</item>
         <item name="colorPrimary">@color/RedTheme_colorPrimary</item>
         <item name="colorPrimaryDark">@color/RedTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/RedTheme_colorAccent</item>

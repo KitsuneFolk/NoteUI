@@ -1,10 +1,11 @@
 package com.pandacorp.notesui.presentation.adapter
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.pandacorp.domain.models.ColorItem
@@ -29,22 +30,22 @@ class ColorsRecyclerAdapter(
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val colorItem = itemsList[position]
-        //If colorItem.color == R.color then set color background, else drawable.
+        //If colorItem.color == Color then set color background, else drawable.
         when (colorItem.type){
             ColorItem.COLOR -> {
-                holder.cardView.setCardBackgroundColor(colorItem.color)
+                holder.imageView.background = ColorDrawable(colorItem.color)
     
             }
             ColorItem.ADD -> {
-                holder.cardView.background = ContextCompat.getDrawable(context, colorItem.color)
+                holder.imageView.background = ContextCompat.getDrawable(context, colorItem.color)
     
             }
         }
-        holder.cardView.setOnClickListener(View.OnClickListener { v ->
+        holder.imageView.setOnClickListener(View.OnClickListener { v ->
             if (onClickListener == null) return@OnClickListener
             onClickListener!!.onItemClick(v, colorItem, position)
         })
-        holder.cardView.setOnLongClickListener(View.OnLongClickListener { v ->
+        holder.imageView.setOnLongClickListener(View.OnLongClickListener { v ->
             if (onClickListener == null) return@OnLongClickListener false
             onClickListener!!.onItemLongClick(v, colorItem, position)
             true
@@ -67,7 +68,8 @@ class ColorsRecyclerAdapter(
     }
     
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val cardView = view.findViewById<CardView>(R.id.color_item_cardView)
+        val imageView = view.findViewById<ImageView>(R.id.colorItemImageView)!!
+        
     }
     
     interface OnClickListener {

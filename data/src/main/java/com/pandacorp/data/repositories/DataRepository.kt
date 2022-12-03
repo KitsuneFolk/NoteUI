@@ -43,5 +43,9 @@ class DataRepository(
         colorDao.remove(colorItem)
     }
     
+    override fun removeAllColors() {
+        colorDao.removeAll()
+    }
+    
     
 }

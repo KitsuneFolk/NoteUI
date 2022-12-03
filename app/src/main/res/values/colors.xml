@@ -4,7 +4,7 @@
     <color name="BlueTheme_colorPrimary">#3232FF</color>
     <color name="BlueTheme_colorPrimaryDark">#2626C5</color>
     <color name="BlueTheme_colorAccent">#FF1FF4</color>
-    <color name="BlueTheme_Background">#4B68FF</color>
+    <color name="BlueTheme_colorBackground">#4B68FF</color>
     <color name="BlueTheme_ButtonColor">#3232FF</color>
     <color name="BlueTheme_textColorSecondary">#F0DBD8</color>
     <color name="BlueTheme_NavigationBar">#90CAF9</color>
@@ -13,7 +13,7 @@
     <color name="DarkTheme_colorPrimary">#0A0A0A</color>
     <color name="DarkTheme_colorPrimaryDark">#000000</color>
     <color name="DarkTheme_colorAccent">#FFCC80</color>
-    <color name="DarkTheme_Background">#141414</color>
+    <color name="DarkTheme_colorBackground">#141414</color>
     <color name="DarkTheme_ActionBar">#FFFFFF</color>
     <color name="DarkTheme_ButtonColor">#0A0A0A</color>
     <color name="DarkTheme_TextColor">#FFFFFF</color>
@@ -24,7 +24,7 @@
     <color name="RedTheme_colorPrimary">#C11010</color>
     <color name="RedTheme_colorPrimaryDark">#AA0909</color>
     <color name="RedTheme_colorAccent">#FCA727</color>
-    <color name="RedTheme_Background">#DC3232</color>
+    <color name="RedTheme_colorBackground">#DC3232</color>
     <color name="RedTheme_ActionBar">#E57373</color>
     <color name="RedTheme_ButtonColor">#DC0000</color>
     <color name="RedTheme_textColorSecondary">#CCA9A5</color>
@@ -32,9 +32,6 @@
 
     <!-- Another -->
     <color name="white">#FFFFFF</color>
-    <color name="red">#FF0000</color>
-    <color name="blue">#1A12F1</color>
-    <color name="yellow">#FFEB3B</color>
 
     <!-- Ucrop -->
     <color name="ucrop_color_toolbar">@color/DarkTheme_colorPrimary</color>
@@ -44,5 +41,14 @@
     <!-- ImagePicker dialog -->
     <color name="dialog_choose_icon_color">#FFFFFF</color>
     <color name="dialog_choose_text_color">#FFFFFF</color>
+
+    <!-- Colors presets to change text color -->
+    <color name="light_yellow">#F4FF81</color>
+    <color name="light_green">#A7FFEB</color>
+    <color name="light_blue">#8C9EFF</color>
+    <color name="light_pink">#EA80FC</color>
+    <color name="light_red">#FF9696</color>
+    <color name="light_purple">#BE4AD1</color>
+
 </resources>
 

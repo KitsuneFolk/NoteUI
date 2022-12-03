@@ -12,13 +12,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.pandacorp.domain.models.NoteItem
+import com.pandacorp.domain.usecases.notes.GetNotesUseCase
 import com.pandacorp.notesui.R
-import com.pandacorp.notesui.presentation.activity_note.NoteActivity
+import com.pandacorp.notesui.databinding.ActivityMainBinding
 import com.pandacorp.notesui.presentation.adapter.NotesRecyclerAdapter
 import com.pandacorp.notesui.presentation.settings.SettingsActivity
 import com.pandacorp.notesui.utils.ThemeHandler
@@ -28,38 +28,47 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     
-    private lateinit var addFAB: FloatingActionButton
-    private lateinit var notesRecyclerView: RecyclerView
+    private lateinit var binding: ActivityMainBinding
+    
+    private lateinit var toolbar: Toolbar
     
     lateinit var notesRecyclerAdapter: NotesRecyclerAdapter
+    
+    private val filteredList = mutableListOf<NoteItem>()
     
     private var actionModeCallback: ActionModeCallback = ActionModeCallback()
     private var actionMode: ActionMode? = null
     
     private val vm: MainViewModel by viewModel()
     
+    private val getNotesUseCase: GetNotesUseCase by inject()
+    
     private val updateCustomAdapterLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
         
         try {
-            Log.d(TAG, "resultLauncher: ")
-            vm.update()
-            notesRecyclerAdapter.notifyDataSetChanged()
+            if (filteredList.isNotEmpty()) {
+                Log.d(TAG, "filteredList size = ${filteredList.size}: ")
+                notesRecyclerAdapter.setList(filteredList)
+                
+            } else {
+                vm.update()
+                notesRecyclerAdapter.notifyDataSetChanged()
+                
+            }
             
             
         } catch (e: Exception) {
-            /**
-             * If activity_note screen was rotated and user backed to MainActivity
-             * then we do nothing, we don't notify adapter about changes because in onCreate
-             * it will be created again.
-             *
-             **/
+             // If activity_note screen was rotated and user backed to MainActivity
+             // then we do nothing, we don't notify adapter about changes because in onCreate
+             // it will be created again.
         }
         
         
@@ -77,9 +86,12 @@ class MainActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ThemeHandler(this).load()
+        binding = ActivityMainBinding.inflate(layoutInflater)
         Utils.setupExceptionHandler()
-        ThemeHandler.load(this)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
         initViews()
         
     }
@@ -93,18 +105,14 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun initAddFloatingActionButton() {
-        addFAB = findViewById(R.id.addFAB)
-        addFAB.setOnClickListener {
-            val colorBackground = ContextCompat.getColor(this, ThemeHandler.getThemeColor(this, ThemeHandler.BACKGROUND_COLOR))
-            val noteItem = NoteItem(content = "", header = "", background = colorBackground.toString())
-            // val position = 0
-            // notesRecyclerAdapter.notifyItemInserted(position)
-            // val listSize = vm.notesList.value!!.size
-            // notesRecyclerAdapter.notifyItemRangeChanged(position, listSize)
-            CoroutineScope(Dispatchers.IO).launch {
-                this@MainActivity.vm.addNote(noteItem)
-                
-            }
+        binding.addFAB.setOnClickListener {
+            val colorBackground = ContextCompat.getColor(
+                    this,
+                    ThemeHandler(this).getColorBackground())
+            val noteItem =
+                NoteItem(content = "", header = "", background = colorBackground.toString())
+            notesRecyclerAdapter.notifyDataSetChanged()
+            CoroutineScope(Dispatchers.IO).launch { this@MainActivity.vm.addNote(noteItem) }
             val intent = Intent(this, NoteActivity::class.java)
             updateCustomAdapterLauncher.launch(intent)
             
@@ -113,7 +121,6 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun initRecyclerView() {
-        notesRecyclerView = findViewById(R.id.recycler_view)
         notesRecyclerAdapter = NotesRecyclerAdapter(this, mutableListOf())
         notesRecyclerAdapter.setOnClickListener(object : NotesRecyclerAdapter.OnClickListener {
             override fun onItemClick(view: View?, item: NoteItem, position: Int) {
@@ -134,8 +141,8 @@ class MainActivity : AppCompatActivity() {
                 
             }
         })
-        notesRecyclerView.adapter = notesRecyclerAdapter
-        registerForContextMenu(notesRecyclerView)
+        binding.recyclerView.adapter = notesRecyclerAdapter
+        registerForContextMenu(binding.recyclerView)
         vm.notesList.observe(this) {
             notesRecyclerAdapter.setList(it)
             
@@ -147,7 +154,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = menu?.findItem(R.id.menu_search)!!.actionView as SearchView
+        val searchView = menu?.findItem(R.id.menu_search)?.actionView as SearchView
         searchView.setSearchableInfo(manager.getSearchableInfo(componentName))
         searchView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener,
             SearchView.OnQueryTextListener {
@@ -159,12 +166,10 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextChange(text: String?): Boolean {
                 searchJob?.cancel()
                 searchJob = CoroutineScope(Dispatchers.Main).launch {
-                    if (text != null) {
-                        filter(text)
-                        
-                    }
+                    if (text.isNullOrEmpty()) filter(null)
+                    else filter(text)
+                    
                 }
-                
                 return false
             }
             
@@ -172,21 +177,41 @@ class MainActivity : AppCompatActivity() {
         return true
     }
     
-    private fun filter(text: String) {
-        
-        val filteredList: ArrayList<NoteItem> = ArrayList<NoteItem>()
-        
-        vm.notesList.observe(this) {
-            for (item in it) {
-                if (item.header.lowercase().contains(text.lowercase(Locale.getDefault()))) {
-                    filteredList.add(item)
+    private fun filter(text: String?) {
+        filteredList.clear()
+        CoroutineScope(Dispatchers.IO).launch {
+            val notesList = getNotesUseCase()
+            // If text is null, then show all notes.
+            if (text == null) {
+                Log.d(TAG, "filter: text == null")
+                CoroutineScope(Dispatchers.Main).launch {
+                    notesRecyclerAdapter.setList(notesList)
+                    
                 }
-            }
-            if (filteredList.isEmpty()) {
-                notesRecyclerAdapter.filterList(filteredList)
                 
             } else {
-                notesRecyclerAdapter.filterList(filteredList)
+                Log.d(TAG, "filter: text != null")
+                for (note in notesList) {
+                    if (note.header.lowercase().contains(text.lowercase(Locale.getDefault()))) {
+                        filteredList.add(note)
+                    }
+                }
+                Log.d(TAG, "filter: filteredList.size = ${filteredList.size} ")
+                if (filteredList.isEmpty()) {
+                    Log.d(TAG, "filter: filteredList is empty")
+                    CoroutineScope(Dispatchers.Main).launch {
+                        notesRecyclerAdapter.setList(filteredList)
+                        
+                    }
+                    
+                } else {
+                    Log.d(TAG, "filter: filteredList is not empty")
+                    CoroutineScope(Dispatchers.Main).launch {
+                        notesRecyclerAdapter.setList(filteredList)
+                        
+                    }
+                }
+                
             }
             
         }
@@ -278,22 +303,18 @@ class MainActivity : AppCompatActivity() {
             removeSelectedItems()
             val removedItemsCount = removeSelectedItems()
             if (removedItemsCount == 0) return
-            val snackbar_undo_title = resources.getText(R.string.snackbar_undo_title)
+            val snackbarUndoTitle = resources.getText(R.string.snackbar_undo_title)
                 .toString() + " " + removedItemsCount.toString()
-            // val snackbar_undo_button_title = resources.getText(R.string.snackbar_undo)
             val snackBarDuration = 4_000
             val snackBar = Snackbar.make(
-                    addFAB,
-                    snackbar_undo_title,
+                    binding.addFAB,
+                    snackbarUndoTitle,
                     snackBarDuration)
             
-            // snackBar.setAction(snackbar_undo_button_title) {
-            //
-            // }
             snackBar.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
             val colorAccent = ContextCompat.getColor(
                     this@MainActivity,
-                    ThemeHandler.getThemeColor(this@MainActivity, ThemeHandler.ACCENT_COLOR))
+                    ThemeHandler(this@MainActivity).getColorAccent())
             snackBar.setActionTextColor(colorAccent)
             snackBar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
             snackBar.show()

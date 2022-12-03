@@ -1,4 +1,4 @@
-package com.pandacorp.notesui.presentation.activity_note
+package com.pandacorp.notesui.presentation
 
 import android.net.Uri
 import android.os.Bundle
@@ -8,9 +8,7 @@ import android.text.style.AlignmentSpan
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
-import android.view.Gravity
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.ColorInt
@@ -18,7 +16,6 @@ import androidx.annotation.GravityInt
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.toSpannable
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
@@ -26,11 +23,13 @@ import com.pandacorp.domain.models.ColorItem
 import com.pandacorp.domain.models.NoteItem
 import com.pandacorp.domain.usecases.notes.GetNotesUseCase
 import com.pandacorp.domain.usecases.notes.UpdateNoteUseCase
+import com.pandacorp.domain.usecases.utils.JsonToSpannableUseCase
+import com.pandacorp.domain.usecases.utils.SpannableToJsonUseCase
 import com.pandacorp.notesui.R
+import com.pandacorp.notesui.controllers.InitSlidingDrawerMenuСontroller
 import com.pandacorp.notesui.databinding.ActivityNoteBinding
 import com.pandacorp.notesui.databinding.ContentActivityNoteBinding
 import com.pandacorp.notesui.databinding.MenuDrawerEndBinding
-import com.pandacorp.notesui.presentation.activity_note.controllers.InitSlidingDrawerMenuСontroller
 import com.pandacorp.notesui.presentation.adapter.ColorsRecyclerAdapter
 import com.pandacorp.notesui.utils.ThemeHandler
 import com.pandacorp.notesui.utils.Utils
@@ -57,6 +56,8 @@ class NoteActivity : AppCompatActivity() {
     
     private val vm: NoteViewModel by viewModel()
     
+    private val spannableToJsonUseCase: SpannableToJsonUseCase by inject()
+    private val jsonToSpannableUseCase: JsonToSpannableUseCase by inject()
     private lateinit var databaseList: MutableList<NoteItem>
     private lateinit var note: NoteItem
     private var notePositionInAdapter: Int? = null
@@ -88,12 +89,13 @@ class NoteActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ThemeHandler.load(this)
+        ThemeHandler(this).load()
         binding = ActivityNoteBinding.inflate(layoutInflater)
         bindingContent = binding.contentActivityInclude
         bindingDrawerMenuNoteEndDrawerBinding = binding.drawerMenuInclude
         setContentView(binding.root)
         Utils.setupExceptionHandler()
+        setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar!!.setHomeButtonEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         CoroutineScope(Dispatchers.Main).launch {
@@ -130,27 +132,20 @@ class NoteActivity : AppCompatActivity() {
             val drawable = ContextCompat.getDrawable(this, drawableResId)
             bindingContent.noteBackgroundImageView.setImageDrawable(drawable)
         } catch (e: Exception) {
-            // In case if note.background is a chosen from storage image.
+            // In case if note.background is a chosen from storage image or color.
             bindingContent.noteBackgroundImageView.setImageURI(Uri.parse(note.background))
             
         }
-        
-        // Change action menu linear layout background tint, don't change background,
-        // there is a drawable with corners.
-        bindingContent.actionMenuParentLayout.backgroundTintList =
-            ResourcesCompat.getColorStateList(
-                    resources,
-                    ThemeHandler.getThemeColor(this, ThemeHandler.PRIMARY_COLOR),
-                    null)
-        
+        //When activity starts, don't show keyboard.
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         
     }
     
     private fun initEditTexts() {
         
-        val headerSpannable = Utils.jsonToSpannable(note.header)
+        val headerSpannable = jsonToSpannableUseCase(note.header)
         
-        val contentSpannable = Utils.jsonToSpannable(note.content)
+        val contentSpannable = jsonToSpannableUseCase(note.content)
         bindingContent.headerEditText.setText(headerSpannable)
         bindingContent.contentEditText.setText(contentSpannable)
         
@@ -302,6 +297,7 @@ class NoteActivity : AppCompatActivity() {
                                 ColorEnvelopeListener { envelope, fromUser ->
                                     val newColorItem = ColorItem(color = envelope.color)
                                     vm.addColor(newColorItem)
+                                    Log.d(TAG, "onItemClick: color = ${envelope.hexCode}")
                                     
                                 })
                         .setNegativeButton(
@@ -328,33 +324,49 @@ class NoteActivity : AppCompatActivity() {
             }
             
             override fun onItemLongClick(view: View?, colorItem: ColorItem, position: Int) {
-                if (colorItem.type != ColorItem.COLOR) return
-                AlertDialog.Builder(this@NoteActivity, R.style.MaterialAlertDialog)
-                    .setTitle(R.string.confirm_color_remove)
-                    .setPositiveButton(R.string.remove) { dialog, which ->
-                        vm.removeColor(colorItem)
-                        colorsRecyclerAdapter.notifyDataSetChanged()
-                        
-                        
-                    }
-                    .setNegativeButton(getString(android.R.string.cancel)) { dialog, which ->
-                        dialog.dismiss()
-                        
-                    }
-                    .show()
-                    .window!!.decorView.setBackgroundResource(R.drawable.alert_dialog_background)
-                
-                
-            }
+                if (colorItem.type == ColorItem.ADD) {
+                    AlertDialog.Builder(this@NoteActivity, R.style.MaterialAlertDialog)
+                        .setTitle(R.string.confirm_colors_reset)
+                        .setPositiveButton(R.string.reset) { dialog, which ->
+                            vm.resetColors(this@NoteActivity)
+                            colorsRecyclerAdapter.notifyDataSetChanged()
+            
+            
+                        }
+                        .setNegativeButton(getString(android.R.string.cancel)) { dialog, which ->
+                            dialog.dismiss()
+            
+                        }
+                        .show()
+                        .window!!.decorView.setBackgroundResource(R.drawable.alert_dialog_background)
+    
+                } else {
+    
+                    AlertDialog.Builder(this@NoteActivity, R.style.MaterialAlertDialog)
+                        .setTitle(R.string.confirm_color_remove)
+                        .setPositiveButton(R.string.remove) { dialog, which ->
+                            vm.removeColor(colorItem)
+                            colorsRecyclerAdapter.notifyDataSetChanged()
+            
+            
+                        }
+                        .setNegativeButton(getString(android.R.string.cancel)) { dialog, which ->
+                            dialog.dismiss()
+            
+                        }
+                        .show()
+                        .window!!.decorView.setBackgroundResource(R.drawable.alert_dialog_background)
+    
+    
+                }
+                }
         })
-        
         bindingContent.actionMenuColorsRecyclerView.adapter = colorsRecyclerAdapter
         vm.colorsList.observe(this@NoteActivity) {
             colorsRecyclerAdapter.setList(it)
         }
         
     }
-    
     
     /**
      * This method changes selected text foreground color of contentEditText
@@ -490,9 +502,23 @@ class NoteActivity : AppCompatActivity() {
         bindingContent.contentEditText.setText(resultText)
     }
     
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_note, menu)
+        return true
+    }
+    
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
             finish()
+        }
+        if (item.itemId == R.id.menu_note_hamburger) {
+            if (binding.drawerMenu.isDrawerOpen(Gravity.RIGHT)) {
+                binding.drawerMenu.closeDrawer(Gravity.RIGHT)
+                binding.contentMotionLayout.transitionToStart()
+            } else {
+                binding.drawerMenu.openDrawer(Gravity.RIGHT)
+                binding.contentMotionLayout.transitionToEnd()
+            }
         }
         return true
     }
@@ -518,8 +544,8 @@ class NoteActivity : AppCompatActivity() {
         val headerSpannableText = bindingContent.headerEditText.text.toSpannable()
         val contentSpannableText = bindingContent.contentEditText.text.toSpannable()
         
-        val jsonHeader = Utils.spannableToJson(headerSpannableText)
-        val jsonContent = Utils.spannableToJson(contentSpannableText)
+        val jsonHeader = spannableToJsonUseCase(headerSpannableText)
+        val jsonContent = spannableToJsonUseCase(contentSpannableText)
         note.header = jsonHeader
         note.content = jsonContent
         

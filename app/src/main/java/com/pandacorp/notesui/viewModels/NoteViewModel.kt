@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.pandacorp.domain.models.ColorItem
 import com.pandacorp.domain.usecases.colors.AddColorUseCase
 import com.pandacorp.domain.usecases.colors.GetColorsUseCase
+import com.pandacorp.domain.usecases.colors.RemoveAllColorsUseCase
 import com.pandacorp.domain.usecases.colors.RemoveColorUseCase
 import com.pandacorp.notesui.R
 import kotlinx.coroutines.CoroutineScope
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 class NoteViewModel(
     private val getColorsListUseCase: GetColorsUseCase,
     private val addColorUseCase: AddColorUseCase,
-    private val removeColorUseCase: RemoveColorUseCase
+    private val removeColorUseCase: RemoveColorUseCase,
+    private val removeAllColorsUseCase: RemoveAllColorsUseCase
 ) :
     ViewModel() {
     var colorsList = MutableLiveData<MutableList<ColorItem>>()
@@ -42,31 +44,33 @@ class NoteViewModel(
     }
     
     fun removeColor(colorItem: ColorItem) {
-        
-        removeColorUseCase(colorItem)
-        viewModelScope.launch {
-            colorsList.postValue(getColorsListUseCase())
-            
+        CoroutineScope(Dispatchers.IO).launch {
+            removeColorUseCase(colorItem)
+            viewModelScope.launch {
+                colorsList.postValue(getColorsListUseCase())
+                
+                
+            }
             
         }
     }
     
     fun addBasicColors(context: Context) {
         //On first time opened add add button and 3 default colors.
-        val addColorItem =
-            ColorItem(color = R.drawable.ic_add_baseline, type = ColorItem.ADD)
-        val yellowColorItem = ColorItem(
-                color = ContextCompat.getColor(context, R.color.yellow))
-        val blueColorItem = ColorItem(
-                color = ContextCompat.getColor(context, R.color.blue))
-        val redColorItem = ColorItem(
-                color = ContextCompat.getColor(context, R.color.red))
-        
+        val basicColorsList = mutableListOf(
+                ColorItem(
+                        color = R.drawable.ic_add_baseline,
+                        type = ColorItem.ADD),
+                ColorItem(color = ContextCompat.getColor(context, R.color.light_yellow)),
+                ColorItem(color = ContextCompat.getColor(context, R.color.light_green)),
+                ColorItem(color = ContextCompat.getColor(context, R.color.light_blue)),
+                ColorItem(color = ContextCompat.getColor(context, R.color.light_pink)),
+                ColorItem(color = ContextCompat.getColor(context, R.color.light_red)),
+                ColorItem(color = ContextCompat.getColor(context, R.color.light_purple)),
+        )
         CoroutineScope(Dispatchers.IO).launch {
-            addColorUseCase(addColorItem)
-            addColorUseCase(yellowColorItem)
-            addColorUseCase(blueColorItem)
-            addColorUseCase(redColorItem)
+            basicColorsList.forEach { addColorUseCase(it) }
+            
             viewModelScope.launch {
                 colorsList.postValue(getColorsListUseCase())
                 
@@ -74,5 +78,17 @@ class NoteViewModel(
         }
         
         
+    }
+    
+    fun resetColors(context: Context) {
+        CoroutineScope(Dispatchers.IO).launch {
+            removeAllColorsUseCase()
+            addBasicColors(context = context)
+            viewModelScope.launch {
+                colorsList.postValue(getColorsListUseCase())
+                
+            }
+            
+        }
     }
 }

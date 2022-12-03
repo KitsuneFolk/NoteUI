@@ -1,4 +1,4 @@
-package com.pandacorp.notesui.presentation.activity_note.controllers
+package com.pandacorp.notesui.controllers
 
 import android.content.Context
 import android.content.Intent
@@ -13,7 +13,7 @@ import com.pandacorp.domain.models.NoteItem
 import com.pandacorp.domain.usecases.notes.UpdateNoteUseCase
 import com.pandacorp.notesui.databinding.ActivityNoteBinding
 import com.pandacorp.notesui.databinding.MenuDrawerEndBinding
-import com.pandacorp.notesui.presentation.activity_note.NoteActivity
+import com.pandacorp.notesui.presentation.NoteActivity
 import com.pandacorp.notesui.presentation.adapter.ImagesRecyclerAdapter
 import com.pandacorp.notesui.utils.ThemeHandler
 import com.pandacorp.notesui.utils.Utils
@@ -49,6 +49,11 @@ class InitSlidingDrawerMenuСontroller(
         this.menuBinding = noteBinding.drawerMenuInclude
         this.pickImageResult = pickImageResult
         
+        initViews()
+        
+    }
+    
+    private fun initViews() {
         menuBinding.expandChangeBackgroundButton.setOnClickListener {
             if (menuBinding.changeBackgroundExpandableLayout.isExpanded) {
                 menuBinding.changeBackgroundExpandableLayout.collapse()
@@ -62,24 +67,27 @@ class InitSlidingDrawerMenuСontroller(
                 .createIntent {
                     Log.d(TAG, "invoke: createIntent")
                     pickImageResult.launch(it)
-                
+                    
                 }
             
             
         }
         menuBinding.drawerMenuResetButton.setOnClickListener() {
-            val colorBackground = ContextCompat.getColor(context, ThemeHandler.getThemeColor(context = context, colorType = ThemeHandler.BACKGROUND_COLOR))
-            noteBinding.contentActivityInclude.noteBackgroundImageView.setImageDrawable(ColorDrawable(colorBackground))
+            val colorBackground = ContextCompat.getColor(
+                    context,
+                    ThemeHandler(context).getColorBackground())
+            noteBinding.contentActivityInclude.noteBackgroundImageView.setImageDrawable(
+                    ColorDrawable(colorBackground))
             CoroutineScope(Dispatchers.IO).launch {
                 note.background = colorBackground.toString()
                 updateNoteUseCase(note)
-        
+                
             }
             
         }
         
         initImageRecyclerView()
-        
+        initChangeTransparentViewsSwitchCompat()
     }
     
     private fun initImageRecyclerView() {
@@ -114,6 +122,21 @@ class InitSlidingDrawerMenuСontroller(
             
         }
         return imagesList
+    }
+    
+    private fun initChangeTransparentViewsSwitchCompat() {
+        menuBinding.switchTransparentActionBarSwitchCompat.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                with(activity.window) {
+                
+                }
+            } else {
+                with(activity.window) {
+                
+                }
+            }
+        }
+        
     }
     
 }

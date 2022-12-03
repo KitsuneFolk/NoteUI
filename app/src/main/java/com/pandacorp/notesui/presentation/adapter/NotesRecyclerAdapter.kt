@@ -13,15 +13,18 @@ import androidx.cardview.widget.CardView
 import androidx.core.util.size
 import androidx.recyclerview.widget.RecyclerView
 import com.pandacorp.domain.models.NoteItem
+import com.pandacorp.domain.usecases.utils.JsonToSpannableUseCase
 import com.pandacorp.notesui.R
-import com.pandacorp.notesui.utils.Utils
-
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class NotesRecyclerAdapter(
-    private var context: Context,
+    context: Context,
     private var itemsList: MutableList<NoteItem>
-) : RecyclerView.Adapter<NotesRecyclerAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<NotesRecyclerAdapter.ViewHolder>(), KoinComponent {
     private val TAG = "NotesRecyclerAdapter"
+    
+    private val jsonToSpannableUseCase: JsonToSpannableUseCase by inject()
     
     private var onClickListener: OnClickListener? = null
     
@@ -42,9 +45,9 @@ class NotesRecyclerAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = itemsList[position]
     
-        holder.header.text = Utils.jsonToSpannable(item.header)
+        holder.header.text = jsonToSpannableUseCase(item.header)
         
-        holder.content.text = Utils.jsonToSpannable(item.content)
+        holder.content.text = jsonToSpannableUseCase(item.content)
         Log.d(TAG, "onBindViewHolder: header.text = ${holder.header.text}")
         Log.d(TAG, "onBindViewHolder: content.text = ${holder.content.text}")
         
@@ -96,35 +99,25 @@ class NotesRecyclerAdapter(
     }
     fun getSelectedItems(): List<Int> {
         val items: MutableList<Int> = ArrayList(selectedItemsList.size())
-        Log.d(TAG, "getSelectedItems: selectedItemsList.size = ${selectedItemsList.size()}")
         for (i in 0 until selectedItemsList.size()) {
             items.add(selectedItemsList.keyAt(i))
         }
         return items
     }
     fun selectAllItems() {
-        Log.d(TAG, "selectAllItems: start selectedItemsList.size = ${selectedItemsList.size}")
         if (selectedItemsList.size == itemsList.size) {
             //Unselect all
-            Log.d(TAG, "selectAllItems: Unselect all")
             selectedItemsList.clear()
         } else {
             //Select all
-            Log.d(TAG, "selectAllItems: Select all")
             selectedItemsList.clear()
             for (i in 0 until itemsList.size) {
                 selectedItemsList.put(i, true)
             }
         }
         notifyDataSetChanged()
-        Log.d(TAG, "selectAllItems: end selectedItemsList.size = ${selectedItemsList.size}")
         
         
-    }
-    
-    fun filterList(filterList: ArrayList<NoteItem>) {
-        itemsList = filterList
-        notifyDataSetChanged()
     }
     
     fun setOnClickListener(onClickListener: OnClickListener?) {
