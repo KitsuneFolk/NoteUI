@@ -6,12 +6,12 @@ import android.text.SpannableString
 import android.text.style.AlignmentSpan
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.Gravity
 import org.json.JSONException
 import org.json.JSONObject
 
 class JsonToSpannableUseCase {
+    private val TAG = "NoteActivity"
     @Throws(JSONException::class)
     operator fun invoke(jsonString: String): Spannable? {
         val json: JSONObject?
@@ -20,7 +20,6 @@ class JsonToSpannableUseCase {
             json = JSONObject(jsonString)
             
         } catch (jsonException: JSONException) {
-            Log.d("NoteActivity", "jsonToSpannable: ${jsonException.message}")
             return null
         }
         val spannableString = SpannableString(json.getString(Strings.textText))
@@ -38,8 +37,8 @@ class JsonToSpannableUseCase {
                         foregroundEnd,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
+            // Log.d(TAG, "invoke: foregrounds = $foregroundSpansJsonArray'")
         } catch (e: Exception) {
-            Log.d("NoteActivity", "jsonToSpannable: ${e.message}")
         }
         
         try {
@@ -56,9 +55,9 @@ class JsonToSpannableUseCase {
                         backgroundEnd,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
+            // Log.d(TAG, "invoke: backgrounds = $backgroundSpansJsonArray")
         } catch (e: Exception) {
-            Log.d("NoteActivity", "jsonToSpannable: ${e.message}")
-            
+        
         }
         try {
             //Check if alignmentSpansJsonArray != null
@@ -81,11 +80,10 @@ class JsonToSpannableUseCase {
                         alignmentEnd,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
+            // Log.d(TAG, "invoke: alignments = $alignmentSpansJsonArray")
         } catch (e: Exception) {
-            Log.d("NoteActivity", "jsonToSpannable: ${e.message}")
-            
-        }
         
+        }
         return spannableString
     }
 }

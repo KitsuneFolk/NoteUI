@@ -31,10 +31,10 @@
     <string name="confirm_color_remove">Ви впевненi що хочете видалити колiр?</string>
     <string name="confirm_colors_reset">Ви впевненi що хочете скинути кольори??</string>
 
-    <!-- Note drawer menu strings -->
+    <!-- Note drawer menu_main strings -->
     <string name="note">Нотаток</string>
     <string name="changeBackground">Змiнити заднiй фон</string>
-    <string name="show_transparent_actionbar_statusbar_navigationbar">Показувати прозорими actionBar, statusBar та navigationBar</string>
+    <string name="show_transparent_actionbar">Показувати прозорим actionBar</string>
     <string name="findImage">Знайти зображення…</string>
     <string name="selectColor">Обрати колiр</string>
     <string name="reset">Скинути</string>
@@ -42,7 +42,9 @@
     <string name="image">Зображення</string>
     <string name="selectImage">Обрати зображення</string>
     <string name="embeddedImages">Вбудованi зображення</string>
-    <string name="colors">Цвета</string>
+    <string name="colors">Кольори</string>
+    <string name="undo">Повернути</string>
+    <string name="redo">Вiдновити</string>
 
     <!-- ImagePicker strings  -->
     <string name="title_choose_image_provider">Обрати</string>

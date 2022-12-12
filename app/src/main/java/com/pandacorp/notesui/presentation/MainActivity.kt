@@ -16,7 +16,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.pandacorp.domain.models.NoteItem
-import com.pandacorp.domain.usecases.notes.GetNotesUseCase
+import com.pandacorp.domain.usecases.notes.database.GetNotesUseCase
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.databinding.ActivityMainBinding
 import com.pandacorp.notesui.presentation.adapter.NotesRecyclerAdapter
@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         if (it.resultCode == RESULT_OK) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
-            overridePendingTransition(0, 0)
+            overridePendingTransition(0, R.anim.slide_out_right)
         }
         
         
@@ -130,7 +130,6 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(this@MainActivity, NoteActivity::class.java)
                     intent.putExtra(NoteActivity.intentNotePositionInAdapter, position)
                     updateCustomAdapterLauncher.launch(intent)
-                    // overridePendingTransition(R.anim.slide_out_up, R.anim.slide_in_up)
                     
                 }
             }
@@ -152,7 +151,7 @@ class MainActivity : AppCompatActivity() {
     
     private var searchJob: Job? = null
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         val manager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchView = menu?.findItem(R.id.menu_search)?.actionView as SearchView
         searchView.setSearchableInfo(manager.getSearchableInfo(componentName))

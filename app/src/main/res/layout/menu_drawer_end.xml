@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="10"
-                android:text="@string/show_transparent_actionbar_statusbar_navigationbar"/>
+                android:text="@string/show_transparent_actionbar"/>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchTransparentActionBarSwitchCompat"

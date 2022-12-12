@@ -4,9 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pandacorp.domain.models.NoteItem
-import com.pandacorp.domain.usecases.notes.AddNoteUseCase
-import com.pandacorp.domain.usecases.notes.GetNotesUseCase
-import com.pandacorp.domain.usecases.notes.RemoveNoteUseCase
+import com.pandacorp.domain.usecases.notes.database.AddNoteUseCase
+import com.pandacorp.domain.usecases.notes.database.GetNotesUseCase
+import com.pandacorp.domain.usecases.notes.database.RemoveNoteUseCase
 import kotlinx.coroutines.launch
 
 class MainViewModel(

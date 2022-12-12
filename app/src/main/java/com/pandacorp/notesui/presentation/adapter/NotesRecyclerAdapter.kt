@@ -1,7 +1,6 @@
 package com.pandacorp.notesui.presentation.adapter
 
 import android.content.Context
-import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +12,10 @@ import androidx.cardview.widget.CardView
 import androidx.core.util.size
 import androidx.recyclerview.widget.RecyclerView
 import com.pandacorp.domain.models.NoteItem
+import com.pandacorp.domain.usecases.notes.SetNoteBackgroundUseCase
 import com.pandacorp.domain.usecases.utils.JsonToSpannableUseCase
 import com.pandacorp.notesui.R
+import com.pandacorp.notesui.utils.Utils
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -25,6 +26,7 @@ class NotesRecyclerAdapter(
     private val TAG = "NotesRecyclerAdapter"
     
     private val jsonToSpannableUseCase: JsonToSpannableUseCase by inject()
+    private val setNoteBackgroundUseCase: SetNoteBackgroundUseCase by inject()
     
     private var onClickListener: OnClickListener? = null
     
@@ -43,24 +45,24 @@ class NotesRecyclerAdapter(
     fun getItem(position: Int): NoteItem = itemsList[position]
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = itemsList[position]
+        val note = itemsList[position]
     
-        holder.header.text = jsonToSpannableUseCase(item.header)
+        holder.header.text = jsonToSpannableUseCase(note.header)
         
-        holder.content.text = jsonToSpannableUseCase(item.content)
-        Log.d(TAG, "onBindViewHolder: header.text = ${holder.header.text}")
-        Log.d(TAG, "onBindViewHolder: content.text = ${holder.content.text}")
+        holder.content.text = jsonToSpannableUseCase(note.content)
         
+        setNoteBackgroundUseCase(note, Utils.backgroundImages, holder.backgroundImageView)
+    
         holder.cardView.isActivated = selectedItemsList.get(position, false)
         
         holder.cardView.setOnClickListener(View.OnClickListener { v ->
             if (onClickListener == null) return@OnClickListener
-            onClickListener!!.onItemClick(v, item, position)
+            onClickListener!!.onItemClick(v, note, position)
         })
         
         holder.cardView.setOnLongClickListener(OnLongClickListener { v ->
             if (onClickListener == null) return@OnLongClickListener false
-            onClickListener!!.onItemLongClick(v, item, position)
+            onClickListener!!.onItemLongClick(v, note, position)
             true
         })
         
@@ -130,12 +132,12 @@ class NotesRecyclerAdapter(
     }
     
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val TAG = "ViewHolder"
-        val header = itemView.findViewById<TextView>(R.id.list_item_header_textView)
-        val content = itemView.findViewById<TextView>(R.id.list_item_content_textview)
-        val checkedImage = itemView.findViewById<ImageView>(R.id.list_item_select_check_image)
+        val header = itemView.findViewById<TextView>(R.id.note_item_header_textView)
+        val content = itemView.findViewById<TextView>(R.id.note_item_content_textview)
+        val backgroundImageView = itemView.findViewById<ImageView>(R.id.note_item_background_imageview)
+        val checkedImage = itemView.findViewById<ImageView>(R.id.note_item_select_check_image)
         
-        val cardView = itemView.findViewById<CardView>(R.id.list_item_cardView)
+        val cardView = itemView.findViewById<CardView>(R.id.note_item_cardView)
         
     }
     

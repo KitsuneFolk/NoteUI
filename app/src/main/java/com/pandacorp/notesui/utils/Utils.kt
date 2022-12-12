@@ -8,13 +8,12 @@ class Utils {
     companion object {
         
         //Images that user can choose to set note background.
-        val backgroundImagesIds = listOf(
-                R.drawable.image_android,
-                R.drawable.image_river,
-                R.drawable.image_field,
+        val backgroundImages = listOf(
+                R.drawable.image_night_city,
+                R.drawable.image_city,
+                R.drawable.image_nature,
                 R.drawable.image_moon,
-                R.drawable.image_flower,
-                R.drawable.image_skyscrapers)
+                R.drawable.image_nature2)
         
         //This function is needed for coroutines logs work on Xiaomi devices.
         fun setupExceptionHandler() {

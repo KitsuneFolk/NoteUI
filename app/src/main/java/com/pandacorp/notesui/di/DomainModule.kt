@@ -4,10 +4,11 @@ import com.pandacorp.domain.usecases.colors.AddColorUseCase
 import com.pandacorp.domain.usecases.colors.GetColorsUseCase
 import com.pandacorp.domain.usecases.colors.RemoveAllColorsUseCase
 import com.pandacorp.domain.usecases.colors.RemoveColorUseCase
-import com.pandacorp.domain.usecases.notes.AddNoteUseCase
-import com.pandacorp.domain.usecases.notes.GetNotesUseCase
-import com.pandacorp.domain.usecases.notes.RemoveNoteUseCase
-import com.pandacorp.domain.usecases.notes.UpdateNoteUseCase
+import com.pandacorp.domain.usecases.notes.SetNoteBackgroundUseCase
+import com.pandacorp.domain.usecases.notes.database.AddNoteUseCase
+import com.pandacorp.domain.usecases.notes.database.GetNotesUseCase
+import com.pandacorp.domain.usecases.notes.database.RemoveNoteUseCase
+import com.pandacorp.domain.usecases.notes.database.UpdateNoteUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
@@ -35,6 +36,9 @@ val domainModule = module {
     }
     single {
         GetColorsUseCase(get())
+    }
+    single {
+        SetNoteBackgroundUseCase(get())
     }
     
 }

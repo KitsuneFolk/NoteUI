@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!-- This is extended version of menu_note,
+     this file menu contains undo and redo buttons -->
+    <item
+        android:id="@+id/menu_note_extended_previous"
+        android:icon="@drawable/ic_undo"
+        android:title="@string/undo"
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/menu_note_extended_next"
+        android:icon="@drawable/ic_redo"
+        android:title="@string/redo"
+        app:showAsAction="always"
+        />
+</menu>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.MainActivity"
-    tools:menu="@menu/menu">
+    tools:menu="@menu/menu_main">
 
     <include android:id="@+id/mainToolbarInclude" layout="@layout/toolbar" />
 

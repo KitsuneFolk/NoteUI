@@ -30,11 +30,13 @@
     <string name="remove">Удалить</string>
     <string name="confirm_color_remove">Вы уверены что хотите удалить цвет?</string>
     <string name="confirm_colors_reset">Вы уверены что хотите сбросить цвета?</string>
+    <string name="undo">Вернуть</string>
+    <string name="redo">Восстановить</string>
 
-    <!-- Note drawer menu strings -->
+    <!-- Note drawer menu_main strings -->
     <string name="note">Заметка</string>
     <string name="changeBackground">Поменять задний фон</string>
-    <string name="show_transparent_actionbar_statusbar_navigationbar">Показывать прозрачными actionBar, statusBar и navigationBar</string>
+    <string name="show_transparent_actionbar">Показывать прозрачным actionBar</string>
     <string name="findImage">Найти изображение…</string>
     <string name="selectColor">Выбрать цвет</string>
     <string name="reset">Сбросить</string>

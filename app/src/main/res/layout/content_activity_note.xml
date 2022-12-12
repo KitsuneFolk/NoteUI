@@ -9,83 +9,106 @@
         android:layout_height="match_parent">
 
         <ScrollView
-            android:id="@+id/noteBackgroundScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpeakableTextPresentCheck">
 
             <ImageView
                 android:id="@+id/noteBackgroundImageView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="true" />
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                tools:src="@drawable/image_night_city"/>
+
         </ScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/headerEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="0"
-                android:background="@null"
-                android:gravity="center"
-                android:hint="@string/header"
-                android:inputType="text"
-                android:maxLines="12"
-                android:minHeight="48dp"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/contentEditText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="3dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:background="@null"
-                android:gravity="top|start"
-                android:hint="@string/content"
-                android:inputType="textMultiLine"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/headerEditText"
-                tools:text="@string/lorem_ipsumX3" />
-
-        </LinearLayout>
+        <include
+            android:id="@+id/noteToolbarInclude"
+            layout="@layout/toolbar" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/actionMenuParent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/noteToolbarInclude">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:fillViewport="true"
+                app:layout_constraintBottom_toTopOf="@id/actionMenuParentLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toTopOf="@id/actionMenuParentLayout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.pandacorp.notesui.utils.CustomEditText
+                        android:id="@+id/headerEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="0"
+                        android:background="@null"
+                        android:gravity="center"
+                        android:hint="@string/header"
+                        android:inputType="text"
+                        android:maxLines="12"
+                        android:minHeight="48dp"
+                        android:textColorHint="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.pandacorp.notesui.utils.CustomEditText
+                        android:id="@+id/contentEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:gravity="top|start"
+                        android:hint="@string/content"
+                        android:inputType="textMultiLine"
+                        android:overScrollMode="always"
+                        android:scrollbars="vertical"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/headerEditText"
+                        tools:text="@string/lorem_ipsumX3" />
+
+                </LinearLayout>
+
+            </ScrollView>
 
             <LinearLayout
                 android:id="@+id/actionMenuParentLayout"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
-                android:clickable="true"
                 android:background="@drawable/linear_layout_rounded_background"
                 android:backgroundTint="?android:colorPrimary"
+                android:clickable="true"
+                android:focusable="true"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:focusable="true"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <LinearLayout
@@ -140,7 +163,7 @@
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:layout_marginStart="15dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="15dp"
                         android:background="?selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_note_action_remove" />
 
@@ -214,7 +237,6 @@
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

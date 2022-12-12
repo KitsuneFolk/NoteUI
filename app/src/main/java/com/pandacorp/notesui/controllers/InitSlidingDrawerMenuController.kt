@@ -1,16 +1,19 @@
 package com.pandacorp.notesui.controllers
 
 import android.content.Context
-import android.content.Intent
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
-import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.pandacorp.domain.models.NoteItem
-import com.pandacorp.domain.usecases.notes.UpdateNoteUseCase
+import com.pandacorp.domain.usecases.notes.database.UpdateNoteUseCase
+import com.pandacorp.notesui.R
 import com.pandacorp.notesui.databinding.ActivityNoteBinding
 import com.pandacorp.notesui.databinding.MenuDrawerEndBinding
 import com.pandacorp.notesui.presentation.NoteActivity
@@ -22,9 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class InitSlidingDrawerMenuСontroller(
-    private val updateNoteUseCase: UpdateNoteUseCase
-) {
+class InitSlidingDrawerMenuController(private val updateNoteUseCase: UpdateNoteUseCase) {
     private val TAG = "NoteActivity"
     
     private lateinit var context: Context
@@ -33,21 +34,38 @@ class InitSlidingDrawerMenuСontroller(
     private lateinit var noteBinding: ActivityNoteBinding
     private lateinit var menuBinding: MenuDrawerEndBinding
     
-    private lateinit var pickImageResult: ActivityResultLauncher<Intent>
+    private lateinit var toolbar: Toolbar
+    
+    private val pickImageResult by lazy {
+        activity.registerForActivityResult(
+                ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == AppCompatActivity.RESULT_OK) {
+                val imageUri = it.data!!.data
+                
+                noteBinding.contentActivityInclude.noteBackgroundImageView.setImageURI(imageUri)
+                note.background = imageUri.toString()
+                CoroutineScope(Dispatchers.IO).launch {
+                    updateNoteUseCase.invoke(note)
+                    
+                }
+            }
+            
+        }
+    }
+    
     operator fun invoke(
         context: Context,
         activity: NoteActivity,
         note: NoteItem,
-        noteBinding: ActivityNoteBinding,
-        pickImageResult: ActivityResultLauncher<Intent>
-    
+        noteBinding: ActivityNoteBinding
     ) {
         this.context = context
         this.activity = activity
         this.note = note
         this.noteBinding = noteBinding
         this.menuBinding = noteBinding.drawerMenuInclude
-        this.pickImageResult = pickImageResult
+        
+        this.toolbar = activity.findViewById(R.id.toolbar)
         
         initViews()
         
@@ -63,7 +81,7 @@ class InitSlidingDrawerMenuСontroller(
         
         menuBinding.drawerMenuSelectButton.setOnClickListener {
             ImagePicker.with(activity = activity)
-                .crop(9f, 16f)
+                .crop(1f, 2f)
                 .createIntent {
                     Log.d(TAG, "invoke: createIntent")
                     pickImageResult.launch(it)
@@ -117,7 +135,7 @@ class InitSlidingDrawerMenuСontroller(
     private fun fillImagesList(): MutableList<Drawable> {
         val imagesList = mutableListOf<Drawable>()
         
-        for (drawableResId in Utils.backgroundImagesIds) {
+        for (drawableResId in Utils.backgroundImages) {
             imagesList.add(ContextCompat.getDrawable(context, drawableResId)!!)
             
         }
@@ -126,17 +144,28 @@ class InitSlidingDrawerMenuСontroller(
     
     private fun initChangeTransparentViewsSwitchCompat() {
         menuBinding.switchTransparentActionBarSwitchCompat.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                with(activity.window) {
+            setTransparentActionBar(isChecked)
+            note.isShowTransparentActionBar = isChecked
+            CoroutineScope(Dispatchers.IO).launch {
+                updateNoteUseCase(note)
                 
-                }
-            } else {
-                with(activity.window) {
-                
-                }
             }
+            
         }
+        menuBinding.switchTransparentActionBarSwitchCompat.isChecked = note.isShowTransparentActionBar
         
+    }
+    
+    private fun setTransparentActionBar(isChecked: Boolean) {
+        if (isChecked) {
+            activity.supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        } else {
+            val colorPrimary =
+                ContextCompat.getColor(context, ThemeHandler(context).getColorPrimary())
+            activity.supportActionBar!!.setBackgroundDrawable(ColorDrawable(colorPrimary))
+        }
+        activity.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        activity.supportActionBar!!.setHomeButtonEnabled(true)
     }
     
 }
