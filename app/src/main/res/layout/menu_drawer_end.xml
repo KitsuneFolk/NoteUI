@@ -10,15 +10,40 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <Button
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@drawable/ripple_color_primary"
             android:id="@+id/expandChangeBackgroundButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:text="@string/changeBackground"
-            android:textColor="@color/white" />
+            android:clickable="true"
+            android:drawableEnd="@drawable/ic_show_less_animated"
+            android:focusable="true"
+            android:minHeight="48dp">
+
+            <TextView
+                android:id="@+id/changeBackgroundButtonTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/changeBackground"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/changeBackgroundButtonImageView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/changeBackgroundButtonImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_show_more_animated"
+                app:layout_constraintBottom_toBottomOf="@id/changeBackgroundButtonTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/changeBackgroundButtonTextView"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <net.cachapa.expandablelayout.ExpandableLayout
             android:id="@+id/changeBackgroundExpandableLayout"
@@ -27,7 +52,7 @@
             app:el_duration="500"
             app:el_expanded="false"
             app:el_parallax="0.5"
-            tools:el_expanded="false">
+            tools:el_expanded="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,20 +61,18 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/drawerMenuSelectButton"
+                    android:id="@+id/drawerMenuSelectImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="@string/selectImage"
-                    android:textColor="@color/white" />
+                    android:text="@string/selectImage"/>
 
                 <Button
                     android:id="@+id/drawerMenuResetButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:text="@string/reset"
-                    android:textColor="@color/white" />
+                    android:text="@string/reset" />
 
                 <TextView
                     android:id="@+id/menu_left_drawer_select_image_textview"
@@ -72,19 +95,21 @@
 
             </LinearLayout>
         </net.cachapa.expandablelayout.ExpandableLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp">
+
             <TextView
                 android:id="@+id/switchTransparentActionBarTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="10"
-                android:text="@string/show_transparent_actionbar"/>
+                android:text="@string/show_transparent_actionbar" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchTransparentActionBarSwitchCompat"

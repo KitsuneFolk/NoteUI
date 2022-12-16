@@ -7,7 +7,6 @@
     <color name="BlueTheme_colorBackground">#4B68FF</color>
     <color name="BlueTheme_ButtonColor">#3232FF</color>
     <color name="BlueTheme_textColorSecondary">#F0DBD8</color>
-    <color name="BlueTheme_NavigationBar">#90CAF9</color>
 
     <!-- DarkTheme -->
     <color name="DarkTheme_colorPrimary">#0A0A0A</color>
@@ -18,7 +17,6 @@
     <color name="DarkTheme_ButtonColor">#0A0A0A</color>
     <color name="DarkTheme_TextColor">#FFFFFF</color>
     <color name="DarkTheme_textColorSecondary">#DAB1B1</color>
-    <color name="DarkTheme_NavigationBar">#0F0F0F</color>
 
     <!-- RedTheme -->
     <color name="RedTheme_colorPrimary">#C11010</color>
@@ -28,10 +26,10 @@
     <color name="RedTheme_ActionBar">#E57373</color>
     <color name="RedTheme_ButtonColor">#DC0000</color>
     <color name="RedTheme_textColorSecondary">#CCA9A5</color>
-    <color name="RedTheme_NavigationBar">#F50000</color>
 
     <!-- Another -->
     <color name="white">#FFFFFF</color>
+    <color name="note_selection_color">#82B1FF</color>
 
     <!-- Ucrop -->
     <color name="ucrop_color_toolbar">@color/DarkTheme_colorPrimary</color>

@@ -1,13 +1,14 @@
 package com.pandacorp.notesui.controllers
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.github.dhaval2404.imagepicker.ImagePicker
@@ -36,34 +37,34 @@ class InitSlidingDrawerMenuController(private val updateNoteUseCase: UpdateNoteU
     
     private lateinit var toolbar: Toolbar
     
-    private val pickImageResult by lazy {
-        activity.registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == AppCompatActivity.RESULT_OK) {
-                val imageUri = it.data!!.data
-                
-                noteBinding.contentActivityInclude.noteBackgroundImageView.setImageURI(imageUri)
-                note.background = imageUri.toString()
-                CoroutineScope(Dispatchers.IO).launch {
-                    updateNoteUseCase.invoke(note)
-                    
-                }
-            }
-            
-        }
+    private lateinit var pickImageResult: ActivityResultLauncher<Intent>
+    
+    private val showMoreDrawable by lazy {
+        ContextCompat.getDrawable(
+                context,
+                R.drawable.ic_show_more_animated) as AnimatedVectorDrawable
+        
+    }
+    private val showLessDrawable: AnimatedVectorDrawable by lazy {
+        ContextCompat.getDrawable(
+                context,
+                R.drawable.ic_show_less_animated) as AnimatedVectorDrawable
+        
     }
     
     operator fun invoke(
         context: Context,
         activity: NoteActivity,
         note: NoteItem,
-        noteBinding: ActivityNoteBinding
+        noteBinding: ActivityNoteBinding,
+        pickImageResult: ActivityResultLauncher<Intent>
     ) {
         this.context = context
         this.activity = activity
         this.note = note
         this.noteBinding = noteBinding
         this.menuBinding = noteBinding.drawerMenuInclude
+        this.pickImageResult = pickImageResult
         
         this.toolbar = activity.findViewById(R.id.toolbar)
         
@@ -72,14 +73,22 @@ class InitSlidingDrawerMenuController(private val updateNoteUseCase: UpdateNoteU
     }
     
     private fun initViews() {
+        
         menuBinding.expandChangeBackgroundButton.setOnClickListener {
             if (menuBinding.changeBackgroundExpandableLayout.isExpanded) {
+                menuBinding.changeBackgroundButtonImageView.setImageDrawable(showLessDrawable)
+                showLessDrawable.start()
                 menuBinding.changeBackgroundExpandableLayout.collapse()
-            } else menuBinding.changeBackgroundExpandableLayout.expand()
+            } else {
+                menuBinding.changeBackgroundButtonImageView.setImageDrawable(showMoreDrawable)
+                showMoreDrawable.start()
+                menuBinding.changeBackgroundExpandableLayout.expand()
+            }
             
         }
         
-        menuBinding.drawerMenuSelectButton.setOnClickListener {
+        menuBinding.drawerMenuSelectImageButton.setOnClickListener {
+            
             ImagePicker.with(activity = activity)
                 .crop(1f, 2f)
                 .createIntent {
@@ -152,7 +161,8 @@ class InitSlidingDrawerMenuController(private val updateNoteUseCase: UpdateNoteU
             }
             
         }
-        menuBinding.switchTransparentActionBarSwitchCompat.isChecked = note.isShowTransparentActionBar
+        menuBinding.switchTransparentActionBarSwitchCompat.isChecked =
+            note.isShowTransparentActionBar
         
     }
     

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.util.size
 import androidx.recyclerview.widget.RecyclerView
 import com.pandacorp.domain.models.NoteItem
@@ -20,7 +21,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class NotesRecyclerAdapter(
-    context: Context,
+    private val context: Context,
     private var itemsList: MutableList<NoteItem>
 ) : RecyclerView.Adapter<NotesRecyclerAdapter.ViewHolder>(), KoinComponent {
     private val TAG = "NotesRecyclerAdapter"
@@ -46,13 +47,13 @@ class NotesRecyclerAdapter(
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val note = itemsList[position]
-    
+        
         holder.header.text = jsonToSpannableUseCase(note.header)
         
         holder.content.text = jsonToSpannableUseCase(note.content)
         
-        setNoteBackgroundUseCase(note, Utils.backgroundImages, holder.backgroundImageView)
-    
+            setNoteBackgroundUseCase(note, Utils.backgroundImages, holder.backgroundImageView)
+        
         holder.cardView.isActivated = selectedItemsList.get(position, false)
         
         holder.cardView.setOnClickListener(View.OnClickListener { v ->
@@ -73,16 +74,26 @@ class NotesRecyclerAdapter(
     //Selection methods
     private fun toggleCheckedIcon(holder: ViewHolder, position: Int) {
         if (selectedItemsList.get(position, false)) {
+            // Check Icon
             holder.checkedImage.visibility = View.VISIBLE
+            
+            // Add selected note ColorFilter
+            holder.backgroundImageView.setColorFilter(
+                    ContextCompat.getColor(
+                            context,
+                            R.color.note_selection_color))
             if (currentSelectedIndex == position) resetCurrentIndex()
         } else {
             holder.checkedImage.visibility = View.INVISIBLE
+            holder.backgroundImageView.clearColorFilter()
             if (currentSelectedIndex == position) resetCurrentIndex()
         }
     }
+    
     private fun resetCurrentIndex() {
         currentSelectedIndex = -1
     }
+    
     fun toggleSelection(pos: Int) {
         currentSelectedIndex = pos
         if (selectedItemsList.get(pos, false)) {
@@ -92,13 +103,16 @@ class NotesRecyclerAdapter(
         }
         notifyItemChanged(pos)
     }
+    
     fun clearSelections() {
         selectedItemsList.clear()
         notifyDataSetChanged()
     }
+    
     fun getSelectedItemCount(): Int {
         return selectedItemsList.size()
     }
+    
     fun getSelectedItems(): List<Int> {
         val items: MutableList<Int> = ArrayList(selectedItemsList.size())
         for (i in 0 until selectedItemsList.size()) {
@@ -106,6 +120,7 @@ class NotesRecyclerAdapter(
         }
         return items
     }
+    
     fun selectAllItems() {
         if (selectedItemsList.size == itemsList.size) {
             //Unselect all
@@ -134,7 +149,8 @@ class NotesRecyclerAdapter(
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val header = itemView.findViewById<TextView>(R.id.note_item_header_textView)
         val content = itemView.findViewById<TextView>(R.id.note_item_content_textview)
-        val backgroundImageView = itemView.findViewById<ImageView>(R.id.note_item_background_imageview)
+        val backgroundImageView =
+            itemView.findViewById<ImageView>(R.id.note_item_background_imageview)
         val checkedImage = itemView.findViewById<ImageView>(R.id.note_item_select_check_image)
         
         val cardView = itemView.findViewById<CardView>(R.id.note_item_cardView)

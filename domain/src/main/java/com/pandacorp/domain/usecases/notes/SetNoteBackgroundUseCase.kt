@@ -7,9 +7,14 @@ import androidx.core.content.ContextCompat
 import com.pandacorp.domain.models.NoteItem
 
 class SetNoteBackgroundUseCase(private val context: Context) {
-    operator fun invoke(note: NoteItem, backgroundImages: List<Int>, noteBackgroundImageView: ImageView) {
+    private val TAG = "NoteActivity"
+    operator fun invoke(
+        note: NoteItem,
+        backgroundImages: List<Int>,
+        noteBackgroundImageView: ImageView
+    ) {
         try {
-            // If note.background is image drawable from Utils.backgroundImages
+            // note.background is an image drawable from Utils.backgroundImages
             val drawableResId = backgroundImages[note.background.toInt()]
             val drawable = ContextCompat.getDrawable(context, drawableResId)
             noteBackgroundImageView.setImageDrawable(drawable)

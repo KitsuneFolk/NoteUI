@@ -4,10 +4,11 @@
 
     <style name="BaseTheme" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:textColor">@color/white</item>
+        <item name="rippleColor">@color/white</item>
         <item name="android:fitsSystemWindows">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="buttonStyle">@style/Button</item>
+        <item name="materialButtonStyle">@style/MaterialButton</item>
         <item name="editTextStyle">@style/EditText</item>
         <item name="toolbarStyle">@style/Toolbar</item>
         <item name="alertDialogTheme">@style/MaterialAlertDialog</item>
@@ -21,6 +22,7 @@
         <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
     </style>
+
     <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="BlueTheme" parent="BaseTheme">
@@ -42,12 +44,11 @@
 
     </style>
 
-    <style name="Button" parent="Widget.Material3.Button">
-        <item name="android:background">?android:attr/colorBackground</item>
-        <item name="color">?colorButton</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="cornerSize">15dp</item>
-
+    <style name="MaterialButton" parent="Widget.Material3.Button">
+        <item name="backgroundTint">?colorPrimary</item>
+        <item name="android:textColor">?android:textColor</item>
+        <item name="cornerRadius">15dp</item>
+        <item name="rippleColor">?rippleColor</item>
     </style>
 
     <style name="EditText" parent="Widget.AppCompat.EditText">

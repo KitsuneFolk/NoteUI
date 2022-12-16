@@ -5,6 +5,7 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.toSpannable
 import com.pandacorp.domain.models.NoteItem
@@ -20,6 +21,7 @@ import com.pandacorp.notesui.databinding.ActivityNoteBinding
 import com.pandacorp.notesui.databinding.ContentActivityNoteBinding
 import com.pandacorp.notesui.databinding.MenuDrawerEndBinding
 import com.pandacorp.notesui.utils.ThemeHandler
+import com.pandacorp.notesui.utils.UndoRedoHelper
 import com.pandacorp.notesui.utils.Utils
 import com.pandacorp.notesui.viewModels.NoteViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -50,6 +52,24 @@ class NoteActivity : AppCompatActivity() {
     private lateinit var note: NoteItem
     private var notePositionInAdapter: Int? = null
     
+    private lateinit var undoRedoContentEditTextHelper: UndoRedoHelper
+    private lateinit var undoRedoHeaderEditTextHelper: UndoRedoHelper
+    
+    private val pickImageResult = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            val imageUri = it.data!!.data
+            
+            bindingContent.noteBackgroundImageView.setImageURI(imageUri)
+            note.background = imageUri.toString()
+            CoroutineScope(Dispatchers.IO).launch {
+                updateNoteUseCase.invoke(note)
+                
+            }
+        }
+        
+    }
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ThemeHandler(this).load()
@@ -74,7 +94,8 @@ class NoteActivity : AppCompatActivity() {
                     context = this@NoteActivity,
                     activity = this@NoteActivity,
                     note = note,
-                    noteBinding = binding
+                    noteBinding = binding,
+                    pickImageResult = pickImageResult
             )
             
         }
@@ -91,8 +112,10 @@ class NoteActivity : AppCompatActivity() {
         val lastNote = databaseList.size - 1
         notePositionInAdapter = intent.getIntExtra(intentNotePositionInAdapter, lastNote)
         note = databaseList[notePositionInAdapter!!]
-        
-       setNoteBackgroundUseCase(note, Utils.backgroundImages, bindingContent.noteBackgroundImageView)
+        setNoteBackgroundUseCase(
+                note,
+                Utils.backgroundImages,
+                bindingContent.noteBackgroundImageView)
         
         // When activity starts, don't show keyboard.
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
@@ -104,19 +127,30 @@ class NoteActivity : AppCompatActivity() {
         val headerSpannable = jsonToSpannableUseCase(note.header)
         
         val contentSpannable = jsonToSpannableUseCase(note.content)
+        
         bindingContent.headerEditText.setText(headerSpannable)
         bindingContent.contentEditText.setText(contentSpannable)
         
+        undoRedoContentEditTextHelper =
+            UndoRedoHelper(binding.contentActivityInclude.contentEditText)
+        undoRedoHeaderEditTextHelper = UndoRedoHelper(binding.contentActivityInclude.headerEditText)
+        
         bindingContent.contentEditText.setOnFocusChangeListener { v, hasFocus ->
+            invalidateOptionsMenu()
+        }
+        bindingContent.headerEditText.setOnFocusChangeListener { v, hasFocus ->
             invalidateOptionsMenu()
         }
         
     }
     
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        when (bindingContent.contentEditText.isFocused) {
-            // Show undo and redo button if editext is focused.
-            true -> menuInflater.inflate(R.menu.menu_note_extended, menu)
+        when (bindingContent.headerEditText.isFocused || bindingContent.contentEditText.isFocused) {
+            // Show undo and redo button if edittext is focused.
+            true -> {
+                menuInflater.inflate(R.menu.menu_note_extended, menu)
+                
+            }
             
             // Show menu hamburger icon if edittext is not focused.
             false -> menuInflater.inflate(R.menu.menu_note, menu)
@@ -142,26 +176,43 @@ class NoteActivity : AppCompatActivity() {
                 
             }
             
-            R.id.menu_note_extended_previous -> {
+            R.id.menu_note_extended_undo -> {
                 if (bindingContent.headerEditText.hasFocus()) {
-                
+                    if (undoRedoHeaderEditTextHelper.canUndo) {
+                        undoRedoHeaderEditTextHelper.undo()
+                        
+                    }
+                    
                 }
                 if (bindingContent.contentEditText.hasFocus()) {
-                
+                    if (undoRedoContentEditTextHelper.canUndo) {
+                        undoRedoContentEditTextHelper.undo()
+                        
+                    }
+                    
                 }
             }
-            R.id.menu_note_extended_next -> {
+            R.id.menu_note_extended_redo -> {
                 if (bindingContent.headerEditText.hasFocus()) {
-                
+                    if (undoRedoHeaderEditTextHelper.canRedo) {
+                        undoRedoHeaderEditTextHelper.redo()
+                        
+                    }
+                    
                 }
                 if (bindingContent.contentEditText.hasFocus()) {
-                
+                    if (undoRedoContentEditTextHelper.canRedo) {
+                        undoRedoContentEditTextHelper.redo()
+                        
+                    }
+                    
                 }
+                
             }
         }
         return true
     }
-  
+    
     private fun updateNote() {
         val headerSpannableText = bindingContent.headerEditText.text ?: ""
         val contentSpannableText = bindingContent.contentEditText.text ?: ""

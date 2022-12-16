@@ -37,7 +37,7 @@ class ColorsRecyclerAdapter(
     
             }
             ColorItem.ADD -> {
-                holder.imageView.background = ContextCompat.getDrawable(context, colorItem.color)
+                holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, colorItem.color))
     
             }
         }

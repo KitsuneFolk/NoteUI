@@ -411,8 +411,14 @@ class InitActionBottomMenuController {
         val spans: Array<AlignmentSpan> = resultText.getSpans(
                 firstSelectedLineStart, lastSelectedLineEnd,
                 AlignmentSpan::class.java)
-        repeat(spans.count()) {
-            resultText.removeSpan(spans[it])
+        spans.forEach {
+            val selectedSpanStart = resultText.getSpanStart(it)
+            val selectedSpanEnd = resultText.getSpanEnd(it)
+            if (selectedSpanStart >= selectionStart && selectedSpanEnd <= selectionEnd) {
+                resultText.removeSpan(it)
+            
+            }
+        
         }
         
         when (gravity) {
