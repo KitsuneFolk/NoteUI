@@ -2,7 +2,10 @@ package com.pandacorp.notesui.app
 
 import android.app.Application
 import androidx.preference.PreferenceManager
-import com.pandacorp.notesui.di.*
+import com.pandacorp.notesui.di.appModule
+import com.pandacorp.notesui.di.dataModule
+import com.pandacorp.notesui.di.domainModule
+import com.pandacorp.notesui.di.utilsModule
 import com.pandacorp.notesui.viewModels.NoteViewModel
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
@@ -23,7 +26,6 @@ class App : Application() {
                             appModule,
                             dataModule,
                             domainModule,
-                            noteActivityControllersModule,
                             utilsModule))
         }
         // Here check is app started first time, and if Yes - add basic colors.

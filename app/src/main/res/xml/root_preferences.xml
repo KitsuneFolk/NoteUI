@@ -12,7 +12,7 @@
             app:entryValues="@array/Themes_values"
             app:key="Themes"
             app:summary="%s"
-            app:title="@string/Theme_text" />
+            app:title="@string/theme" />
         <ListPreference
             android:defaultValue="@string/settings_language_default_value"
             android:icon="@drawable/ic_settings_language"
@@ -20,9 +20,16 @@
             app:entries="@array/Languages"
             app:entryValues="@array/Languages_values"
             app:key="Languages"
-            app:title="@string/Language_text"/>
+            app:title="@string/language"/>
 
 
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/notes">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="hide_actionbar_while_scrolling"
+            android:title="@string/hide_actionbar_while_scrolling"
+            />
     </PreferenceCategory>
     <PreferenceCategory app:title="@string/another">
         <Preference

@@ -12,4 +12,5 @@ val appModule = module{
     viewModel<NoteViewModel>{
         NoteViewModel(get(), get(), get(), get())
     }
+    
 }

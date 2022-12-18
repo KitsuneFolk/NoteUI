@@ -4,12 +4,14 @@
     <!-- Preference Titles -->
     <string name="settings">Settings</string>
     <string name="design">Design</string>
-    <string name="Language_text">Language</string>
-    <string name="Theme_text">Theme</string>
+    <string name="language">Language</string>
+    <string name="theme">Theme</string>
+    <string name="notes">Notes</string>
+    <string name="hide_actionbar_while_scrolling">Hide actionbar while scrolling</string>
     <string name="version">Version</string>
     <string name="another">Another</string>
 
-    <string name="settings_theme_default_value">blue</string>
+    <string name="settings_theme_default_value">follow_system</string>
     <string name="settings_theme_summary">Blue</string>
     <string name="settings_language_default_value">en</string>
     <string name="settings_language_summary">English</string>
@@ -51,7 +53,7 @@
     <string name="redo">Redo</string>
 
     <!-- MainActivity strings  -->
-    <string name="snackbar_undo_title">were removed notes: </string>
+    <string name="snackbar_undo_title">Notes have been removed: </string>
     <string name="snackbar_undo">Undo deleting</string>
 
     <!-- ImagePicker strings  -->

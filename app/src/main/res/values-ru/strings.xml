@@ -4,8 +4,10 @@
     <!-- Preference Titles -->
     <string name="settings">Настройки</string>
     <string name="design">Внешний вид</string>
-    <string name="Language_text">Язык</string>
-    <string name="Theme_text">Тема</string>
+    <string name="language">Язык</string>
+    <string name="theme">Тема</string>
+    <string name="notes">Заметки</string>
+    <string name="hide_actionbar_while_scrolling">Скрывать actionbar при листании</string>
     <string name="version">Версия</string>
     <string name="another">Другое</string>
 

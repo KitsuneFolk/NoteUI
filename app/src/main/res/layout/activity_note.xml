@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
 
-        tools:context=".presentation.NoteActivity">
+        tools:context=".presentation.activities.NoteActivity">
 
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawerMenu"

@@ -2,24 +2,26 @@
 <resources>
     <!-- Reply Preference -->
     <string-array name="Themes">
+        <item>Follow system</item>
         <item>Blue</item>
         <item>Dark</item>
         <item>Red</item>
     </string-array>
-    <string-array name="Themes_values">
+    <string-array name="Themes_values" translatable="false">
+        <item>follow_system</item>
         <item>blue</item>
         <item>dark</item>
         <item>red</item>
     </string-array>
 
-    <string-array name="Languages">
-        <item>Русский</item>
+    <string-array name="Languages" translatable="false">
         <item>English</item>
+        <item>Русский</item>
         <item>Українська</item>
     </string-array>
-    <string-array name="Languages_values">
-        <item>ru</item>
+    <string-array name="Languages_values" translatable="false">
         <item>en</item>
+        <item>ru</item>
         <item>uk</item>
     </string-array>
 

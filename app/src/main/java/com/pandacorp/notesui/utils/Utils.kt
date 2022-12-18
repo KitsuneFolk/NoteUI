@@ -4,16 +4,19 @@ import com.pandacorp.notesui.R
 
 
 class Utils {
-    
     companion object {
         
         //Images that user can choose to set note background.
         val backgroundImages = listOf(
                 R.drawable.image_night_city,
                 R.drawable.image_city,
-                R.drawable.image_nature,
                 R.drawable.image_moon,
-                R.drawable.image_nature2)
+                R.drawable.image_night_sky,
+                R.drawable.image_nature,
+                R.drawable.image_mountain,
+                R.drawable.image_colors,
+                R.drawable.image_speed
+        )
         
         //This function is needed for coroutines logs work on Xiaomi devices.
         fun setupExceptionHandler() {

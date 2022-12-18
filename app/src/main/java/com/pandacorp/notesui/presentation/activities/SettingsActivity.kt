@@ -1,15 +1,12 @@
-package com.pandacorp.notesui.presentation.settings
+package com.pandacorp.notesui.presentation.activities
 
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.ListPreference
-import androidx.preference.Preference
+import androidx.preference.*
 import androidx.preference.Preference.OnPreferenceChangeListener
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.utils.ThemeHandler
 import com.pandacorp.notesui.utils.Utils
@@ -59,9 +56,10 @@ class SettingsActivity : AppCompatActivity() {
         var language: String? = null
         var theme: String? = null
         var sp: SharedPreferences? = null
-        lateinit var themes_listPreference: ListPreference
-        lateinit var languages_listPreference: ListPreference
-        lateinit var version_Preference: Preference
+        private lateinit var themesListPreference: ListPreference
+        private lateinit var languagesListPreference: ListPreference
+        private lateinit var versionPreference: Preference
+        private lateinit var hideActionBarWhileScrollingSwitch: SwitchPreference
         
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -76,15 +74,16 @@ class SettingsActivity : AppCompatActivity() {
         
         private fun initViews() {
             sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
-            themes_listPreference = findPreference("Themes")!!
-            themes_listPreference.onPreferenceChangeListener = this
-            languages_listPreference = findPreference("Languages")!!
-            languages_listPreference.onPreferenceChangeListener = this
-            //Here we add version title to the preference.
-            version_Preference = findPreference("Version")!!
+            themesListPreference = findPreference(PreferencesKeys.themesKey)!!
+            themesListPreference.onPreferenceChangeListener = this
+            languagesListPreference = findPreference(PreferencesKeys.languagesKey)!!
+            languagesListPreference.onPreferenceChangeListener = this
+            hideActionBarWhileScrollingSwitch = findPreference(PreferencesKeys.hideActionBarWhileScrollingKey)!!
+            //Here we add title to the version preference.
+            versionPreference = findPreference(PreferencesKeys.versionKey)!!
             val version = requireContext().packageManager
                 .getPackageInfo(requireContext().packageName, 0).versionName
-            version_Preference.title =
+            versionPreference.title =
                 resources.getString(R.string.version) + " " + version
         }
         
@@ -100,4 +99,11 @@ class SettingsActivity : AppCompatActivity() {
             return true
         }
     }
+}
+object PreferencesKeys{
+    const val languagesKey = "Languages"
+    const val themesKey = "Themes"
+    const val hideActionBarWhileScrollingKey = "hide_actionbar_while_scrolling"
+    const val versionKey = "Version"
+    
 }
