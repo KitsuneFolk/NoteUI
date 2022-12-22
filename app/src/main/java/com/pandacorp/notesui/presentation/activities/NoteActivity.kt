@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Bundle
 import android.text.Layout
 import android.text.Spannable
@@ -26,7 +27,6 @@ import androidx.transition.TransitionManager
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.pandacorp.domain.models.ColorItem
 import com.pandacorp.domain.models.NoteItem
-import com.pandacorp.domain.usecases.notes.SetNoteBackgroundUseCase
 import com.pandacorp.domain.usecases.notes.database.GetNotesUseCase
 import com.pandacorp.domain.usecases.notes.database.UpdateNoteUseCase
 import com.pandacorp.domain.usecases.utils.HideToolbarWhileScrollingUseCase
@@ -65,13 +65,11 @@ class NoteActivity : AppCompatActivity() {
     private val updateNoteUseCase: UpdateNoteUseCase by inject()
     private val hideToolbarWhileScrollingUseCase: HideToolbarWhileScrollingUseCase by inject()
     
-    private val setNoteBackgroundUseCase: SetNoteBackgroundUseCase by inject()
-    
     private val vm: NoteViewModel by viewModel()
     
     private val spannableToJsonUseCase: SpannableToJsonUseCase by inject()
     private val jsonToSpannableUseCase: JsonToSpannableUseCase by inject()
-    private lateinit var databaseList: MutableList<NoteItem>
+    
     private lateinit var note: NoteItem
     private var notePositionInAdapter: Int? = null
     
@@ -96,7 +94,7 @@ class NoteActivity : AppCompatActivity() {
             bindingContent.noteBackgroundImageView.setImageURI(imageUri)
             note.background = imageUri.toString()
             CoroutineScope(Dispatchers.IO).launch {
-                updateNoteUseCase.invoke(note)
+                updateNoteUseCase(note)
                 
             }
         }
@@ -131,21 +129,39 @@ class NoteActivity : AppCompatActivity() {
     
     
     private suspend fun initViews() {
-        databaseList = withContext(Dispatchers.IO) {
+        val databaseList = withContext(Dispatchers.IO) {
             getNotesUseCase()
-            
         }
         // Here we get note by position what we get from intent.
         val lastNote = databaseList.size - 1
         notePositionInAdapter = intent.getIntExtra(intentNotePositionInAdapter, lastNote)
         note = databaseList[notePositionInAdapter!!]
-        setNoteBackgroundUseCase(
-                note,
-                Utils.backgroundImages,
-                bindingContent.noteBackgroundImageView)
+        
+        changeNoteBackground(note.background)
         
         // When activity starts, don't show keyboard.
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        
+    }
+    
+    private fun changeNoteBackground(
+        background: String
+    ) {
+        val noteBackgroundImageView = bindingContent.noteBackgroundImageView
+        try {
+            // note.background is an image drawable from Utils.backgroundImages
+            val drawableResId = Utils.backgroundImages[background.toInt()]
+            val drawable = ContextCompat.getDrawable(this, drawableResId)
+            noteBackgroundImageView.setImageDrawable(drawable)
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            // note.background is a color.
+            val colorBackground = ThemeHandler(this).getColorBackground()
+            noteBackgroundImageView.background = ColorDrawable(colorBackground)
+        } catch (e: NumberFormatException) {
+            // note.background is a image from storage (uri)
+            noteBackgroundImageView.setImageURI(Uri.parse(background))
+            
+        }
         
     }
     
@@ -180,14 +196,6 @@ class NoteActivity : AppCompatActivity() {
             override fun onItemClick(
                 view: View?, colorItem: ColorItem, position: Int
             ) {
-                val selectedEditText: EditText =
-                    if (bindingContent.contentEditText.isFocused) {
-                        bindingContent.contentEditText
-                    } else if (bindingContent.headerEditText.isFocused) {
-                        bindingContent.headerEditText
-                    } else throw Exception("Else branch")
-                val selectionStart = selectedEditText.selectionStart
-                val selectionEnd = selectedEditText.selectionEnd
                 if (colorItem.type == ColorItem.ADD) {
                     //Add button clicked
                     ColorPickerDialog.Builder(this@NoteActivity)
@@ -207,18 +215,29 @@ class NoteActivity : AppCompatActivity() {
                         .attachBrightnessSlideBar(true)
                         .setBottomSpace(12) // set a bottom space between the last slideBar and buttons.
                         .show()
-                    selectedEditText.setSelection(
-                            selectionStart,
-                            selectionEnd)
                     return
                 }
+                val selectedEditText: EditText =
+                    if (bindingContent.contentEditText.isFocused) bindingContent.contentEditText
+                    else if (bindingContent.headerEditText.isFocused) bindingContent.headerEditText
+                    else return // User didn't selected an edittext;
+                val selectionStart = selectedEditText.selectionStart
+                val selectionEnd = selectedEditText.selectionEnd
                 
                 when (clickedActionButtonState) {
                     ClickedActionButtonState.FOREGROUND_COLOR -> {
-                        changeTextForegroundColor(selectedEditText, colorItem.color, selectionStart, selectionEnd)
+                        changeTextForegroundColor(
+                                selectedEditText,
+                                colorItem.color,
+                                selectionStart,
+                                selectionEnd)
                     }
                     ClickedActionButtonState.BACKGROUND_COLOR -> {
-                        changeTextBackgroundColor(selectedEditText, colorItem.color, selectionStart, selectionEnd)
+                        changeTextBackgroundColor(
+                                selectedEditText,
+                                colorItem.color,
+                                selectionStart,
+                                selectionEnd)
                     }
                     ClickedActionButtonState.NULL -> {}
                 }
@@ -371,11 +390,9 @@ class NoteActivity : AppCompatActivity() {
         
         bindingContent.actionMenuColorsRemoveImageView.setOnClickListener {
             val selectedEditText: EditText =
-                if (bindingContent.contentEditText.isFocused) {
-                    bindingContent.contentEditText
-                } else if (bindingContent.headerEditText.isFocused) {
-                    bindingContent.headerEditText
-                } else throw Exception("Else branch")
+                if (bindingContent.contentEditText.isFocused) bindingContent.contentEditText
+                else if (bindingContent.headerEditText.isFocused) bindingContent.headerEditText
+                else return@setOnClickListener // User didn't selected an edittext;
             val selectionStart = selectedEditText.selectionStart
             val selectionEnd = selectedEditText.selectionEnd
             when (clickedActionButtonState) {
@@ -519,6 +536,9 @@ class NoteActivity : AppCompatActivity() {
     ) {
         // Won't change text gravity for headerEditText
         if (bindingContent.headerEditText.isFocused) return
+        // If contentEditText is not focused then do nothing
+        if (!bindingContent.contentEditText.isFocused) return
+        
         val resultText =
             bindingContent.contentEditText.text?.toSpannable() ?: return
         val selectedLinePositions =
@@ -627,8 +647,8 @@ class NoteActivity : AppCompatActivity() {
                     ThemeHandler(this).getColorBackground())
             bindingContent.noteBackgroundImageView.setImageDrawable(
                     ColorDrawable(colorBackground))
+            note.background = colorBackground.toString()
             CoroutineScope(Dispatchers.IO).launch {
-                note.background = colorBackground.toString()
                 updateNoteUseCase(note)
                 
             }
@@ -697,7 +717,7 @@ class NoteActivity : AppCompatActivity() {
     }
     
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        when (bindingContent.headerEditText.isFocused || bindingContent.contentEditText.isFocused) {
+        when (bindingContent.headerEditText.isFocused or bindingContent.contentEditText.isFocused) {
             // Show undo and redo button if edittext is focused.
             true -> {
                 menuInflater.inflate(R.menu.menu_note_extended, menu)

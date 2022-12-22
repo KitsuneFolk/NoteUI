@@ -2,11 +2,11 @@ package com.pandacorp.notesui.presentation.adapter
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.pandacorp.domain.models.ColorItem
 import com.pandacorp.notesui.R
@@ -29,15 +29,16 @@ class ColorsRecyclerAdapter(
     }
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        Log.d(TAG, "onBindViewHolder: position = $position")
         val colorItem = itemsList[position]
-        //If colorItem.color == Color then set color background, else drawable.
         when (colorItem.type){
             ColorItem.COLOR -> {
                 holder.imageView.background = ColorDrawable(colorItem.color)
     
             }
             ColorItem.ADD -> {
-                holder.imageView.setImageDrawable(ContextCompat.getDrawable(context, colorItem.color))
+                Log.d(TAG, "onBindViewHolder: add ")
+                holder.imageView.setImageResource(colorItem.color)
     
             }
         }
@@ -52,6 +53,10 @@ class ColorsRecyclerAdapter(
         })
     
     
+    }
+    
+    override fun getItemViewType(position: Int): Int {
+        return position
     }
     
     override fun getItemCount(): Int {

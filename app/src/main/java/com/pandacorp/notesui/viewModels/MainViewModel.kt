@@ -2,11 +2,13 @@ package com.pandacorp.notesui.viewModels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.pandacorp.domain.models.NoteItem
 import com.pandacorp.domain.usecases.notes.database.AddNoteUseCase
 import com.pandacorp.domain.usecases.notes.database.GetNotesUseCase
 import com.pandacorp.domain.usecases.notes.database.RemoveNoteUseCase
+import com.pandacorp.notesui.presentation.activities.MainActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -15,38 +17,32 @@ class MainViewModel(
     private val removeNoteUseCase: RemoveNoteUseCase
 ) :
     ViewModel() {
+    private val TAG = MainActivity.TAG
     var notesList = MutableLiveData<MutableList<NoteItem>>()
     
     init {
-        viewModelScope.launch {
-            notesList.postValue(getNotesUseCase())
-            
-            
+        getNotes()
+    }
+    
+    fun addNote(note: NoteItem) {
+        notesList.value?.add(note)
+        CoroutineScope(Dispatchers.IO).launch {
+            addNoteUseCase(note)
         }
     }
     
-    fun addNote(noteItem: NoteItem) {
-        addNoteUseCase(noteItem)
-        
-        viewModelScope.launch {
-            notesList.postValue(getNotesUseCase())
-            
+    fun removeNote(note: NoteItem) {
+        notesList.value?.remove(note)
+        CoroutineScope(Dispatchers.IO).launch {
+            removeNoteUseCase(note)
         }
     }
     
-    fun removeNote(noteItem: NoteItem) {
-        removeNoteUseCase(noteItem)
-        
-        viewModelScope.launch {
+    fun getNotes() {
+        notesList.value?.clear()
+        CoroutineScope(Dispatchers.IO).launch {
             notesList.postValue(getNotesUseCase())
-            
         }
-    }
-    
-    fun update() {
-        viewModelScope.launch {
-            notesList.value?.clear()
-            notesList.postValue(getNotesUseCase()) }
     }
     
     

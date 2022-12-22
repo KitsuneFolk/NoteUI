@@ -58,16 +58,16 @@ class MainActivity : AppCompatActivity() {
                 notesRecyclerAdapter.setList(filteredList)
                 
             } else {
-                vm.update()
+                vm.getNotes()
                 notesRecyclerAdapter.notifyDataSetChanged()
                 
             }
             
             
         } catch (e: Exception) {
-             // If activity_note screen was rotated and user backed to MainActivity
-             // then we do nothing, we don't notify adapter about changes because in onCreate
-             // it will be created again.
+            // If activity_note screen was rotated and user backed to MainActivity
+            // then we do nothing, we don't notify adapter about changes because in onCreate
+            // it will be created again.
         }
         
         
@@ -110,8 +110,7 @@ class MainActivity : AppCompatActivity() {
                     ThemeHandler(this).getColorBackground())
             val noteItem =
                 NoteItem(content = "", header = "", background = colorBackground.toString())
-            notesRecyclerAdapter.notifyDataSetChanged()
-            CoroutineScope(Dispatchers.IO).launch { this@MainActivity.vm.addNote(noteItem) }
+            this@MainActivity.vm.addNote(noteItem)
             val intent = Intent(this, NoteActivity::class.java)
             updateCustomAdapterLauncher.launch(intent)
             
@@ -246,22 +245,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
     
-    private fun removeSelectedItems(): Int {
-        val selectedItemPositions: List<Int> = notesRecyclerAdapter.getSelectedItems()
-        Log.d(
-                TAG,
-                "removeSelectedItems: selectedItemPositions.size = ${selectedItemPositions.size}")
-        if (selectedItemPositions.isEmpty()) {
-            return 0
-        }
-        for (i in selectedItemPositions) {
-            vm.removeNote(notesRecyclerAdapter.getItem(i))
-            
-        }
-        notesRecyclerAdapter.notifyDataSetChanged()
-        return selectedItemPositions.size
-    }
-    
     //This class needed for creating multiselect on RecyclerView
     inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
@@ -278,7 +261,7 @@ class MainActivity : AppCompatActivity() {
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             val id = item.itemId
             if (id == R.id.recyclerview_menu_delete) {
-                initSnackBar()
+                handleSelectedNotesRemoving()
                 mode.finish()
                 return true
             }
@@ -297,9 +280,8 @@ class MainActivity : AppCompatActivity() {
             
         }
         
-        private fun initSnackBar() {
-            removeSelectedItems()
-            val removedItemsCount = removeSelectedItems()
+        private fun handleSelectedNotesRemoving() {
+            val removedItemsCount = removeSelectedNotes()
             if (removedItemsCount == 0) return
             val snackbarUndoTitle = resources.getText(R.string.snackbar_undo_title)
                 .toString() + " " + removedItemsCount.toString()
@@ -317,7 +299,28 @@ class MainActivity : AppCompatActivity() {
             snackBar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
             snackBar.show()
         }
+        
+        private fun removeSelectedNotes(): Int {
+            val selectedNotesPositions: List<Int> = notesRecyclerAdapter.getSelectedItems()
+            if (selectedNotesPositions.isEmpty()) {
+                return 0
+            }
+            val selectedNotes: MutableList<NoteItem> = mutableListOf()
+            for (i in selectedNotesPositions){
+                selectedNotes.add(notesRecyclerAdapter.getItem(i))
+            }
+            
+            for (note in selectedNotes) {
+                vm.removeNote(note)
+                
+            }
+            return selectedNotesPositions.size
+        }
+        
     }
     
+    companion object {
+        const val TAG = "MainActivity"
+    }
     
 }

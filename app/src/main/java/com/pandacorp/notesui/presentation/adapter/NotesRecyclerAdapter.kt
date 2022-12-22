@@ -1,6 +1,8 @@
 package com.pandacorp.notesui.presentation.adapter
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +15,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.util.size
 import androidx.recyclerview.widget.RecyclerView
 import com.pandacorp.domain.models.NoteItem
-import com.pandacorp.domain.usecases.notes.SetNoteBackgroundUseCase
 import com.pandacorp.domain.usecases.utils.JsonToSpannableUseCase
 import com.pandacorp.notesui.R
+import com.pandacorp.notesui.utils.ThemeHandler
 import com.pandacorp.notesui.utils.Utils
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -27,7 +29,6 @@ class NotesRecyclerAdapter(
     private val TAG = "NotesRecyclerAdapter"
     
     private val jsonToSpannableUseCase: JsonToSpannableUseCase by inject()
-    private val setNoteBackgroundUseCase: SetNoteBackgroundUseCase by inject()
     
     private var onClickListener: OnClickListener? = null
     
@@ -52,7 +53,10 @@ class NotesRecyclerAdapter(
         
         holder.content.text = jsonToSpannableUseCase(note.content)
         
-            setNoteBackgroundUseCase(note, Utils.backgroundImages, holder.backgroundImageView)
+        // Remove background to avoid bug when after removing note, a new one had background as removed one.
+        holder.backgroundImageView.setImageDrawable(null)
+        
+        changeNoteBackground(note.background, holder.backgroundImageView)
         
         holder.cardView.isActivated = selectedItemsList.get(position, false)
         
@@ -71,23 +75,45 @@ class NotesRecyclerAdapter(
         
     }
     
+    private fun changeNoteBackground(
+        background: String, noteBackgroundImageView: ImageView
+    ) {
+        
+        try {
+            // note.background is an image drawable from Utils.backgroundImages
+            val drawableResId = Utils.backgroundImages[background.toInt()]
+            val drawable = ContextCompat.getDrawable(context, drawableResId)
+            noteBackgroundImageView.setImageDrawable(drawable)
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            // note.background is a color.
+            val colorBackground = ThemeHandler(context).getColorBackground()
+            noteBackgroundImageView.background = ColorDrawable(colorBackground)
+        } catch (e: NumberFormatException) {
+            // note.background is a image from storage (uri)
+            noteBackgroundImageView.setImageURI(Uri.parse(background))
+            
+        }
+        
+    }
+    
     //Selection methods
     private fun toggleCheckedIcon(holder: ViewHolder, position: Int) {
+        val note = itemsList[position]
+        val selectionColor = ContextCompat.getColor(context, R.color.note_selection_color)
+        val colorPrimary = ContextCompat.getColor(context, ThemeHandler(context).getColorPrimary())
         if (selectedItemsList.get(position, false)) {
-            // Check Icon
-            holder.checkedImage.visibility = View.VISIBLE
+            holder.checkedImage.visibility = View.VISIBLE // show check icon
             
-            // Add selected note ColorFilter
-            holder.backgroundImageView.setColorFilter(
-                    ContextCompat.getColor(
-                            context,
-                            R.color.note_selection_color))
-            if (currentSelectedIndex == position) resetCurrentIndex()
+            holder.cardView.setCardBackgroundColor(selectionColor) // change background
+            holder.backgroundImageView.setColorFilter(selectionColor) // add color filter if there is an image
+            
         } else {
-            holder.checkedImage.visibility = View.INVISIBLE
-            holder.backgroundImageView.clearColorFilter()
-            if (currentSelectedIndex == position) resetCurrentIndex()
+            holder.checkedImage.visibility = View.INVISIBLE // hide check icon
+            
+            holder.cardView.setCardBackgroundColor(colorPrimary) // change background
+            holder.backgroundImageView.clearColorFilter() // remove color filter
         }
+        if (currentSelectedIndex == position) resetCurrentIndex()
     }
     
     private fun resetCurrentIndex() {

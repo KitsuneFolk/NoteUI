@@ -4,6 +4,7 @@ import com.pandacorp.notesui.R
 
 
 class Utils {
+    
     companion object {
         
         //Images that user can choose to set note background.

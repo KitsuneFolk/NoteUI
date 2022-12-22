@@ -4,7 +4,6 @@ package com.pandacorp.notesui.utils
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.util.Log
 import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.presentation.activities.PreferencesKeys
@@ -18,6 +17,8 @@ class ThemeHandler(private val context: Context) {
     private val Theme_Dark = "dark"
     private val Theme_Red = "red"
     
+    private val Theme_default = Theme_FollowSystem
+    
     private val russianLocale = Locale("ru")
     private val englishLocale = Locale("en")
     private val ukrainianLocale = Locale("uk")
@@ -25,7 +26,7 @@ class ThemeHandler(private val context: Context) {
     private var sp: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
     
     fun getColorPrimary(): Int {
-        val colorPrimary = when (sp.getString(PreferencesKeys.themesKey, "blue")) {
+        val colorPrimary = when (sp.getString(PreferencesKeys.themesKey, Theme_default)) {
             Theme_FollowSystem -> {
                 if (isDeviceDarkMode()) R.color.DarkTheme_colorPrimary else R.color.BlueTheme_colorPrimary
             }
@@ -47,7 +48,7 @@ class ThemeHandler(private val context: Context) {
     }
     
     fun getColorAccent(): Int {
-        val colorAccent = when (sp.getString(PreferencesKeys.themesKey, "blue")) {
+        val colorAccent = when (sp.getString(PreferencesKeys.themesKey, Theme_default)) {
             Theme_FollowSystem -> {
                 if (isDeviceDarkMode()) R.color.DarkTheme_colorAccent else R.color.BlueTheme_colorAccent
             }
@@ -69,7 +70,7 @@ class ThemeHandler(private val context: Context) {
     }
     
     fun getColorBackground(): Int {
-        val colorBackground = when (sp.getString(PreferencesKeys.themesKey, "blue")) {
+        val colorBackground = when (sp.getString(PreferencesKeys.themesKey, Theme_default)) {
             Theme_FollowSystem -> {
                 if (isDeviceDarkMode()) R.color.DarkTheme_colorBackground else R.color.BlueTheme_colorBackground
             }
@@ -85,14 +86,14 @@ class ThemeHandler(private val context: Context) {
             else -> throw IllegalStateException(
                     "Unexpected value: " + sp.getString(
                             PreferencesKeys.themesKey,
-                            "blue"))
+                            Theme_default))
         }
         return colorBackground
     }
     
     fun getTheme(context: Context?): Int {
         val sp = PreferenceManager.getDefaultSharedPreferences(context)
-        val theme = sp.getString("Themes", Theme_Blue)
+        val theme = sp.getString("Themes", Theme_default)
         val themeId: Int = when (theme) {
             Theme_FollowSystem -> if (isDeviceDarkMode()) R.style.DarkTheme else R.style.BlueTheme
             Theme_Blue -> R.style.BlueTheme
@@ -105,7 +106,7 @@ class ThemeHandler(private val context: Context) {
     
     fun load() {
         val sp = PreferenceManager.getDefaultSharedPreferences(context)
-        val theme = sp.getString(PreferencesKeys.themesKey, Theme_FollowSystem)!!
+        val theme = sp.getString(PreferencesKeys.themesKey, Theme_default)!!
         val language = sp.getString(PreferencesKeys.languagesKey, "")!!
         setMyTheme(context, theme)
         setMyLanguage(context, language)
@@ -150,7 +151,6 @@ class ThemeHandler(private val context: Context) {
     
     private fun isDeviceDarkMode(): Boolean {
         val nightModeFlags = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        Log.d(TAG, "isDeviceDarkMode: ${nightModeFlags == Configuration.UI_MODE_NIGHT_YES}")
         return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
     
