@@ -6,7 +6,7 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
-import com.pandacorp.notesui.presentation.activities.PreferencesKeys
+import com.pandacorp.notesui.presentation.settings.PreferencesKeys
 import java.util.*
 
 class ThemeHandler(private val context: Context) {

@@ -34,7 +34,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".presentation.activities.SettingsActivity"
+            android:name="com.pandacorp.notesui.presentation.settings.SettingsActivity"
             android:label="@string/settings"/>
     </application>
 

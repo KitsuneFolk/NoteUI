@@ -38,6 +38,7 @@ import com.pandacorp.notesui.databinding.ContentActivityNoteBinding
 import com.pandacorp.notesui.databinding.MenuDrawerEndBinding
 import com.pandacorp.notesui.presentation.adapter.ColorsRecyclerAdapter
 import com.pandacorp.notesui.presentation.adapter.ImagesRecyclerAdapter
+import com.pandacorp.notesui.presentation.settings.PreferencesKeys
 import com.pandacorp.notesui.utils.ThemeHandler
 import com.pandacorp.notesui.utils.UndoRedoHelper
 import com.pandacorp.notesui.utils.Utils
@@ -262,7 +263,7 @@ class NoteActivity : AppCompatActivity() {
                             
                         }
                         .show()
-                        .window!!.decorView.setBackgroundResource(R.drawable.alert_dialog_background)
+                        .window!!.decorView.setBackgroundResource(R.drawable.dialog_rounded_corners)
                     
                 } else {
                     
@@ -279,7 +280,7 @@ class NoteActivity : AppCompatActivity() {
                             
                         }
                         .show()
-                        .window!!.decorView.setBackgroundResource(R.drawable.alert_dialog_background)
+                        .window!!.decorView.setBackgroundResource(R.drawable.dialog_rounded_corners)
                     
                     
                 }

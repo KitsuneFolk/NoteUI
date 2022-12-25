@@ -13,6 +13,12 @@
         <item>dark</item>
         <item>red</item>
     </string-array>
+    <string-array name="Themes_drawables" translatable="false">
+        <item>@drawable/ic_follow_system</item>
+        <item>@color/BlueTheme_colorBackground</item>
+        <item>@color/DarkTheme_colorBackground</item>
+        <item>@color/RedTheme_colorBackground</item>
+    </string-array>
 
     <string-array name="Languages" translatable="false">
         <item>English</item>
@@ -23,6 +29,11 @@
         <item>en</item>
         <item>ru</item>
         <item>uk</item>
+    </string-array>
+    <string-array name="Languages_drawables" translatable="false">
+        <item>@drawable/flag_uk</item>
+        <item>@drawable/flag_russia</item>
+        <item>@drawable/flag_ukraine</item>
     </string-array>
 
 </resources>

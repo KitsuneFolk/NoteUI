@@ -26,7 +26,6 @@
     <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="BlueTheme" parent="BaseTheme">
-
         <item name="android:colorBackground">@color/BlueTheme_colorBackground</item>
         <item name="colorPrimary">@color/BlueTheme_colorPrimary</item>
         <item name="colorPrimaryDark">@color/BlueTheme_colorPrimaryDark</item>
@@ -82,7 +81,7 @@
     <style name="MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog.Centered">
         
         <item name="android:colorBackground">?android:attr/colorPrimaryDark</item>
-        <item name="background">@drawable/alert_dialog_background</item>
+        <item name="background">@drawable/dialog_rounded_corners</item>
         <item name="textColorAlertDialogListItem">@color/white</item>
         <item name="color">?android:attr/colorPrimary</item>
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>

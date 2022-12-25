@@ -1,4 +1,4 @@
-package com.pandacorp.notesui.presentation.activities
+package com.pandacorp.notesui.presentation.settings
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -15,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SettingsActivity : AppCompatActivity() {
-    private val TAG = "SettingsActivity"
     private lateinit var sp: SharedPreferences
     private lateinit var edit: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +23,7 @@ class SettingsActivity : AppCompatActivity() {
         Utils.setupExceptionHandler()
         setContentView(R.layout.activity_settings)
         setSupportActionBar(findViewById(R.id.toolbar))
+        supportActionBar!!.setTitle(R.string.settings)
         
         supportFragmentManager
             .beginTransaction()
@@ -49,7 +49,10 @@ class SettingsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
         
     }
+    companion object {
+        val TAG = "SettingsActivity"
     
+    }
     class SettingsFragment : PreferenceFragmentCompat(),
         OnPreferenceChangeListener {
         private val TAG = "SettingsActivity"
@@ -78,7 +81,8 @@ class SettingsActivity : AppCompatActivity() {
             themesListPreference.onPreferenceChangeListener = this
             languagesListPreference = findPreference(PreferencesKeys.languagesKey)!!
             languagesListPreference.onPreferenceChangeListener = this
-            hideActionBarWhileScrollingSwitch = findPreference(PreferencesKeys.hideActionBarWhileScrollingKey)!!
+            hideActionBarWhileScrollingSwitch =
+                findPreference(PreferencesKeys.hideActionBarWhileScrollingKey)!!
             //Here we add title to the version preference.
             versionPreference = findPreference(PreferencesKeys.versionKey)!!
             val version = requireContext().packageManager
@@ -87,10 +91,21 @@ class SettingsActivity : AppCompatActivity() {
                 resources.getString(R.string.version) + " " + version
         }
         
+        override fun onDisplayPreferenceDialog(preference: Preference?) {
+            when (preference?.key) {
+                PreferencesKeys.themesKey -> { // rounded theme dialog with images
+                    PreferenceDialog(PreferencesKeys.themesKey).show(parentFragmentManager, null)
+                }
+                PreferencesKeys.languagesKey -> { // rounded language dialog with images
+                    PreferenceDialog(PreferencesKeys.languagesKey).show(parentFragmentManager, null)
+                }
+                else -> {
+                    super.onDisplayPreferenceDialog(preference)
+                }
+            }
+        }
         
         override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-            language = sp!!.getString("Languages", "")
-            theme = sp!!.getString("Themes", "")
             requireActivity().setResult(RESULT_OK)
             requireActivity().startActivity(Intent(context, SettingsActivity::class.java))
             requireActivity().finish()
@@ -100,7 +115,8 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 }
-object PreferencesKeys{
+
+object PreferencesKeys {
     const val languagesKey = "Languages"
     const val themesKey = "Themes"
     const val hideActionBarWhileScrollingKey = "hide_actionbar_while_scrolling"

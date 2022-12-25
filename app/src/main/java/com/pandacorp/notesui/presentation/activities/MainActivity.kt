@@ -20,6 +20,7 @@ import com.pandacorp.domain.usecases.notes.database.GetNotesUseCase
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.databinding.ActivityMainBinding
 import com.pandacorp.notesui.presentation.adapter.NotesRecyclerAdapter
+import com.pandacorp.notesui.presentation.settings.SettingsActivity
 import com.pandacorp.notesui.utils.ThemeHandler
 import com.pandacorp.notesui.utils.Utils
 import com.pandacorp.notesui.viewModels.MainViewModel
