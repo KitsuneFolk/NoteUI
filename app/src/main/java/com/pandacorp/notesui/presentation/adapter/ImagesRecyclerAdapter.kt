@@ -2,7 +2,6 @@ package com.pandacorp.notesui.presentation.adapter
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,8 @@ class ImagesRecyclerAdapter(
     
     private val TAG = "ImagesRecyclerAdapter"
     
-    private var onClickListener: OnClickListener? = null
+    private var onImageItemClickListener: OnImageItemClickListener? = null
+    private var onImageItemLongClickListener: OnImageItemLongClickListener? = null
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -28,12 +28,11 @@ class ImagesRecyclerAdapter(
     }
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d(TAG, "onBindViewHolder: ")
         val drawable = drawablesList[position]
         holder.imageView.setImageDrawable(drawable)
         holder.itemView.setOnClickListener {
-            onClickListener?.onItemClick(holder.imageView, drawable, position)
-            onClickListener?.onItemLongClick(holder.imageView, drawable, position)
+            onImageItemClickListener?.onClick(holder.imageView, drawable, position)
+            onImageItemLongClickListener?.onLongClick(holder.imageView, drawable, position)
         }
         
     }
@@ -47,17 +46,21 @@ class ImagesRecyclerAdapter(
         notifyDataSetChanged()
     }
     
-    fun setOnClickListener(onClickListener: OnClickListener?) {
-        this.onClickListener = onClickListener
-    }
-    
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView = view.findViewById<ImageView>(R.id.imageItemImageView)
     }
     
-    interface OnClickListener {
-        fun onItemClick(view: View?, drawable: Drawable, position: Int)
-        fun onItemLongClick(view: View?, drawable: Drawable, position: Int)
+    fun setOnClickListener(onImageItemClickListener: OnImageItemClickListener) {
+        this.onImageItemClickListener = onImageItemClickListener
+    }
+    fun setOnLongClickListener(onImageItemLongClickListener: OnImageItemLongClickListener) {
+        this.onImageItemLongClickListener = onImageItemLongClickListener
     }
     
+    interface OnImageItemClickListener {
+        fun onClick(view: View?, drawable: Drawable, position: Int)
+    }
+    interface OnImageItemLongClickListener {
+        fun onLongClick(view: View?, drawable: Drawable, position: Int)
+    }
 }

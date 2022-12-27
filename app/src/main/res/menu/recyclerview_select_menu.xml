@@ -5,7 +5,7 @@
     <item
         android:id="@+id/recyclerview_menu_delete"
         android:icon="@drawable/ic_delete"
-        android:title="@string/delete"
+        android:title="@string/remove"
         app:showAsAction="ifRoom|collapseActionView"
         />
     <item

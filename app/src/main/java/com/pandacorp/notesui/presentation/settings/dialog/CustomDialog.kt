@@ -1,4 +1,4 @@
-package com.pandacorp.notesui.presentation.settings
+package com.pandacorp.notesui.presentation.settings.dialog
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable

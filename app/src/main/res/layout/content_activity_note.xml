@@ -41,7 +41,7 @@
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/noteToolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="?actionBarSize"/>
+                    android:layout_height="?actionBarSize" />
 
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -92,6 +92,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:gravity="top|start"
+                        android:textSize="18sp"
                         android:hint="@string/content"
                         android:inputType="textMultiLine"
                         android:overScrollMode="always"

@@ -121,8 +121,8 @@ class MainActivity : AppCompatActivity() {
     
     private fun initRecyclerView() {
         notesRecyclerAdapter = NotesRecyclerAdapter(this, mutableListOf())
-        notesRecyclerAdapter.setOnClickListener(object : NotesRecyclerAdapter.OnClickListener {
-            override fun onItemClick(view: View?, item: NoteItem, position: Int) {
+        notesRecyclerAdapter.setOnClickListener(object : NotesRecyclerAdapter.OnNoteItemClickListener {
+            override fun onClick(view: View?, noteItem: NoteItem, position: Int) {
                 if (notesRecyclerAdapter.getSelectedItemCount() > 0) {
                     enableActionMode(position)
                 } else {
@@ -133,11 +133,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             
-            override fun onItemLongClick(view: View?, item: NoteItem, position: Int) {
-                Log.d(TAG, "onItemLongClick: position = $position")
+        })
+        notesRecyclerAdapter.setOnLongClickListener(object : NotesRecyclerAdapter.OnNoteItemLongClickListener{
+            override fun onLongClick(view: View?, noteItem: NoteItem, position: Int) {
                 enableActionMode(position)
-                
             }
+    
         })
         binding.recyclerView.adapter = notesRecyclerAdapter
         registerForContextMenu(binding.recyclerView)
@@ -220,9 +221,9 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_settings -> {
                 resultLauncher.launch(Intent(this, SettingsActivity::class.java))
-                
+
             }
-            
+
         }
         
         return true

@@ -2,7 +2,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dialogPreferencesLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center">
@@ -16,10 +15,12 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="@dimen/dialog_minWidth"
+            android:minHeight="@dimen/dialog_minHeight"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/dialogPreferencesTitle"
+                android:id="@+id/dialogPreferencesListView_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -28,28 +29,49 @@
                 android:textStyle="bold"
                 tools:text="@string/language" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/dialogPreferencesListViewLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:orientation="horizontal">
 
                 <ListView
-                    android:id="@+id/dialogPreferencesListView"
+                    android:id="@+id/dialogPreferencesListView_listView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_weight="1"
                     android:divider="@android:color/transparent"
-                    tools:listitem="@layout/list_item" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:listitem="@layout/list_item"
+                    tools:visibility="gone"/>
 
-            </LinearLayout>
+                <NumberPicker
+                    android:id="@+id/dialogPreferencesListView_numberPicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button
-                android:id="@+id/dialogPreferencesCancel"
+                android:id="@+id/dialogPreferencesListView_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:layout_gravity="end|bottom"
                 android:layout_marginEnd="25dp"
                 android:layout_marginBottom="15dp"
                 android:backgroundTint="?colorPrimaryDark"

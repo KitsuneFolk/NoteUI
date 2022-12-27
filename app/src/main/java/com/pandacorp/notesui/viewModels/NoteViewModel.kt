@@ -59,7 +59,7 @@ class NoteViewModel(
         //On first time opened add add button and 3 default colors.
         val basicColorsList = mutableListOf(
                 ColorItem(
-                        color = R.drawable.ic_add_baseline,
+                        color = 0,
                         type = ColorItem.ADD),
                 ColorItem(color = ContextCompat.getColor(context, R.color.light_yellow)),
                 ColorItem(color = ContextCompat.getColor(context, R.color.light_green)),

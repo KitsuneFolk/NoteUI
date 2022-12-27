@@ -8,11 +8,12 @@
     <string name="theme">Тема</string>
     <string name="notes">Нотатки</string>
     <string name="hide_actionbar_while_scrolling">Ховати actionbar при гортаннi</string>
+    <string name="headerTextSize">Розмiр текста заголовку</string>
+    <string name="contentTextSize">Розмiр текста змiсту</string>
     <string name="version">Версія</string>
     <string name="another">Iнше</string>
 
     <string name="settings_theme_summary">Синя</string>
-    <string name="settings_theme_default_value">blue</string>
     <string name="settings_language_default_value">uk</string>
     <string name="settings_language_summary">Українська</string>
 
@@ -21,8 +22,7 @@
     <string name="search_hint">Знайти нотаток…</string>
 
     <!-- Select strings -->
-    <string name="delete">Удалить</string>
-    <string name="select_all">Выбрать всё</string>
+    <string name="select_all">Обрати все</string>
 
     <!-- activity_note strings -->
     <string name="header">Заголовок…</string>

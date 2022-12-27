@@ -2,12 +2,10 @@ package com.pandacorp.notesui.utils
 
 import com.pandacorp.notesui.R
 
-
 class Utils {
     
     companion object {
-        
-        //Images that user can choose to set note background.
+        //Images what user can choose to set note background.
         val backgroundImages = listOf(
                 R.drawable.image_night_city,
                 R.drawable.image_city,
@@ -18,7 +16,9 @@ class Utils {
                 R.drawable.image_colors,
                 R.drawable.image_speed
         )
-        
+    
+        const val preferenceBundleKey = "preferenceBundleKey"
+    
         //This function is needed for coroutines logs work on Xiaomi devices.
         fun setupExceptionHandler() {
             Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->

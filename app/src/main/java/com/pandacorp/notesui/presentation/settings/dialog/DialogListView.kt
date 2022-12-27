@@ -1,4 +1,4 @@
-package com.pandacorp.notesui.presentation.settings
+package com.pandacorp.notesui.presentation.settings.dialog
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -13,8 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.presentation.adapter.ListAdapter
+import com.pandacorp.notesui.presentation.settings.ListItem
+import com.pandacorp.notesui.presentation.settings.PreferencesKeys
+import com.pandacorp.notesui.presentation.settings.SettingsActivity
+import com.pandacorp.notesui.utils.Utils
 
-class PreferenceDialog(private val preferenceKey: String) : CustomDialog() {
+class DialogListView : CustomDialog() {
     private lateinit var sp: SharedPreferences
     
     override fun onCreateView(
@@ -23,30 +27,32 @@ class PreferenceDialog(private val preferenceKey: String) : CustomDialog() {
         
         sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
         
-        val view = inflater.inflate(R.layout.dialog_preferences, container, false)
+        val view = inflater.inflate(R.layout.dialog_preferences_list_view, container, false)
         
-        val titleTextView = view.findViewById<TextView>(R.id.dialogPreferencesTitle)
-        val cancelButton = view.findViewById<Button>(R.id.dialogPreferencesCancel)
-        val listView = view.findViewById<ListView>(R.id.dialogPreferencesListView)
+        val preferenceKey = requireArguments().getString(Utils.preferenceBundleKey)
+        
+        val titleTextView = view.findViewById<TextView>(R.id.dialogPreferencesListView_title)
+        val cancelButton = view.findViewById<Button>(R.id.dialogPreferencesListView_cancel)
+        val listView = view.findViewById<ListView>(R.id.dialogPreferencesListView_listView)
+        
         titleTextView.setText(
                 when (preferenceKey) {
                     PreferencesKeys.themesKey -> R.string.theme
                     PreferencesKeys.languagesKey -> R.string.language
-                    else -> throw IllegalArgumentException()
-                })
+                    else -> throw IllegalArgumentException("PreferenceKey = $preferenceKey")
+                }
+        )
+        
+        cancelButton.setOnClickListener {
+            dialog!!.cancel()
+        }
         
         val itemsList: MutableList<ListItem> = when (preferenceKey) {
             PreferencesKeys.themesKey -> fillThemesList()
             PreferencesKeys.languagesKey -> fillLanguagesList()
             else -> throw IllegalArgumentException()
+            
         }
-        titleTextView.setText(
-                when (preferenceKey) {
-                    PreferencesKeys.themesKey -> R.string.theme
-                    PreferencesKeys.languagesKey -> R.string.language
-                    else -> throw IllegalArgumentException()
-                })
-        
         val adapter = ListAdapter(requireContext(), itemsList, preferenceKey)
         adapter.setOnClickListener(object : ListAdapter.OnListItemClickListener {
             override fun onClick(view: View?, listItem: ListItem, position: Int) {
@@ -60,46 +66,52 @@ class PreferenceDialog(private val preferenceKey: String) : CustomDialog() {
         })
         listView.adapter = adapter
         
-        cancelButton.setOnClickListener {
-            dialog!!.cancel()
-        }
         
         return view
     }
     
     private fun fillThemesList(): MutableList<ListItem> {
-        val themesKeysList = requireContext().resources.getStringArray(R.array.Themes_values)
-        val themesTitlesList = requireContext().resources.getStringArray(R.array.Themes)
-        val themesDrawablesList =
+        val keysList = requireContext().resources.getStringArray(R.array.Themes_values)
+        val titlesList = requireContext().resources.getStringArray(R.array.Themes)
+        val itemsList =
             requireContext().resources.obtainTypedArray(R.array.Themes_drawables)
         val themesList: MutableList<ListItem> = mutableListOf()
-        repeat(themesKeysList.size) { i ->
+        repeat(keysList.size) { i ->
             themesList.add(
                     ListItem(
-                            themesKeysList[i],
-                            themesTitlesList[i],
-                            themesDrawablesList.getDrawable(i)!!))
+                            keysList[i],
+                            titlesList[i],
+                            itemsList.getDrawable(i)!!))
         }
-        themesDrawablesList.recycle()
+        itemsList.recycle()
         return themesList
     }
     
     private fun fillLanguagesList(): MutableList<ListItem> {
-        val languagesKeysList = requireContext().resources.getStringArray(R.array.Languages_values)
-        val languagesDrawablesList =
+        val keysList = requireContext().resources.getStringArray(R.array.Languages_values)
+        val drawablesList =
             requireContext().resources.obtainTypedArray(R.array.Languages_drawables)
-        val languagesTitlesList = requireContext().resources.getStringArray(R.array.Languages)
-        val languagesList: MutableList<ListItem> = mutableListOf()
-        repeat(languagesKeysList.size) { i ->
-            languagesList.add(
+        val titlesList = requireContext().resources.getStringArray(R.array.Languages)
+        val itemsList: MutableList<ListItem> = mutableListOf()
+        repeat(keysList.size) { i ->
+            itemsList.add(
                     ListItem(
-                            languagesKeysList[i],
-                            languagesTitlesList[i],
-                            languagesDrawablesList.getDrawable(i)!!))
+                            keysList[i],
+                            titlesList[i],
+                            drawablesList.getDrawable(i)!!))
         }
-        languagesDrawablesList.recycle()
-        return languagesList
+        drawablesList.recycle()
+        return itemsList
     }
     
+    companion object {
+        fun newInstance(preferenceKey: String): DialogListView {
+            val args = Bundle()
+            args.putString(Utils.preferenceBundleKey, preferenceKey)
+            val dialog = DialogListView()
+            dialog.arguments = args
+            return dialog
+        }
+    }
     
 }

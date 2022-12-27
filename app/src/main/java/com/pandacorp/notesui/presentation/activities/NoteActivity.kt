@@ -1,5 +1,6 @@
 package com.pandacorp.notesui.presentation.activities
 
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.ColorDrawable
@@ -57,6 +58,8 @@ class NoteActivity : AppCompatActivity() {
     private lateinit var bindingContent: ContentActivityNoteBinding
     private lateinit var menuBinding: MenuDrawerEndBinding
     
+    private lateinit var sp: SharedPreferences
+    
     private lateinit var toolbar: Toolbar
     private var isHideToolbarWhileScrolling: Boolean = true
     
@@ -111,7 +114,8 @@ class NoteActivity : AppCompatActivity() {
         setContentView(binding.root)
         Utils.setupExceptionHandler()
         toolbar = findViewById(R.id.noteToolbar)
-        isHideToolbarWhileScrolling = PreferenceManager.getDefaultSharedPreferences(this)
+        sp = PreferenceManager.getDefaultSharedPreferences(this)
+        isHideToolbarWhileScrolling = sp
             .getBoolean(PreferencesKeys.hideActionBarWhileScrollingKey, true)
         hideToolbarWhileScrollingUseCase(toolbar = toolbar, isHide = isHideToolbarWhileScrolling)
         setSupportActionBar(toolbar)
@@ -140,6 +144,11 @@ class NoteActivity : AppCompatActivity() {
         
         changeNoteBackground(note.background)
         
+        val contentTextSize = sp.getString(PreferencesKeys.contentTextSizeKey, PreferencesKeys.contentTextSizeDefaultValue)!!.toFloat()
+        val headerTextSize = sp.getString(PreferencesKeys.headerTextSizeKey, PreferencesKeys.headerTextSizeDefaultValue)!!.toFloat()
+        changeEditTextTextSize(bindingContent.contentEditText, contentTextSize)
+        changeEditTextTextSize(bindingContent.headerEditText, headerTextSize)
+        
         // When activity starts, don't show keyboard.
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         
@@ -164,6 +173,10 @@ class NoteActivity : AppCompatActivity() {
             
         }
         
+    }
+    
+    private fun changeEditTextTextSize(editText: EditText, size: Float){
+        editText.textSize = size
     }
     
     private fun initEditTexts() {
@@ -193,10 +206,9 @@ class NoteActivity : AppCompatActivity() {
     private fun initActionBottomMenu() {
         
         colorsRecyclerAdapter = ColorsRecyclerAdapter(this, mutableListOf())
-        colorsRecyclerAdapter.setOnClickListener(object : ColorsRecyclerAdapter.OnClickListener {
-            override fun onItemClick(
-                view: View?, colorItem: ColorItem, position: Int
-            ) {
+        colorsRecyclerAdapter.setOnClickListener(object :
+            ColorsRecyclerAdapter.OnColorItemClickListener {
+            override fun onClick(view: View?, colorItem: ColorItem, position: Int) {
                 if (colorItem.type == ColorItem.ADD) {
                     //Add button clicked
                     ColorPickerDialog.Builder(this@NoteActivity)
@@ -212,7 +224,6 @@ class NoteActivity : AppCompatActivity() {
                         .setNegativeButton(
                                 getString(android.R.string.cancel)
                         ) { dialogInterface, i -> dialogInterface.dismiss() }
-                        .attachAlphaSlideBar(true)
                         .attachBrightnessSlideBar(true)
                         .setBottomSpace(12) // set a bottom space between the last slideBar and buttons.
                         .show()
@@ -247,8 +258,10 @@ class NoteActivity : AppCompatActivity() {
                         selectionEnd)
                 
             }
-            
-            override fun onItemLongClick(view: View?, colorItem: ColorItem, position: Int) {
+        })
+        colorsRecyclerAdapter.setOnLongClickListener(object :
+            ColorsRecyclerAdapter.OnColorItemLongClickListener {
+            override fun onLongClick(view: View?, colorItem: ColorItem, position: Int) {
                 if (colorItem.type == ColorItem.ADD) {
                     AlertDialog.Builder(this@NoteActivity, R.style.MaterialAlertDialog)
                         .setTitle(R.string.confirm_colors_reset)
@@ -663,21 +676,16 @@ class NoteActivity : AppCompatActivity() {
     private fun initImageRecyclerView() {
         val imagesList = fillImagesList()
         val imageRecyclerAdapter = ImagesRecyclerAdapter(this, imagesList)
-        imageRecyclerAdapter.setOnClickListener(object : ImagesRecyclerAdapter.OnClickListener {
-            override fun onItemClick(view: View?, drawable: Drawable, position: Int) {
+        imageRecyclerAdapter.setOnClickListener(object : ImagesRecyclerAdapter.OnImageItemClickListener {
+            override fun onClick(view: View?, drawable: Drawable, position: Int) {
                 // Here we store int as background, then get drawable by position
                 // from Utils.backgroundImagesIds and set it.
                 bindingContent.noteBackgroundImageView.setImageDrawable(drawable)
                 note.background = position.toString()
                 CoroutineScope(Dispatchers.IO).launch {
                     updateNoteUseCase(note)
-                    
+        
                 }
-                
-            }
-            
-            override fun onItemLongClick(view: View?, drawable: Drawable, position: Int) {
-                
             }
         })
         menuBinding.imageRecyclerView.adapter = imageRecyclerAdapter

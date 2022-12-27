@@ -8,13 +8,17 @@
     <string name="theme">Theme</string>
     <string name="notes">Notes</string>
     <string name="hide_actionbar_while_scrolling">Hide actionbar while scrolling</string>
+    <string name="headerTextSize">Header text size</string>
+    <string name="contentTextSize">Content text size</string>
     <string name="version">Version</string>
     <string name="another">Another</string>
 
-    <string name="settings_theme_default_value">follow_system</string>
+    <string name="settings_theme_default_value" translatable="false">follow_system</string>
     <string name="settings_theme_summary">Blue</string>
     <string name="settings_language_default_value">en</string>
     <string name="settings_language_summary">English</string>
+    <string name="settings_note_content_size_default_value" translatable="false">18</string>
+    <string name="settings_note_header_size_default_value" translatable="false">20</string>
 
     <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in.</string>
     <string name="lorem_ipsumX2" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in.</string>
@@ -25,7 +29,6 @@
     <string name="search_hint">Search a note…</string>
 
     <!-- Select strings -->
-    <string name="delete">Delete</string>
     <string name="select_all">Select all</string>
 
     <!-- activity_note strings -->
@@ -82,4 +85,5 @@
 
     <string name="dismiss">Dismiss</string>
     <string name="select">Select</string>
+    <string name="ok" translatable="false">OK</string>
 </resources>

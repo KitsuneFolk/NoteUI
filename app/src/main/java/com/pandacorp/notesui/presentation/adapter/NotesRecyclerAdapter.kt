@@ -6,7 +6,6 @@ import android.net.Uri
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -26,17 +25,16 @@ class NotesRecyclerAdapter(
     private val context: Context,
     private var itemsList: MutableList<NoteItem>
 ) : RecyclerView.Adapter<NotesRecyclerAdapter.ViewHolder>(), KoinComponent {
-    private val TAG = "NotesRecyclerAdapter"
     
     private val jsonToSpannableUseCase: JsonToSpannableUseCase by inject()
     
-    private var onClickListener: OnClickListener? = null
+    private var onNoteItemClickListener: OnNoteItemClickListener? = null
+    private var onNoteItemLongClickListener: OnNoteItemLongClickListener? = null
     
     private var selectedItemsList = SparseBooleanArray()
     private var currentSelectedIndex = -1
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.note_item, parent, false)
         return ViewHolder(itemView)
@@ -47,29 +45,27 @@ class NotesRecyclerAdapter(
     fun getItem(position: Int): NoteItem = itemsList[position]
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val note = itemsList[position]
+        val noteItem = itemsList[position]
         
-        holder.header.text = jsonToSpannableUseCase(note.header)
+        holder.header.text = jsonToSpannableUseCase(noteItem.header)
         
-        holder.content.text = jsonToSpannableUseCase(note.content)
+        holder.content.text = jsonToSpannableUseCase(noteItem.content)
         
         // Remove background to avoid bug when after removing note, a new one had background as removed one.
         holder.backgroundImageView.setImageDrawable(null)
         
-        changeNoteBackground(note.background, holder.backgroundImageView)
+        changeNoteBackground(noteItem.background, holder.backgroundImageView)
         
         holder.cardView.isActivated = selectedItemsList.get(position, false)
-        
-        holder.cardView.setOnClickListener(View.OnClickListener { v ->
-            if (onClickListener == null) return@OnClickListener
-            onClickListener!!.onItemClick(v, note, position)
-        })
-        
-        holder.cardView.setOnLongClickListener(OnLongClickListener { v ->
-            if (onClickListener == null) return@OnLongClickListener false
-            onClickListener!!.onItemLongClick(v, note, position)
+    
+        holder.cardView.setOnClickListener { v ->
+            onNoteItemClickListener?.onClick(v, noteItem, position)
+        }
+        holder.cardView.setOnLongClickListener { v ->
+            onNoteItemLongClickListener?.onLongClick(v, noteItem, position) ?:
+            return@setOnLongClickListener false
             true
-        })
+        }
         
         toggleCheckedIcon(holder, position)
         
@@ -163,13 +159,23 @@ class NotesRecyclerAdapter(
         
     }
     
-    fun setOnClickListener(onClickListener: OnClickListener?) {
-        this.onClickListener = onClickListener
-    }
-    
     fun setList(itemsList: MutableList<NoteItem>) {
         this.itemsList = itemsList
         notifyDataSetChanged()
+    }
+    
+    fun setOnClickListener(onNoteItemClickListener: OnNoteItemClickListener) {
+        this.onNoteItemClickListener = onNoteItemClickListener
+    }
+    fun setOnLongClickListener(onNoteItemLongClickListener: OnNoteItemLongClickListener) {
+        this.onNoteItemLongClickListener = onNoteItemLongClickListener
+    }
+    
+    interface OnNoteItemClickListener {
+        fun onClick(view: View?, noteItem: NoteItem, position: Int)
+    }
+    interface OnNoteItemLongClickListener {
+        fun onLongClick(view: View?, noteItem: NoteItem, position: Int)
     }
     
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -182,10 +188,9 @@ class NotesRecyclerAdapter(
         val cardView = itemView.findViewById<CardView>(R.id.note_item_cardView)
         
     }
+    companion object {
+        const val TAG = "NotesRecyclerAdapter"
     
-    interface OnClickListener {
-        fun onItemClick(view: View?, item: NoteItem, position: Int)
-        fun onItemLongClick(view: View?, item: NoteItem, position: Int)
     }
     
 }

@@ -1,6 +1,5 @@
 package com.pandacorp.notesui.presentation.settings
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
@@ -8,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.*
 import androidx.preference.Preference.OnPreferenceChangeListener
 import com.pandacorp.notesui.R
+import com.pandacorp.notesui.presentation.settings.dialog.DialogListView
+import com.pandacorp.notesui.presentation.settings.dialog.DialogNumberPicker
 import com.pandacorp.notesui.utils.ThemeHandler
 import com.pandacorp.notesui.utils.Utils
 import kotlinx.coroutines.CoroutineScope
@@ -50,15 +51,12 @@ class SettingsActivity : AppCompatActivity() {
         
     }
     companion object {
-        val TAG = "SettingsActivity"
+        const val TAG = "SettingsActivity"
     
     }
     class SettingsFragment : PreferenceFragmentCompat(),
         OnPreferenceChangeListener {
-        private val TAG = "SettingsActivity"
-        var language: String? = null
-        var theme: String? = null
-        var sp: SharedPreferences? = null
+        private lateinit var sp: SharedPreferences
         private lateinit var themesListPreference: ListPreference
         private lateinit var languagesListPreference: ListPreference
         private lateinit var versionPreference: Preference
@@ -94,10 +92,16 @@ class SettingsActivity : AppCompatActivity() {
         override fun onDisplayPreferenceDialog(preference: Preference?) {
             when (preference?.key) {
                 PreferencesKeys.themesKey -> { // rounded theme dialog with images
-                    PreferenceDialog(PreferencesKeys.themesKey).show(parentFragmentManager, null)
+                    DialogListView.newInstance(PreferencesKeys.themesKey).show(parentFragmentManager, null)
                 }
                 PreferencesKeys.languagesKey -> { // rounded language dialog with images
-                    PreferenceDialog(PreferencesKeys.languagesKey).show(parentFragmentManager, null)
+                    DialogListView.newInstance(PreferencesKeys.languagesKey).show(parentFragmentManager, null)
+                }
+                PreferencesKeys.contentTextSizeKey -> {
+                    DialogNumberPicker.newInstance(PreferencesKeys.contentTextSizeKey).show(parentFragmentManager, null)
+                }
+                PreferencesKeys.headerTextSizeKey -> {
+                    DialogNumberPicker.newInstance(PreferencesKeys.headerTextSizeKey).show(parentFragmentManager, null)
                 }
                 else -> {
                     super.onDisplayPreferenceDialog(preference)
@@ -105,14 +109,8 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
         
-        override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-            requireActivity().setResult(RESULT_OK)
-            requireActivity().startActivity(Intent(context, SettingsActivity::class.java))
-            requireActivity().finish()
-            requireActivity().overridePendingTransition(0, 0)
-            
-            return true
-        }
+        override fun onPreferenceChange(preference: Preference, newValue: Any) = true
+        
     }
 }
 
@@ -121,5 +119,9 @@ object PreferencesKeys {
     const val themesKey = "Themes"
     const val hideActionBarWhileScrollingKey = "hide_actionbar_while_scrolling"
     const val versionKey = "Version"
+    const val contentTextSizeKey = "ContentTextSize"
+    const val headerTextSizeKey = "HeaderTextSize"
+    const val contentTextSizeDefaultValue = "18"
+    const val headerTextSizeDefaultValue = "20"
     
 }

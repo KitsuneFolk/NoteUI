@@ -52,10 +52,10 @@ class ListAdapter(
         return view
     }
     
-    fun setOnClickListener(onListItemClickListener: OnListItemClickListener?) {
+    fun setOnClickListener(onListItemClickListener: OnListItemClickListener) {
         this.onListItemClickListener = onListItemClickListener
     }
-    fun setOnLongClickListener(onListItemLongClickListener: OnListItemLongClickListener?) {
+    fun setOnLongClickListener(onListItemLongClickListener: OnListItemLongClickListener) {
         this.onListItemLongClickListener = onListItemLongClickListener
     }
     

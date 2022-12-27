@@ -18,7 +18,9 @@ class ColorsRecyclerAdapter(
     
     private val TAG = "ColorsRecyclerAdapter"
     
-    private var onClickListener: OnClickListener? = null
+    private var onColorItemClickListener: OnColorItemClickListener? = null
+    private var onColorItemLongClickListener: OnColorItemLongClickListener? = null
+    
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -31,6 +33,7 @@ class ColorsRecyclerAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d(TAG, "onBindViewHolder: position = $position")
         val colorItem = itemsList[position]
+        holder.imageView.setImageResource(0) // remove background to avoid bug with recycling
         when (colorItem.type){
             ColorItem.COLOR -> {
                 holder.imageView.background = ColorDrawable(colorItem.color)
@@ -38,19 +41,18 @@ class ColorsRecyclerAdapter(
             }
             ColorItem.ADD -> {
                 Log.d(TAG, "onBindViewHolder: add ")
-                holder.imageView.setImageResource(colorItem.color)
+                holder.imageView.setImageResource(R.drawable.ic_add_baseline)
     
             }
         }
-        holder.imageView.setOnClickListener(View.OnClickListener { v ->
-            if (onClickListener == null) return@OnClickListener
-            onClickListener!!.onItemClick(v, colorItem, position)
-        })
-        holder.imageView.setOnLongClickListener(View.OnLongClickListener { v ->
-            if (onClickListener == null) return@OnLongClickListener false
-            onClickListener!!.onItemLongClick(v, colorItem, position)
+        holder.imageView.setOnClickListener { v ->
+            onColorItemClickListener?.onClick(v, colorItem, position)
+        }
+        holder.imageView.setOnLongClickListener { v ->
+            onColorItemLongClickListener?.onLongClick(v, colorItem, position) ?:
+            return@setOnLongClickListener false
             true
-        })
+        }
     
     
     }
@@ -68,18 +70,22 @@ class ColorsRecyclerAdapter(
         notifyDataSetChanged()
     }
     
-    fun setOnClickListener(onClickListener: OnClickListener?) {
-        this.onClickListener = onClickListener
-    }
-    
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView = view.findViewById<ImageView>(R.id.colorItemImageView)!!
         
     }
     
-    interface OnClickListener {
-        fun onItemClick(view: View?, colorItem: ColorItem, position: Int)
-        fun onItemLongClick(view: View?, colorItem: ColorItem, position: Int)
+    fun setOnClickListener(onColorItemClickListener: OnColorItemClickListener) {
+        this.onColorItemClickListener = onColorItemClickListener
+    }
+    fun setOnLongClickListener(onColorItemLongClickListener: OnColorItemLongClickListener) {
+        this.onColorItemLongClickListener = onColorItemLongClickListener
+    }
+    interface OnColorItemClickListener {
+        fun onClick(view: View?, colorItem: ColorItem, position: Int)
+    }
+    interface OnColorItemLongClickListener {
+        fun onLongClick(view: View?, colorItem: ColorItem, position: Int)
     }
     
 }
