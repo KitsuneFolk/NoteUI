@@ -49,15 +49,16 @@
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout-xxhdpi/note_image.xml" value="0.14957264957264957" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout-xxxdpi/note_image.xml" value="0.14957264957264957" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout-xxxhdpi/note_image.xml" value="0.13671875" />
-        <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/activity_main.xml" value="0.21" />
+        <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/activity_note.xml" value="0.33" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/activity_search.xml" value="0.18229166666666666" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/activity_settings.xml" value="0.25" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/app_bar_note.xml" value="0.17" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/color_card_item.xml" value="0.5" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/color_item.xml" value="1.25" />
-        <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/content_activity_note.xml" value="0.2" />
+        <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/content_activity_note.xml" value="0.67" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/content_note.xml" value="0.18229166666666666" />
+        <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/dialog_color_picker.xml" value="0.27555555555555555" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/dialog_create_note.xml" value="0.19635416666666666" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/dialog_languages.xml" value="0.33" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/dialog_number_picker.xml" value="0.33" />

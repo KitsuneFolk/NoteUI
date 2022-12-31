@@ -3,4 +3,5 @@
     <dimen name="corners_radius">40dp</dimen>
     <dimen name="dialog_minHeight">350dp</dimen>
     <dimen name="dialog_minWidth">300dp</dimen>
+    <dimen name="actionMenuButtonsSize">35dp</dimen>
 </resources>

@@ -27,8 +27,12 @@
     <PreferenceCategory android:title="@string/notes">
         <SwitchPreference
             android:defaultValue="true"
+            android:key="isShowAddNoteFABText"
+            android:title="@string/isShowAddNoteFABText" />
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="hide_actionbar_while_scrolling"
-            android:title="@string/hide_actionbar_while_scrolling" />
+            android:title="@string/isHideActionBarOnScroll" />
         <ListPreference
             android:defaultValue="@string/settings_note_header_size_default_value"
             android:key="HeaderTextSize"

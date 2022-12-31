@@ -9,6 +9,7 @@ import androidx.preference.Preference.OnPreferenceChangeListener
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.presentation.settings.dialog.DialogListView
 import com.pandacorp.notesui.presentation.settings.dialog.DialogNumberPicker
+import com.pandacorp.notesui.utils.Constans
 import com.pandacorp.notesui.utils.ThemeHandler
 import com.pandacorp.notesui.utils.Utils
 import kotlinx.coroutines.CoroutineScope
@@ -61,6 +62,7 @@ class SettingsActivity : AppCompatActivity() {
         private lateinit var languagesListPreference: ListPreference
         private lateinit var versionPreference: Preference
         private lateinit var hideActionBarWhileScrollingSwitch: SwitchPreference
+        private lateinit var isShowAddNoteFABText: SwitchPreference
         
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -75,14 +77,20 @@ class SettingsActivity : AppCompatActivity() {
         
         private fun initViews() {
             sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
-            themesListPreference = findPreference(PreferencesKeys.themesKey)!!
+            themesListPreference = findPreference(Constans.PreferencesKeys.themesKey)!!
             themesListPreference.onPreferenceChangeListener = this
-            languagesListPreference = findPreference(PreferencesKeys.languagesKey)!!
+            languagesListPreference = findPreference(Constans.PreferencesKeys.languagesKey)!!
             languagesListPreference.onPreferenceChangeListener = this
+            isShowAddNoteFABText = findPreference(Constans.PreferencesKeys.isShowAddNoteFABTextKey)!!
+            isShowAddNoteFABText.setOnPreferenceChangeListener { preference, newValue ->
+                sp.edit().putBoolean(Constans.PreferencesKeys.isShowAddNoteFABTextKey, newValue as Boolean).apply()
+                requireActivity().setResult(RESULT_OK)
+                return@setOnPreferenceChangeListener true
+            }
             hideActionBarWhileScrollingSwitch =
-                findPreference(PreferencesKeys.hideActionBarWhileScrollingKey)!!
+                findPreference(Constans.PreferencesKeys.isHideActionBarOnScrollKey)!!
             //Here we add title to the version preference.
-            versionPreference = findPreference(PreferencesKeys.versionKey)!!
+            versionPreference = findPreference(Constans.PreferencesKeys.versionKey)!!
             val version = requireContext().packageManager
                 .getPackageInfo(requireContext().packageName, 0).versionName
             versionPreference.title =
@@ -91,17 +99,17 @@ class SettingsActivity : AppCompatActivity() {
         
         override fun onDisplayPreferenceDialog(preference: Preference?) {
             when (preference?.key) {
-                PreferencesKeys.themesKey -> { // rounded theme dialog with images
-                    DialogListView.newInstance(PreferencesKeys.themesKey).show(parentFragmentManager, null)
+                Constans.PreferencesKeys.themesKey -> { // rounded theme dialog with images
+                    DialogListView.newInstance(Constans.PreferencesKeys.themesKey).show(parentFragmentManager, null)
                 }
-                PreferencesKeys.languagesKey -> { // rounded language dialog with images
-                    DialogListView.newInstance(PreferencesKeys.languagesKey).show(parentFragmentManager, null)
+                Constans.PreferencesKeys.languagesKey -> { // rounded language dialog with images
+                    DialogListView.newInstance(Constans.PreferencesKeys.languagesKey).show(parentFragmentManager, null)
                 }
-                PreferencesKeys.contentTextSizeKey -> {
-                    DialogNumberPicker.newInstance(PreferencesKeys.contentTextSizeKey).show(parentFragmentManager, null)
+                Constans.PreferencesKeys.contentTextSizeKey -> {
+                    DialogNumberPicker.newInstance(Constans.PreferencesKeys.contentTextSizeKey).show(parentFragmentManager, null)
                 }
-                PreferencesKeys.headerTextSizeKey -> {
-                    DialogNumberPicker.newInstance(PreferencesKeys.headerTextSizeKey).show(parentFragmentManager, null)
+                Constans.PreferencesKeys.headerTextSizeKey -> {
+                    DialogNumberPicker.newInstance(Constans.PreferencesKeys.headerTextSizeKey).show(parentFragmentManager, null)
                 }
                 else -> {
                     super.onDisplayPreferenceDialog(preference)
@@ -109,19 +117,10 @@ class SettingsActivity : AppCompatActivity() {
             }
         }
         
-        override fun onPreferenceChange(preference: Preference, newValue: Any) = true
+        override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
+            return true
+            
+        }
         
     }
-}
-
-object PreferencesKeys {
-    const val languagesKey = "Languages"
-    const val themesKey = "Themes"
-    const val hideActionBarWhileScrollingKey = "hide_actionbar_while_scrolling"
-    const val versionKey = "Version"
-    const val contentTextSizeKey = "ContentTextSize"
-    const val headerTextSizeKey = "HeaderTextSize"
-    const val contentTextSizeDefaultValue = "18"
-    const val headerTextSizeDefaultValue = "20"
-    
 }

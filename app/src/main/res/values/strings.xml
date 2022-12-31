@@ -7,7 +7,8 @@
     <string name="language">Language</string>
     <string name="theme">Theme</string>
     <string name="notes">Notes</string>
-    <string name="hide_actionbar_while_scrolling">Hide actionbar while scrolling</string>
+    <string name="isShowAddNoteFABText">Show Add note button text</string>
+    <string name="isHideActionBarOnScroll">Hide actionbar while scrolling</string>
     <string name="headerTextSize">Header text size</string>
     <string name="contentTextSize">Content text size</string>
     <string name="version">Version</string>
@@ -56,8 +57,8 @@
     <string name="redo">Redo</string>
 
     <!-- MainActivity strings  -->
+    <string name="addNote">Add note</string>
     <string name="snackbar_undo_title">Notes have been removed: </string>
-    <string name="snackbar_undo">Undo deleting</string>
 
     <!-- ImagePicker strings  -->
     <string name="title_choose_image_provider">Choose</string>
@@ -86,4 +87,5 @@
     <string name="dismiss">Dismiss</string>
     <string name="select">Select</string>
     <string name="ok" translatable="false">OK</string>
+    <string name="successfully">Successfully</string>
 </resources>

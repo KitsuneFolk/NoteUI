@@ -21,11 +21,12 @@ class MainViewModel(
     var notesList = MutableLiveData<MutableList<NoteItem>>()
     
     init {
-        getNotes()
+        updateNotes()
     }
     
-    fun addNote(note: NoteItem) {
-        notesList.value?.add(note)
+    fun addNote(position: Int, note: NoteItem) {
+        notesList.value?.add(position, note)
+        notesList.postValue(notesList.value)
         CoroutineScope(Dispatchers.IO).launch {
             addNoteUseCase(note)
         }
@@ -33,17 +34,25 @@ class MainViewModel(
     
     fun removeNote(note: NoteItem) {
         notesList.value?.remove(note)
+        notesList.postValue(notesList.value)
         CoroutineScope(Dispatchers.IO).launch {
             removeNoteUseCase(note)
         }
     }
     
-    fun getNotes() {
+    fun updateNotes() {
         notesList.value?.clear()
         CoroutineScope(Dispatchers.IO).launch {
             notesList.postValue(getNotesUseCase())
         }
     }
     
+    fun restoreNotes(notes: List<Pair<NoteItem, Int>>) {
+        notes.forEach { pair ->
+            val note = pair.first
+            val position = pair.second
+            addNote(position, note)
+        }
+    }
     
 }

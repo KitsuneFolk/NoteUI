@@ -7,7 +7,8 @@
     <string name="language">Язык</string>
     <string name="theme">Тема</string>
     <string name="notes">Заметки</string>
-    <string name="hide_actionbar_while_scrolling">Скрывать actionbar при листании</string>
+    <string name="isShowAddNoteFABText">Показывать текст кнопки Создать заметку</string>
+    <string name="isHideActionBarOnScroll">Скрывать actionbar при листании</string>
     <string name="headerTextSize">Размер текста заголовка</string>
     <string name="contentTextSize">Размер текста содержания</string>
     <string name="version">Версия</string>
@@ -48,6 +49,10 @@
     <string name="embeddedImages">Встроенные изображения</string>
     <string name="colors">Цвета</string>
 
+    <!-- MainActivity strings  -->
+    <string name="addNote">Создать заметку</string>
+    <string name="snackbar_undo_title">Было удалено заметок: </string>
+
     <!-- ImagePicker strings  -->
     <string name="title_choose_image_provider">Выбрать</string>
     <string name="action_cancel">Отменить</string>
@@ -70,11 +75,7 @@
     <string name="ucrop_scale">Масштабировать</string>
     <string name="ucrop_crop">Обрезать</string>
 
-
-    <!-- MainActivity strings  -->
-    <string name="snackbar_undo_title">Было удалено заметок: </string>
-    <string name="snackbar_undo">Отменить удаление</string>
-
     <string name="dismiss">Отклонить</string>
     <string name="select">Выбрать</string>
+    <string name="successfully">Успешно</string>
 </resources>

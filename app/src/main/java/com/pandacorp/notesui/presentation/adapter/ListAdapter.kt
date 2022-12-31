@@ -12,7 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.presentation.activities.MainActivity
 import com.pandacorp.notesui.presentation.settings.ListItem
-import com.pandacorp.notesui.presentation.settings.PreferencesKeys
+import com.pandacorp.notesui.utils.Constans
 
 class ListAdapter(
     context: Context, languagesList: MutableList<ListItem>, private val preferenceKey: String
@@ -46,7 +46,7 @@ class ListAdapter(
         textView.text = listItem.title
         imageView.setImageDrawable(listItem.drawable)
         // make imageview rounded if key == theme
-        if (preferenceKey == PreferencesKeys.themesKey){
+        if (preferenceKey == Constans.PreferencesKeys.themesKey){
             cardView.radius  = 80f
         }
         return view

@@ -33,7 +33,6 @@ class NotesRecyclerAdapter(
     
     private var selectedItemsList = SparseBooleanArray()
     private var currentSelectedIndex = -1
-    
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.note_item, parent, false)
@@ -42,6 +41,9 @@ class NotesRecyclerAdapter(
     
     override fun getItemCount() = itemsList.size
     
+    override fun getItemId(position: Int): Long = position.toLong()
+    
+    override fun getItemViewType(position: Int): Int = position
     fun getItem(position: Int): NoteItem = itemsList[position]
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -94,7 +96,6 @@ class NotesRecyclerAdapter(
     
     //Selection methods
     private fun toggleCheckedIcon(holder: ViewHolder, position: Int) {
-        val note = itemsList[position]
         val selectionColor = ContextCompat.getColor(context, R.color.note_selection_color)
         val colorPrimary = ContextCompat.getColor(context, ThemeHandler(context).getColorPrimary())
         if (selectedItemsList.get(position, false)) {

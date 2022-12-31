@@ -7,7 +7,8 @@
     <string name="language">Мова</string>
     <string name="theme">Тема</string>
     <string name="notes">Нотатки</string>
-    <string name="hide_actionbar_while_scrolling">Ховати actionbar при гортаннi</string>
+    <string name="isShowAddNoteFABText">Показати текст кнопки Створити нотаток</string>
+    <string name="isHideActionBarOnScroll">Ховати actionbar при гортаннi</string>
     <string name="headerTextSize">Розмiр текста заголовку</string>
     <string name="contentTextSize">Розмiр текста змiсту</string>
     <string name="version">Версія</string>
@@ -48,6 +49,10 @@
     <string name="undo">Повернути</string>
     <string name="redo">Вiдновити</string>
 
+    <!-- MainActivity strings  -->
+    <string name="addNote">Створити нотаток</string>
+    <string name="snackbar_undo_title">Було видалено нотаткiв: </string>
+
     <!-- ImagePicker strings  -->
     <string name="title_choose_image_provider">Обрати</string>
     <string name="action_cancel">Вiдмiнити</string>
@@ -70,11 +75,8 @@
     <string name="ucrop_scale">Масштабувати</string>
     <string name="ucrop_crop">Обрiзати</string>
 
-
-    <!-- MainActivity strings  -->
-    <string name="snackbar_undo_title">Було видалено нотаткiв: </string>
-    <string name="snackbar_undo">Вiдмiнити видалення</string>
-
     <string name="dismiss">Вiдхилити</string>
     <string name="select">Обрати</string>
+    <string name="successfully">Успiшно</string>
+
 </resources>

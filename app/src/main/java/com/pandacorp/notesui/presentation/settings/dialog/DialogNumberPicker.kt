@@ -16,9 +16,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
-import com.pandacorp.notesui.presentation.settings.PreferencesKeys
 import com.pandacorp.notesui.presentation.settings.SettingsActivity
-import com.pandacorp.notesui.utils.Utils
+import com.pandacorp.notesui.utils.Constans
 
 class DialogNumberPicker : CustomDialog() {
     private val TAG = SettingsActivity.TAG
@@ -34,7 +33,7 @@ class DialogNumberPicker : CustomDialog() {
         
         val view = inflater.inflate(R.layout.dialog_number_picker, container, false)
     
-        val preferenceKey = requireArguments().getString(Utils.preferenceBundleKey)
+        val preferenceKey = requireArguments().getString(Constans.PreferencesKeys.preferenceBundleKey)
     
         val title = view.findViewById<TextView>(R.id.dialogNumberPicker_title)
         val okButton = view.findViewById<Button>(R.id.dialogNumberPicker_ok)
@@ -45,8 +44,8 @@ class DialogNumberPicker : CustomDialog() {
         
         val preferenceValue =
             sp.getString(preferenceKey, when (preferenceKey) {
-                PreferencesKeys.contentTextSizeKey -> PreferencesKeys.contentTextSizeDefaultValue
-                PreferencesKeys.headerTextSizeKey -> PreferencesKeys.headerTextSizeDefaultValue
+                Constans.PreferencesKeys.contentTextSizeKey -> Constans.PreferencesKeys.contentTextSizeDefaultValue
+                Constans.PreferencesKeys.headerTextSizeKey -> Constans.PreferencesKeys.headerTextSizeDefaultValue
                 else -> throw IllegalArgumentException("preferenceKey = $preferenceKey")
             })!!
         
@@ -54,8 +53,8 @@ class DialogNumberPicker : CustomDialog() {
         
         title.setText(
                 when (preferenceKey) {
-                    PreferencesKeys.contentTextSizeKey -> R.string.contentTextSize
-                    PreferencesKeys.headerTextSizeKey -> R.string.headerTextSize
+                    Constans.PreferencesKeys.contentTextSizeKey -> R.string.contentTextSize
+                    Constans.PreferencesKeys.headerTextSizeKey -> R.string.headerTextSize
                     else -> throw IllegalArgumentException()
                 })
         sampleTextView.textSize = preferenceValue.toFloat()
@@ -107,7 +106,7 @@ class DialogNumberPicker : CustomDialog() {
         fun newInstance(preferenceKey: String): DialogNumberPicker {
             val args = Bundle()
             val dialog = DialogNumberPicker()
-            args.putString(Utils.preferenceBundleKey, preferenceKey)
+            args.putString(Constans.PreferencesKeys.preferenceBundleKey, preferenceKey)
             dialog.arguments = args
             return dialog
         }

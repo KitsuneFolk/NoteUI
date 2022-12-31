@@ -14,9 +14,8 @@ import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.presentation.adapter.ListAdapter
 import com.pandacorp.notesui.presentation.settings.ListItem
-import com.pandacorp.notesui.presentation.settings.PreferencesKeys
 import com.pandacorp.notesui.presentation.settings.SettingsActivity
-import com.pandacorp.notesui.utils.Utils
+import com.pandacorp.notesui.utils.Constans
 
 class DialogListView : CustomDialog() {
     private lateinit var sp: SharedPreferences
@@ -29,7 +28,7 @@ class DialogListView : CustomDialog() {
         
         val view = inflater.inflate(R.layout.dialog_preferences_list_view, container, false)
         
-        val preferenceKey = requireArguments().getString(Utils.preferenceBundleKey)
+        val preferenceKey = requireArguments().getString(Constans.PreferencesKeys.preferenceBundleKey)
         
         val titleTextView = view.findViewById<TextView>(R.id.dialogPreferencesListView_title)
         val cancelButton = view.findViewById<Button>(R.id.dialogPreferencesListView_cancel)
@@ -37,8 +36,8 @@ class DialogListView : CustomDialog() {
         
         titleTextView.setText(
                 when (preferenceKey) {
-                    PreferencesKeys.themesKey -> R.string.theme
-                    PreferencesKeys.languagesKey -> R.string.language
+                    Constans.PreferencesKeys.themesKey -> R.string.theme
+                    Constans.PreferencesKeys.languagesKey -> R.string.language
                     else -> throw IllegalArgumentException("PreferenceKey = $preferenceKey")
                 }
         )
@@ -48,8 +47,8 @@ class DialogListView : CustomDialog() {
         }
         
         val itemsList: MutableList<ListItem> = when (preferenceKey) {
-            PreferencesKeys.themesKey -> fillThemesList()
-            PreferencesKeys.languagesKey -> fillLanguagesList()
+            Constans.PreferencesKeys.themesKey -> fillThemesList()
+            Constans.PreferencesKeys.languagesKey -> fillLanguagesList()
             else -> throw IllegalArgumentException()
             
         }
@@ -107,7 +106,7 @@ class DialogListView : CustomDialog() {
     companion object {
         fun newInstance(preferenceKey: String): DialogListView {
             val args = Bundle()
-            args.putString(Utils.preferenceBundleKey, preferenceKey)
+            args.putString(Constans.PreferencesKeys.preferenceBundleKey, preferenceKey)
             val dialog = DialogListView()
             dialog.arguments = args
             return dialog

@@ -92,12 +92,12 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:gravity="top|start"
-                        android:textSize="18sp"
                         android:hint="@string/content"
                         android:inputType="textMultiLine"
                         android:overScrollMode="always"
                         android:scrollbars="vertical"
                         android:textColor="@color/white"
+                        android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -124,40 +124,55 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <LinearLayout
-                android:id="@+id/actionMenuLinearLayout"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="gone">
+                tools:ignore="SpeakableTextPresentCheck">
 
-                <ImageView
-                    android:id="@+id/actionMenuButtonChangeTextForegroundColor"
-                    android:layout_width="37dp"
-                    android:layout_height="37dp"
-                    android:layout_marginStart="10dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_note_change_text_foreground" />
+                <LinearLayout
+                    android:id="@+id/actionMenuLinearLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:visibility="visible">
 
-                <ImageView
-                    android:id="@+id/actionMenuButtonChangeTextGravity"
-                    android:layout_width="37dp"
-                    android:layout_height="37dp"
-                    android:layout_marginStart="50dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_note_change_text_gravity" />
+                    <ImageView
+                        android:id="@+id/actionMenuButtonChangeTextForegroundColor"
+                        android:layout_width="@dimen/actionMenuButtonsSize"
+                        android:layout_height="@dimen/actionMenuButtonsSize"
+                        android:layout_marginStart="50dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_note_change_text_foreground" />
 
-                <ImageView
-                    android:id="@+id/actionMenuButtonChangeTextBackgroundColor"
-                    android:layout_width="37dp"
-                    android:layout_height="37dp"
-                    android:layout_marginStart="50dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_note_change_text_background" />
-            </LinearLayout>
+                    <ImageView
+                        android:id="@+id/actionMenuButtonChangeTextGravity"
+                        android:layout_width="@dimen/actionMenuButtonsSize"
+                        android:layout_height="@dimen/actionMenuButtonsSize"
+                        android:layout_marginStart="50dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_note_change_text_gravity" />
+
+                    <ImageView
+                        android:id="@+id/actionMenuButtonChangeTextBackgroundColor"
+                        android:layout_width="@dimen/actionMenuButtonsSize"
+                        android:layout_height="@dimen/actionMenuButtonsSize"
+                        android:layout_marginStart="50dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_note_change_text_background" />
+
+                    <ImageView
+                        android:id="@+id/actionMenuButtonAddImage"
+                        android:layout_width="@dimen/actionMenuButtonsSize"
+                        android:layout_height="@dimen/actionMenuButtonsSize"
+                        android:layout_marginStart="50dp"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_note_add_image" />
+                </LinearLayout>
+            </HorizontalScrollView>
 
             <LinearLayout
                 android:id="@+id/actionMenuColorsLinearLayout"
@@ -169,12 +184,12 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:visibility="visible">
+                tools:visibility="gone">
 
                 <ImageView
                     android:id="@+id/actionMenuColorsRemoveImageView"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="@dimen/actionMenuButtonsSize"
+                    android:layout_height="@dimen/actionMenuButtonsSize"
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
                     android:background="?selectableItemBackgroundBorderless"
@@ -215,24 +230,24 @@
 
                 <ImageView
                     android:id="@+id/actionMenuGravityLeftImageView"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="@dimen/actionMenuButtonsSize"
+                    android:layout_height="@dimen/actionMenuButtonsSize"
                     android:layout_marginStart="10dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_note_change_text_gravity_left" />
 
                 <ImageView
                     android:id="@+id/actionMenuGravityCenterImageView"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="@dimen/actionMenuButtonsSize"
+                    android:layout_height="@dimen/actionMenuButtonsSize"
                     android:layout_marginStart="50dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_note_change_text_gravity_center" />
 
                 <ImageView
                     android:id="@+id/actionMenuGravityRightImageView"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
+                    android:layout_width="@dimen/actionMenuButtonsSize"
+                    android:layout_height="@dimen/actionMenuButtonsSize"
                     android:layout_marginStart="50dp"
                     android:background="?selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_note_change_text_gravity_right" />

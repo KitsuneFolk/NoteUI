@@ -11,6 +11,7 @@ import com.pandacorp.domain.usecases.colors.GetColorsUseCase
 import com.pandacorp.domain.usecases.colors.RemoveAllColorsUseCase
 import com.pandacorp.domain.usecases.colors.RemoveColorUseCase
 import com.pandacorp.notesui.R
+import com.pandacorp.notesui.presentation.activities.NoteActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +23,8 @@ class NoteViewModel(
     private val removeAllColorsUseCase: RemoveAllColorsUseCase
 ) :
     ViewModel() {
+    private val TAG = NoteActivity.TAG
+    
     var colorsList = MutableLiveData<MutableList<ColorItem>>()
     
     init {
