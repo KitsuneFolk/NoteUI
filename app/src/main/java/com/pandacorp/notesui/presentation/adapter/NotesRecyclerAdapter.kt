@@ -11,22 +11,22 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.util.forEach
 import androidx.core.util.size
 import androidx.recyclerview.widget.RecyclerView
 import com.pandacorp.domain.models.NoteItem
 import com.pandacorp.domain.usecases.utils.JsonToSpannableUseCase
 import com.pandacorp.notesui.R
-import com.pandacorp.notesui.utils.ThemeHandler
+import com.pandacorp.notesui.utils.PreferenceHandler
 import com.pandacorp.notesui.utils.Utils
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class NotesRecyclerAdapter(
     private val context: Context,
     private var itemsList: MutableList<NoteItem>
 ) : RecyclerView.Adapter<NotesRecyclerAdapter.ViewHolder>(), KoinComponent {
     
-    private val jsonToSpannableUseCase: JsonToSpannableUseCase by inject()
+    private val jsonToSpannableUseCase: JsonToSpannableUseCase = JsonToSpannableUseCase(context)
     
     private var onNoteItemClickListener: OnNoteItemClickListener? = null
     private var onNoteItemLongClickListener: OnNoteItemLongClickListener? = null
@@ -44,14 +44,15 @@ class NotesRecyclerAdapter(
     override fun getItemId(position: Int): Long = position.toLong()
     
     override fun getItemViewType(position: Int): Int = position
+    
     fun getItem(position: Int): NoteItem = itemsList[position]
     
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val noteItem = itemsList[position]
         
-        holder.header.text = jsonToSpannableUseCase(noteItem.header)
+        holder.header.text = jsonToSpannableUseCase(holder.header, noteItem.header)
         
-        holder.content.text = jsonToSpannableUseCase(noteItem.content)
+        holder.content.text = jsonToSpannableUseCase(holder.content, noteItem.content)
         
         // Remove background to avoid bug when after removing note, a new one had background as removed one.
         holder.backgroundImageView.setImageDrawable(null)
@@ -59,13 +60,13 @@ class NotesRecyclerAdapter(
         changeNoteBackground(noteItem.background, holder.backgroundImageView)
         
         holder.cardView.isActivated = selectedItemsList.get(position, false)
-    
+        
         holder.cardView.setOnClickListener { v ->
             onNoteItemClickListener?.onClick(v, noteItem, position)
         }
         holder.cardView.setOnLongClickListener { v ->
-            onNoteItemLongClickListener?.onLongClick(v, noteItem, position) ?:
-            return@setOnLongClickListener false
+            onNoteItemLongClickListener?.onLongClick(v, noteItem, position)
+                ?: return@setOnLongClickListener false
             true
         }
         
@@ -84,7 +85,7 @@ class NotesRecyclerAdapter(
             noteBackgroundImageView.setImageDrawable(drawable)
         } catch (e: ArrayIndexOutOfBoundsException) {
             // note.background is a color.
-            val colorBackground = ThemeHandler(context).getColorBackground()
+            val colorBackground = PreferenceHandler(context).getColorBackground()
             noteBackgroundImageView.background = ColorDrawable(colorBackground)
         } catch (e: NumberFormatException) {
             // note.background is a image from storage (uri)
@@ -97,7 +98,8 @@ class NotesRecyclerAdapter(
     //Selection methods
     private fun toggleCheckedIcon(holder: ViewHolder, position: Int) {
         val selectionColor = ContextCompat.getColor(context, R.color.note_selection_color)
-        val colorPrimary = ContextCompat.getColor(context, ThemeHandler(context).getColorPrimary())
+        val colorPrimary =
+            ContextCompat.getColor(context, PreferenceHandler(context).getColorPrimary())
         if (selectedItemsList.get(position, false)) {
             holder.checkedImage.visibility = View.VISIBLE // show check icon
             
@@ -110,11 +112,8 @@ class NotesRecyclerAdapter(
             holder.cardView.setCardBackgroundColor(colorPrimary) // change background
             holder.backgroundImageView.clearColorFilter() // remove color filter
         }
-        if (currentSelectedIndex == position) resetCurrentIndex()
-    }
-    
-    private fun resetCurrentIndex() {
-        currentSelectedIndex = -1
+        if (currentSelectedIndex == position) currentSelectedIndex =
+            -1 // reset currentSelectedIndex
     }
     
     fun toggleSelection(pos: Int) {
@@ -128,8 +127,10 @@ class NotesRecyclerAdapter(
     }
     
     fun clearSelections() {
+        selectedItemsList.forEach { key, value ->
+            notifyItemChanged(key)
+        }
         selectedItemsList.clear()
-        notifyDataSetChanged()
     }
     
     fun getSelectedItemCount(): Int {
@@ -147,16 +148,19 @@ class NotesRecyclerAdapter(
     fun selectAllItems() {
         if (selectedItemsList.size == itemsList.size) {
             //Unselect all
+            selectedItemsList.forEach { key, value ->
+                notifyItemChanged(key)
+            }
+            
             selectedItemsList.clear()
         } else {
             //Select all
             selectedItemsList.clear()
             for (i in 0 until itemsList.size) {
                 selectedItemsList.put(i, true)
+                notifyItemChanged(i)
             }
         }
-        notifyDataSetChanged()
-        
         
     }
     
@@ -168,6 +172,7 @@ class NotesRecyclerAdapter(
     fun setOnClickListener(onNoteItemClickListener: OnNoteItemClickListener) {
         this.onNoteItemClickListener = onNoteItemClickListener
     }
+    
     fun setOnLongClickListener(onNoteItemLongClickListener: OnNoteItemLongClickListener) {
         this.onNoteItemLongClickListener = onNoteItemLongClickListener
     }
@@ -175,6 +180,7 @@ class NotesRecyclerAdapter(
     interface OnNoteItemClickListener {
         fun onClick(view: View?, noteItem: NoteItem, position: Int)
     }
+    
     interface OnNoteItemLongClickListener {
         fun onLongClick(view: View?, noteItem: NoteItem, position: Int)
     }
@@ -189,9 +195,10 @@ class NotesRecyclerAdapter(
         val cardView = itemView.findViewById<CardView>(R.id.note_item_cardView)
         
     }
+    
     companion object {
         const val TAG = "NotesRecyclerAdapter"
-    
+        
     }
     
 }

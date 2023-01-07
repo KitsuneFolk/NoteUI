@@ -52,7 +52,7 @@
             app:el_duration="500"
             app:el_expanded="false"
             app:el_parallax="0.5"
-            tools:el_expanded="true">
+            tools:el_expanded="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -103,18 +103,17 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp">
 
-            <TextView
-                android:id="@+id/switchTransparentActionBarTextView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="10"
-                android:text="@string/show_transparent_actionbar" />
-
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchTransparentActionBarSwitchCompat"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ripple_color_primary"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/show_transparent_actionbar"
                 tools:checked="true" />
         </LinearLayout>
 

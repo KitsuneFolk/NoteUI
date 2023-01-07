@@ -10,7 +10,7 @@ import com.pandacorp.notesui.R
 import com.pandacorp.notesui.presentation.settings.dialog.DialogListView
 import com.pandacorp.notesui.presentation.settings.dialog.DialogNumberPicker
 import com.pandacorp.notesui.utils.Constans
-import com.pandacorp.notesui.utils.ThemeHandler
+import com.pandacorp.notesui.utils.PreferenceHandler
 import com.pandacorp.notesui.utils.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +21,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var edit: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ThemeHandler(this).load()
+        PreferenceHandler(this).load()
         Utils.setupExceptionHandler()
         setContentView(R.layout.activity_settings)
         setSupportActionBar(findViewById(R.id.toolbar))

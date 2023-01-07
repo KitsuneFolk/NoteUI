@@ -56,8 +56,9 @@
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/app_bar_note.xml" value="0.17" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/color_card_item.xml" value="0.5" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/color_item.xml" value="1.25" />
-        <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/content_activity_note.xml" value="0.67" />
+        <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/content_activity_note.xml" value="0.25" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/content_note.xml" value="0.18229166666666666" />
+        <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/dialog_bottom_sheet.xml" value="0.22" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/dialog_color_picker.xml" value="0.27555555555555555" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/dialog_create_note.xml" value="0.19635416666666666" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/dialog_languages.xml" value="0.33" />
@@ -75,6 +76,7 @@
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/menu_drawer_end.xml" value="0.30024213075060535" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/menu_left_drawer.xml" value="0.11481481481481481" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/menu_main_extended.xml" value="0.17222222222222222" />
+        <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/menu_note_drawer.xml" value="0.29453125" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/menu_note_end_drawer.xml" value="0.25" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/menu_view__select_background.xml" value="0.19635416666666666" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/layout/menu_view_select_background.xml" value="0.16" />
@@ -101,6 +103,7 @@
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/xml/root_preference.xml" value="0.1" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/xml/root_preferences.xml" value="0.33" />
         <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/app/src/main/res/xml/searchable.xml" value="0.1" />
+        <entry key="..\:/Programming_files/JavaFiles/ProjectsAS/NotesUI/domain/src/main/res/layout/dialog_bottom_sheet.xml" value="0.1" />
       </map>
     </option>
   </component>

@@ -18,14 +18,19 @@ class MainViewModel(
 ) :
     ViewModel() {
     private val TAG = MainActivity.TAG
+    
     var notesList = MutableLiveData<MutableList<NoteItem>>()
     
     init {
         updateNotes()
     }
     
-    fun addNote(position: Int, note: NoteItem) {
-        notesList.value?.add(position, note)
+    fun addNote(note: NoteItem, position: Int? = null) {
+        if (position != null) {
+            notesList.value?.add(position, note)
+        } else {
+            notesList.value?.add(note)
+        }
         notesList.postValue(notesList.value)
         CoroutineScope(Dispatchers.IO).launch {
             addNoteUseCase(note)
@@ -51,7 +56,7 @@ class MainViewModel(
         notes.forEach { pair ->
             val note = pair.first
             val position = pair.second
-            addNote(position, note)
+            addNote(note, position)
         }
     }
     

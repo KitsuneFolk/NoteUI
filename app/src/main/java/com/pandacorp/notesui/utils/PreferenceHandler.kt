@@ -8,7 +8,7 @@ import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
 import java.util.*
 
-class ThemeHandler(private val context: Context) {
+class PreferenceHandler(private val context: Context) {
     private val TAG = "Utils"
     
     private val Theme_FollowSystem = "follow_system"
@@ -69,24 +69,25 @@ class ThemeHandler(private val context: Context) {
     }
     
     fun getColorBackground(): Int {
-        val colorBackground = when (sp.getString(Constans.PreferencesKeys.themesKey, Theme_default)) {
-            Theme_FollowSystem -> {
-                if (isDeviceDarkMode()) R.color.DarkTheme_colorBackground else R.color.BlueTheme_colorBackground
+        val colorBackground =
+            when (sp.getString(Constans.PreferencesKeys.themesKey, Theme_default)) {
+                Theme_FollowSystem -> {
+                    if (isDeviceDarkMode()) R.color.DarkTheme_colorBackground else R.color.BlueTheme_colorBackground
+                }
+                Theme_Blue -> {
+                    R.color.BlueTheme_colorBackground
+                }
+                Theme_Dark -> {
+                    R.color.DarkTheme_colorBackground
+                }
+                Theme_Red -> {
+                    R.color.RedTheme_colorBackground
+                }
+                else -> throw IllegalStateException(
+                        "Unexpected value: " + sp.getString(
+                                Constans.PreferencesKeys.themesKey,
+                                Theme_default))
             }
-            Theme_Blue -> {
-                R.color.BlueTheme_colorBackground
-            }
-            Theme_Dark -> {
-                R.color.DarkTheme_colorBackground
-            }
-            Theme_Red -> {
-                R.color.RedTheme_colorBackground
-            }
-            else -> throw IllegalStateException(
-                    "Unexpected value: " + sp.getString(
-                            Constans.PreferencesKeys.themesKey,
-                            Theme_default))
-        }
         return colorBackground
     }
     
@@ -125,31 +126,27 @@ class ThemeHandler(private val context: Context) {
     }
     
     private fun setMyLanguage(context: Context, language: String) {
-        
+        val configuration = Configuration()
         when (language) {
             "ru" -> {
                 Locale.setDefault(russianLocale)
-                val configuration = Configuration()
-                configuration.locale = russianLocale
-                context.resources.updateConfiguration(configuration, null)
+                configuration.setLocale(russianLocale)
             }
             "en" -> {
                 Locale.setDefault(englishLocale)
-                val configuration = Configuration()
-                configuration.locale = englishLocale
-                context.resources.updateConfiguration(configuration, null)
+                configuration.setLocale(englishLocale)
             }
             "uk" -> {
                 Locale.setDefault(ukrainianLocale)
-                val configuration = Configuration()
-                configuration.locale = ukrainianLocale
-                context.resources.updateConfiguration(configuration, null)
+                configuration.setLocale(ukrainianLocale)
             }
         }
+        context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
     }
     
     private fun isDeviceDarkMode(): Boolean {
-        val nightModeFlags = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val nightModeFlags =
+            context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
     

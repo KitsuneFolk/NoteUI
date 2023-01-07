@@ -24,7 +24,7 @@ import com.pandacorp.notesui.databinding.ActivityMainBinding
 import com.pandacorp.notesui.presentation.adapter.NotesRecyclerAdapter
 import com.pandacorp.notesui.presentation.settings.SettingsActivity
 import com.pandacorp.notesui.utils.Constans
-import com.pandacorp.notesui.utils.ThemeHandler
+import com.pandacorp.notesui.utils.PreferenceHandler
 import com.pandacorp.notesui.utils.Utils
 import com.pandacorp.notesui.viewModels.MainViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        ThemeHandler(this).load()
+        PreferenceHandler(this).load()
         binding = ActivityMainBinding.inflate(layoutInflater)
         Utils.setupExceptionHandler()
         setContentView(binding.root)
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         binding.addFAB.setOnClickListener {
             val colorBackground = ContextCompat.getColor(
                     this,
-                    ThemeHandler(this).getColorBackground())
+                    PreferenceHandler(this).getColorBackground())
             
             val intent = Intent(this, NoteActivity::class.java)
             val noteHeader = ""
@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity() {
             
             val noteItem =
                 NoteItem(header = noteHeader, content = noteContent, background = noteBackground)
-            this@MainActivity.vm.addNote(0, noteItem)
+            this@MainActivity.vm.addNote(noteItem)
             
             intent.putExtra(Constans.Bundles.noteHeaderText, noteHeader)
             intent.putExtra(Constans.Bundles.noteContentText, noteContent)
@@ -314,8 +314,18 @@ class MainActivity : AppCompatActivity() {
         }
         
         private fun handleSelectedNotesRemoving() {
-            val removedNotes = removeSelectedNotes()
-            if (removedNotes.isEmpty()) return
+            val selectedNotesPositions: List<Int> = notesRecyclerAdapter.getSelectedItems()
+            if (selectedNotesPositions.isEmpty()) return
+    
+            val removedNotes: MutableList<Pair<NoteItem, Int>> = mutableListOf()
+            for (i in selectedNotesPositions) {
+                val note = notesRecyclerAdapter.getItem(i)
+                removedNotes.add(Pair(note, i))
+            }
+            for (note in removedNotes) {
+                vm.removeNote(note.first)
+        
+            }
             val snackBarUndoTitle = resources.getText(R.string.snackbar_undo_title)
                 .toString() + " " + removedNotes.size.toString()
             val snackBarDuration = 4_000
@@ -327,7 +337,7 @@ class MainActivity : AppCompatActivity() {
             undoSnackbar.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
             val colorAccent = ContextCompat.getColor(
                     this@MainActivity,
-                    ThemeHandler(this@MainActivity).getColorAccent())
+                    PreferenceHandler(this@MainActivity).getColorAccent())
             undoSnackbar.setActionTextColor(colorAccent)
             undoSnackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
             undoSnackbar.setAction(R.string.undo) {
@@ -342,28 +352,6 @@ class MainActivity : AppCompatActivity() {
                 successSnackbar.show()
             }
             undoSnackbar.show()
-        }
-        
-        /**
-         * @return List of Pairs NoteItem and Int, Int - position of the noteItem in the adapter
-         */
-        private fun removeSelectedNotes(): MutableList<Pair<NoteItem, Int>> {
-            val selectedNotesPositions: List<Int> = notesRecyclerAdapter.getSelectedItems()
-            if (selectedNotesPositions.isEmpty()) {
-                return mutableListOf()
-            }
-            val selectedNotes: MutableList<NoteItem> = mutableListOf()
-            val selectedNotesPairs: MutableList<Pair<NoteItem, Int>> = mutableListOf()
-            for (i in selectedNotesPositions) {
-                val note = notesRecyclerAdapter.getItem(i)
-                selectedNotes.add(note)
-                selectedNotesPairs.add(Pair(note, i))
-            }
-            for (note in selectedNotes) {
-                vm.removeNote(note)
-                
-            }
-            return selectedNotesPairs
         }
         
     }

@@ -83,7 +83,7 @@ class DialogNumberPicker : CustomDialog() {
             
         }
         numberPicker.setOnValueChangedListener { picker, oldVal, newVal ->
-            val amplitude = 5
+            val amplitude = 1
             vibrate(amplitude)
             
             sampleTextView.textSize = textSizesList[newVal].toFloat()
@@ -98,7 +98,7 @@ class DialogNumberPicker : CustomDialog() {
     
     private fun vibrate(amplitude: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(100, amplitude))
+            vibrator.vibrate(VibrationEffect.createOneShot(50, amplitude))
         }
     }
     

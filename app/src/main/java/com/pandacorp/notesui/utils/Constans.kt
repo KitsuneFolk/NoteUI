@@ -3,10 +3,12 @@ package com.pandacorp.notesui.utils
 class Constans {
     // Object to watch what NoteActivity bottom_action_menu button was clicked,
     // foreground text color or background, or button clicked state is null.
-    object ClickedActionButtonState {
+    object ClickedActionMenu {
+        const val BUNDLE_KEY = "ClickedActionMenu"
         const val NULL = 0
-        const val FOREGROUND_COLOR = 1
-        const val BACKGROUND_COLOR = 2
+        const val FOREGROUND = 1
+        const val BACKGROUND = 2
+        const val GRAVITY = 3
     }
     
     object PreferencesKeys {
@@ -30,4 +32,5 @@ class Constans {
         const val noteIsShowTransparentActionBar = "noteIsShowTransparentActionBar"
     
     }
+    
 }

@@ -7,7 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-
         tools:context=".presentation.activities.NoteActivity">
 
         <androidx.drawerlayout.widget.DrawerLayout
@@ -38,7 +37,7 @@
 
                 <include
                     android:id="@+id/drawerMenuInclude"
-                    layout="@layout/menu_drawer_end" />
+                    layout="@layout/menu_note_drawer" />
             </ScrollView>
         </androidx.drawerlayout.widget.DrawerLayout>
 
