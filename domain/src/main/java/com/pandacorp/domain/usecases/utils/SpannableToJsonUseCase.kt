@@ -1,11 +1,9 @@
 package com.pandacorp.domain.usecases.utils
 
+import android.graphics.Typeface
 import android.text.Layout
 import android.text.Spannable
-import android.text.style.AlignmentSpan
-import android.text.style.BackgroundColorSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.ImageSpan
+import android.text.style.*
 import android.view.Gravity
 import org.json.JSONArray
 import org.json.JSONException
@@ -20,28 +18,40 @@ class SpannableToJsonUseCase {
         json.put(Constans.textText, spannable.toString())
         
         // foreground spans
-        val foregroundSpans = spannable.getSpans(
-                0, spannable.length,
-                ForegroundColorSpan::class.java)
+        val foregroundSpans =
+            spannable.getSpans(0, spannable.length, ForegroundColorSpan::class.java)
         addForegroundSpans(spannable, json, foregroundSpans)
         
         // background spans
-        val backgroundSpans = spannable.getSpans(
-                0, spannable.length,
-                BackgroundColorSpan::class.java)
+        val backgroundSpans =
+            spannable.getSpans(0, spannable.length, BackgroundColorSpan::class.java)
         addBackgroundSpans(spannable, json, backgroundSpans)
         
         // alignment spans
-        val alignmentSpans = spannable.getSpans(
-                0, spannable.length,
-                AlignmentSpan::class.java)
+        val alignmentSpans = spannable.getSpans(0, spannable.length, AlignmentSpan::class.java)
         addAlignmentSpan(spannable, json, alignmentSpans)
         
         // images spans
-        val imagesSpans = spannable.getSpans(
-                0, spannable.length,
-                ImageSpan::class.java)
+        val imagesSpans = spannable.getSpans(0, spannable.length, ImageSpan::class.java)
         addImageSpans(spannable, json, imagesSpans)
+        
+        // bold and italic spans
+        val styleSpans = spannable.getSpans(0, spannable.length, StyleSpan::class.java)
+        
+        val boldSpans: MutableList<StyleSpan> = mutableListOf()
+        val italicSpans: MutableList<StyleSpan> = mutableListOf()
+        
+        // fill bold list
+        styleSpans.forEach { styleSpan ->
+            if (styleSpan.style == Typeface.BOLD) boldSpans.add(styleSpan)
+        }
+        makeBold(spannable, json, boldSpans)
+        
+        // fill italic list
+        styleSpans.forEach { styleSpan ->
+            if (styleSpan.style == Typeface.ITALIC) boldSpans.add(styleSpan)
+        }
+        makeItalic(spannable, json, italicSpans)
         
         return json.toString()
     }
@@ -112,7 +122,7 @@ class SpannableToJsonUseCase {
     
     private fun addImageSpans(spannable: Spannable, json: JSONObject, spans: Array<ImageSpan>) {
         val jsonArray = JSONArray()
-
+        
         for (span in spans) {
             val start = spannable.getSpanStart(span)
             val end = spannable.getSpanEnd(span)
@@ -124,6 +134,36 @@ class SpannableToJsonUseCase {
             jsonArray.put(spansJO)
         }
         json.put(Constans.imageSpans, jsonArray)
+    }
+    
+    private fun makeBold(spannable: Spannable, json: JSONObject, spans: List<StyleSpan>) {
+        val jsonArray = JSONArray()
+        
+        for (span in spans) {
+            val spansJO = JSONObject()
+            val start = spannable.getSpanStart(span)
+            val end = spannable.getSpanEnd(span)
+            spansJO.put(Constans.boldStart, start)
+            spansJO.put(Constans.boldEnd, end)
+            jsonArray.put(spansJO)
+        }
+        json.put(Constans.boldSpans, jsonArray)
+        
+    }
+    
+    private fun makeItalic(spannable: Spannable, json: JSONObject, spans: List<StyleSpan>) {
+        val jsonArray = JSONArray()
+        
+        for (span in spans) {
+            val spansJO = JSONObject()
+            val start = spannable.getSpanStart(span)
+            val end = spannable.getSpanEnd(span)
+            spansJO.put(Constans.italicStart, start)
+            spansJO.put(Constans.italicEnd, end)
+            jsonArray.put(spansJO)
+        }
+        json.put(Constans.italicSpans, jsonArray)
+        
     }
     
 }

@@ -6,12 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ListView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
+import com.pandacorp.notesui.databinding.DialogListViewBinding
 import com.pandacorp.notesui.presentation.adapter.ListAdapter
 import com.pandacorp.notesui.presentation.settings.ListItem
 import com.pandacorp.notesui.presentation.settings.SettingsActivity
@@ -20,21 +18,19 @@ import com.pandacorp.notesui.utils.Constans
 class DialogListView : CustomDialog() {
     private lateinit var sp: SharedPreferences
     
+    private lateinit var binding: DialogListViewBinding
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         
         sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
         
-        val view = inflater.inflate(R.layout.dialog_preferences_list_view, container, false)
+        binding = DialogListViewBinding.inflate(layoutInflater)
         
         val preferenceKey = requireArguments().getString(Constans.PreferencesKeys.preferenceBundleKey)
         
-        val titleTextView = view.findViewById<TextView>(R.id.dialogPreferencesListView_title)
-        val cancelButton = view.findViewById<Button>(R.id.dialogPreferencesListView_cancel)
-        val listView = view.findViewById<ListView>(R.id.dialogPreferencesListView_listView)
-        
-        titleTextView.setText(
+        binding.dialogListViewTitle.setText(
                 when (preferenceKey) {
                     Constans.PreferencesKeys.themesKey -> R.string.theme
                     Constans.PreferencesKeys.languagesKey -> R.string.language
@@ -42,7 +38,7 @@ class DialogListView : CustomDialog() {
                 }
         )
         
-        cancelButton.setOnClickListener {
+        binding.dialogListViewCancel.setOnClickListener {
             dialog!!.cancel()
         }
         
@@ -63,10 +59,10 @@ class DialogListView : CustomDialog() {
                 requireActivity().overridePendingTransition(0, 0)
             }
         })
-        listView.adapter = adapter
+        binding.dialogListViewListView.adapter = adapter
         
         
-        return view
+        return binding.root
     }
     
     private fun fillThemesList(): MutableList<ListItem> {

@@ -24,4 +24,12 @@ object Constans {
     const val imageStart = "imageStart"
     const val imageEnd = "imageEnd"
     
+    const val boldSpans = "boldSpans"
+    const val boldEnd = "boldEnd"
+    const val boldStart = "boldStart"
+    
+    const val italicSpans = "italicSpans"
+    const val italicEnd = "italicEnd"
+    const val italicStart = "italicStart"
+    
 }

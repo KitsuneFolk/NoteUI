@@ -25,7 +25,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             tools:ignore="ContentDescription"
-            tools:src="@color/RedTheme_ActionBar" />
+            tools:src="@drawable/flag_uk" />
 
     </androidx.cardview.widget.CardView>
 

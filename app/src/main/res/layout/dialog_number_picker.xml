@@ -1,102 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center">
+<layout>
 
-    <androidx.cardview.widget.CardView
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="?colorPrimary"
-        app:cardCornerRadius="@dimen/corners_radius">
+        android:layout_gravity="center">
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="@dimen/dialog_minWidth"
-            android:minHeight="@dimen/dialog_minHeight"
-            android:orientation="vertical">
+            app:cardBackgroundColor="?colorPrimary"
+            app:cardCornerRadius="@dimen/corners_radius">
 
-            <TextView
-                android:id="@+id/dialogNumberPicker_title"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                tools:text="@string/contentTextSize" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/dialogPreferencesNumberPickerLayout"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <NumberPicker
-                    android:id="@+id/dialogNumberPicker_numberPicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
-                    android:scrollbarSize="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                android:minWidth="@dimen/dialog_minWidth"
+                android:minHeight="@dimen/dialog_minHeight"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/dialogNumberPicker_sampleTextView"
+                    android:id="@+id/dialogNumberPicker_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:gravity="center"
-                    android:lines="2"
-                    android:text="@string/lorem_ipsum"
-                    app:layout_constraintEnd_toEndOf="@id/dialogNumberPicker_numberPicker"
-                    app:layout_constraintStart_toStartOf="@id/dialogNumberPicker_numberPicker"
-                    app:layout_constraintTop_toBottomOf="@id/dialogNumberPicker_numberPicker" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/dialogNumberPicker_cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|bottom"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginBottom="5dp"
-                    android:backgroundTint="?colorPrimaryDark"
-                    android:text="@string/action_cancel"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
                     android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@id/dialogNumberPicker_ok"
-                    app:layout_constraintEnd_toStartOf="@id/dialogNumberPicker_ok"
-                    app:layout_constraintTop_toTopOf="@id/dialogNumberPicker_ok"/>
+                    android:textStyle="bold"
+                    tools:text="@string/contentTextSize" />
 
-                <Button
-                    android:id="@+id/dialogNumberPicker_ok"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/dialogPreferencesNumberPickerLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <NumberPicker
+                        android:id="@+id/dialogNumberPicker_numberPicker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:scrollbarSize="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/dialogNumberPicker_sampleTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:lines="2"
+                        android:text="@string/lorem_ipsum"
+                        app:layout_constraintEnd_toEndOf="@id/dialogNumberPicker_numberPicker"
+                        app:layout_constraintStart_toStartOf="@id/dialogNumberPicker_numberPicker"
+                        app:layout_constraintTop_toBottomOf="@id/dialogNumberPicker_numberPicker" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end|bottom"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginBottom="5dp"
-                    android:backgroundTint="?colorPrimaryDark"
-                    android:text="@string/ok"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_gravity="end"
+                    android:orientation="horizontal">
 
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</FrameLayout>
+                    <Button
+                        android:id="@+id/dialogNumberPicker_cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginBottom="5dp"
+                        android:backgroundTint="?colorPrimaryDark"
+                        android:stateListAnimator="@animator/increase_size_touch_animator"
+                        android:text="@string/action_cancel"
+                        android:textSize="17sp"
+                        app:layout_constraintBottom_toBottomOf="@id/dialogNumberPicker_ok"
+                        app:layout_constraintEnd_toStartOf="@id/dialogNumberPicker_ok"
+                        app:layout_constraintTop_toTopOf="@id/dialogNumberPicker_ok" />
+
+                    <Button
+                        android:id="@+id/dialogNumberPicker_ok"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginBottom="15dp"
+                        android:backgroundTint="?colorPrimaryDark"
+                        android:stateListAnimator="@animator/increase_size_touch_animator"
+                        android:text="@string/ok"
+                        android:textSize="17sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+</layout>

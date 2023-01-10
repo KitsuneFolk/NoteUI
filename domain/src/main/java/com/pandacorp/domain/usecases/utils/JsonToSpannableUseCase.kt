@@ -1,17 +1,14 @@
 package com.pandacorp.domain.usecases.utils
 
 import android.content.Context
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.Layout
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.text.style.AlignmentSpan
-import android.text.style.BackgroundColorSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.ImageSpan
-import android.util.Log
+import android.text.style.*
 import android.view.Gravity
 import android.view.View
 import android.widget.EditText
@@ -21,9 +18,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class JsonToSpannableUseCase(
-    private val context: Context
-) {
+class JsonToSpannableUseCase(private val context: Context) {
     private val TAG = "NoteActivity"
     
     @Throws(JSONException::class)
@@ -63,6 +58,20 @@ class JsonToSpannableUseCase(
             
         } catch (e: Exception) {
             // imagesSpansJsonArray == null
+        }
+        try {
+            val boldSpansJsonArray = json.getJSONArray(Constans.boldSpans)
+            addBoldSpans(boldSpansJsonArray, builder)
+            
+        } catch (e: Exception) {
+            // boldSpansJsonArray == null
+        }
+        try {
+            val italicSpansJsonArray = json.getJSONArray(Constans.italicSpans)
+            addItalicSpans(italicSpansJsonArray, builder)
+            
+        } catch (e: Exception) {
+            // italicSpansJsonArray == null
         }
         return builder
     }
@@ -144,31 +153,22 @@ class JsonToSpannableUseCase(
                     
                     if (width > 0 && height > 0) {
                         if (aspectRatio > 1) {
-                            Log.d(TAG, "if 1")
                             // Landscape image
                             if (width > maxWidth) {
-                                Log.d(TAG, "if 2")
                                 width = maxWidth
                                 height = (width / aspectRatio).toInt()
                             }
                         } else {
-                            Log.d(TAG, "e 1")
                             // Portrait image
                             if (height > maxHeight) {
-                                Log.d(TAG, "if 3")
                                 height = maxHeight
                                 width = (height * aspectRatio).toInt()
                             }
                         }
                     } else {
-                        Log.d(TAG, "e 2")
                         width = drawable.intrinsicWidth
                         height = drawable.intrinsicHeight
                     }
-                    Log.d(TAG, "addImagesSpans: aspectRatio = $aspectRatio")
-                    Log.d(TAG, "addImagesSpans: drawable.intrinsicWidth = ${drawable.intrinsicWidth}, drawable.intrinsicHeight = ${drawable.intrinsicHeight}")
-                    Log.d(TAG, "addImagesSpans: height = $height, width = $width")
-                    Log.d(TAG, "addImagesSpans: ---------")
                     drawable.setBounds(0, 0, width, height)
                 }
                 
@@ -182,6 +182,25 @@ class JsonToSpannableUseCase(
             
             text.replace(start, end, builder)
             
+        }
+    }
+    
+    private fun addBoldSpans(jsonArray: JSONArray, spannableString: Spannable) {
+        for (i in 0 until jsonArray.length()) {
+            val boldSpan = jsonArray.getJSONObject(i)
+            val start = boldSpan.getInt(Constans.boldStart)
+            val end = boldSpan.getInt(Constans.boldEnd)
+            spannableString.setSpan(StyleSpan(Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    
+        }
+    }
+    private fun addItalicSpans(jsonArray: JSONArray, spannableString: Spannable) {
+        for (i in 0 until jsonArray.length()) {
+            val boldSpan = jsonArray.getJSONObject(i)
+            val start = boldSpan.getInt(Constans.italicStart)
+            val end = boldSpan.getInt(Constans.italicEnd)
+            spannableString.setSpan(StyleSpan(Typeface.ITALIC), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+    
         }
     }
     

@@ -1,30 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <attr name="colorButton" format="color" />
-
-    <style name="BaseTheme" parent="Theme.Material3.Dark.NoActionBar">
-        <item name="android:textColor">@color/white</item>
-        <item name="rippleColor">@color/white</item>
-        <item name="android:fitsSystemWindows">true</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="materialButtonStyle">@style/MaterialButton</item>
-        <item name="editTextStyle">@style/EditText</item>
-        <item name="toolbarStyle">@style/Toolbar</item>
-        <item name="alertDialogTheme">@style/MaterialAlertDialog</item>
-        <item name="drawerArrowStyle">@style/DrawerArrowToggle</item>
-        <item name="snackbarStyle">@style/SnackBarStyle</item>
-        <item name="switchStyle">@style/Switch</item>
-        <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
-    </style>
-
-    <style name="WindowAnimation" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
-    </style>
-
-    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-
     <style name="BlueTheme" parent="BaseTheme">
         <item name="android:colorBackground">@color/BlueTheme_colorBackground</item>
         <item name="colorPrimary">@color/BlueTheme_colorPrimary</item>
@@ -39,58 +14,61 @@
         <!--  This color are used for Material Action Mode background  -->
         <item name="colorSurface">@color/BlueTheme_colorPrimary</item>
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
-        <item name="colorButton">@color/BlueTheme_ButtonColor</item>
 
     </style>
 
-    <style name="MaterialButton" parent="Widget.Material3.Button">
-        <item name="backgroundTint">?colorPrimary</item>
-        <item name="android:textColor">?android:textColor</item>
-        <item name="cornerRadius">15dp</item>
-        <item name="rippleColor">?rippleColor</item>
+    <style name="DarkTheme" parent="BaseTheme">
+        <item name="android:colorBackground">@color/DarkTheme_colorBackground</item>
+        <item name="colorPrimary">@color/DarkTheme_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/DarkTheme_colorPrimaryDark</item>
+        <item name="colorAccent">@color/DarkTheme_colorAccent</item>
+        <item name="android:statusBarColor">@color/DarkTheme_colorPrimary</item>
+        <item name="android:textColorSecondary">@color/DarkTheme_textColorSecondary</item>
+        <item name="android:textColorHint">@color/DarkTheme_TextColor</item>
+        <item name="android:navigationBarColor">@color/DarkTheme_colorPrimary</item>
+        <!--  white color for back arrow  -->
+        <item name="colorControlNormal">@color/white</item>
+        <!--  This color used for Material Action Mode background  -->
+        <item name="colorSurface">@color/DarkTheme_colorPrimary</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
     </style>
 
-    <style name="EditText" parent="Widget.AppCompat.EditText">
-        <item name="android:textColor">@color/white</item>
+    <style name="RedTheme" parent="BaseTheme">
+
+        <item name="android:colorBackground">@color/RedTheme_colorBackground</item>
+        <item name="colorPrimary">@color/RedTheme_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/RedTheme_colorPrimaryDark</item>
+        <item name="colorAccent">@color/RedTheme_colorAccent</item>
+        <item name="android:statusBarColor">@color/RedTheme_colorPrimary</item>
+        <item name="android:textColorSecondary">@color/RedTheme_textColorSecondary</item>
         <item name="android:textColorHint">@color/white</item>
-    </style>
+        <item name="android:navigationBarColor">@color/RedTheme_colorPrimary</item>
+        <!--  white color for back arrow  -->
+        <item name="colorControlNormal">@color/white</item>
+        <!--  This color is used for Material Action Mode background  -->
+        <item name="colorSurface">@color/RedTheme_colorPrimary</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
 
-    <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
-        <item name="android:colorPrimary">@color/white</item>
-        <item name="android:background">?android:attr/colorPrimary</item>
-    </style>
-
-    <style name="DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="android:background">@color/white</item>
-        <item name="color">@color/white</item>
-
-    </style>
-
-    <style name="SnackBarStyle" parent="Widget.Design.Snackbar">
-        <item name="backgroundTint">?android:attr/colorPrimary</item>
-    </style>
-
-    <style name="NegativeButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog.Centered">
-        
-        <item name="android:colorBackground">?android:attr/colorPrimaryDark</item>
-        <item name="background">@drawable/dialog_rounded_corners</item>
-        <item name="textColorAlertDialogListItem">@color/white</item>
-        <item name="color">?android:attr/colorPrimary</item>
-        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
-        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
-        <item name="cornerRadius">10dp</item>
     </style>
     
-    <style name="Switch" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="thumbTint">@color/white</item>
+    <style name="PurpleTheme" parent="BaseTheme">
+
+        <item name="android:colorBackground">@color/PurpleTheme_colorBackground</item>
+        <item name="colorPrimary">@color/PurpleTheme_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/PurpleTheme_colorPrimaryDark</item>
+        <item name="colorAccent">@color/PurpleTheme_colorAccent</item>
+        <item name="android:statusBarColor">@color/PurpleTheme_colorPrimary</item>
+        <item name="android:textColorSecondary">@color/PurpleTheme_textColorSecondary</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="android:navigationBarColor">@color/PurpleTheme_colorPrimary</item>
+        <!--  white color for back arrow  -->
+        <item name="colorControlNormal">@color/white</item>
+        <!--  This color is used for Material Action Mode background  -->
+        <item name="colorSurface">@color/PurpleTheme_colorPrimary</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
     </style>
+    
 
 </resources>

@@ -5,7 +5,6 @@
     <color name="BlueTheme_colorPrimaryDark">#2626C5</color>
     <color name="BlueTheme_colorAccent">#FF1FF4</color>
     <color name="BlueTheme_colorBackground">#4B68FF</color>
-    <color name="BlueTheme_ButtonColor">#3232FF</color>
     <color name="BlueTheme_textColorSecondary">#F0DBD8</color>
 
     <!-- DarkTheme -->
@@ -13,8 +12,6 @@
     <color name="DarkTheme_colorPrimaryDark">#000000</color>
     <color name="DarkTheme_colorAccent">#FFCC80</color>
     <color name="DarkTheme_colorBackground">#141414</color>
-    <color name="DarkTheme_ActionBar">#FFFFFF</color>
-    <color name="DarkTheme_ButtonColor">#0A0A0A</color>
     <color name="DarkTheme_TextColor">#FFFFFF</color>
     <color name="DarkTheme_textColorSecondary">#DAB1B1</color>
 
@@ -23,9 +20,16 @@
     <color name="RedTheme_colorPrimaryDark">#AA0909</color>
     <color name="RedTheme_colorAccent">#FCA727</color>
     <color name="RedTheme_colorBackground">#DC3232</color>
-    <color name="RedTheme_ActionBar">#E57373</color>
-    <color name="RedTheme_ButtonColor">#DC0000</color>
     <color name="RedTheme_textColorSecondary">#CCA9A5</color>
+
+    <!-- PurpleTheme -->
+    <color name="PurpleTheme_colorPrimary">#8A2BE2</color>
+    <color name="PurpleTheme_colorPrimaryDark">#6614B5</color>
+    <color name="PurpleTheme_colorBackground">#9966CC</color>
+<!--    <color name="PurpleTheme_colorAccent">#ADD8E6</color>-->
+    <color name="PurpleTheme_colorAccent">#8C9EFF</color>
+    <color name="PurpleTheme_colorSecondary">#D3D3D3</color>
+    <color name="PurpleTheme_textColorSecondary">#EFB3FF</color>
 
     <!-- Another -->
     <color name="white">#FFFFFF</color>

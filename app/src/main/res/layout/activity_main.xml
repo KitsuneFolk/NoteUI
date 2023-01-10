@@ -51,6 +51,7 @@
                 android:text="@string/addNote"
                 android:textSize="12sp"
                 app:icon="@drawable/ic_add"
+                android:stateListAnimator="@animator/increase_size_touch_animator"
                 app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

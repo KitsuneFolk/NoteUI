@@ -2,6 +2,7 @@ package com.pandacorp.notesui.presentation.activities
 
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.graphics.Typeface
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -10,11 +11,8 @@ import android.os.Bundle
 import android.text.Layout
 import android.text.Spannable
 import android.text.SpannableStringBuilder
-import android.text.style.AlignmentSpan
-import android.text.style.BackgroundColorSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.ImageSpan
-import android.util.Log
+import android.text.style.*
+import android.util.TypedValue
 import android.view.*
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
@@ -194,8 +192,9 @@ class NoteActivity : AppCompatActivity() {
         if (isShowTransparentActionBar)
             supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         else {
-            val colorPrimary =
-                ContextCompat.getColor(this, PreferenceHandler(this).getColorPrimary())
+            val tv = TypedValue()
+            theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
+            val colorPrimary = tv.data
             supportActionBar!!.setBackgroundDrawable(ColorDrawable(colorPrimary))
         }
         
@@ -265,9 +264,7 @@ class NoteActivity : AppCompatActivity() {
         
     }
     
-    private fun changeNoteBackground(
-        background: String
-    ) {
+    private fun changeNoteBackground(background: String) {
         val noteBackgroundImageView = bindingContent.noteBackgroundImageView
         try {
             // note.background is an image drawable from Utils.backgroundImages
@@ -276,7 +273,9 @@ class NoteActivity : AppCompatActivity() {
             noteBackgroundImageView.setImageDrawable(drawable)
         } catch (e: ArrayIndexOutOfBoundsException) {
             // note.background is a color.
-            val colorBackground = PreferenceHandler(this).getColorBackground()
+            val typedValue = TypedValue()
+            theme.resolveAttribute(android.R.attr.colorBackground, typedValue, true)
+            val colorBackground = typedValue.data
             noteBackgroundImageView.background = ColorDrawable(colorBackground)
         } catch (e: NumberFormatException) {
             // note.background is a image from storage (uri)
@@ -442,6 +441,7 @@ class NoteActivity : AppCompatActivity() {
                     bindingContent.actionMenuParentLayout,
                     animation)
             bindingContent.actionMenuGravityLayout.visibility = View.GONE
+            bindingContent.actionMenuButtonsLayout.visibility = View.VISIBLE
             clickedActionMenuButton = Constans.ClickedActionMenu.NULL
             
         }
@@ -461,7 +461,7 @@ class NoteActivity : AppCompatActivity() {
             bindingContent.actionMenuColorsLayout.visibility =
                 View.VISIBLE
             clickedActionMenuButton = Constans.ClickedActionMenu.FOREGROUND
-    
+            
         }
         bindingContent.actionMenuButtonChangeTextGravity.setOnClickListener {
             //Slide Animation
@@ -475,7 +475,7 @@ class NoteActivity : AppCompatActivity() {
             bindingContent.actionMenuButtonsLayout.visibility = View.GONE
             bindingContent.actionMenuGravityLayout.visibility = View.VISIBLE
             clickedActionMenuButton = Constans.ClickedActionMenu.GRAVITY
-    
+            
         }
         bindingContent.actionMenuButtonChangeTextBackgroundColor.setOnClickListener {
             clickedActionMenuButton = Constans.ClickedActionMenu.BACKGROUND
@@ -492,7 +492,7 @@ class NoteActivity : AppCompatActivity() {
             bindingContent.actionMenuButtonsLayout.visibility = View.GONE
             bindingContent.actionMenuColorsLayout.visibility = View.VISIBLE
             clickedActionMenuButton = Constans.ClickedActionMenu.BACKGROUND
-    
+            
         }
         
         bindingContent.actionMenuColorsRemoveImageView.setOnClickListener {
@@ -537,18 +537,30 @@ class NoteActivity : AppCompatActivity() {
             bindingContent.actionMenuColorsLayout.visibility = View.GONE
             bindingContent.actionMenuButtonsLayout.visibility = View.VISIBLE
             clickedActionMenuButton = Constans.ClickedActionMenu.NULL
-    
+            
         }
         
         bindingContent.actionMenuButtonAddImage.setOnClickListener {
-            ImagePicker.Builder(activity = this)
-                .createIntent { resultIntent ->
-                    if (getFocusedEditText() == null) return@createIntent
-                    Log.d(TAG, "initActionBottomMenu: getFocusedEditText = ${getFocusedEditText()} ")
-                    pickImageToAddResult.launch(resultIntent)
-                    
-                }
+            if (getFocusedEditText() != null) {
+                
+                ImagePicker.Builder(activity = this)
+                    .createIntent { resultIntent ->
+                        pickImageToAddResult.launch(resultIntent)
+                        
+                    }
+            }
             
+        }
+        
+        bindingContent.actionMenuButtonBold.setOnClickListener {
+            val editText = getFocusedEditText() ?: return@setOnClickListener
+            
+            makeBold(editText = editText)
+        }
+        bindingContent.actionMenuButtonItalic.setOnClickListener {
+            val editText = getFocusedEditText() ?: return@setOnClickListener
+            
+            makeItalic(editText = editText)
         }
         
         
@@ -622,6 +634,7 @@ class NoteActivity : AppCompatActivity() {
             }
             
         }
+        
         if (backgroundColor == null) {
             resultText.setSpan(
                     BackgroundColorSpan(Color.TRANSPARENT),
@@ -725,6 +738,77 @@ class NoteActivity : AppCompatActivity() {
     }
     
     /**
+     * This function inserts bold span at selected edittext positions, if there is already spans it removes and adds nothing, else adds a span
+     * @param editText an edittext where you need to insert bold span;
+     */
+    private fun makeBold(editText: EditText) {
+        val start = editText.selectionStart
+        val end = editText.selectionEnd
+    
+        val span = editText.text.toSpannable()
+        
+        val styleSpans = span.getSpans(start, end, StyleSpan::class.java)
+        val boldSpans: MutableList<StyleSpan> = mutableListOf()
+        
+        // fill list
+        styleSpans.forEach { styleSpan ->
+            if (styleSpan.style == Typeface.BOLD) boldSpans.add(styleSpan)
+        }
+        boldSpans.forEach { boldSpan ->
+            val selectedSpanStart = span.getSpanStart(boldSpan)
+            val selectedSpanEnd = span.getSpanEnd(boldSpan)
+            
+            if (selectedSpanStart >= start && selectedSpanEnd <= end) {
+                span.removeSpan(boldSpan)
+                
+            }
+        }
+        if (boldSpans.isEmpty()) {
+            // add spans
+            span.setSpan(StyleSpan(Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        } else {
+            // remove spans, what we do above
+        }
+        
+        editText.setText(span)
+        editText.setSelection(start, end)
+    }
+    
+    private fun makeItalic(editText: EditText) {
+        val start = editText.selectionStart
+        val end = editText.selectionEnd
+    
+        val span = editText.text.toSpannable()
+        
+        val styleSpans = span.getSpans(start, end, StyleSpan::class.java)
+        val italicSpans: MutableList<StyleSpan> = mutableListOf()
+        
+        // fill list
+        styleSpans.forEach { styleSpan ->
+            if (styleSpan.style == Typeface.ITALIC) italicSpans.add(styleSpan)
+        }
+        
+        italicSpans.forEach { italicSpan ->
+            val selectedSpanStart = span.getSpanStart(italicSpan)
+            val selectedSpanEnd = span.getSpanEnd(italicSpan)
+            
+            if (selectedSpanStart >= start && selectedSpanEnd <= end) {
+                span.removeSpan(italicSpan)
+                
+            }
+        }
+        if (italicSpans.isEmpty()) {
+            // add spans
+            span.setSpan(StyleSpan(Typeface.ITALIC), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        } else {
+            // remove spans, what we do above
+        }
+        
+        editText.setText(span)
+        editText.setSelection(start, end)
+    }
+    
+    /**
      * @return pair of int with start text of line and.
      */
     private fun getEditTextSelectedLineTextBySelection(
@@ -775,9 +859,9 @@ class NoteActivity : AppCompatActivity() {
             
         }
         bindingMenu.drawerMenuResetButton.setOnClickListener {
-            val colorBackground = ContextCompat.getColor(
-                    this,
-                    PreferenceHandler(this).getColorBackground())
+            val tv = TypedValue()
+            theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+            val colorBackground = tv.data
             bindingContent.noteBackgroundImageView.setImageDrawable(
                     ColorDrawable(colorBackground))
             note.background = colorBackground.toString()
@@ -829,8 +913,9 @@ class NoteActivity : AppCompatActivity() {
             if (isChecked) {
                 supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             } else {
-                val colorPrimary =
-                    ContextCompat.getColor(this, PreferenceHandler(this).getColorPrimary())
+                val tv = TypedValue()
+                theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
+                val colorPrimary = tv.data
                 supportActionBar!!.setBackgroundDrawable(ColorDrawable(colorPrimary))
             }
             note.isShowTransparentActionBar = isChecked

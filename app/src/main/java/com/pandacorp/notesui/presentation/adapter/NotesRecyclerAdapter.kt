@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.util.SparseBooleanArray
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pandacorp.domain.models.NoteItem
 import com.pandacorp.domain.usecases.utils.JsonToSpannableUseCase
 import com.pandacorp.notesui.R
-import com.pandacorp.notesui.utils.PreferenceHandler
 import com.pandacorp.notesui.utils.Utils
 import org.koin.core.component.KoinComponent
 
@@ -85,7 +85,9 @@ class NotesRecyclerAdapter(
             noteBackgroundImageView.setImageDrawable(drawable)
         } catch (e: ArrayIndexOutOfBoundsException) {
             // note.background is a color.
-            val colorBackground = PreferenceHandler(context).getColorBackground()
+            val tv = TypedValue()
+            context.theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+            val colorBackground = tv.data
             noteBackgroundImageView.background = ColorDrawable(colorBackground)
         } catch (e: NumberFormatException) {
             // note.background is a image from storage (uri)
@@ -98,8 +100,9 @@ class NotesRecyclerAdapter(
     //Selection methods
     private fun toggleCheckedIcon(holder: ViewHolder, position: Int) {
         val selectionColor = ContextCompat.getColor(context, R.color.note_selection_color)
-        val colorPrimary =
-            ContextCompat.getColor(context, PreferenceHandler(context).getColorPrimary())
+        val tv = TypedValue()
+        context.theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
+        val colorPrimary = tv.data
         if (selectedItemsList.get(position, false)) {
             holder.checkedImage.visibility = View.VISIBLE // show check icon
             

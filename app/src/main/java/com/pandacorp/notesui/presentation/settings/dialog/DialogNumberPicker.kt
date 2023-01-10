@@ -10,12 +10,10 @@ import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.NumberPicker
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
+import com.pandacorp.notesui.databinding.DialogNumberPickerBinding
 import com.pandacorp.notesui.presentation.settings.SettingsActivity
 import com.pandacorp.notesui.utils.Constans
 
@@ -24,6 +22,8 @@ class DialogNumberPicker : CustomDialog() {
     private lateinit var sp: SharedPreferences
     private lateinit var vibrator: Vibrator
     
+    private lateinit var binding: DialogNumberPickerBinding
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -31,19 +31,14 @@ class DialogNumberPicker : CustomDialog() {
         sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
         vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         
-        val view = inflater.inflate(R.layout.dialog_number_picker, container, false)
-    
-        val preferenceKey = requireArguments().getString(Constans.PreferencesKeys.preferenceBundleKey)
-    
-        val title = view.findViewById<TextView>(R.id.dialogNumberPicker_title)
-        val okButton = view.findViewById<Button>(R.id.dialogNumberPicker_ok)
-        val cancelButton = view.findViewById<Button>(R.id.dialogNumberPicker_cancel)
-        val numberPicker =
-            view.findViewById<NumberPicker>(R.id.dialogNumberPicker_numberPicker)
-        val sampleTextView = view.findViewById<TextView>(R.id.dialogNumberPicker_sampleTextView)
+        binding = DialogNumberPickerBinding.inflate(inflater)
+        
+        val preferenceKey =
+            requireArguments().getString(Constans.PreferencesKeys.preferenceBundleKey)
         
         val preferenceValue =
-            sp.getString(preferenceKey, when (preferenceKey) {
+            sp.getString(
+                    preferenceKey, when (preferenceKey) {
                 Constans.PreferencesKeys.contentTextSizeKey -> Constans.PreferencesKeys.contentTextSizeDefaultValue
                 Constans.PreferencesKeys.headerTextSizeKey -> Constans.PreferencesKeys.headerTextSizeDefaultValue
                 else -> throw IllegalArgumentException("preferenceKey = $preferenceKey")
@@ -51,20 +46,20 @@ class DialogNumberPicker : CustomDialog() {
         
         val textSizesList = fillContentTextSizesList()
         
-        title.setText(
+        binding.dialogNumberPickerTitle.setText(
                 when (preferenceKey) {
                     Constans.PreferencesKeys.contentTextSizeKey -> R.string.contentTextSize
                     Constans.PreferencesKeys.headerTextSizeKey -> R.string.headerTextSize
                     else -> throw IllegalArgumentException()
                 })
-        sampleTextView.textSize = preferenceValue.toFloat()
+        binding.dialogNumberPickerSampleTextView.textSize = preferenceValue.toFloat()
         
-        cancelButton.setOnClickListener {
+        binding.dialogNumberPickerCancel.setOnClickListener {
             dialog!!.cancel()
         }
         
-        okButton.setOnClickListener {
-            val value = textSizesList[numberPicker.value]
+        binding.dialogNumberPickerOk.setOnClickListener {
+            val value = textSizesList[binding.dialogNumberPickerNumberPicker.value]
             sp.edit().putString(preferenceKey, value).apply()
             dialog!!.cancel()
             requireActivity().setResult(AppCompatActivity.RESULT_OK)
@@ -72,8 +67,8 @@ class DialogNumberPicker : CustomDialog() {
             requireActivity().finish()
             requireActivity().overridePendingTransition(0, 0)
         }
-        
-        numberPicker.apply {
+    
+        binding.dialogNumberPickerNumberPicker.apply {
             displayedValues = textSizesList
             minValue = 0
             maxValue = textSizesList.size - 1
@@ -82,15 +77,15 @@ class DialogNumberPicker : CustomDialog() {
             wrapSelectorWheel = false
             
         }
-        numberPicker.setOnValueChangedListener { picker, oldVal, newVal ->
+        binding.dialogNumberPickerNumberPicker.setOnValueChangedListener { picker, oldVal, newVal ->
             val amplitude = 1
             vibrate(amplitude)
             
-            sampleTextView.textSize = textSizesList[newVal].toFloat()
+            binding.dialogNumberPickerSampleTextView.textSize = textSizesList[newVal].toFloat()
         }
         
         
-        return view
+        return binding.root
     }
     
     private fun fillContentTextSizesList(): Array<String> =

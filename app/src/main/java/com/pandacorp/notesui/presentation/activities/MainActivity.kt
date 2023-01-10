@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -115,9 +116,9 @@ class MainActivity : AppCompatActivity() {
     
     private fun initAddFloatingActionButton() {
         binding.addFAB.setOnClickListener {
-            val colorBackground = ContextCompat.getColor(
-                    this,
-                    PreferenceHandler(this).getColorBackground())
+            val tv = TypedValue()
+            theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+            val colorBackground = tv.data
             
             val intent = Intent(this, NoteActivity::class.java)
             val noteHeader = ""
@@ -335,9 +336,10 @@ class MainActivity : AppCompatActivity() {
                     snackBarDuration)
             
             undoSnackbar.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-            val colorAccent = ContextCompat.getColor(
-                    this@MainActivity,
-                    PreferenceHandler(this@MainActivity).getColorAccent())
+            val tv = TypedValue()
+            theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
+            val colorAccent = tv.data
+            
             undoSnackbar.setActionTextColor(colorAccent)
             undoSnackbar.animationMode = Snackbar.ANIMATION_MODE_SLIDE
             undoSnackbar.setAction(R.string.undo) {
