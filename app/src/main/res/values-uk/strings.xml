@@ -7,8 +7,9 @@
     <string name="language">Мова</string>
     <string name="theme">Тема</string>
     <string name="notes">Нотатки</string>
-    <string name="isShowAddNoteFABText">Показати текст кнопки Створити нотаток</string>
-    <string name="isHideActionBarOnScroll">Ховати actionbar при гортаннi</string>
+    <string name="preferencesIsShowAddNoteFABText">Показати текст кнопки Створити нотаток</string>
+    <string name="preferencesIsHideActionBarOnScroll">Ховати actionbar при гортаннi</string>
+    <string name="preferencesDisableDrawerMenuAnimation">Вiдключати анiмацiю бокового меню коли число символiв бiльше нiж </string>
     <string name="headerTextSize">Розмiр текста заголовку</string>
     <string name="contentTextSize">Розмiр текста змiсту</string>
     <string name="version">Версія</string>
@@ -31,8 +32,7 @@
     <string name="addFabDescription">Добавити новий нотаток</string>
     <string name="alert_dialog_add_color">Додати новий колір</string>
     <string name="remove">Видалити</string>
-    <string name="confirm_color_remove">Ви впевненi що хочете видалити колiр?</string>
-    <string name="confirm_colors_reset">Ви впевненi що хочете скинути кольори??</string>
+    <string name="removeAll">Видалити все</string>
 
     <!-- Note drawer menu_main strings -->
     <string name="note">Нотаток</string>
@@ -78,5 +78,6 @@
     <string name="dismiss">Вiдхилити</string>
     <string name="select">Обрати</string>
     <string name="successfully">Успiшно</string>
+    <string name="myNumber">Моє число</string>
 
 </resources>

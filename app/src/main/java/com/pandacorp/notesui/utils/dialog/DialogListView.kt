@@ -1,30 +1,25 @@
-package com.pandacorp.notesui.presentation.settings.dialog
+package com.pandacorp.notesui.utils.dialog
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.databinding.DialogListViewBinding
+import com.pandacorp.notesui.presentation.activities.SettingsActivity
 import com.pandacorp.notesui.presentation.adapter.ListAdapter
 import com.pandacorp.notesui.presentation.settings.ListItem
-import com.pandacorp.notesui.presentation.settings.SettingsActivity
 import com.pandacorp.notesui.utils.Constans
 
 class DialogListView : CustomDialog() {
-    private lateinit var sp: SharedPreferences
     
     private lateinit var binding: DialogListViewBinding
     
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        
-        sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
+    ): View {
         
         binding = DialogListViewBinding.inflate(layoutInflater)
         

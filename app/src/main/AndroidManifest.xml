@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.pandacorp.notesui">
 
-    <uses-permission android:name="android.permission.VIBRATE" />
-
     <application
         android:name=".app.App"
         android:allowBackup="true"
@@ -36,7 +34,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name="com.pandacorp.notesui.presentation.settings.SettingsActivity"
+            android:name="com.pandacorp.notesui.presentation.activities.SettingsActivity"
             android:label="@string/settings" />
     </application>
 

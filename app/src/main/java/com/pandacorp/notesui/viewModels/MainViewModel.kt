@@ -59,5 +59,6 @@ class MainViewModel(
             addNote(note, position)
         }
     }
+    fun getNotes(): MutableList<NoteItem> = notesList.value!!
     
 }

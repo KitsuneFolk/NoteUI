@@ -1,17 +1,19 @@
-package com.pandacorp.notesui.presentation.settings
+package com.pandacorp.notesui.presentation.activities
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.*
 import androidx.preference.Preference.OnPreferenceChangeListener
 import com.pandacorp.notesui.R
-import com.pandacorp.notesui.presentation.settings.dialog.DialogListView
-import com.pandacorp.notesui.presentation.settings.dialog.DialogNumberPicker
 import com.pandacorp.notesui.utils.Constans
 import com.pandacorp.notesui.utils.PreferenceHandler
 import com.pandacorp.notesui.utils.Utils
+import com.pandacorp.notesui.utils.dialog.DialogListView
+import com.pandacorp.notesui.utils.dialog.DialogNumberPicker
+import com.pandacorp.notesui.utils.dialog.DialogNumberPickerEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 class SettingsActivity : AppCompatActivity() {
     private lateinit var sp: SharedPreferences
     private lateinit var edit: SharedPreferences.Editor
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PreferenceHandler(this).load()
@@ -51,18 +54,21 @@ class SettingsActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
         
     }
+    
     companion object {
         const val TAG = "SettingsActivity"
-    
+        
     }
+    
     class SettingsFragment : PreferenceFragmentCompat(),
         OnPreferenceChangeListener {
         private lateinit var sp: SharedPreferences
         private lateinit var themesListPreference: ListPreference
         private lateinit var languagesListPreference: ListPreference
-        private lateinit var versionPreference: Preference
-        private lateinit var hideActionBarWhileScrollingSwitch: SwitchPreference
+        private lateinit var disableDrawerAnimation: ListPreference
         private lateinit var isShowAddNoteFABText: SwitchPreference
+        private lateinit var hideActionBarWhileScrollingSwitch: SwitchPreference
+        private lateinit var versionPreference: Preference
         
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -81,14 +87,23 @@ class SettingsActivity : AppCompatActivity() {
             themesListPreference.onPreferenceChangeListener = this
             languagesListPreference = findPreference(Constans.PreferencesKeys.languagesKey)!!
             languagesListPreference.onPreferenceChangeListener = this
-            isShowAddNoteFABText = findPreference(Constans.PreferencesKeys.isShowAddNoteFABTextKey)!!
+            isShowAddNoteFABText =
+                findPreference(Constans.PreferencesKeys.isShowAddNoteFABTextKey)!!
             isShowAddNoteFABText.setOnPreferenceChangeListener { preference, newValue ->
-                sp.edit().putBoolean(Constans.PreferencesKeys.isShowAddNoteFABTextKey, newValue as Boolean).apply()
+                sp.edit().putBoolean(
+                        Constans.PreferencesKeys.isShowAddNoteFABTextKey,
+                        newValue as Boolean).apply()
                 requireActivity().setResult(RESULT_OK)
                 return@setOnPreferenceChangeListener true
             }
             hideActionBarWhileScrollingSwitch =
                 findPreference(Constans.PreferencesKeys.isHideActionBarOnScrollKey)!!
+            disableDrawerAnimation =
+                findPreference(Constans.PreferencesKeys.disableDrawerAnimationKey)!!
+            // set custom summary
+            disableDrawerAnimation.summary = sp.getString(
+                    Constans.PreferencesKeys.disableDrawerAnimationKey,
+                    Constans.PreferencesKeys.disableDrawerAnimationDV)
             //Here we add title to the version preference.
             versionPreference = findPreference(Constans.PreferencesKeys.versionKey)!!
             val version = requireContext().packageManager
@@ -100,16 +115,31 @@ class SettingsActivity : AppCompatActivity() {
         override fun onDisplayPreferenceDialog(preference: Preference?) {
             when (preference?.key) {
                 Constans.PreferencesKeys.themesKey -> { // rounded theme dialog with images
-                    DialogListView.newInstance(Constans.PreferencesKeys.themesKey).show(parentFragmentManager, null)
+                    DialogListView.newInstance(Constans.PreferencesKeys.themesKey)
+                        .show(parentFragmentManager, null)
                 }
                 Constans.PreferencesKeys.languagesKey -> { // rounded language dialog with images
-                    DialogListView.newInstance(Constans.PreferencesKeys.languagesKey).show(parentFragmentManager, null)
+                    DialogListView.newInstance(Constans.PreferencesKeys.languagesKey)
+                        .show(parentFragmentManager, null)
+                }
+                Constans.PreferencesKeys.disableDrawerAnimationKey -> {
+                    DialogNumberPickerEditText.newInstance(Constans.PreferencesKeys.disableDrawerAnimationKey)
+                        .show(parentFragmentManager, null)
                 }
                 Constans.PreferencesKeys.contentTextSizeKey -> {
-                    DialogNumberPicker.newInstance(Constans.PreferencesKeys.contentTextSizeKey).show(parentFragmentManager, null)
+                    DialogNumberPicker.newInstance(Constans.PreferencesKeys.contentTextSizeKey)
+                        .show(parentFragmentManager, null)
                 }
                 Constans.PreferencesKeys.headerTextSizeKey -> {
-                    DialogNumberPicker.newInstance(Constans.PreferencesKeys.headerTextSizeKey).show(parentFragmentManager, null)
+                    Log.d(
+                            TAG,
+                            "onDisplayPreferenceDialog: headerTextSizeKey = ${
+                                sp.getString(
+                                        Constans.PreferencesKeys.headerTextSizeKey,
+                                        Constans.PreferencesKeys.headerTextSizeDV)
+                            }")
+                    DialogNumberPicker.newInstance(Constans.PreferencesKeys.headerTextSizeKey)
+                        .show(parentFragmentManager, null)
                 }
                 else -> {
                     super.onDisplayPreferenceDialog(preference)

@@ -3,8 +3,9 @@ package com.pandacorp.notesui.utils
 import com.pandacorp.notesui.R
 
 class Utils {
-
     companion object {
+        const val TAG = "CustomUtils"
+        
         //Images what user can choose to set note background.
         val backgroundImages = listOf(
                 R.drawable.image_night_city,

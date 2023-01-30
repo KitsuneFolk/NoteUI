@@ -10,6 +10,8 @@
         android:id="@+id/note_item_cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         android:foreground="?selectableItemBackground"
         app:cardBackgroundColor="?colorPrimary"
         app:cardCornerRadius="15dp"

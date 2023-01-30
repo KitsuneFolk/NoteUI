@@ -136,6 +136,7 @@
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:scrollbarSize="0dp"
                     tools:ignore="SpeakableTextPresentCheck">
 
                     <LinearLayout
@@ -150,8 +151,9 @@
                             android:layout_width="@dimen/actionMenuButtonsSize"
                             android:layout_height="@dimen/actionMenuButtonsSize"
                             android:layout_marginEnd="20dp"
+                            android:layout_marginStart="20dp"
                             android:src="@drawable/ic_note_bold"
-                            android:stateListAnimator="@animator/increase_size_touch_animator" />
+                            android:stateListAnimator="@animator/increase_size_normal_animator" />
 
                         <ImageView
                             android:id="@+id/actionMenuButtonItalic"
@@ -159,38 +161,39 @@
                             android:layout_height="@dimen/actionMenuButtonsSize"
                             android:layout_marginEnd="25dp"
                             android:src="@drawable/ic_note_italic"
-                            android:stateListAnimator="@animator/increase_size_touch_animator" />
+                            android:stateListAnimator="@animator/increase_size_normal_animator" />
 
                         <ImageView
-                            android:id="@+id/actionMenuButtonChangeTextForegroundColor"
+                            android:id="@+id/action_menu_change_text_foreground_color"
                             android:layout_width="@dimen/actionMenuButtonsSize"
                             android:layout_height="@dimen/actionMenuButtonsSize"
                             android:layout_marginEnd="25dp"
                             android:src="@drawable/ic_note_change_text_foreground"
-                            android:stateListAnimator="@animator/increase_size_touch_animator" />
+                            android:stateListAnimator="@animator/increase_size_normal_animator" />
 
                         <ImageView
-                            android:id="@+id/actionMenuButtonChangeTextGravity"
+                            android:id="@+id/action_menu_change_text_gravity"
                             android:layout_width="@dimen/actionMenuButtonsSize"
                             android:layout_height="@dimen/actionMenuButtonsSize"
                             android:layout_marginEnd="25dp"
                             android:src="@drawable/ic_note_change_text_gravity"
-                            android:stateListAnimator="@animator/increase_size_touch_animator" />
+                            android:stateListAnimator="@animator/increase_size_normal_animator" />
 
                         <ImageView
-                            android:id="@+id/actionMenuButtonChangeTextBackgroundColor"
+                            android:id="@+id/action_menu_change_text_background_color"
                             android:layout_width="@dimen/actionMenuButtonsSize"
                             android:layout_height="@dimen/actionMenuButtonsSize"
                             android:layout_marginEnd="25dp"
                             android:src="@drawable/ic_note_change_text_background"
-                            android:stateListAnimator="@animator/increase_size_touch_animator" />
+                            android:stateListAnimator="@animator/increase_size_normal_animator" />
 
                         <ImageView
                             android:id="@+id/actionMenuButtonAddImage"
                             android:layout_width="@dimen/actionMenuButtonsSize"
                             android:layout_height="@dimen/actionMenuButtonsSize"
+                            android:layout_marginEnd="20dp"
                             android:src="@drawable/ic_note_add_image"
-                            android:stateListAnimator="@animator/increase_size_touch_animator" />
+                            android:stateListAnimator="@animator/increase_size_normal_animator" />
 
                     </LinearLayout>
                 </HorizontalScrollView>
@@ -215,7 +218,7 @@
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
                     android:src="@drawable/ic_note_action_remove"
-                    android:stateListAnimator="@animator/increase_size_touch_animator" />
+                    android:stateListAnimator="@animator/increase_size_normal_animator" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/actionMenuColorsRecyclerView"
@@ -234,7 +237,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:background="@android:color/transparent"
-                    android:stateListAnimator="@animator/increase_size_touch_animator"
+                    android:stateListAnimator="@animator/increase_size_normal_animator"
                     android:src="@drawable/ic_baseline_close_24" />
 
             </LinearLayout>
@@ -257,7 +260,7 @@
                     android:layout_height="@dimen/actionMenuButtonsSize"
                     android:layout_marginStart="10dp"
                     android:src="@drawable/ic_note_change_text_gravity_left"
-                    android:stateListAnimator="@animator/increase_size_touch_animator" />
+                    android:stateListAnimator="@animator/increase_size_normal_animator" />
 
                 <ImageView
                     android:id="@+id/actionMenuGravityCenterImageView"
@@ -265,7 +268,7 @@
                     android:layout_height="@dimen/actionMenuButtonsSize"
                     android:layout_marginStart="50dp"
                     android:src="@drawable/ic_note_change_text_gravity_center"
-                    android:stateListAnimator="@animator/increase_size_touch_animator" />
+                    android:stateListAnimator="@animator/increase_size_normal_animator" />
 
                 <ImageView
                     android:id="@+id/actionMenuGravityRightImageView"
@@ -273,7 +276,7 @@
                     android:layout_height="@dimen/actionMenuButtonsSize"
                     android:layout_marginStart="50dp"
                     android:src="@drawable/ic_note_change_text_gravity_right"
-                    android:stateListAnimator="@animator/increase_size_touch_animator" />
+                    android:stateListAnimator="@animator/increase_size_normal_animator" />
 
                 <ImageView
                     android:id="@+id/actionMenuGravityCloseImageView"
@@ -281,7 +284,7 @@
                     android:layout_height="32dp"
                     android:layout_marginStart="50dp"
                     android:src="@drawable/ic_baseline_close_24"
-                    android:stateListAnimator="@animator/increase_size_touch_animator" />
+                    android:stateListAnimator="@animator/increase_size_normal_animator" />
 
             </LinearLayout>
 

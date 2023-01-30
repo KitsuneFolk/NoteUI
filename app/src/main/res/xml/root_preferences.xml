@@ -28,11 +28,19 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="isShowAddNoteFABText"
-            android:title="@string/isShowAddNoteFABText" />
+            android:title="@string/preferencesIsShowAddNoteFABText" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="hide_actionbar_while_scrolling"
-            android:title="@string/isHideActionBarOnScroll" />
+            android:title="@string/preferencesIsHideActionBarOnScroll" />
+        <ListPreference
+            android:defaultValue="@string/preferencesDisableDrawerMenuAnimationDefaultValue"
+            android:key="sideMenuDisableAnimation"
+            android:summary="%s"
+            android:title="@string/preferencesDisableDrawerMenuAnimation"
+            app:entries="@array/DisableMenuAnimation_values"
+            app:entryValues="@array/DisableMenuAnimation_values"
+            app:singleLineTitle="false" />
         <ListPreference
             android:defaultValue="@string/settings_note_header_size_default_value"
             android:key="HeaderTextSize"

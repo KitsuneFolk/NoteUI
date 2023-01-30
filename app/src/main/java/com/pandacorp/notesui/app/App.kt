@@ -37,7 +37,7 @@ class App : Application() {
     private fun checkIsFirstTime() {
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("isFirstTime", true)) {
             
-            vm.addBasicColors(this)
+            vm.addBasicColors(addAddItem = true)
             
             PreferenceManager.getDefaultSharedPreferences(this).edit()
                 .putBoolean("isFirstTime", false).apply()

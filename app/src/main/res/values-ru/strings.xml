@@ -7,8 +7,9 @@
     <string name="language">Язык</string>
     <string name="theme">Тема</string>
     <string name="notes">Заметки</string>
-    <string name="isShowAddNoteFABText">Показывать текст кнопки Создать заметку</string>
-    <string name="isHideActionBarOnScroll">Скрывать actionbar при листании</string>
+    <string name="preferencesIsShowAddNoteFABText">Показывать текст кнопки Создать заметку</string>
+    <string name="preferencesIsHideActionBarOnScroll">Скрывать actionbar при листании</string>
+    <string name="preferencesDisableDrawerMenuAnimation">Отключать анимацию бокового меню когда число символов больше чем </string>
     <string name="headerTextSize">Размер текста заголовка</string>
     <string name="contentTextSize">Размер текста содержания</string>
     <string name="version">Версия</string>
@@ -31,8 +32,7 @@
     <string name="addFabDescription">Добавить новую заметку</string>
     <string name="alert_dialog_add_color">Добавить новый цвет</string>
     <string name="remove">Удалить</string>
-    <string name="confirm_color_remove">Вы уверены что хотите удалить цвет?</string>
-    <string name="confirm_colors_reset">Вы уверены что хотите сбросить цвета?</string>
+    <string name="removeAll">Удалить всё</string>
     <string name="undo">Вернуть</string>
     <string name="redo">Восстановить</string>
 
@@ -78,4 +78,5 @@
     <string name="dismiss">Отклонить</string>
     <string name="select">Выбрать</string>
     <string name="successfully">Успешно</string>
+    <string name="myNumber">Моё число</string>
 </resources>

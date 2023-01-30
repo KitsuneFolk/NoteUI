@@ -1,4 +1,4 @@
-package com.pandacorp.notesui.presentation.settings.dialog
+package com.pandacorp.notesui.utils.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,14 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.databinding.DialogColorPickerBinding
-import com.pandacorp.notesui.presentation.activities.NoteActivity
 import com.skydoves.colorpickerview.flag.BubbleFlag
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import com.skydoves.colorpickerview.preference.ColorPickerPreferenceManager
 
 class DialogColorPicker : CustomDialog() {
-    private val TAG = NoteActivity.TAG
-    
     private lateinit var binding: DialogColorPickerBinding
     private var colorEnvelopeListener: ColorEnvelopeListener? = null
     
@@ -21,7 +18,6 @@ class DialogColorPicker : CustomDialog() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         // This needed to not recreate fragment after screen rotation, so envelopeListener won't be null
-        retainInstance = true
         binding = DialogColorPickerBinding.inflate(layoutInflater)
         
         binding.dialogColorPickerTitle.setText(R.string.alert_dialog_add_color)

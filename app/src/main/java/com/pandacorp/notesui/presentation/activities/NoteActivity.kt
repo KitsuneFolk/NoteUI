@@ -1,24 +1,19 @@
 package com.pandacorp.notesui.presentation.activities
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
-import android.graphics.Typeface
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.text.Layout
 import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.*
 import android.util.TypedValue
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.ColorInt
-import androidx.annotation.GravityInt
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -29,28 +24,28 @@ import androidx.transition.TransitionManager
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.pandacorp.domain.models.ColorItem
 import com.pandacorp.domain.models.NoteItem
-import com.pandacorp.domain.usecases.notes.database.GetNotesUseCase
 import com.pandacorp.domain.usecases.notes.database.UpdateNoteUseCase
-import com.pandacorp.domain.usecases.utils.Constans.imgId
 import com.pandacorp.domain.usecases.utils.HideToolbarWhileScrollingUseCase
 import com.pandacorp.domain.usecases.utils.JsonToSpannableUseCase
 import com.pandacorp.domain.usecases.utils.SpannableToJsonUseCase
+import com.pandacorp.domain.usecases.utils.text.*
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.databinding.ActivityNoteBinding
 import com.pandacorp.notesui.databinding.ContentActivityNoteBinding
 import com.pandacorp.notesui.databinding.MenuNoteDrawerBinding
 import com.pandacorp.notesui.presentation.adapter.ColorsRecyclerAdapter
 import com.pandacorp.notesui.presentation.adapter.ImagesRecyclerAdapter
-import com.pandacorp.notesui.presentation.settings.dialog.DialogColorPicker
 import com.pandacorp.notesui.utils.Constans
 import com.pandacorp.notesui.utils.PreferenceHandler
 import com.pandacorp.notesui.utils.UndoRedoHelper
 import com.pandacorp.notesui.utils.Utils
+import com.pandacorp.notesui.utils.dialog.CustomBottomSheetDialog
+import com.pandacorp.notesui.utils.dialog.DialogColorPicker
+import com.pandacorp.notesui.viewModels.MainViewModel
 import com.pandacorp.notesui.viewModels.NoteViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -66,24 +61,28 @@ class NoteActivity : AppCompatActivity() {
     
     private lateinit var colorsRecyclerAdapter: ColorsRecyclerAdapter
     
-    private val getNotesUseCase: GetNotesUseCase by inject()
     private val updateNoteUseCase: UpdateNoteUseCase by inject()
     private val hideToolbarWhileScrollingUseCase: HideToolbarWhileScrollingUseCase by inject()
     
-    private val vm: NoteViewModel by viewModel()
+    private val notesVM: MainViewModel by viewModel()
+    private val colorsVM: NoteViewModel by viewModel()
     
     private val spannableToJsonUseCase: SpannableToJsonUseCase = SpannableToJsonUseCase()
-    private val jsonToSpannableUseCase: JsonToSpannableUseCase =
-        JsonToSpannableUseCase(this)
+    private val jsonToSpannableUseCase: JsonToSpannableUseCase = JsonToSpannableUseCase(this)
+    
+    private val changeTextForegroundColorUseCase: ChangeTextForegroundColorUseCase by inject()
+    private val changeTextBackgroundColorUseCase: ChangeTextBackgroundColorUseCase by inject()
+    private val changeTextGravityUseCase: ChangeTextGravityUseCase by inject()
+    private val insertImageInEditTextUseCase: InsertImageInEditTextUseCase by inject()
+    private val makeTextBoldUseCase: MakeTextBoldUseCase by inject()
+    private val makeTextItalicUseCase: MakeTextItalicUseCase by inject()
     
     private lateinit var note: NoteItem
-    private lateinit var noteBackground: String
-    private var notePositionInAdapter: Int? = null
     
     private lateinit var undoRedoContentEditTextHelper: UndoRedoHelper
     private lateinit var undoRedoHeaderEditTextHelper: UndoRedoHelper
     
-    private var clickedActionMenuButton = Constans.ClickedActionMenu.NULL
+    private var clickedActionMenuButton = Constans.ClickedActionButton.NULL
     
     private val pickNoteBackgroundImageResult = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()) {
@@ -92,7 +91,6 @@ class NoteActivity : AppCompatActivity() {
             
             bindingContent.noteBackgroundImageView.setImageURI(imageUri)
             note.background = imageUri.toString()
-            noteBackground = note.background
             CoroutineScope(Dispatchers.IO).launch {
                 updateNoteUseCase(note)
                 
@@ -112,7 +110,7 @@ class NoteActivity : AppCompatActivity() {
             
             // get drawable from uri
             imageUri?.also {
-                insertImage(editText, imageUri)
+                insertImageInEditTextUseCase(editText, imageUri)
                 
             }
             editText.setSelection(selectionStart)
@@ -137,9 +135,9 @@ class NoteActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar!!.setHomeButtonEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        initViews()
         restoreSavedData(savedInstanceState)
         CoroutineScope(Dispatchers.IO).launch {
-            initViews()
             CoroutineScope(Dispatchers.Main).launch {
                 initEditTexts()
                 initActionBottomMenu()
@@ -156,40 +154,40 @@ class NoteActivity : AppCompatActivity() {
      * This method restores data when screen gets rotated and gets the data from intent if activity started
      */
     private fun restoreSavedData(savedInstanceState: Bundle?) {
-        val headerSpannable: Spannable?
-        val contentSpannable: Spannable?
-        val background: String?
-        val isShowTransparentActionBar: Boolean?
-        if (savedInstanceState != null) {
-            headerSpannable =
-                jsonToSpannableUseCase(
-                        bindingContent.headerEditText,
-                        savedInstanceState.getString(Constans.Bundles.noteHeaderText)!!)
-            contentSpannable =
-                jsonToSpannableUseCase(
-                        bindingContent.contentEditText,
-                        savedInstanceState.getString(Constans.Bundles.noteContentText)!!)
-            background = savedInstanceState.getString(Constans.Bundles.noteBackground)!!
-            isShowTransparentActionBar =
-                savedInstanceState.getBoolean(Constans.Bundles.noteIsShowTransparentActionBar)
-            
-        } else {
-            headerSpannable =
-                jsonToSpannableUseCase(
-                        bindingContent.headerEditText,
-                        intent.getStringExtra(Constans.Bundles.noteHeaderText)!!)
-            contentSpannable =
-                jsonToSpannableUseCase(
-                        bindingContent.contentEditText,
-                        intent.getStringExtra(Constans.Bundles.noteContentText)!!)
-            background = intent.getStringExtra(Constans.Bundles.noteBackground)!!
-            isShowTransparentActionBar =
-                intent.getBooleanExtra(Constans.Bundles.noteIsShowTransparentActionBar, false)
+        savedInstanceState?.also {
+            clickedActionMenuButton = it.getInt(Constans.ClickedActionButton.KEY)
+            when (clickedActionMenuButton) {
+                Constans.ClickedActionButton.NULL -> {}
+                Constans.ClickedActionButton.FOREGROUND -> {
+                    bindingContent.actionMenuButtonsLayout.visibility = View.GONE
+                    bindingContent.actionMenuColorsLayout.visibility = View.VISIBLE
+                    
+                }
+                Constans.ClickedActionButton.BACKGROUND -> {
+                    bindingContent.actionMenuButtonsLayout.visibility = View.GONE
+                    bindingContent.actionMenuColorsLayout.visibility = View.VISIBLE
+                }
+                Constans.ClickedActionButton.GRAVITY -> {
+                    bindingContent.actionMenuButtonsLayout.visibility = View.GONE
+                    bindingContent.actionMenuGravityLayout.visibility = View.VISIBLE
+                }
+            }
         }
-        bindingContent.headerEditText.setText(headerSpannable)
-        bindingContent.contentEditText.setText(contentSpannable)
-        changeNoteBackground(background)
-        if (isShowTransparentActionBar)
+        
+        
+    }
+    
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(Constans.ClickedActionButton.KEY, clickedActionMenuButton)
+    }
+    
+    private fun initViews() {
+        // Here we get note by position what we get from intent.
+        val notesList = notesVM.getNotes()
+        note = notesList[intent.getIntExtra(intentNotePosition, notesList.lastIndex)]
+        
+        if (note.isShowTransparentActionBar)
             supportActionBar!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         else {
             val tv = TypedValue()
@@ -198,67 +196,21 @@ class NoteActivity : AppCompatActivity() {
             supportActionBar!!.setBackgroundDrawable(ColorDrawable(colorPrimary))
         }
         
+        changeNoteBackground(note.background)
+        
         // Text size
-        val contentTextSize = sp.getString(
-                Constans.PreferencesKeys.contentTextSizeKey,
-                Constans.PreferencesKeys.contentTextSizeDefaultValue)!!.toFloat()
-        val headerTextSize = sp.getString(
-                Constans.PreferencesKeys.headerTextSizeKey,
-                Constans.PreferencesKeys.headerTextSizeDefaultValue)!!.toFloat()
-        changeEditTextTextSize(bindingContent.contentEditText, contentTextSize)
-        changeEditTextTextSize(bindingContent.headerEditText, headerTextSize)
-        
-        savedInstanceState?.also {
-            clickedActionMenuButton = it.getInt(Constans.ClickedActionMenu.BUNDLE_KEY)
-            when (clickedActionMenuButton) {
-                Constans.ClickedActionMenu.NULL -> {}
-                Constans.ClickedActionMenu.FOREGROUND -> {
-                    bindingContent.actionMenuButtonsLayout.visibility = View.GONE
-                    bindingContent.actionMenuColorsLayout.visibility = View.VISIBLE
-                    
-                }
-                Constans.ClickedActionMenu.BACKGROUND -> {
-                    bindingContent.actionMenuButtonsLayout.visibility = View.GONE
-                    bindingContent.actionMenuColorsLayout.visibility = View.VISIBLE
-                }
-                Constans.ClickedActionMenu.GRAVITY -> {
-                    bindingContent.actionMenuButtonsLayout.visibility = View.GONE
-                    bindingContent.actionMenuGravityLayout.visibility = View.VISIBLE
-                }
-            }
-        }
-    }
+        CoroutineScope(Dispatchers.Main).launch {
+            val contentTextSize = sp.getString(
+                    Constans.PreferencesKeys.contentTextSizeKey,
+                    Constans.PreferencesKeys.contentTextSizeDV)!!.toFloat()
+            val headerTextSize = sp.getString(
+                    Constans.PreferencesKeys.headerTextSizeKey,
+                    Constans.PreferencesKeys.headerTextSizeDV)!!.toFloat()
+            changeEditTextTextSize(bindingContent.contentEditText, contentTextSize)
+            changeEditTextTextSize(bindingContent.headerEditText, headerTextSize)
     
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        val headerText =
-            spannableToJsonUseCase((bindingContent.headerEditText.text ?: "").toSpannable())
-        val contentText =
-            spannableToJsonUseCase((bindingContent.contentEditText.text ?: "").toSpannable())
-        
-        // if noteBackground has been not chosen, then get it's value from intent
-        if (!this::noteBackground.isInitialized) {
-            noteBackground = intent.getStringExtra(Constans.Bundles.noteBackground)!!
         }
-        outState.putString(Constans.Bundles.noteHeaderText, headerText)
-        outState.putString(Constans.Bundles.noteContentText, contentText)
-        outState.putString(Constans.Bundles.noteBackground, noteBackground)
-        outState.putBoolean(
-                Constans.Bundles.noteIsShowTransparentActionBar,
-                bindingMenu.switchTransparentActionBarSwitchCompat.isChecked
-        )
-        outState.putInt(Constans.ClickedActionMenu.BUNDLE_KEY, clickedActionMenuButton)
-    }
-    
-    private suspend fun initViews() {
-        val databaseList = withContext(Dispatchers.IO) {
-            getNotesUseCase()
-        }
-        // Here we get note by position what we get from intent.
-        val lastNote = databaseList.size - 1
-        notePositionInAdapter = intent.getIntExtra(intentNotePositionInAdapter, lastNote)
-        note = databaseList[notePositionInAdapter!!]
-        
+       
         // When activity starts, don't show keyboard.
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         
@@ -293,17 +245,34 @@ class NoteActivity : AppCompatActivity() {
         
         undoRedoContentEditTextHelper =
             UndoRedoHelper(binding.contentActivityInclude.contentEditText)
-        undoRedoHeaderEditTextHelper = UndoRedoHelper(binding.contentActivityInclude.headerEditText)
+        undoRedoHeaderEditTextHelper =
+            UndoRedoHelper(binding.contentActivityInclude.headerEditText)
         
         bindingContent.headerEditText.setOnFocusChangeListener { v, hasFocus ->
-            if (isHideToolbarWhileScrolling) hideToolbarWhileScrollingUseCase(toolbar, !hasFocus)
+            if (isHideToolbarWhileScrolling) hideToolbarWhileScrollingUseCase(
+                    toolbar,
+                    !hasFocus)
             invalidateOptionsMenu()
         }
         bindingContent.contentEditText.setOnFocusChangeListener { v, hasFocus ->
-            if (isHideToolbarWhileScrolling) hideToolbarWhileScrollingUseCase(toolbar, !hasFocus)
+            if (isHideToolbarWhileScrolling) hideToolbarWhileScrollingUseCase(
+                    toolbar,
+                    !hasFocus)
             invalidateOptionsMenu()
         }
-        
+        binding.contentMotionLayout.attachEditText(
+                bindingContent.contentEditText,
+                sp.getString(
+                        Constans.PreferencesKeys.disableDrawerAnimationKey,
+                        Constans.PreferencesKeys.disableDrawerAnimationDV)!!)
+        // Text
+        val headerSpannable: Spannable? =
+            jsonToSpannableUseCase(bindingContent.headerEditText, note.header)
+        val contentSpannable: Spannable? =
+            jsonToSpannableUseCase(bindingContent.contentEditText, note.content)
+        bindingContent.headerEditText.setText(headerSpannable)
+        bindingContent.contentEditText.setText(contentSpannable)
+    
     }
     
     private fun initActionBottomMenu() {
@@ -317,7 +286,7 @@ class NoteActivity : AppCompatActivity() {
                     val dialog = DialogColorPicker.newInstance()
                     dialog.setOnPositiveButtonClick { envelope, fromUser ->
                         val newColorItem = ColorItem(color = envelope.color)
-                        vm.addColor(newColorItem)
+                        colorsVM.addColor(newColorItem)
                         
                     }
                     dialog.show(this@NoteActivity.supportFragmentManager, null)
@@ -328,21 +297,21 @@ class NoteActivity : AppCompatActivity() {
                 val selectionEnd = selectedEditText.selectionEnd
                 
                 when (clickedActionMenuButton) {
-                    Constans.ClickedActionMenu.FOREGROUND -> {
-                        changeTextForegroundColor(
+                    Constans.ClickedActionButton.FOREGROUND -> {
+                        changeTextForegroundColorUseCase(
                                 selectedEditText,
                                 colorItem.color,
                                 selectionStart,
                                 selectionEnd)
                     }
-                    Constans.ClickedActionMenu.BACKGROUND -> {
-                        changeTextBackgroundColor(
+                    Constans.ClickedActionButton.BACKGROUND -> {
+                        changeTextBackgroundColorUseCase(
                                 selectedEditText,
                                 colorItem.color,
                                 selectionStart,
                                 selectionEnd)
                     }
-                    Constans.ClickedActionMenu.NULL -> {}
+                    Constans.ClickedActionButton.NULL -> {}
                 }
                 selectedEditText.setSelection(
                         selectionStart,
@@ -352,54 +321,45 @@ class NoteActivity : AppCompatActivity() {
         })
         colorsRecyclerAdapter.setOnLongClickListener(object :
             ColorsRecyclerAdapter.OnColorItemLongClickListener {
-            override fun onLongClick(view: View?, colorItem: ColorItem, position: Int) {
+            override fun onLongClick(
+                view: View?, colorItem: ColorItem, position: Int
+            ) {
                 if (colorItem.type == ColorItem.ADD) {
-                    AlertDialog.Builder(this@NoteActivity, R.style.MaterialAlertDialog)
-                        .setTitle(R.string.confirm_colors_reset)
-                        .setPositiveButton(R.string.reset) { dialog, which ->
-                            vm.resetColors(this@NoteActivity)
-                            colorsRecyclerAdapter.notifyDataSetChanged()
-                            
-                            
-                        }
-                        .setNegativeButton(getString(android.R.string.cancel)) { dialog, which ->
-                            dialog.dismiss()
-                            
-                        }
-                        .show()
-                        .window!!.decorView.setBackgroundResource(R.drawable.dialog_rounded_corners)
+                    val dialog = CustomBottomSheetDialog.newInstance(ColorItem.ADD)
+                    dialog.setOnResetButtonClickListener {
+                        colorsVM.resetColors()
+                        dialog.dismiss()
+                    }
+                    dialog.setOnRemoveButtonClickListener() {
+                        colorsVM.removeAllColors()
+                        dialog.dismiss()
+                    }
+                    dialog.show(this@NoteActivity.supportFragmentManager, null)
                     
                 } else {
-                    
-                    AlertDialog.Builder(this@NoteActivity, R.style.MaterialAlertDialog)
-                        .setTitle(R.string.confirm_color_remove)
-                        .setPositiveButton(R.string.remove) { dialog, which ->
-                            vm.removeColor(colorItem)
-                            colorsRecyclerAdapter.notifyDataSetChanged()
-                            
-                            
-                        }
-                        .setNegativeButton(getString(android.R.string.cancel)) { dialog, which ->
-                            dialog.dismiss()
-                            
-                        }
-                        .show()
-                        .window!!.decorView.setBackgroundResource(R.drawable.dialog_rounded_corners)
-                    
-                    
+                    val dialog = CustomBottomSheetDialog.newInstance(ColorItem.COLOR)
+                    dialog.setOnRemoveButtonClickListener() {
+                        colorsVM.removeColor(colorItem)
+                        dialog.dismiss()
+                    }
+                    dialog.show(this@NoteActivity.supportFragmentManager, null)
                 }
             }
         })
         bindingContent.actionMenuColorsRecyclerView.adapter =
             colorsRecyclerAdapter
-        vm.colorsList.observe(this) {
+        colorsVM.colorsList.observe(this) {
             colorsRecyclerAdapter.setList(it)
         }
         
         bindingContent.actionMenuGravityLeftImageView.setOnClickListener {
+            val editText = getFocusedEditText()
+            if (editText != bindingContent.contentEditText) return@setOnClickListener // don't change gravity for headerEdittext
+            
             val startSelection = bindingContent.contentEditText.selectionStart
             val endSelection = bindingContent.contentEditText.selectionEnd
-            changeTextGravity(
+            changeTextGravityUseCase(
+                    editText,
                     Gravity.LEFT,
                     bindingContent.contentEditText.selectionStart,
                     bindingContent.contentEditText.selectionEnd)
@@ -408,9 +368,13 @@ class NoteActivity : AppCompatActivity() {
                     endSelection)
         }
         bindingContent.actionMenuGravityCenterImageView.setOnClickListener {
+            val editText = getFocusedEditText()
+            if (editText != bindingContent.contentEditText) return@setOnClickListener // don't change gravity for headerEdittext
+            
             val startSelection = bindingContent.contentEditText.selectionStart
             val endSelection = bindingContent.contentEditText.selectionEnd
-            changeTextGravity(
+            changeTextGravityUseCase(
+                    editText,
                     Gravity.CENTER,
                     bindingContent.contentEditText.selectionStart,
                     bindingContent.contentEditText.selectionEnd)
@@ -420,9 +384,13 @@ class NoteActivity : AppCompatActivity() {
             
         }
         bindingContent.actionMenuGravityRightImageView.setOnClickListener {
+            val editText = getFocusedEditText()
+            if (editText != bindingContent.contentEditText) return@setOnClickListener // don't change gravity for headerEdittext
+            
             val startSelection = bindingContent.contentEditText.selectionStart
             val endSelection = bindingContent.contentEditText.selectionEnd
-            changeTextGravity(
+            changeTextGravityUseCase(
+                    editText,
                     Gravity.RIGHT,
                     bindingContent.contentEditText.selectionStart,
                     bindingContent.contentEditText.selectionEnd)
@@ -442,12 +410,12 @@ class NoteActivity : AppCompatActivity() {
                     animation)
             bindingContent.actionMenuGravityLayout.visibility = View.GONE
             bindingContent.actionMenuButtonsLayout.visibility = View.VISIBLE
-            clickedActionMenuButton = Constans.ClickedActionMenu.NULL
+            clickedActionMenuButton = Constans.ClickedActionButton.NULL
             
         }
         
-        bindingContent.actionMenuButtonChangeTextForegroundColor.setOnClickListener {
-            clickedActionMenuButton = Constans.ClickedActionMenu.FOREGROUND
+        bindingContent.actionMenuChangeTextForegroundColor.setOnClickListener {
+            clickedActionMenuButton = Constans.ClickedActionButton.FOREGROUND
             
             //Slide Animation
             val animation = Slide(Gravity.BOTTOM)
@@ -460,10 +428,10 @@ class NoteActivity : AppCompatActivity() {
             bindingContent.actionMenuButtonsLayout.visibility = View.GONE
             bindingContent.actionMenuColorsLayout.visibility =
                 View.VISIBLE
-            clickedActionMenuButton = Constans.ClickedActionMenu.FOREGROUND
+            clickedActionMenuButton = Constans.ClickedActionButton.FOREGROUND
             
         }
-        bindingContent.actionMenuButtonChangeTextGravity.setOnClickListener {
+        bindingContent.actionMenuChangeTextGravity.setOnClickListener {
             //Slide Animation
             val animation = Slide(Gravity.BOTTOM)
             animation.duration = 400
@@ -474,11 +442,11 @@ class NoteActivity : AppCompatActivity() {
                     animation)
             bindingContent.actionMenuButtonsLayout.visibility = View.GONE
             bindingContent.actionMenuGravityLayout.visibility = View.VISIBLE
-            clickedActionMenuButton = Constans.ClickedActionMenu.GRAVITY
+            clickedActionMenuButton = Constans.ClickedActionButton.GRAVITY
             
         }
-        bindingContent.actionMenuButtonChangeTextBackgroundColor.setOnClickListener {
-            clickedActionMenuButton = Constans.ClickedActionMenu.BACKGROUND
+        bindingContent.actionMenuChangeTextBackgroundColor.setOnClickListener {
+            clickedActionMenuButton = Constans.ClickedActionButton.BACKGROUND
             
             //Slide Animation
             val animation = Slide(Gravity.BOTTOM)
@@ -491,7 +459,7 @@ class NoteActivity : AppCompatActivity() {
                     animation)
             bindingContent.actionMenuButtonsLayout.visibility = View.GONE
             bindingContent.actionMenuColorsLayout.visibility = View.VISIBLE
-            clickedActionMenuButton = Constans.ClickedActionMenu.BACKGROUND
+            clickedActionMenuButton = Constans.ClickedActionButton.BACKGROUND
             
         }
         
@@ -500,16 +468,16 @@ class NoteActivity : AppCompatActivity() {
             val selectionStart = selectedEditText.selectionStart
             val selectionEnd = selectedEditText.selectionEnd
             when (clickedActionMenuButton) {
-                Constans.ClickedActionMenu.NULL ->
-                    throw IllegalArgumentException("Constans.ClickedActionMenu cannot be null when color buttons were clicked.")
-                Constans.ClickedActionMenu.FOREGROUND ->
-                    changeTextForegroundColor(
+                Constans.ClickedActionButton.NULL ->
+                    throw IllegalArgumentException("Constans.ClickedActionButton cannot be null when color buttons were clicked.")
+                Constans.ClickedActionButton.FOREGROUND ->
+                    changeTextForegroundColorUseCase(
                             selectedEditText,
                             null,
                             startPosition = selectionStart,
                             endPosition = selectionEnd)
-                Constans.ClickedActionMenu.BACKGROUND ->
-                    changeTextBackgroundColor(
+                Constans.ClickedActionButton.BACKGROUND ->
+                    changeTextBackgroundColorUseCase(
                             selectedEditText,
                             null,
                             startPosition = selectionStart,
@@ -523,7 +491,7 @@ class NoteActivity : AppCompatActivity() {
             
         }
         bindingContent.noteActionColorsCloseImageButton.setOnClickListener {
-            clickedActionMenuButton = Constans.ClickedActionMenu.NULL
+            clickedActionMenuButton = Constans.ClickedActionButton.NULL
             
             //Slide Animation
             val animation = Slide(Gravity.BOTTOM)
@@ -536,12 +504,12 @@ class NoteActivity : AppCompatActivity() {
                     animation)
             bindingContent.actionMenuColorsLayout.visibility = View.GONE
             bindingContent.actionMenuButtonsLayout.visibility = View.VISIBLE
-            clickedActionMenuButton = Constans.ClickedActionMenu.NULL
+            clickedActionMenuButton = Constans.ClickedActionButton.NULL
             
         }
         
         bindingContent.actionMenuButtonAddImage.setOnClickListener {
-            if (getFocusedEditText() != null) {
+            if (getFocusedEditText() == bindingContent.contentEditText) {
                 
                 ImagePicker.Builder(activity = this)
                     .createIntent { resultIntent ->
@@ -555,276 +523,15 @@ class NoteActivity : AppCompatActivity() {
         bindingContent.actionMenuButtonBold.setOnClickListener {
             val editText = getFocusedEditText() ?: return@setOnClickListener
             
-            makeBold(editText = editText)
+            makeTextBoldUseCase(editText = editText)
         }
         bindingContent.actionMenuButtonItalic.setOnClickListener {
             val editText = getFocusedEditText() ?: return@setOnClickListener
             
-            makeItalic(editText = editText)
+            makeTextItalicUseCase(editText = editText)
         }
         
         
-    }
-    
-    /**
-     * This method changes selected text foreground color of contentEditText
-     */
-    private fun changeTextForegroundColor(
-        editText: EditText,
-        @ColorInt foregroundColor: Int?,
-        startPosition: Int,
-        endPosition: Int
-    ) {
-        val resultText: Spannable =
-            editText.text?.toSpannable() ?: return
-        
-        val spans: Array<ForegroundColorSpan> = resultText.getSpans(
-                startPosition, endPosition,
-                ForegroundColorSpan::class.java)
-        spans.forEach {
-            val selectedSpanStart = resultText.getSpanStart(it)
-            val selectedSpanEnd = resultText.getSpanEnd(it)
-            if (selectedSpanStart >= startPosition && selectedSpanEnd <= endPosition) {
-                
-                resultText.removeSpan(it)
-                
-            }
-            
-        }
-        if (foregroundColor == null) {
-            resultText.setSpan(
-                    ForegroundColorSpan(Color.WHITE),
-                    startPosition,
-                    endPosition,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        } else {
-            resultText.setSpan(
-                    ForegroundColorSpan(foregroundColor),
-                    startPosition,
-                    endPosition,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            
-        }
-        
-        editText.setText(resultText)
-        
-    }
-    
-    /**
-     * This method changes selected text background color of contentEditText
-     */
-    private fun changeTextBackgroundColor(
-        editText: EditText,
-        @ColorInt backgroundColor: Int?,
-        startPosition: Int,
-        endPosition: Int
-    ) {
-        val resultText: Spannable =
-            editText.text?.toSpannable() ?: return
-        
-        val spans: Array<BackgroundColorSpan> = resultText.getSpans(
-                startPosition, endPosition,
-                BackgroundColorSpan::class.java)
-        spans.forEach {
-            val selectedSpanStart = resultText.getSpanStart(it)
-            val selectedSpanEnd = resultText.getSpanEnd(it)
-            if (selectedSpanStart >= startPosition && selectedSpanEnd <= endPosition) {
-                resultText.removeSpan(it)
-                
-            }
-            
-        }
-        
-        if (backgroundColor == null) {
-            resultText.setSpan(
-                    BackgroundColorSpan(Color.TRANSPARENT),
-                    startPosition,
-                    endPosition,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        } else {
-            resultText.setSpan(
-                    BackgroundColorSpan(backgroundColor),
-                    startPosition,
-                    endPosition,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            
-        }
-        
-        editText.setText(resultText)
-        
-        
-    }
-    
-    /**
-     * This method changes text gravity.
-     */
-    private fun changeTextGravity(
-        @GravityInt gravity: Int,
-        selectionStart: Int,
-        selectionEnd: Int
-    ) {
-        if (getFocusedEditText() != bindingContent.contentEditText) return // don't change gravity for headerEdittext
-        
-        val resultText =
-            bindingContent.contentEditText.text?.toSpannable() ?: return
-        val selectedLinePositions =
-            getEditTextSelectedLineTextBySelection(
-                    bindingContent.contentEditText,
-                    selectionStart, selectionEnd)
-        val firstSelectedLineStart = selectedLinePositions.first
-        val lastSelectedLineEnd = selectedLinePositions.second
-        
-        val spans: Array<AlignmentSpan> = resultText.getSpans(
-                firstSelectedLineStart, lastSelectedLineEnd,
-                AlignmentSpan::class.java)
-        spans.forEach {
-            val selectedSpanStart = resultText.getSpanStart(it)
-            val selectedSpanEnd = resultText.getSpanEnd(it)
-            if (selectedSpanStart >= selectionStart && selectedSpanEnd <= selectionEnd) {
-                resultText.removeSpan(it)
-                
-            }
-            
-        }
-        
-        when (gravity) {
-            Gravity.LEFT -> {
-                resultText.setSpan(
-                        (AlignmentSpan.Standard(Layout.Alignment.ALIGN_NORMAL)),
-                        firstSelectedLineStart,
-                        lastSelectedLineEnd,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-            
-            Gravity.CENTER -> {
-                resultText.setSpan(
-                        (AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER)),
-                        firstSelectedLineStart,
-                        lastSelectedLineEnd,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-            
-            Gravity.RIGHT -> {
-                resultText.setSpan(
-                        AlignmentSpan.Standard(Layout.Alignment.ALIGN_OPPOSITE),
-                        firstSelectedLineStart,
-                        lastSelectedLineEnd,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                bindingContent.contentEditText.setText(resultText)
-            }
-        }
-        bindingContent.contentEditText.setText(resultText)
-        
-    }
-    
-    /**
-     * This function inserts images at position inside edittext
-     */
-    private fun insertImage(editText: EditText, uri: Uri) {
-        if (editText == bindingContent.headerEditText) return // Don't insert image for header edittext
-        
-        val selectionStart = editText.selectionStart
-        val selectionEnd = editText.selectionEnd
-        
-        val inputStream = this.contentResolver.openInputStream(uri)
-        val drawable = Drawable.createFromStream(inputStream, uri.toString())
-        drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-        
-        val imageSpan = ImageSpan(drawable, uri.toString(), ImageSpan.ALIGN_BASELINE)
-        val builder = SpannableStringBuilder(imgId)
-        builder.setSpan(imageSpan, 0, imgId.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        editText.text.replace(selectionStart, selectionEnd, builder)
-        
-    }
-    
-    /**
-     * This function inserts bold span at selected edittext positions, if there is already spans it removes and adds nothing, else adds a span
-     * @param editText an edittext where you need to insert bold span;
-     */
-    private fun makeBold(editText: EditText) {
-        val start = editText.selectionStart
-        val end = editText.selectionEnd
-    
-        val span = editText.text.toSpannable()
-        
-        val styleSpans = span.getSpans(start, end, StyleSpan::class.java)
-        val boldSpans: MutableList<StyleSpan> = mutableListOf()
-        
-        // fill list
-        styleSpans.forEach { styleSpan ->
-            if (styleSpan.style == Typeface.BOLD) boldSpans.add(styleSpan)
-        }
-        boldSpans.forEach { boldSpan ->
-            val selectedSpanStart = span.getSpanStart(boldSpan)
-            val selectedSpanEnd = span.getSpanEnd(boldSpan)
-            
-            if (selectedSpanStart >= start && selectedSpanEnd <= end) {
-                span.removeSpan(boldSpan)
-                
-            }
-        }
-        if (boldSpans.isEmpty()) {
-            // add spans
-            span.setSpan(StyleSpan(Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        } else {
-            // remove spans, what we do above
-        }
-        
-        editText.setText(span)
-        editText.setSelection(start, end)
-    }
-    
-    private fun makeItalic(editText: EditText) {
-        val start = editText.selectionStart
-        val end = editText.selectionEnd
-    
-        val span = editText.text.toSpannable()
-        
-        val styleSpans = span.getSpans(start, end, StyleSpan::class.java)
-        val italicSpans: MutableList<StyleSpan> = mutableListOf()
-        
-        // fill list
-        styleSpans.forEach { styleSpan ->
-            if (styleSpan.style == Typeface.ITALIC) italicSpans.add(styleSpan)
-        }
-        
-        italicSpans.forEach { italicSpan ->
-            val selectedSpanStart = span.getSpanStart(italicSpan)
-            val selectedSpanEnd = span.getSpanEnd(italicSpan)
-            
-            if (selectedSpanStart >= start && selectedSpanEnd <= end) {
-                span.removeSpan(italicSpan)
-                
-            }
-        }
-        if (italicSpans.isEmpty()) {
-            // add spans
-            span.setSpan(StyleSpan(Typeface.ITALIC), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        } else {
-            // remove spans, what we do above
-        }
-        
-        editText.setText(span)
-        editText.setSelection(start, end)
-    }
-    
-    /**
-     * @return pair of int with start text of line and.
-     */
-    private fun getEditTextSelectedLineTextBySelection(
-        editText: EditText,
-        selectionStart: Int,
-        selectionEnd: Int
-    ): Pair<Int, Int> {
-        var selectedLineStart = -1
-        var selectedLineEnd = -1
-        if (selectionStart != -1) {
-            val firstSelectedLine = editText.layout.getLineForOffset(selectionStart)
-            val lastSelectedLine = editText.layout.getLineForOffset(selectionEnd)
-            selectedLineStart = editText.layout.getLineStart(firstSelectedLine)
-            selectedLineEnd = editText.layout.getLineVisibleEnd(lastSelectedLine)
-        }
-        return Pair(selectedLineStart, selectedLineEnd)
     }
     
     private fun initSlidingDrawerMenu() {
@@ -865,7 +572,6 @@ class NoteActivity : AppCompatActivity() {
             bindingContent.noteBackgroundImageView.setImageDrawable(
                     ColorDrawable(colorBackground))
             note.background = colorBackground.toString()
-            noteBackground = note.background
             CoroutineScope(Dispatchers.IO).launch {
                 updateNoteUseCase(note)
                 
@@ -887,7 +593,6 @@ class NoteActivity : AppCompatActivity() {
                 // from Utils.backgroundImagesIds and set it.
                 bindingContent.noteBackgroundImageView.setImageDrawable(drawable)
                 note.background = position.toString()
-                noteBackground = note.background
                 CoroutineScope(Dispatchers.IO).launch {
                     updateNoteUseCase(note)
                     
@@ -938,6 +643,21 @@ class NoteActivity : AppCompatActivity() {
         else null
     }
     
+    private fun updateNote() {
+        val headerSpannableText = bindingContent.headerEditText.text ?: ""
+        val contentSpannableText = bindingContent.contentEditText.text ?: ""
+        val jsonHeader = spannableToJsonUseCase(headerSpannableText.toSpannable())
+        note.header = jsonHeader
+        val jsonContent = spannableToJsonUseCase(contentSpannableText.toSpannable())
+        note.content = jsonContent
+        
+        CoroutineScope(Dispatchers.IO).launch {
+            updateNoteUseCase(note)
+            
+        }
+        
+    }
+    
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Show undo and redo button if edittext is focused.
         if (getFocusedEditText() == null)
@@ -951,16 +671,21 @@ class NoteActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                finish()
+                val et = getFocusedEditText()
+                if (et == null) finish()
+                else {
+                    // clear focus and close keyboard
+                    et.clearFocus()
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(et.windowToken, 0)
+                }
                 
             }
             R.id.menu_note_hamburger -> {
                 if (binding.drawerMenu.isDrawerOpen(Gravity.RIGHT)) {
                     binding.drawerMenu.closeDrawer(Gravity.RIGHT)
-                    binding.contentMotionLayout.transitionToStart()
                 } else {
                     binding.drawerMenu.openDrawer(Gravity.RIGHT)
-                    binding.contentMotionLayout.transitionToEnd()
                 }
                 
             }
@@ -1002,21 +727,6 @@ class NoteActivity : AppCompatActivity() {
         return true
     }
     
-    private fun updateNote() {
-        val headerSpannableText = bindingContent.headerEditText.text ?: ""
-        val contentSpannableText = bindingContent.contentEditText.text ?: ""
-        val jsonHeader = spannableToJsonUseCase(headerSpannableText.toSpannable())
-        note.header = jsonHeader
-        val jsonContent = spannableToJsonUseCase(contentSpannableText.toSpannable())
-        note.content = jsonContent
-        
-        CoroutineScope(Dispatchers.IO).launch {
-            updateNoteUseCase(note)
-            
-        }
-        
-    }
-    
     override fun onPause() {
         try {
             updateNote()
@@ -1029,7 +739,7 @@ class NoteActivity : AppCompatActivity() {
     
     companion object {
         const val TAG = "NoteActivity"
-        const val intentNotePositionInAdapter = "notePositionInAdapter"
+        const val intentNotePosition = "notePositionInAdapter"
         
     }
 }

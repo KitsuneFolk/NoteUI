@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:stateListAnimator="@animator/increase_size_touch_animator">
+    android:stateListAnimator="@animator/increase_size_normal_animator">
 
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Reply Preference -->
+    <!-- Themes -->
     <string-array name="Themes">
         <item>Follow system</item>
         <item>Blue</item>
@@ -8,6 +8,7 @@
         <item>Purple</item>
         <item>Red</item>
     </string-array>
+    <string name="settings_theme_default_value" translatable="false">follow_system</string>
     <string-array name="Themes_values" translatable="false">
         <item>follow_system</item>
         <item>blue</item>
@@ -22,7 +23,7 @@
         <item>@color/PurpleTheme_colorBackground</item>
         <item>@color/RedTheme_colorBackground</item>
     </string-array>
-
+    <!-- Languages -->
     <string-array name="Languages" translatable="false">
         <item>English</item>
         <item>Русский</item>
@@ -39,16 +40,30 @@
         <item>@drawable/flag_ukraine</item>
     </string-array>
 
+    <!-- TextSizes -->
+    <string name="settings_note_content_size_default_value" translatable="false">18</string>
+    <string name="settings_note_header_size_default_value" translatable="false">20</string>
+
     <string-array name="TextSizes_values" translatable="false">
+        <item>14</item>
         <item>16</item>
-        <item>17</item>
         <item>18</item>
-        <item>19</item>
         <item>20</item>
-        <item>21</item>
         <item>22</item>
-        <item>23</item>
         <item>24</item>
+    </string-array>
+
+    <!-- Array for values when need to disable motion layout animation for drawer menu -->
+    <string name="preferencesDisableDrawerMenuAnimationDefaultValue" translatable="false">10 000</string>
+    <string-array name="DisableMenuAnimation_values" translatable="false">
+        <item>0</item>
+        <item>10 000</item>
+        <item>20 000</item>
+        <item>30 000</item>
+        <item>40 000</item>
+        <item>50 000</item>
+        <item>100 000</item>
+        <item>1 000 000</item>
     </string-array>
 
 </resources>

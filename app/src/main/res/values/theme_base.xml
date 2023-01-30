@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="BaseTheme" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:textColor">@color/white</item>
         <item name="rippleColor">@color/white</item>
@@ -13,6 +14,7 @@
         <item name="drawerArrowStyle">@style/DrawerArrowToggle</item>
         <item name="snackbarStyle">@style/SnackBarStyle</item>
         <item name="switchStyle">@style/Switch</item>
+        <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
         <item name="android:windowAnimationStyle">@style/WindowAnimation</item>
     </style>
 
@@ -27,7 +29,7 @@
         <item name="backgroundTint">?colorPrimary</item>
         <item name="android:textColor">?android:textColor</item>
         <item name="cornerRadius">15dp</item>
-        <item name="rippleColor">?rippleColor</item>
+        <item name="rippleColor">@null</item>
     </style>
 
     <style name="EditText" parent="Widget.AppCompat.EditText">
@@ -59,7 +61,6 @@
     </style>
 
     <style name="MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog.Centered">
-
         <item name="android:colorBackground">?android:attr/colorPrimaryDark</item>
         <item name="background">@drawable/dialog_rounded_corners</item>
         <item name="textColorAlertDialogListItem">@color/white</item>
@@ -71,6 +72,23 @@
 
     <style name="Switch" parent="Widget.AppCompat.CompoundButton.Switch">
         <item name="thumbTint">@color/white</item>
+    </style>
+
+    <!-- BottomSheetDialog -->
+    <style name="CustomBottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
+    </style>
+
+    <style name="CustomBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+        <item name="shapeAppearanceOverlay">@style/CustomShapeAppearanceBottomSheetDialog</item>
+    </style>
+    <style name="CustomShapeAppearanceBottomSheetDialog" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">@dimen/corners_radius</item>
+        <item name="cornerSizeTopLeft">@dimen/corners_radius</item>
+    </style>
+    <style name="FAB" parent="ShapeAppearanceOverlay.Material3.FloatingActionButton">
+        <item name="rippleColor">@null</item>
     </style>
 
 </resources>

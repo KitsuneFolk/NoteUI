@@ -1,48 +1,41 @@
-package com.pandacorp.notesui.presentation.settings.dialog
+package com.pandacorp.notesui.utils.dialog
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.PreferenceManager
 import com.pandacorp.notesui.R
 import com.pandacorp.notesui.databinding.DialogNumberPickerBinding
-import com.pandacorp.notesui.presentation.settings.SettingsActivity
+import com.pandacorp.notesui.presentation.activities.SettingsActivity
 import com.pandacorp.notesui.utils.Constans
 
-class DialogNumberPicker : CustomDialog() {
-    private val TAG = SettingsActivity.TAG
-    private lateinit var sp: SharedPreferences
-    private lateinit var vibrator: Vibrator
-    
+open class DialogNumberPicker : CustomDialog() {
     private lateinit var binding: DialogNumberPickerBinding
     
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        
-        sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        
+    ): View {
         binding = DialogNumberPickerBinding.inflate(inflater)
         
-        val preferenceKey =
-            requireArguments().getString(Constans.PreferencesKeys.preferenceBundleKey)
+        val args = requireArguments()
+        val preferenceKey = args.getString(Constans.PreferencesKeys.preferenceBundleKey)
+        Log.d(TAG, "onCreateView: preferenceKey = $preferenceKey")
         
+        val defaultValue = when (preferenceKey) {
+            Constans.PreferencesKeys.contentTextSizeKey -> Constans.PreferencesKeys.contentTextSizeDV
+            Constans.PreferencesKeys.headerTextSizeKey -> {
+                Log.d(TAG, "headerTextSizeDV = ${Constans.PreferencesKeys.headerTextSizeDV}")
+                Constans.PreferencesKeys.headerTextSizeDV
+            }
+            else -> throw IllegalArgumentException("preferenceKey = $preferenceKey")
+        }
         val preferenceValue =
-            sp.getString(
-                    preferenceKey, when (preferenceKey) {
-                Constans.PreferencesKeys.contentTextSizeKey -> Constans.PreferencesKeys.contentTextSizeDefaultValue
-                Constans.PreferencesKeys.headerTextSizeKey -> Constans.PreferencesKeys.headerTextSizeDefaultValue
-                else -> throw IllegalArgumentException("preferenceKey = $preferenceKey")
-            })!!
+            sp.getString(preferenceKey, defaultValue)!!
+        
+        Log.d(TAG, "onCreateView: preferenceValue = $preferenceValue")
         
         val textSizesList = fillContentTextSizesList()
         
@@ -67,7 +60,7 @@ class DialogNumberPicker : CustomDialog() {
             requireActivity().finish()
             requireActivity().overridePendingTransition(0, 0)
         }
-    
+        
         binding.dialogNumberPickerNumberPicker.apply {
             displayedValues = textSizesList
             minValue = 0
@@ -78,8 +71,7 @@ class DialogNumberPicker : CustomDialog() {
             
         }
         binding.dialogNumberPickerNumberPicker.setOnValueChangedListener { picker, oldVal, newVal ->
-            val amplitude = 1
-            vibrate(amplitude)
+            vibrate()
             
             binding.dialogNumberPickerSampleTextView.textSize = textSizesList[newVal].toFloat()
         }
@@ -90,12 +82,6 @@ class DialogNumberPicker : CustomDialog() {
     
     private fun fillContentTextSizesList(): Array<String> =
         requireContext().resources.getStringArray(R.array.TextSizes_values)
-    
-    private fun vibrate(amplitude: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(50, amplitude))
-        }
-    }
     
     companion object {
         fun newInstance(preferenceKey: String): DialogNumberPicker {

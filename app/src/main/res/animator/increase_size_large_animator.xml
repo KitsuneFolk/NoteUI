@@ -20,12 +20,12 @@
             <objectAnimator
                 android:duration="50"
                 android:propertyName="scaleX"
-                android:valueTo="1.15"
+                android:valueTo="1.4"
                 android:valueType="floatType"/>
             <objectAnimator
                 android:duration="50"
                 android:propertyName="scaleY"
-                android:valueTo="1.15"
+                android:valueTo="1.4"
                 android:valueType="floatType"/>
         </set>
     </item>

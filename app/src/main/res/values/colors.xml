@@ -45,12 +45,14 @@
     <color name="dialog_choose_text_color">#FFFFFF</color>
 
     <!-- Colors presets to change text color -->
-    <color name="light_yellow">#F4FF81</color>
-    <color name="light_green">#A7FFEB</color>
-    <color name="light_blue">#8C9EFF</color>
-    <color name="light_pink">#EA80FC</color>
     <color name="light_red">#FF9696</color>
-    <color name="light_purple">#BE4AD1</color>
+    <color name="light_pink">#EA80FC</color>
+    <color name="light_purple">#D051E4</color>
+    <color name="light_blue">#8C9EFF</color>
+    <color name="light_lime">#81D4FA</color>
+    <color name="light_green">#A7FFEB</color>
+    <color name="light_yellow">#FFF59D</color>
+
 
 </resources>
 
