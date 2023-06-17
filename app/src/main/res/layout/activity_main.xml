@@ -1,59 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pandacorp.noteui.presentation.ui.activity.MainActivity"
+    tools:menu="@menu/menu_main">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragula_nav_host_fragment"
+        android:name="com.fragula2.FragulaNavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.activities.MainActivity"
-        tools:menu="@menu/menu_main">
-
-        <include
-            android:id="@+id/mainToolbarInclude"
-            layout="@layout/toolbar" />
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainToolbarInclude">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:spanCount="2"
-                tools:listitem="@layout/note_item">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                android:id="@+id/addFAB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="50dp"
-                android:backgroundTint="?android:colorPrimaryDark"
-                android:clickable="true"
-                android:contentDescription="@string/addFabDescription"
-                android:focusable="true"
-                android:text="@string/addNote"
-                android:textSize="12sp"
-                app:icon="@drawable/ic_add"
-                android:stateListAnimator="@animator/increase_size_normal_animator"
-                app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</layout>
+        app:defaultNavHost="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:navGraph="@navigation/navigation_screens" />
+</FrameLayout>

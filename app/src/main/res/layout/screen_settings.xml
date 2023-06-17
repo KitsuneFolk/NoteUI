@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbarInclude"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:colorBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/smallMargin"
+            android:paddingBottom="60dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/appearanceTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumMargin"
+                    android:padding="@dimen/smallMargin"
+                    android:text="@string/appearance"
+                    android:textSize="@dimen/normalText"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/appearanceCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mediumMargin"
+                    android:layout_marginEnd="@dimen/mediumMargin"
+                    app:cardBackgroundColor="?colorPrimary"
+                    app:strokeColor="@android:color/white"
+                    app:strokeWidth="@dimen/stroke">
+
+                    <LinearLayout
+                        android:id="@+id/appearanceLayouts"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/themeLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/smallMargin"
+                            android:paddingTop="@dimen/mediumMargin"
+                            android:paddingEnd="@dimen/smallMargin"
+                            android:paddingBottom="@dimen/mediumMargin">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin"
+                                android:src="@drawable/ic_theme" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/theme"
+                                    android:textSize="@dimen/mediumText" />
+
+                                <TextView
+                                    android:id="@+id/themeTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="?android:textColorSecondary"
+                                    android:textSize="@dimen/normalText"
+                                    tools:text="BlueTheme" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/languageLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/smallMargin"
+                            android:paddingTop="@dimen/mediumMargin"
+                            android:paddingEnd="@dimen/smallMargin"
+                            android:paddingBottom="@dimen/mediumMargin">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin"
+                                android:src="@drawable/ic_language" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/language"
+                                    android:textSize="@dimen/mediumText" />
+
+                                <TextView
+                                    android:id="@+id/languageTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="?android:textColorSecondary"
+                                    android:textSize="@dimen/normalText"
+                                    tools:text="English" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/notesTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumMargin"
+                    android:padding="@dimen/smallMargin"
+                    android:text="@string/notes"
+                    android:textSize="@dimen/normalText"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/notesCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mediumMargin"
+                    android:layout_marginEnd="@dimen/mediumMargin"
+                    android:paddingTop="@dimen/mediumMargin"
+                    android:paddingBottom="@dimen/mediumMargin"
+                    app:cardBackgroundColor="?colorPrimary"
+                    app:strokeColor="@android:color/white"
+                    app:strokeWidth="@dimen/stroke">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/showFabTextLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/smallMargin"
+                            android:paddingTop="@dimen/mediumMargin"
+                            android:paddingEnd="@dimen/smallMargin"
+                            android:paddingBottom="@dimen/mediumMargin">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin"
+                                android:src="@drawable/ic_short_text" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/showFabTextSwitch"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:textSize="@dimen/mediumText"
+                                android:checked="true"
+                                android:gravity="start"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingTop="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/smallMargin"
+                                android:paddingBottom="@dimen/mediumMargin"
+                                android:text="@string/preferencesIsShowAddNoteFABText" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/hideActionBarLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/smallMargin"
+                            android:paddingTop="@dimen/mediumMargin"
+                            android:paddingEnd="@dimen/smallMargin"
+                            android:paddingBottom="@dimen/mediumMargin">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin"
+                                android:src="@drawable/ic_actionbar" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/hideActionBarSwitch"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:textSize="@dimen/mediumText"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingTop="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/smallMargin"
+                                android:paddingBottom="@dimen/mediumMargin"
+                                android:text="@string/preferencesIsHideActionBarOnScroll" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/drawerMenuAnimationLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/smallMargin"
+                            android:paddingTop="@dimen/mediumMargin"
+                            android:paddingEnd="@dimen/smallMargin"
+                            android:paddingBottom="@dimen/mediumMargin">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin"
+                                android:src="@drawable/ic_menu_animation" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/preferencesDisableDrawerMenuAnimation"
+                                    android:textSize="@dimen/mediumText" />
+
+                                <TextView
+                                    android:id="@+id/drawerAnimationtTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="?android:textColorSecondary"
+                                    android:textSize="@dimen/normalText"
+                                    tools:text="@string/disableSideMenuAnimation_defaultValue" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/titleSizeLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/smallMargin"
+                            android:paddingTop="@dimen/mediumMargin"
+                            android:paddingEnd="@dimen/smallMargin"
+                            android:paddingBottom="@dimen/mediumMargin">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin"
+                                android:src="@drawable/ic_title" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/titleTextSize"
+                                    android:textSize="@dimen/mediumText" />
+
+                                <TextView
+                                    android:id="@+id/titleSizeTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="?android:textColorSecondary"
+                                    android:textSize="@dimen/normalText"
+                                    tools:text="@string/titleSize_defaultValue" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/contentSizeLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/smallMargin"
+                            android:paddingTop="@dimen/mediumMargin"
+                            android:paddingEnd="@dimen/smallMargin"
+                            android:paddingBottom="@dimen/mediumMargin">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin"
+                                android:src="@drawable/ic_content" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/contentTextSize"
+                                    android:textSize="@dimen/mediumText" />
+
+                                <TextView
+                                    android:id="@+id/contentSizeTextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="?android:textColorSecondary"
+                                    android:textSize="@dimen/normalText"
+                                    tools:text="@string/contentSize_defaultValue" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/anotherTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/mediumMargin"
+                    android:padding="@dimen/smallMargin"
+                    android:text="@string/another"
+                    android:textSize="@dimen/normalText"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/versionCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/mediumMargin"
+                    android:layout_marginEnd="@dimen/mediumMargin"
+                    android:paddingTop="@dimen/mediumMargin"
+                    android:paddingBottom="@dimen/mediumMargin"
+                    app:cardBackgroundColor="?colorPrimary"
+                    app:strokeColor="@android:color/white"
+                    app:strokeWidth="@dimen/stroke">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/smallMargin"
+                        android:background="?selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/smallMargin"
+                        android:paddingTop="@dimen/mediumMargin"
+                        android:paddingEnd="@dimen/smallMargin"
+                        android:paddingBottom="@dimen/smallMargin">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:paddingStart="@dimen/mediumMargin"
+                            android:paddingEnd="@dimen/mediumMargin"
+                            android:src="@drawable/ic_version" />
+
+                        <TextView
+                            android:id="@+id/versionTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="@dimen/mediumMargin"
+                            android:paddingTop="@dimen/mediumMargin"
+                            android:paddingEnd="@dimen/smallMargin"
+                            android:paddingBottom="@dimen/mediumMargin"
+                            android:textSize="@dimen/normalText"
+                            tools:text="Version 1.1.2" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

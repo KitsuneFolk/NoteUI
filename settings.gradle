@@ -1,4 +1,2 @@
-rootProject.name = "NotesUI"
+rootProject.name = "NoteUI"
 include ':app'
-include ':data'
-include ':domain'

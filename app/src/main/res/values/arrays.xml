@@ -41,29 +41,29 @@
     </string-array>
 
     <!-- TextSizes -->
-    <string name="settings_note_content_size_default_value" translatable="false">18</string>
-    <string name="settings_note_header_size_default_value" translatable="false">20</string>
+    <string name="contentSize_defaultValue" translatable="false">18</string>
+    <string name="titleSize_defaultValue" translatable="false">20</string>
 
-    <string-array name="TextSizes_values" translatable="false">
+    <integer-array name="TextSizes_values" translatable="false">
         <item>14</item>
         <item>16</item>
         <item>18</item>
         <item>20</item>
         <item>22</item>
         <item>24</item>
-    </string-array>
+    </integer-array>
 
     <!-- Array for values when need to disable motion layout animation for drawer menu -->
-    <string name="preferencesDisableDrawerMenuAnimationDefaultValue" translatable="false">10 000</string>
-    <string-array name="DisableMenuAnimation_values" translatable="false">
+    <string name="disableSideMenuAnimation_defaultValue" translatable="false">10 000</string>
+    <integer-array name="DisableMenuAnimation_values" translatable="false">
         <item>0</item>
-        <item>10 000</item>
-        <item>20 000</item>
-        <item>30 000</item>
-        <item>40 000</item>
-        <item>50 000</item>
-        <item>100 000</item>
-        <item>1 000 000</item>
-    </string-array>
+        <item>10000</item>
+        <item>20000</item>
+        <item>30000</item>
+        <item>40000</item>
+        <item>50000</item>
+        <item>100000</item>
+        <item>1000000</item>
+    </integer-array>
 
 </resources>

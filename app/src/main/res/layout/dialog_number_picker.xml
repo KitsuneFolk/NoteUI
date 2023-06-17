@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginStart="@dimen/mediumMargin"
+    android:layout_marginTop="@dimen/mediumMargin"
+    android:layout_marginEnd="@dimen/mediumMargin"
+    android:layout_marginBottom="@dimen/mediumMargin">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center">
+        app:cardBackgroundColor="?colorPrimary"
+        app:cardCornerRadius="@dimen/bigCorners"
+        app:strokeColor="@android:color/white"
+        app:strokeWidth="@dimen/stroke">
 
-        <androidx.cardview.widget.CardView
+        <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="?colorPrimary"
-            app:cardCornerRadius="@dimen/corners_radius">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -22,19 +30,18 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/dialogNumberPicker_title"
+                    android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
                     android:layout_marginStart="5dp"
+                    android:layout_marginTop="10dp"
                     android:layout_marginEnd="5dp"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     tools:text="@string/contentTextSize" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/dialogPreferencesNumberPickerLayout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
@@ -42,7 +49,7 @@
                     android:orientation="horizontal">
 
                     <NumberPicker
-                        android:id="@+id/dialogNumberPicker_numberPicker"
+                        android:id="@+id/numberPicker"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -53,16 +60,18 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/dialogNumberPicker_sampleTextView"
+                        android:id="@+id/sample"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="@dimen/smallMargin"
+                        android:layout_marginStart="@dimen/smallMargin"
+                        android:layout_marginEnd="@dimen/smallMargin"
                         android:gravity="center"
                         android:lines="2"
                         android:text="@string/lorem_ipsum"
-                        app:layout_constraintEnd_toEndOf="@id/dialogNumberPicker_numberPicker"
-                        app:layout_constraintStart_toStartOf="@id/dialogNumberPicker_numberPicker"
-                        app:layout_constraintTop_toBottomOf="@id/dialogNumberPicker_numberPicker" />
+                        app:layout_constraintEnd_toEndOf="@id/numberPicker"
+                        app:layout_constraintStart_toStartOf="@id/numberPicker"
+                        app:layout_constraintTop_toBottomOf="@id/numberPicker" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -73,7 +82,7 @@
                     android:orientation="horizontal">
 
                     <Button
-                        android:id="@+id/dialogNumberPicker_cancel"
+                        android:id="@+id/cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|bottom"
@@ -81,15 +90,15 @@
                         android:layout_marginEnd="25dp"
                         android:layout_marginBottom="5dp"
                         android:backgroundTint="?colorPrimaryDark"
-                        android:stateListAnimator="@animator/increase_size_normal_animator"
+                        android:stateListAnimator="@animator/decrease_size_normal_animator"
                         android:text="@string/action_cancel"
                         android:textSize="17sp"
-                        app:layout_constraintBottom_toBottomOf="@id/dialogNumberPicker_ok"
-                        app:layout_constraintEnd_toStartOf="@id/dialogNumberPicker_ok"
-                        app:layout_constraintTop_toTopOf="@id/dialogNumberPicker_ok" />
+                        app:layout_constraintBottom_toBottomOf="@id/ok"
+                        app:layout_constraintEnd_toStartOf="@id/ok"
+                        app:layout_constraintTop_toTopOf="@id/ok" />
 
                     <Button
-                        android:id="@+id/dialogNumberPicker_ok"
+                        android:id="@+id/ok"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|bottom"
@@ -97,15 +106,14 @@
                         android:layout_marginEnd="25dp"
                         android:layout_marginBottom="15dp"
                         android:backgroundTint="?colorPrimaryDark"
-                        android:stateListAnimator="@animator/increase_size_normal_animator"
+                        android:stateListAnimator="@animator/decrease_size_normal_animator"
                         android:text="@string/ok"
                         android:textSize="17sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
-    </FrameLayout>
-</layout>
+        </ScrollView>
+    </com.google.android.material.card.MaterialCardView>
+</FrameLayout>

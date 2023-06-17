@@ -12,7 +12,6 @@
     <color name="DarkTheme_colorPrimaryDark">#000000</color>
     <color name="DarkTheme_colorAccent">#FFCC80</color>
     <color name="DarkTheme_colorBackground">#141414</color>
-    <color name="DarkTheme_TextColor">#FFFFFF</color>
     <color name="DarkTheme_textColorSecondary">#DAB1B1</color>
 
     <!-- RedTheme -->
@@ -26,14 +25,14 @@
     <color name="PurpleTheme_colorPrimary">#8A2BE2</color>
     <color name="PurpleTheme_colorPrimaryDark">#6614B5</color>
     <color name="PurpleTheme_colorBackground">#9966CC</color>
-<!--    <color name="PurpleTheme_colorAccent">#ADD8E6</color>-->
     <color name="PurpleTheme_colorAccent">#8C9EFF</color>
     <color name="PurpleTheme_colorSecondary">#D3D3D3</color>
     <color name="PurpleTheme_textColorSecondary">#EFB3FF</color>
 
+    <color name="restoreColor">#5EA3DE</color>
+
     <!-- Another -->
     <color name="white">#FFFFFF</color>
-    <color name="note_selection_color">#82B1FF</color>
 
     <!-- Ucrop -->
     <color name="ucrop_color_toolbar">@color/DarkTheme_colorPrimary</color>
@@ -52,7 +51,4 @@
     <color name="light_lime">#81D4FA</color>
     <color name="light_green">#A7FFEB</color>
     <color name="light_yellow">#FFF59D</color>
-
-
 </resources>
-

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:layout_gravity="bottom"
+    android:background="@drawable/linear_layout_rounded_background"
+    android:maxWidth="320dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/addButtonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:visibility="visible">
+
+        <Button
+            android:id="@+id/reset"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="@string/reset"
+            android:textAllCaps="true"
+            android:textColor="?android:textColor"
+            android:textSize="@dimen/mediumText" />
+
+        <Button
+            android:id="@+id/removeAll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="@string/removeAll"
+            android:textAllCaps="true"
+            android:textColor="?android:textColor"
+            android:textSize="@dimen/mediumText" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/colorLayout"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/remove"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="?selectableItemBackground"
+            android:text="@string/remove"
+            android:textAllCaps="true"
+            android:textColor="?android:textColor"
+            android:textSize="@dimen/mediumText" />
+    </FrameLayout>
+</LinearLayout>

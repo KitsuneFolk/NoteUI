@@ -1,19 +1,21 @@
-apply plugin: 'com.android.application'
-apply plugin: 'org.jetbrains.kotlin.android'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+}
 
 android {
-    compileSdkVersion 32
-    buildToolsVersion "31.0.0"
+    namespace 'com.pandacorp.noteui.app'
+    ext.sdk = 33
+    ext.buildTools_version = '33.0.2'
+    compileSdkVersion sdk
+    buildToolsVersion buildTools_version
     defaultConfig {
-        applicationId "com.pandacorp.notesui"
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion sdk
         versionCode 1
         versionName "1.0"
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -22,46 +24,49 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding {
+        enabled = true
+    }
+    buildFeatures {
+        viewBinding = true
+    }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    dataBinding {
-        enabled true
+        jvmTarget = '17'
     }
 }
 dependencies {
-
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+
+    // Custom libraries
     implementation "com.github.skydoves:colorpickerview:2.2.4"
     implementation "com.github.cachapa:expandablelayout:2.9.2"
-    // Select Image library and dependence to it.
+    implementation 'com.fragula2:fragula-core:2.8'
+    implementation 'androidx.core:core-splashscreen:1.0.1'
     implementation 'com.github.dhaval2404:imagepicker:2.1'
-    implementation 'com.github.yalantis:ucrop:2.2.2'
+    implementation 'com.github.yalantis:ucrop:2.2.8'
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    kapt 'com.github.bumptech.glide:compiler:4.15.1'
 
     // Koin
-    implementation "io.insert-koin:koin-core:3.2.2"
-    implementation "io.insert-koin:koin-android:3.2.2"
-
-    implementation 'androidx.test:core-ktx:1.4.0'
+    implementation 'io.insert-koin:koin-core:3.2.2'
+    implementation 'io.insert-koin:koin-android:3.2.2'
 
     // Room Database
-    def room_version = "2.4.3"
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-
-    implementation project(path: ':data')
-    implementation project(path: ':domain')
-
-
+    implementation 'androidx.room:room-runtime:2.5.1'
+    implementation 'androidx.room:room-ktx:2.5.1'
+    kapt 'androidx.room:room-compiler:2.5.1'
 }
 repositories {
     mavenCentral()

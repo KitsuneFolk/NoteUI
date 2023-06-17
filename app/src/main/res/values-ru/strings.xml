@@ -3,16 +3,16 @@
 
     <!-- Preference Titles -->
     <string name="settings">Настройки</string>
-    <string name="design">Внешний вид</string>
+    <string name="appearance">Внешний вид</string>
     <string name="language">Язык</string>
     <string name="theme">Тема</string>
     <string name="notes">Заметки</string>
     <string name="preferencesIsShowAddNoteFABText">Показывать текст кнопки Создать заметку</string>
     <string name="preferencesIsHideActionBarOnScroll">Скрывать actionbar при листании</string>
     <string name="preferencesDisableDrawerMenuAnimation">Отключать анимацию бокового меню когда число символов больше чем </string>
-    <string name="headerTextSize">Размер текста заголовка</string>
+    <string name="titleTextSize">Размер текста заголовка</string>
     <string name="contentTextSize">Размер текста содержания</string>
-    <string name="version">Версия</string>
+    <string name="version">Версия %1$s</string>
     <string name="another">Другое</string>
 
     <string name="settings_theme_summary">Синяя</string>
@@ -27,7 +27,7 @@
     <string name="select_all">Выбрать всё</string>
 
     <!-- activity_note strings -->
-    <string name="header">Заголовок…</string>
+    <string name="title">Заголовок…</string>
     <string name="content">Содержание…</string>
     <string name="addFabDescription">Добавить новую заметку</string>
     <string name="alert_dialog_add_color">Добавить новый цвет</string>
@@ -79,4 +79,7 @@
     <string name="select">Выбрать</string>
     <string name="successfully">Успешно</string>
     <string name="myNumber">Моё число</string>
+
+    <string name="emptyRecyclerView">Пусто. Добавьте элемент с помощью кнопки</string>
+    <string name="notesNotFound">Не было найдено никаких заметок</string>
 </resources>

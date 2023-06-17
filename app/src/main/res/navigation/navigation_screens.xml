@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/nav_main_screen">
+
+    <swipeable
+        android:id="@+id/nav_main_screen"
+        android:name="com.pandacorp.noteui.presentation.ui.screen.MainScreen"
+        tools:layout="@layout/screen_main">
+        <action
+            android:id="@+id/action_nav_main_screen_to_nav_note_screen"
+            app:destination="@id/nav_note_screen" />
+        <action
+            android:id="@+id/action_nav_main_screen_to_nav_settings_screen"
+            app:destination="@id/nav_settings_screen" />
+    </swipeable>
+
+    <swipeable
+        android:id="@+id/nav_settings_screen"
+        android:name="com.pandacorp.noteui.presentation.ui.screen.SettingsScreen"
+        android:label="@string/settings"
+        tools:layout="@layout/screen_settings" />
+
+    <swipeable
+        android:id="@+id/nav_note_screen"
+        android:name="com.pandacorp.noteui.presentation.ui.screen.NoteScreen"
+        tools:layout="@layout/screen_note" />
+
+</navigation>

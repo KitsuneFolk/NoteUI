@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="bigImage">150dp</dimen>
+
+    <dimen name="bigMargin">36dp</dimen>
+</resources>

@@ -3,16 +3,16 @@
 
     <!-- Preference Titles -->
     <string name="settings">Налаштування</string>
-    <string name="design">Зовнiшний вигляд</string>
+    <string name="appearance">Зовнiшний вигляд</string>
     <string name="language">Мова</string>
     <string name="theme">Тема</string>
     <string name="notes">Нотатки</string>
     <string name="preferencesIsShowAddNoteFABText">Показати текст кнопки Створити нотаток</string>
     <string name="preferencesIsHideActionBarOnScroll">Ховати actionbar при гортаннi</string>
     <string name="preferencesDisableDrawerMenuAnimation">Вiдключати анiмацiю бокового меню коли число символiв бiльше нiж </string>
-    <string name="headerTextSize">Розмiр текста заголовку</string>
+    <string name="titleTextSize">Розмiр текста заголовку</string>
     <string name="contentTextSize">Розмiр текста змiсту</string>
-    <string name="version">Версія</string>
+    <string name="version">Версія %1$s</string>
     <string name="another">Iнше</string>
 
     <string name="settings_theme_summary">Синя</string>
@@ -27,7 +27,7 @@
     <string name="select_all">Обрати все</string>
 
     <!-- activity_note strings -->
-    <string name="header">Заголовок…</string>
+    <string name="title">Заголовок…</string>
     <string name="content">Зміст…</string>
     <string name="addFabDescription">Добавити новий нотаток</string>
     <string name="alert_dialog_add_color">Додати новий колір</string>
@@ -79,5 +79,8 @@
     <string name="select">Обрати</string>
     <string name="successfully">Успiшно</string>
     <string name="myNumber">Моє число</string>
+
+    <string name="emptyRecyclerView">Порожньо. Додайте елемент за допомогою кнопки</string>
+    <string name="notesNotFound">Не було знайдено нiяких нотаток</string>
 
 </resources>
