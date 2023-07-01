@@ -34,4 +34,11 @@ class CurrentNoteViewModel(private val updateNoteUseCase: UpdateNoteUseCase) : V
             _note.postValue(noteItem)
         }
     }
+    fun clearData() {
+        viewModelScope.launch {
+            _note.value = NoteItem()
+            titleEditHistory.value?.clear()
+            contentEditHistory.value?.clear()
+        }
+    }
 }

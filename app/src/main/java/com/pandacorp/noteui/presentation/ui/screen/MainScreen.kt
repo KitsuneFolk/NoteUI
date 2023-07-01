@@ -114,6 +114,7 @@ class MainScreen : Fragment() {
     override fun onResume() {
         super.onResume()
         requireActivity().window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        currentNoteViewModel.clearData()
         if (app.isSettingsChanged) {
             binding.apply {
                 if (!sp.getBoolean(Constants.Preferences.isShowFabTextKey, true)) addFAB.shrink()
