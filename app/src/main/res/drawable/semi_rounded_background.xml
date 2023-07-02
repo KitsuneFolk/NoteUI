@@ -8,11 +8,6 @@
         android:topLeftRadius="35dp"
         android:topRightRadius="35dp" />
 
-    <padding
-        android:left="@dimen/mediumMargin"
-        android:right="@dimen/mediumMargin"
-        android:top="@dimen/smallMargin" />
-
     <stroke
         android:color="@android:color/white"
         android:width="@dimen/stroke" />

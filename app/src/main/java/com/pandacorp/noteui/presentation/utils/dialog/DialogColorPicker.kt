@@ -14,17 +14,17 @@ class DialogColorPicker(private val activity: Activity) : CustomDialog(activity)
 
     private var colorEnvelopeListener: ColorEnvelopeListener? = null
     private fun initViews() {
-        binding.dialogColorPickerTitle.setText(R.string.alert_dialog_add_color)
+        binding.title.setText(R.string.addColor)
 
-        binding.dialogColorPickerCancel.setOnClickListener {
+        binding.cancel.setOnClickListener {
             cancel()
         }
 
-        binding.dialogColorPickerOk.setOnClickListener {
+        binding.ok.setOnClickListener {
             cancel()
-            colorEnvelopeListener?.onColorSelected(binding.dialogColorPickerColorPicker.colorEnvelope, true)
+            colorEnvelopeListener?.onColorSelected(binding.colorPicker.colorEnvelope, true)
         }
-        binding.dialogColorPickerColorPicker.flagView = BubbleFlag(context)
+        binding.colorPicker.flagView = BubbleFlag(context)
 
         restoreInstanceState()
     }
@@ -41,13 +41,12 @@ class DialogColorPicker(private val activity: Activity) : CustomDialog(activity)
     }
 
     override fun onSaveInstanceState(): Bundle {
-        ColorPickerPreferenceManager.getInstance(activity).saveColorPickerData(binding.dialogColorPickerColorPicker)
+        ColorPickerPreferenceManager.getInstance(activity).saveColorPickerData(binding.colorPicker)
         return super.onSaveInstanceState()
     }
 
     private fun restoreInstanceState() {
-        ColorPickerPreferenceManager.getInstance(activity)
-            .restoreColorPickerData(binding.dialogColorPickerColorPicker)
+        ColorPickerPreferenceManager.getInstance(activity).restoreColorPickerData(binding.colorPicker)
     }
 
 }

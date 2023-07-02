@@ -30,7 +30,7 @@
     <string name="title">Заголовок…</string>
     <string name="content">Содержание…</string>
     <string name="addFabDescription">Добавить новую заметку</string>
-    <string name="alert_dialog_add_color">Добавить новый цвет</string>
+    <string name="addColor">Добавить новый цвет</string>
     <string name="remove">Удалить</string>
     <string name="removeAll">Удалить всё</string>
     <string name="undo">Вернуть</string>

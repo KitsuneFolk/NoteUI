@@ -34,7 +34,7 @@
     <string name="title">Title…</string>
     <string name="content">Content…</string>
     <string name="addFabDescription">Add new note</string>
-    <string name="alert_dialog_add_color">Add new color</string>
+    <string name="addColor">Add new color</string>
     <string name="remove">Remove</string>
     <string name="removeAll">Remove all</string>
 

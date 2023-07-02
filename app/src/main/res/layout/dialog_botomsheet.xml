@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:layout_gravity="bottom"
-    android:background="@drawable/linear_layout_rounded_background"
-    android:maxWidth="320dp"
-    android:orientation="vertical">
+    android:layout_gravity="bottom|center_horizontal"
+    android:background="@drawable/semi_rounded_background"
+    android:maxWidth="@dimen/maxWidth"
+    android:paddingTop="@dimen/mediumMargin"
+    android:paddingStart="@dimen/mediumMargin"
+    android:paddingEnd="@dimen/mediumMargin"
+    android:paddingBottom="@dimen/smallMargin"
+    app:cardCornerRadius="0dp">
 
     <LinearLayout
         android:id="@+id/addButtonLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/reset"
+            style="@style/BottomSheetMaterialButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
             android:text="@string/reset"
             android:textAllCaps="true"
             android:textColor="?android:textColor"
             android:textSize="@dimen/mediumText" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/removeAll"
+            style="@style/BottomSheetMaterialButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
             android:text="@string/removeAll"
             android:textAllCaps="true"
             android:textColor="?android:textColor"
@@ -42,20 +47,20 @@
 
     <FrameLayout
         android:id="@+id/colorLayout"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/remove"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="@style/BottomSheetMaterialButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="?selectableItemBackground"
             android:text="@string/remove"
             android:textAllCaps="true"
             android:textColor="?android:textColor"
             android:textSize="@dimen/mediumText" />
     </FrameLayout>
-</LinearLayout>
+</FrameLayout>

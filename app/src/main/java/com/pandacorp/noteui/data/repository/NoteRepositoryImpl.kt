@@ -1,19 +1,20 @@
 package com.pandacorp.noteui.data.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.pandacorp.noteui.data.database.dao.NoteDao
 import com.pandacorp.noteui.data.mapper.NoteMapper
 import com.pandacorp.noteui.domain.model.NoteItem
 import com.pandacorp.noteui.domain.repository.NoteRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 class NoteRepositoryImpl(private val dao: NoteDao, private val mapper: NoteMapper) : NoteRepository {
-    override fun getAll(): Flow<List<NoteItem>> =
-        dao.getAll().map { flow ->
-            flow.map { item ->
-                mapper.toNoteItem(item)
+    override fun getAll(): LiveData<List<NoteItem>> =
+        Transformations.map(dao.getAll()) { list ->
+            list.map {
+                mapper.toNoteItem(it)
             }
         }
+
 
     override fun update(item: NoteItem) = dao.update(mapper.toNoteDataItem(item))
 

@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="WindowAnimation" parent="@android:style/Animation.Activity">
-        <item name="android:activityOpenEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:activityCloseExitAnimation">@anim/slide_out_right</item>
-    </style>
-
     <style name="MaterialButtonStyle" parent="Widget.Material3.Button">
         <item name="backgroundTint">?colorPrimaryDark</item>
         <item name="android:textColor">?android:textColor</item>
         <item name="strokeColor">@android:color/white</item>
         <item name="strokeWidth">@dimen/stroke</item>
-        <item name="rippleColor">@null</item>
+        <item name="rippleColor">?colorControlHighlight</item>
+    </style>
+
+    <style name="BottomSheetMaterialButton" parent="Widget.Material3.Button">
+        <item name="backgroundTint">?colorPrimary</item>
+        <item name="android:textColor">?android:textColor</item>
+        <item name="rippleColor">?colorControlHighlight</item>
+        <item name="strokeWidth">@null</item>
+        <item name="cornerSizeTopRight">@dimen/corners_radius</item>
+        <item name="cornerSizeTopLeft">@dimen/corners_radius</item>
     </style>
 
     <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
@@ -60,7 +64,6 @@
     </style>
     
     <style name="ExtendedFABStyle" parent="Widget.Material3.ExtendedFloatingActionButton.Primary">
-        <item name="rippleColor">@null</item>
         <item name="android:backgroundTint">?colorPrimaryDark</item>
         <item name="backgroundTint">@android:color/white</item>
         <item name="strokeWidth">@dimen/stroke</item>

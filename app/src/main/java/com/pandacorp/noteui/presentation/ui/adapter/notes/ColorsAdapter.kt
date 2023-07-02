@@ -21,14 +21,14 @@ class ColorsAdapter : ListAdapter<ColorItem, ColorsAdapter.ViewHolder>(DiffCallb
 
     inner class ViewHolder(private val binding: ItemColorBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(colorItem: ColorItem) {
-            when (colorItem.color) { // TODO: Check
+            when (colorItem.color) {
                 ColorItem.ADD -> binding.imageView.setImageResource(R.drawable.ic_add_baseline)
                 else -> binding.imageView.setImageDrawable(ColorDrawable(colorItem.color))
             }
-            binding.layout.setOnClickListener {
+            binding.cardView.setOnClickListener {
                 onColorItemClickListener?.onClick(colorItem)
             }
-            binding.layout.setOnLongClickListener {
+            binding.cardView.setOnLongClickListener {
                 onColorItemLongClickListener?.onLongClick(colorItem)
                     ?: return@setOnLongClickListener false
                 true
@@ -57,7 +57,7 @@ class ColorsAdapter : ListAdapter<ColorItem, ColorsAdapter.ViewHolder>(DiffCallb
     override fun submitList(list: List<ColorItem>?) {
         val newList = list?.let { ArrayList(it) }
         // Add the Add button at the start of the list
-        newList?.add(0, ColorItem(id = 1, color = ColorItem.ADD))
+        newList?.add(0, ColorItem(id = -1, color = ColorItem.ADD))
         super.submitList(newList)
     }
 

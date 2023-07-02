@@ -267,15 +267,13 @@ class MainScreen : Fragment() {
             else addFAB.extend()
         }
 
-        lifecycleScope.launch {
-            notesViewModel.notesList.collect {
-                notesAdapter.submitList(it)
+        notesViewModel.notesList.observe(viewLifecycleOwner) {
+            notesAdapter.submitList(it)
 
-                binding.hintInclude.textView.setText(R.string.emptyRecyclerView)
-                if (it.isEmpty()) showEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)
-                else hideEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)
+            binding.hintInclude.textView.setText(R.string.emptyRecyclerView)
+            if (it.isEmpty()) showEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)
+            else hideEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)
 
-            }
         }
 
         notesViewModel.selectedNotes.observe(viewLifecycleOwner) {
@@ -297,14 +295,14 @@ class MainScreen : Fragment() {
 
         notesViewModel.filteredNotes.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
-                if (notesViewModel.getNotes().isEmpty()) { // No notes to search
+                if (notesViewModel.notesList.value.isNullOrEmpty()) { // No notes to search
                     binding.searchHintInclude.textView.setText(R.string.emptyRecyclerView)
                     showEmptyImage(binding.searchRecyclerView, binding.searchHintInclude.root)
                     return@launch
                 }
                 binding.searchHintInclude.textView.setText(R.string.notesNotFound)
                 if (it == null) { // User cleared the SearchView, show all notes
-                    searchAdapter.submitList(notesViewModel.getNotes())
+                    searchAdapter.submitList(notesViewModel.notesList.value)
                     hideEmptyImage(binding.searchRecyclerView, binding.searchHintInclude.root)
                 } else if (it.isEmpty()) { // Couldn't find the searched notes
                     searchAdapter.submitList(it)
@@ -323,18 +321,19 @@ class MainScreen : Fragment() {
                 binding.searchBar.text = it
                 searchJob?.cancel()
                 searchJob = CoroutineScope(Dispatchers.Main).launch {
-                    val filteredNotes = getFilteredNotes(it, notesViewModel.getNotes())
+                    val filteredNotes = getFilteredNotes(it, notesViewModel.notesList.value)
                     notesViewModel.filteredNotes.postValue(filteredNotes)
                 }
             }
         }
     }
 
-    private fun getFilteredNotes(text: String?, notesList: List<NoteItem>): MutableList<NoteItem>? {
+    private fun getFilteredNotes(text: String?, notesList: List<NoteItem>?): MutableList<NoteItem>? {
         return if (text.isNullOrEmpty())
             null // Clear and show all notes
         else {
             val filteredList = mutableListOf<NoteItem>()
+            if (notesList == null) return filteredList
             for (noteItem in notesList) {
                 val parsedTitle =
                     JSONObject(noteItem.title).getString(com.pandacorp.noteui.domain.utils.Constants.text)

@@ -10,7 +10,6 @@ import com.pandacorp.noteui.domain.usecase.note.AddNotesUseCase
 import com.pandacorp.noteui.domain.usecase.note.GetNotesUseCase
 import com.pandacorp.noteui.domain.usecase.note.RemoveNotesUseCase
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -31,8 +30,6 @@ class NotesViewModel(
 
     var filteredNotes = MutableLiveData<MutableList<NoteItem>>(null)
     var searchViewText = MutableLiveData("")
-
-    suspend fun getNotes(): List<NoteItem> = notesList.stateIn(viewModelScope).value
 
     suspend fun addNote(noteItem: NoteItem): Long {
         return withContext(Dispatchers.IO) {

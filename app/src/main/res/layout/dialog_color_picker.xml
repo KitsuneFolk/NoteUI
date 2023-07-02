@@ -1,103 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/mediumMargin"
-    android:layout_marginBottom="@dimen/mediumMargin"
+    android:layout_gravity="center"
     android:layout_marginStart="@dimen/mediumMargin"
+    android:layout_marginTop="@dimen/mediumMargin"
     android:layout_marginEnd="@dimen/mediumMargin"
-    android:layout_gravity="center">
+    android:layout_marginBottom="@dimen/mediumMargin"
+    app:cardBackgroundColor="?colorPrimary"
+    app:cardCornerRadius="@dimen/bigCorners"
+    app:strokeColor="@android:color/white"
+    app:strokeWidth="@dimen/stroke">
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="?colorPrimary"
-        app:strokeWidth="@dimen/stroke"
-        app:strokeColor="@android:color/white"
-        app:cardCornerRadius="@dimen/bigCorners">
+        android:minWidth="@dimen/dialog_minWidth"
+        android:minHeight="@dimen/dialog_minHeight"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="@dimen/dialog_minWidth"
-            android:minHeight="@dimen/dialog_minHeight"
-            android:orientation="vertical">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            tools:text="@string/addColor" />
 
-            <TextView
-                android:id="@+id/dialogColorPicker_title"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <com.skydoves.colorpickerview.ColorPickerView
+                android:id="@+id/colorPicker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:preferenceName="addNewColorCPV" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="@dimen/bigMargin"
+                android:gravity="center"
+                android:text="@string/action_cancel"
                 android:textSize="17sp"
-                android:textStyle="bold"
-                tools:text="@string/alert_dialog_add_color" />
+                app:layout_constraintBottom_toBottomOf="@id/ok"
+                app:layout_constraintEnd_toStartOf="@id/ok"
+                app:layout_constraintHorizontal_bias="0.75"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/ok" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/dialogColorPicker_layout"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <com.skydoves.colorpickerview.ColorPickerView
-                    android:id="@+id/dialogColorPicker_colorPicker"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:preferenceName="addNewColorCPV" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ok"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:orientation="horizontal">
+                android:layout_gravity="end|bottom"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="@dimen/bigMargin"
+                android:layout_marginBottom="15dp"
+                android:gravity="center"
+                android:text="@string/ok"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <Button
-                    android:id="@+id/dialogColorPicker_cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|bottom"
-                    android:layout_marginEnd="25dp"
-                    android:backgroundTint="?colorPrimaryDark"
-                    android:gravity="center"
-                    android:stateListAnimator="@animator/decrease_size_normal_animator"
-                    android:text="@string/action_cancel"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="@id/dialogColorPicker_ok"
-                    app:layout_constraintEnd_toStartOf="@id/dialogColorPicker_ok"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/dialogColorPicker_ok" />
-
-                <Button
-                    android:id="@+id/dialogColorPicker_ok"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|bottom"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginBottom="15dp"
-                    android:backgroundTint="?colorPrimaryDark"
-                    android:gravity="center"
-                    android:stateListAnimator="@animator/decrease_size_normal_animator"
-                    android:text="@string/ok"
-                    android:textSize="17sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-</FrameLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

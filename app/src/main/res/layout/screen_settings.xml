@@ -421,16 +421,15 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="@dimen/smallMargin"
-                        android:background="?selectableItemBackgroundBorderless"
                         android:clickable="true"
                         android:focusable="true"
+                        android:background="?selectableItemBackground"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingStart="@dimen/smallMargin"
                         android:paddingTop="@dimen/mediumMargin"
                         android:paddingEnd="@dimen/smallMargin"
-                        android:paddingBottom="@dimen/smallMargin">
+                        android:paddingBottom="@dimen/mediumMargin">
 
                         <ImageView
                             android:layout_width="wrap_content"

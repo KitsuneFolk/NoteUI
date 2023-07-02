@@ -81,32 +81,30 @@
                     android:layout_gravity="end"
                     android:orientation="horizontal">
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|bottom"
                         android:layout_marginTop="5dp"
-                        android:layout_marginEnd="25dp"
+                        android:layout_marginEnd="@dimen/bigMargin"
                         android:layout_marginBottom="5dp"
-                        android:backgroundTint="?colorPrimaryDark"
-                        android:stateListAnimator="@animator/decrease_size_normal_animator"
                         android:text="@string/action_cancel"
                         android:textSize="17sp"
                         app:layout_constraintBottom_toBottomOf="@id/ok"
                         app:layout_constraintEnd_toStartOf="@id/ok"
+                        app:layout_constraintHorizontal_bias="0.75"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@id/ok" />
 
-                    <Button
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/ok"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|bottom"
                         android:layout_marginTop="5dp"
-                        android:layout_marginEnd="25dp"
+                        android:layout_marginEnd="@dimen/bigMargin"
                         android:layout_marginBottom="15dp"
-                        android:backgroundTint="?colorPrimaryDark"
-                        android:stateListAnimator="@animator/decrease_size_normal_animator"
                         android:text="@string/ok"
                         android:textSize="17sp"
                         app:layout_constraintBottom_toBottomOf="parent"

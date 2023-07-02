@@ -31,4 +31,6 @@
     <dimen name="actionMenu">65dp</dimen>
 
     <dimen name="bigImage">200dp</dimen>
+
+    <dimen name="maxWidth">320dp</dimen>
 </resources>
