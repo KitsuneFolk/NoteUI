@@ -57,6 +57,9 @@ import com.pandacorp.noteui.presentation.utils.helpers.sp
 import com.pandacorp.noteui.presentation.utils.views.UndoRedoHelper
 import com.pandacorp.noteui.presentation.viewModels.ColorViewModel
 import com.pandacorp.noteui.presentation.viewModels.CurrentNoteViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -394,90 +397,95 @@ class NoteScreen : Fragment() {
         undoRedoContentEditTextHelper =
             UndoRedoHelper(binding.contentEditText, currentNoteViewModel.contentEditHistory.value!!)
 
-        binding.motionDrawerLayout.post { // Use post to remove lags
-            binding.motionDrawerLayout.attachEditText(
-                binding.contentEditText,
-                sp.getInt(
-                    Constants.Preferences.disableDrawerAnimationKey,
-                    Constants.Preferences.disableDrawerAnimationDefaultValue
-                )
+        initDrawerMenu()
+
+        initActionBottomMenu()
+    }
+
+    private fun initDrawerMenu() = CoroutineScope(Dispatchers.Main).launch {
+        delay(300) // Add delay to remove lags
+        binding.imageRecyclerView.adapter = imagesAdapter
+
+        binding.motionDrawerLayout.attachEditText(
+            binding.contentEditText,
+            sp.getInt(
+                Constants.Preferences.disableDrawerAnimationKey,
+                Constants.Preferences.disableDrawerAnimationDefaultValue
             )
-            binding.motionDrawerLayout.loadLayoutDescription(R.xml.drawer_layout_motion_scene) // Don't set in xml to remove lags on fragment inflation
-            binding.imageRecyclerView.adapter = imagesAdapter
+        )
 
-            binding.drawerMenu.addDrawerListener(object : DrawerListener {
-                override fun onDrawerOpened(drawerView: View) {
+        binding.motionDrawerLayout.loadLayoutDescription(R.xml.drawer_layout_motion_scene) // Set programmatically to remove lags
+
+        binding.drawerMenu.addDrawerListener(object : DrawerListener {
+            override fun onDrawerOpened(drawerView: View) {
+                swipeBackFragment.setScrollingEnabled(false)
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                swipeBackFragment.setScrollingEnabled(true)
+            }
+
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+
+            override fun onDrawerStateChanged(newState: Int) {
+                if (newState == DrawerLayout.STATE_DRAGGING)
                     swipeBackFragment.setScrollingEnabled(false)
-                }
-
-                override fun onDrawerClosed(drawerView: View) {
-                    swipeBackFragment.setScrollingEnabled(true)
-                }
-
-                override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
-
-                override fun onDrawerStateChanged(newState: Int) {
-                    if (newState == DrawerLayout.STATE_DRAGGING)
-                        swipeBackFragment.setScrollingEnabled(false)
-                }
-            })
-            binding.expandChangeBackgroundButton.apply {
-                val showMoreDrawable =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_show_more_animated)
-                            as AnimatedVectorDrawable
-                val showLessDrawable =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_show_less_animated)
-                            as AnimatedVectorDrawable
-                setOnClickListener {
-                    if (binding.changeBackgroundExpandableLayout.isExpanded) {
-                        binding.changeBackgroundButtonImageView.setImageDrawable(showLessDrawable)
-                        showLessDrawable.start()
-                        binding.changeBackgroundExpandableLayout.collapse()
-                    } else {
-                        binding.changeBackgroundButtonImageView.setImageDrawable(showMoreDrawable)
-                        showMoreDrawable.start()
-                        binding.changeBackgroundExpandableLayout.expand()
-                    }
-                }
             }
-            binding.drawerMenuSelectImageButton.setOnClickListener {
-                val dm = resources.displayMetrics
-                val height = dm.heightPixels.toFloat()
-                val width = dm.widthPixels.toFloat()
-
-                ImagePicker.with(activity = requireActivity())
-                    .crop(width, height)
-                    .createIntent {
-                        pickNoteBackgroundImageResult.launch(it)
-                    }
-            }
-            binding.drawerMenuResetButton.setOnClickListener {
-                val tv = TypedValue()
-                requireContext().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
-                val colorBackground = tv.data
-                binding.noteBackgroundImageView.setImageDrawable(
-                    ColorDrawable(colorBackground)
-                )
-                currentNoteViewModel.note.value!!.background = colorBackground.toString()
-            }
-
-            binding.transparentActionBarSwitch.apply {
-                isChecked = currentNoteViewModel.note.value!!.isShowTransparentActionBar
-                setOnCheckedChangeListener { _, isChecked ->
-                    binding.toolbar.background =
-                        if (isChecked)
-                            ColorDrawable(Color.TRANSPARENT)
-                        else {
-                            val tv = TypedValue()
-                            requireContext().theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
-                            ColorDrawable(tv.data)
-                        }
-                    currentNoteViewModel.note.value!!.isShowTransparentActionBar = isChecked
+        })
+        binding.expandChangeBackgroundButton.apply {
+            val showMoreDrawable =
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_show_more_animated)
+                        as AnimatedVectorDrawable
+            val showLessDrawable =
+                ContextCompat.getDrawable(requireContext(), R.drawable.ic_show_less_animated)
+                        as AnimatedVectorDrawable
+            setOnClickListener {
+                if (binding.changeBackgroundExpandableLayout.isExpanded) {
+                    binding.changeBackgroundButtonImageView.setImageDrawable(showLessDrawable)
+                    showLessDrawable.start()
+                    binding.changeBackgroundExpandableLayout.collapse()
+                } else {
+                    binding.changeBackgroundButtonImageView.setImageDrawable(showMoreDrawable)
+                    showMoreDrawable.start()
+                    binding.changeBackgroundExpandableLayout.expand()
                 }
             }
         }
+        binding.drawerMenuSelectImageButton.setOnClickListener {
+            val dm = resources.displayMetrics
+            val height = dm.heightPixels.toFloat()
+            val width = dm.widthPixels.toFloat()
 
-        initActionBottomMenu()
+            ImagePicker.with(activity = requireActivity())
+                .crop(width, height)
+                .createIntent {
+                    pickNoteBackgroundImageResult.launch(it)
+                }
+        }
+        binding.drawerMenuResetButton.setOnClickListener {
+            val tv = TypedValue()
+            requireContext().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+            val colorBackground = tv.data
+            binding.noteBackgroundImageView.setImageDrawable(
+                ColorDrawable(colorBackground)
+            )
+            currentNoteViewModel.note.value!!.background = colorBackground.toString()
+        }
+
+        binding.transparentActionBarSwitch.apply {
+            isChecked = currentNoteViewModel.note.value!!.isShowTransparentActionBar
+            setOnCheckedChangeListener { _, isChecked ->
+                binding.toolbar.background =
+                    if (isChecked)
+                        ColorDrawable(Color.TRANSPARENT)
+                    else {
+                        val tv = TypedValue()
+                        requireContext().theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
+                        ColorDrawable(tv.data)
+                    }
+                currentNoteViewModel.note.value!!.isShowTransparentActionBar = isChecked
+            }
+        }
     }
 
     private fun initActionBottomMenu() {

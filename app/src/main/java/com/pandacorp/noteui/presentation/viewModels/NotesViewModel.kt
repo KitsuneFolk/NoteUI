@@ -53,4 +53,6 @@ class NotesViewModel(
             }
         }
     }
+
+    fun getNoteById(id: Long): NoteItem = notesList.value!!.first { it.id == id }
 }

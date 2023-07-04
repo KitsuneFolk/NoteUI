@@ -53,14 +53,12 @@ class MainScreen : Fragment() {
     private val navController by lazy { findNavController() }
 
     private val notesAdapter by lazy {
-        NotesAdapter(requireContext()).apply {
+        NotesAdapter().apply {
             setOnClickListener(object : NotesAdapter.OnNoteItemClickListener {
                 override fun onClick(noteItem: NoteItem, position: Int) {
                     if (actionMode != null) select(position)
                     else {
-                        /* Pass an object, but not a reference, to fix the bug when viewmodel updated the note
-                        via the function, but not with the observer */
-                        currentNoteViewModel.setNote(noteItem.copy())
+                        currentNoteViewModel.setNote(notesViewModel.getNoteById(noteItem.id))
                         navController.navigate(R.id.nav_note_screen)
                     }
                 }
@@ -82,11 +80,11 @@ class MainScreen : Fragment() {
     }
 
     private val searchAdapter by lazy {
-        NotesAdapter(requireContext()).apply {
+        NotesAdapter().apply {
             isSelectionEnabled = false
             setOnClickListener(object : NotesAdapter.OnNoteItemClickListener {
                 override fun onClick(noteItem: NoteItem, position: Int) {
-                    currentNoteViewModel.setNote(noteItem) // TODO: Maybe get the note from viewmodel by position, to resolve the bug when user can leave NoteScreen, and enter it again quickly and the note will not have the made changes
+                    currentNoteViewModel.setNote(notesViewModel.getNoteById(noteItem.id))
                     navController.navigate(R.id.nav_note_screen)
                 }
 
@@ -269,6 +267,7 @@ class MainScreen : Fragment() {
 
         notesViewModel.notesList.observe(viewLifecycleOwner) {
             notesAdapter.submitList(it)
+            searchAdapter.submitList(it)
 
             binding.hintInclude.textView.setText(R.string.emptyRecyclerView)
             if (it.isEmpty()) showEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)

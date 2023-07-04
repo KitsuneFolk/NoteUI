@@ -1,6 +1,5 @@
 package com.pandacorp.noteui.presentation.ui.adapter.notes
 
-import android.content.Context
 import android.graphics.Color
 import android.util.SparseBooleanArray
 import android.util.TypedValue
@@ -14,8 +13,7 @@ import com.pandacorp.noteui.domain.model.NoteItem
 import com.pandacorp.noteui.presentation.utils.helpers.Utils
 import com.pandacorp.noteui.presentation.utils.helpers.setSpannableFromJson
 
-class NotesAdapter(private val context: Context) :
-    ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback()) {
+class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback()) {
     var isSelectionEnabled = true
 
     private var onNoteItemClickListener: OnNoteItemClickListener? = null
@@ -83,7 +81,7 @@ class NotesAdapter(private val context: Context) :
 
     private fun selectNote(binding: ItemNoteBinding, isSelect: Boolean) {
         val tv = TypedValue()
-        context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
+        binding.root.context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
         val selectionColor = tv.data
         binding.cardView.strokeColor = if (isSelect) selectionColor else Color.WHITE
     }
