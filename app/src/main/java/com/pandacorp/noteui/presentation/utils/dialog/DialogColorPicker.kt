@@ -1,6 +1,6 @@
 package com.pandacorp.noteui.presentation.utils.dialog
 
-import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.DialogColorPickerBinding
@@ -8,7 +8,7 @@ import com.skydoves.colorpickerview.flag.BubbleFlag
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import com.skydoves.colorpickerview.preference.ColorPickerPreferenceManager
 
-class DialogColorPicker(private val activity: Activity) : CustomDialog(activity) {
+class DialogColorPicker(private val context: Context) : CustomDialog(context) {
     private var _binding: DialogColorPickerBinding? = null
     private val binding get() = _binding!!
 
@@ -41,12 +41,12 @@ class DialogColorPicker(private val activity: Activity) : CustomDialog(activity)
     }
 
     override fun onSaveInstanceState(): Bundle {
-        ColorPickerPreferenceManager.getInstance(activity).saveColorPickerData(binding.colorPicker)
+        ColorPickerPreferenceManager.getInstance(context).saveColorPickerData(binding.colorPicker)
         return super.onSaveInstanceState()
     }
 
     private fun restoreInstanceState() {
-        ColorPickerPreferenceManager.getInstance(activity).restoreColorPickerData(binding.colorPicker)
+        ColorPickerPreferenceManager.getInstance(context).restoreColorPickerData(binding.colorPicker)
     }
 
 }

@@ -44,13 +44,13 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.preference:preference-ktx:1.2.0'
-    implementation 'androidx.navigation:navigation-runtime-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.6.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.6.0'
 
     // Custom libraries
     implementation "com.github.skydoves:colorpickerview:2.2.4"
     implementation "com.github.cachapa:expandablelayout:2.9.2"
-    implementation 'com.fragula2:fragula-core:2.8'
+    implementation 'com.fragula2:fragula-core:2.9'
     implementation 'androidx.core:core-splashscreen:1.0.1'
     implementation 'com.github.dhaval2404:imagepicker:2.1'
     implementation 'com.github.yalantis:ucrop:2.2.8'
@@ -64,9 +64,9 @@ dependencies {
     implementation 'io.insert-koin:koin-android:3.2.2'
 
     // Room Database
-    implementation 'androidx.room:room-runtime:2.5.1'
-    implementation 'androidx.room:room-ktx:2.5.1'
-    kapt 'androidx.room:room-compiler:2.5.1'
+    implementation 'androidx.room:room-runtime:2.5.2'
+    implementation 'androidx.room:room-ktx:2.5.2'
+    kapt 'androidx.room:room-compiler:2.5.2'
 }
 repositories {
     mavenCentral()

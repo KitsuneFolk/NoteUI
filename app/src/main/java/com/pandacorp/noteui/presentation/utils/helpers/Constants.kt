@@ -25,8 +25,8 @@ class Constants {
 
         const val SHOWED_DIALOG = "preferenceBundleKey"
         const val SAVED_VALUE = "SAVED_VALUE"
-
     }
+
     object DialogKey {
         const val KEY = "DialogKey"
         const val NULL = 0

@@ -30,7 +30,7 @@ class CurrentNoteViewModel(private val updateNoteUseCase: UpdateNoteUseCase) : V
     }
 
     fun setNote(noteItem: NoteItem) {
-        /* Post a copy to fix the bug when the viewmodel updated the notevia the function,
+        /* Post a copy to fix the bug when the viewmodel updated the note via the function,
            but not with the observer */
         viewModelScope.launch {
             _note.postValue(noteItem.copy())

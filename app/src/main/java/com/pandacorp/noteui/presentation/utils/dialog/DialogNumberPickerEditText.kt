@@ -1,13 +1,13 @@
 package com.pandacorp.noteui.presentation.utils.dialog
 
-import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.DialogNumberPickerEdittextBinding
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 
-class DialogNumberPickerEditText(private val activity: Activity, private val preferenceKey: String) :
-    CustomDialog(activity) {
+class DialogNumberPickerEditText(private val context: Context, private val preferenceKey: String) :
+    CustomDialog(context) {
     private var _binding: DialogNumberPickerEdittextBinding? = null
     private val binding get() = _binding!!
 
@@ -75,5 +75,5 @@ class DialogNumberPickerEditText(private val activity: Activity, private val pre
     }
 
     private fun getListValues(): IntArray =
-        activity.resources.getIntArray(R.array.DisableMenuAnimation_values)
+        context.resources.getIntArray(R.array.DisableMenuAnimation_values)
 }

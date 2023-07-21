@@ -40,16 +40,16 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
 
             binding.cardView.apply {
                 setOnClickListener {
-                    onNoteItemClickListener?.onClick(noteItem, adapterPosition)
+                    onNoteItemClickListener?.onClick(noteItem, bindingAdapterPosition)
                 }
                 setOnLongClickListener {
-                    onNoteItemClickListener?.onLongClick(noteItem, adapterPosition)
+                    onNoteItemClickListener?.onLongClick(noteItem, bindingAdapterPosition)
                     true
                 }
             }
             Utils.changeNoteBackground(noteItem.background, binding.backgroundImageView, isAdapter = true)
             if (isSelectionEnabled)
-                selectNote(binding, selectedNotes.get(adapterPosition, false))
+                selectNote(binding, selectedNotes.get(bindingAdapterPosition, false))
         }
     }
 

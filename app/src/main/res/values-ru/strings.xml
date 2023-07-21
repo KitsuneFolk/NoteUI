@@ -17,7 +17,6 @@
 
     <string name="settings_theme_summary">Синяя</string>
     <string name="settings_language_default_value">ru</string>
-    <string name="settings_language_summary">Русский</string>
 
     <!-- Search strings -->
     <string name="search">Найти</string>

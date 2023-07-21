@@ -53,13 +53,6 @@ class Utils {
             ColorItem(id = 7, color = ContextCompat.getColor(context, R.color.light_red))
         )
 
-        // This function is needed for coroutines logs work on Xiaomi devices.
-        fun setupExceptionHandler() {
-            Thread.setDefaultUncaughtExceptionHandler { _, throwable ->
-                throw (throwable)
-            }
-        }
-
         /**
          * Changes the note background in adapter and NoteScreen
          * @param background encoded string background, stored in db

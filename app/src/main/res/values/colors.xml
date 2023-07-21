@@ -26,19 +26,15 @@
     <color name="PurpleTheme_colorPrimaryDark">#6614B5</color>
     <color name="PurpleTheme_colorBackground">#9966CC</color>
     <color name="PurpleTheme_colorAccent">#8C9EFF</color>
-    <color name="PurpleTheme_colorSecondary">#D3D3D3</color>
     <color name="PurpleTheme_textColorSecondary">#EFB3FF</color>
 
     <color name="restoreColor">#5EA3DE</color>
-
-    <!-- Another -->
-    <color name="white">#FFFFFF</color>
 
     <!-- Ucrop -->
     <color name="ucrop_color_toolbar">@color/DarkTheme_colorPrimary</color>
     <color name="ucrop_color_statusbar">@color/DarkTheme_colorPrimary</color>
     <color name="ucrop_color_widget_active">@color/BlueTheme_colorAccent</color>
-    <color name="ucrop_color_toolbar_widget">@color/white</color>
+    <color name="ucrop_color_toolbar_widget">@android:color/white</color>
     <!-- ImagePicker dialog -->
     <color name="dialog_choose_icon_color">#FFFFFF</color>
     <color name="dialog_choose_text_color">#FFFFFF</color>

@@ -1,13 +1,13 @@
 package com.pandacorp.noteui.presentation.utils.dialog
 
-import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.DialogNumberPickerBinding
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 
-open class DialogNumberPicker(private val activity: Activity, private val preferenceKey: String) :
-    CustomDialog(activity) {
+open class DialogNumberPicker(private val context: Context, private val preferenceKey: String) :
+    CustomDialog(context) {
     private var _binding: DialogNumberPickerBinding? = null
     private val binding get() = _binding!!
 
@@ -73,5 +73,5 @@ open class DialogNumberPicker(private val activity: Activity, private val prefer
     }
 
     private fun getTextSizeList(): IntArray =
-        activity.resources.getIntArray(R.array.TextSizes_values)
+        context.resources.getIntArray(R.array.TextSizes_values)
 }

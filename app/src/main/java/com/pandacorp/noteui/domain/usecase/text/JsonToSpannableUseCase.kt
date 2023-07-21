@@ -17,7 +17,6 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class JsonToSpannableUseCase(private val context: Context) {
-
     @Throws(JSONException::class)
     operator fun invoke(type: Int, jsonString: String): Spannable? {
         val json: JSONObject?

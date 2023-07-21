@@ -26,7 +26,7 @@ class ImagesAdapter : ListAdapter<Drawable, ImagesAdapter.ViewHolder>(DiffCallba
                 .load(drawable)
                 .into(binding.imageView)
             binding.root.setOnClickListener {
-                onImageItemClickListener?.onClick(drawable, adapterPosition)
+                onImageItemClickListener?.onClick(drawable, bindingAdapterPosition)
             }
         }
     }

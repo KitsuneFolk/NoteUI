@@ -20,12 +20,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
+        Thread.setDefaultUncaughtExceptionHandler { _, throwable -> throw (throwable) } // Throw uncaught exceptions
+        PreferenceHandler.setLanguage(this)
         super.onCreate(savedInstanceState)
-        PreferenceHandler.load(this)
+        PreferenceHandler.setTheme(this)
         _binding = ActivityMainBinding.inflate(layoutInflater)
-        Utils.setupExceptionHandler()
         setContentView(binding.root)
         Utils.setUiWindowInsets(this, binding.root) // Apply insets manually
+
         initViews()
     }
 

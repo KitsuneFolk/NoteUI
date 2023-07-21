@@ -100,7 +100,7 @@ class MainScreen : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = ScreenMainBinding.inflate(inflater, container, false)
 
@@ -115,7 +115,11 @@ class MainScreen : Fragment() {
         currentNoteViewModel.clearData()
         if (app.isSettingsChanged) {
             binding.apply {
-                if (!sp.getBoolean(Constants.Preferences.isShowFabTextKey, true)) addFAB.shrink()
+                if (!sp.getBoolean(
+                        Constants.Preferences.isShowFabTextKey,
+                        Constants.Preferences.isShowFabTextDefaultValue
+                    )
+                ) addFAB.shrink()
                 else addFAB.extend()
             }
             app.isSettingsChanged = false
@@ -261,7 +265,11 @@ class MainScreen : Fragment() {
                     }
                 }
             }
-            if (!sp.getBoolean(Constants.Preferences.isShowFabTextKey, true)) addFAB.shrink()
+            if (!sp.getBoolean(
+                    Constants.Preferences.isShowFabTextKey,
+                    Constants.Preferences.isShowFabTextDefaultValue
+                )
+            ) addFAB.shrink()
             else addFAB.extend()
         }
 
