@@ -4,14 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pandacorp.noteui.domain.model.NoteItem
-import com.pandacorp.noteui.domain.usecase.note.UpdateNoteUseCase
+import com.pandacorp.noteui.domain.repository.NoteRepository
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import com.pandacorp.noteui.presentation.utils.views.UndoRedoHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CurrentNoteViewModel(private val updateNoteUseCase: UpdateNoteUseCase) : ViewModel() {
+class CurrentNoteViewModel(private val noteRepository: NoteRepository) : ViewModel() {
     private val _note = MutableLiveData<NoteItem>()
     val note: MutableLiveData<NoteItem> = _note
 
@@ -24,7 +24,7 @@ class CurrentNoteViewModel(private val updateNoteUseCase: UpdateNoteUseCase) : V
         _note.value = noteItem
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                updateNoteUseCase(noteItem)
+                noteRepository.update(noteItem)
             }
         }
     }

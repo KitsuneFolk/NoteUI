@@ -5,25 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pandacorp.noteui.domain.model.NoteItem
-import com.pandacorp.noteui.domain.usecase.note.AddNoteUseCase
-import com.pandacorp.noteui.domain.usecase.note.AddNotesUseCase
-import com.pandacorp.noteui.domain.usecase.note.GetNotesUseCase
-import com.pandacorp.noteui.domain.usecase.note.RemoveNotesUseCase
+import com.pandacorp.noteui.domain.repository.NoteRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-class NotesViewModel(
-    private val getNotesUseCase: GetNotesUseCase,
-    private val addNoteUseCase: AddNoteUseCase,
-    private val addNotesUseCase: AddNotesUseCase,
-    private val removeNotesUseCase: RemoveNotesUseCase,
-) : ViewModel() {
-
+class NotesViewModel(private val noteRepository: NoteRepository) : ViewModel() {
     val notesList = runBlocking {
         withContext(Dispatchers.IO) {
-            getNotesUseCase()
+            noteRepository.getAll()
         }
     }
     var selectedNotes = MutableLiveData(SparseBooleanArray())
@@ -33,15 +24,14 @@ class NotesViewModel(
 
     suspend fun addNote(noteItem: NoteItem): Long {
         return withContext(Dispatchers.IO) {
-            addNoteUseCase(noteItem)
+            noteRepository.insert(noteItem)
         }
     }
 
-    // Test if the restored notes will be on their positions
-    fun restoreNotes(notes: List<Pair<NoteItem, Int>>) {
+    fun restoreNotes(notes: List<NoteItem>) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                addNotesUseCase(notes.map { it.first })
+                noteRepository.insert(notes)
             }
         }
     }
@@ -49,7 +39,7 @@ class NotesViewModel(
     fun removeNotes(list: List<NoteItem>) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                removeNotesUseCase(list)
+                noteRepository.remove(list)
             }
         }
     }

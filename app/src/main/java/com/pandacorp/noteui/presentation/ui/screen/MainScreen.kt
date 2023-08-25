@@ -184,11 +184,12 @@ class MainScreen : Fragment() {
 
             if (selectedNotesPositions.isEmpty()) return
 
-            val removedNotes: MutableList<Pair<NoteItem, Int>> = mutableListOf<Pair<NoteItem, Int>>().apply {
-                for (i in selectedNotesPositions) add(Pair(notesAdapter.currentList[i], i))
+            val removedNotes = mutableListOf<NoteItem>().apply {
+                for (i in selectedNotesPositions) {
+                    add(notesAdapter.currentList[i])
+                }
             }
-
-            notesViewModel.removeNotes(removedNotes.map { it.first })
+            notesViewModel.removeNotes(removedNotes)
 
             val snackBarUndoTitle = resources.getText(R.string.snackbar_undo_title)
                 .toString() + " " + removedNotes.size.toString()
