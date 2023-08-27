@@ -28,7 +28,7 @@ class DialogListView(private val context: Context, private val preferenceKey: St
                 Constants.Preferences.themesKey -> R.string.theme
                 Constants.Preferences.languagesKey -> R.string.language
                 else -> throw IllegalArgumentException("PreferenceKey = $preferenceKey")
-            }
+            },
         )
 
         binding.dialogListViewCancel.setOnClickListener {
@@ -39,7 +39,6 @@ class DialogListView(private val context: Context, private val preferenceKey: St
             Constants.Preferences.themesKey -> fillThemesList()
             Constants.Preferences.languagesKey -> fillLanguagesList()
             else -> throw IllegalArgumentException()
-
         }
         val adapter = SettingsAdapter(context, itemsList, preferenceKey).apply {
             setOnClickListener { listItem ->
@@ -64,8 +63,8 @@ class DialogListView(private val context: Context, private val preferenceKey: St
                 SettingsItem(
                     keysList[i],
                     titlesList[i],
-                    itemsList.getDrawable(i)!!
-                )
+                    itemsList.getDrawable(i)!!,
+                ),
             )
         }
         itemsList.recycle()
@@ -83,12 +82,11 @@ class DialogListView(private val context: Context, private val preferenceKey: St
                 SettingsItem(
                     keysList[i],
                     titlesList[i],
-                    drawablesList.getDrawable(i)!!
-                )
+                    drawablesList.getDrawable(i)!!,
+                ),
             )
         }
         drawablesList.recycle()
         return itemsList
     }
-
 }

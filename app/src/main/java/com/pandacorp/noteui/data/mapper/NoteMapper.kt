@@ -10,7 +10,7 @@ class NoteMapper {
             noteDataItem.title,
             noteDataItem.content,
             noteDataItem.background,
-            noteDataItem.isShowTransparentActionBar
+            noteDataItem.isShowTransparentActionBar,
         )
 
     fun toNoteDataItem(noteItem: NoteItem): NoteDataItem =
@@ -19,6 +19,6 @@ class NoteMapper {
             noteItem.title,
             noteItem.content,
             noteItem.background,
-            noteItem.isShowTransparentActionBar
+            noteItem.isShowTransparentActionBar,
         )
 }

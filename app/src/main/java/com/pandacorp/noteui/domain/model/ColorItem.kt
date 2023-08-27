@@ -7,6 +7,7 @@ data class ColorItem(
     companion object Type {
         // Add button to add more colors
         const val ADD = -1
+
         // Key to indicate that Item is a color for dialogs
         const val COLOR = 0
     }

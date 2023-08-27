@@ -136,7 +136,6 @@ class SpannableToJsonUseCase {
             jsonArray.put(spansJO)
         }
         json.put(Constants.BoldSpans.key, jsonArray)
-
     }
 
     private fun makeItalic(spannable: Spannable, json: JSONObject, spans: List<StyleSpan>) {
@@ -149,7 +148,5 @@ class SpannableToJsonUseCase {
             jsonArray.put(spansJO)
         }
         json.put(Constants.ItalicSpans.key, jsonArray)
-
     }
-
 }

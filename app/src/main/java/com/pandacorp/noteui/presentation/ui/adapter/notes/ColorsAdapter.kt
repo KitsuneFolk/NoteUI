@@ -33,7 +33,6 @@ class ColorsAdapter : ListAdapter<ColorItem, ColorsAdapter.ViewHolder>(DiffCallb
                     ?: return@setOnLongClickListener false
                 true
             }
-
         }
     }
 

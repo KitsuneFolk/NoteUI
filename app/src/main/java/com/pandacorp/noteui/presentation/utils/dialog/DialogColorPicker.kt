@@ -48,5 +48,4 @@ class DialogColorPicker(private val context: Context) : CustomDialog(context) {
     private fun restoreInstanceState() {
         ColorPickerPreferenceManager.getInstance(context).restoreColorPickerData(binding.colorPicker)
     }
-
 }

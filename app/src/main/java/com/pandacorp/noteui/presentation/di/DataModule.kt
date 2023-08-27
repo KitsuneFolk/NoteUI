@@ -30,7 +30,6 @@ val dataModule = module {
                 }
             })
             .build()
-
     }
     single {
         get<Database>().noteDao()

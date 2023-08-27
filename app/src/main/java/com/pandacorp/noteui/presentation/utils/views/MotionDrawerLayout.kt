@@ -10,7 +10,7 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.drawerlayout.widget.DrawerLayout
 import com.pandacorp.noteui.presentation.utils.helpers.getParcelableExtraSupport
 
-class MotionDrawerLayout: MotionLayout, DrawerLayout.DrawerListener {
+class MotionDrawerLayout : MotionLayout, DrawerLayout.DrawerListener {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
@@ -54,7 +54,9 @@ class MotionDrawerLayout: MotionLayout, DrawerLayout.DrawerListener {
     private fun isDisableAnimation(): Boolean {
         if (editText != null && maxValue != null) {
             if (editText!!.text.length > maxValue!!) return true
-        } else return true
+        } else {
+            return true
+        }
         return false
     }
 

@@ -23,7 +23,6 @@ open class DialogNumberPicker(private val context: Context, private val preferen
         _binding = DialogNumberPickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initViews()
-
     }
 
     private fun initViews() {
@@ -42,7 +41,7 @@ open class DialogNumberPicker(private val context: Context, private val preferen
                 Constants.Preferences.contentTextSizeKey -> R.string.contentTextSize
                 Constants.Preferences.titleTextSizeKey -> R.string.titleTextSize
                 else -> throw IllegalArgumentException()
-            }
+            },
         )
         binding.sample.textSize = preferenceValue.toFloat()
 

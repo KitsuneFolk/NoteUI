@@ -78,7 +78,7 @@ class SettingsScreen : Fragment() {
             binding.themeTextView.apply {
                 val themeKey = sp.getString(
                     Constants.Preferences.themesKey,
-                    requireContext().resources.getString(R.string.settings_theme_default_value)
+                    requireContext().resources.getString(R.string.settings_theme_default_value),
                 )!!
                 text = getThemeFromKey(themeKey)
             }
@@ -87,7 +87,7 @@ class SettingsScreen : Fragment() {
             binding.languageTextView.apply {
                 val languageKey = sp.getString(
                     Constants.Preferences.languagesKey,
-                    requireContext().resources.getString(R.string.settings_language_default_value)
+                    requireContext().resources.getString(R.string.settings_language_default_value),
                 )!!
                 text = getLanguageFromKey(languageKey)
             }
@@ -100,7 +100,7 @@ class SettingsScreen : Fragment() {
         binding.showFabTextLayout.apply {
             binding.showFabTextSwitch.isChecked = sp.getBoolean(
                 Constants.Preferences.isShowFabTextKey,
-                Constants.Preferences.isShowFabTextDefaultValue
+                Constants.Preferences.isShowFabTextDefaultValue,
             )
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
@@ -115,7 +115,7 @@ class SettingsScreen : Fragment() {
         binding.hideActionBarLayout.apply {
             binding.hideActionBarSwitch.isChecked = sp.getBoolean(
                 Constants.Preferences.isHideActionBarOnScrollKey,
-                Constants.Preferences.isHideActionBarOnScrollDefaultValue
+                Constants.Preferences.isHideActionBarOnScrollDefaultValue,
             )
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
@@ -123,7 +123,7 @@ class SettingsScreen : Fragment() {
                 sp.edit()
                     .putBoolean(
                         Constants.Preferences.isHideActionBarOnScrollKey,
-                        newValue
+                        newValue,
                     )
                     .apply()
                 binding.hideActionBarSwitch.isChecked = newValue
@@ -134,7 +134,7 @@ class SettingsScreen : Fragment() {
         binding.drawerMenuAnimationLayout.apply {
             binding.drawerAnimationtTextView.text = sp.getInt(
                 Constants.Preferences.disableDrawerAnimationKey,
-                Constants.Preferences.disableDrawerAnimationDefaultValue
+                Constants.Preferences.disableDrawerAnimationDefaultValue,
             ).toString()
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
@@ -144,7 +144,7 @@ class SettingsScreen : Fragment() {
         binding.titleSizeLayout.apply {
             binding.titleSizeTextView.text = sp.getInt(
                 Constants.Preferences.titleTextSizeKey,
-                Constants.Preferences.titleTextSizeDefaultValue
+                Constants.Preferences.titleTextSizeDefaultValue,
             ).toString()
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
@@ -154,7 +154,7 @@ class SettingsScreen : Fragment() {
         binding.contentSizeLayout.apply {
             binding.contentSizeTextView.text = sp.getInt(
                 Constants.Preferences.contentTextSizeKey,
-                Constants.Preferences.contentTextSizeDefaultValue
+                Constants.Preferences.contentTextSizeDefaultValue,
             ).toString()
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener

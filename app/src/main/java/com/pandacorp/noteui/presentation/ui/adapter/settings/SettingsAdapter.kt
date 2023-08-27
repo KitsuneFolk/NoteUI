@@ -13,7 +13,9 @@ import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 
 class SettingsAdapter(
-    context: Context, languagesList: MutableList<SettingsItem>, private val preferenceKey: String
+    context: Context,
+    languagesList: MutableList<SettingsItem>,
+    private val preferenceKey: String
 ) : ArrayAdapter<SettingsItem>(context, 0, languagesList) {
     private var onListItemClickListener: OnListItemClickListener? = null
 
@@ -48,4 +50,3 @@ class SettingsAdapter(
         fun onClick(listItem: SettingsItem)
     }
 }
-    

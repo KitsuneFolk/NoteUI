@@ -54,8 +54,9 @@ fun EditText.changeTextForegroundColor(@ColorInt foregroundColor: Int? = null) {
     val spannable = text.toSpannable()
 
     val spans: Array<ForegroundColorSpan> = spannable.getSpans(
-        selectionStart, selectionEnd,
-        ForegroundColorSpan::class.java
+        selectionStart,
+        selectionEnd,
+        ForegroundColorSpan::class.java,
     )
     spans.forEach {
         val selectedSpanStart = spannable.getSpanStart(it)
@@ -67,7 +68,7 @@ fun EditText.changeTextForegroundColor(@ColorInt foregroundColor: Int? = null) {
         ForegroundColorSpan((foregroundColor ?: currentTextColor)),
         selectionStart,
         selectionEnd,
-        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
     )
 
     val savedSelectionStart = selectionStart
@@ -80,21 +81,23 @@ fun EditText.changeTextBackgroundColor(@ColorInt backgroundColor: Int? = null) {
     val spannable = text.toSpannable()
 
     val spans: Array<BackgroundColorSpan> = spannable.getSpans(
-        selectionStart, selectionEnd,
-        BackgroundColorSpan::class.java
+        selectionStart,
+        selectionEnd,
+        BackgroundColorSpan::class.java,
     )
     spans.forEach {
         val selectedSpanStart = spannable.getSpanStart(it)
         val selectedSpanEnd = spannable.getSpanEnd(it)
-        if (selectedSpanStart >= selectionStart && selectedSpanEnd <= selectionEnd) 
+        if (selectedSpanStart >= selectionStart && selectedSpanEnd <= selectionEnd) {
             spannable.removeSpan(it)
+        }
     }
 
     spannable.setSpan(
         BackgroundColorSpan((backgroundColor ?: Color.TRANSPARENT)),
         selectionStart,
         selectionEnd,
-        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
     )
 
     val savedSelectionStart = selectionStart
@@ -109,8 +112,9 @@ fun EditText.changeTextGravity(gravity: Int) {
 
     val spannable = text.toSpannable()
     val spans: Array<AlignmentSpan> = spannable.getSpans(
-        selectedLineStart, selectedLineEnd,
-        AlignmentSpan::class.java
+        selectedLineStart,
+        selectedLineEnd,
+        AlignmentSpan::class.java,
     )
     spans.forEach {
         val selectedSpanStart = spannable.getSpanStart(it)
@@ -128,7 +132,7 @@ fun EditText.changeTextGravity(gravity: Int) {
         AlignmentSpan.Standard(alignment),
         selectedLineStart,
         selectedLineEnd,
-        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
     )
 
     val savedSelectionStart = selectionStart
@@ -163,14 +167,18 @@ fun EditText.makeTextBold() {
         if (span.style == Typeface.BOLD) boldSpans.add(span)
     }
     boldSpans.forEach { boldSpan ->
-        if (spannable.getSpanStart(boldSpan) >= selectionStart && spannable.getSpanEnd(boldSpan) <= selectionEnd)
+        if (spannable.getSpanStart(boldSpan) >= selectionStart && spannable.getSpanEnd(boldSpan) <= selectionEnd) {
             spannable.removeSpan(boldSpan)
+        }
     }
-    if (boldSpans.isEmpty())
+    if (boldSpans.isEmpty()) {
         spannable.setSpan(
-            StyleSpan(Typeface.BOLD), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            StyleSpan(Typeface.BOLD),
+            selectionStart,
+            selectionEnd,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
-    else {
+    } else {
         /* remove the spans, what we do above */
     }
 
@@ -193,14 +201,18 @@ fun EditText.makeTextItalic() {
         val selectedSpanStart = spannable.getSpanStart(italicSpan)
         val selectedSpanEnd = spannable.getSpanEnd(italicSpan)
 
-        if (selectedSpanStart >= selectionStart && selectedSpanEnd <= selectionEnd)
+        if (selectedSpanStart >= selectionStart && selectedSpanEnd <= selectionEnd) {
             spannable.removeSpan(italicSpan)
+        }
     }
-    if (italicSpans.isEmpty())
+    if (italicSpans.isEmpty()) {
         spannable.setSpan(
-            StyleSpan(Typeface.ITALIC), selectionStart, selectionEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            StyleSpan(Typeface.ITALIC),
+            selectionStart,
+            selectionEnd,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
-    else {
+    } else {
         /* remove the spans, what we do above */
     }
 

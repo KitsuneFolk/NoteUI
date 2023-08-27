@@ -10,11 +10,13 @@ import java.util.LinkedList
 /*
  * THIS CLASS IS PROVIDED TO THE PUBLIC DOMAIN FOR FREE WITHOUT ANY
  * RESTRICTIONS OR ANY WARRANTY.
- */ /**
+ */
+/**
  * A generic undo/redo implementation for TextViews.
  */
 class UndoRedoHelper(
-    private val mTextView: TextView, val editHistory: EditHistory = EditHistory()
+    private val mTextView: TextView,
+    val editHistory: EditHistory = EditHistory()
 ) {
     private var mIsUndoOrRedo = false
 
@@ -92,7 +94,6 @@ class UndoRedoHelper(
     private val currentHistorySize: Int
         get() = editHistory.mmHistory.size
 
-
     class EditHistory {
         val mmHistory = LinkedList<EditItem>()
 
@@ -158,7 +159,9 @@ class UndoRedoHelper(
         private var mAfterChange: CharSequence? = null
 
         override fun beforeTextChanged(
-            s: CharSequence, start: Int, count: Int,
+            s: CharSequence,
+            start: Int,
+            count: Int,
             after: Int
         ) {
             if (mIsUndoOrRedo) return
@@ -167,7 +170,9 @@ class UndoRedoHelper(
         }
 
         override fun onTextChanged(
-            s: CharSequence, start: Int, before: Int,
+            s: CharSequence,
+            start: Int,
+            before: Int,
             count: Int
         ) {
             if (mIsUndoOrRedo) return

@@ -48,8 +48,9 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
                 }
             }
             Utils.changeNoteBackground(noteItem.background, binding.backgroundImageView, isAdapter = true)
-            if (isSelectionEnabled)
+            if (isSelectionEnabled) {
                 selectNote(binding, selectedNotes.get(bindingAdapterPosition, false))
+            }
         }
     }
 

@@ -56,8 +56,9 @@ class MainScreen : Fragment() {
         NotesAdapter().apply {
             setOnClickListener(object : NotesAdapter.OnNoteItemClickListener {
                 override fun onClick(noteItem: NoteItem, position: Int) {
-                    if (actionMode != null) select(position)
-                    else {
+                    if (actionMode != null) {
+                        select(position)
+                    } else {
                         currentNoteViewModel.setNote(notesViewModel.getNoteById(noteItem.id))
                         navController.navigate(R.id.nav_note_screen)
                     }
@@ -70,8 +71,11 @@ class MainScreen : Fragment() {
                 private fun select(position: Int) {
                     val selectedNotesList = notesViewModel.selectedNotes.value!!
                     selectedNotesList.apply {
-                        if (get(position, false)) delete(position)
-                        else put(position, true)
+                        if (get(position, false)) {
+                            delete(position)
+                        } else {
+                            put(position, true)
+                        }
                         notesViewModel.selectedNotes.postValue(this)
                     }
                 }
@@ -117,10 +121,13 @@ class MainScreen : Fragment() {
             binding.apply {
                 if (!sp.getBoolean(
                         Constants.Preferences.isShowFabTextKey,
-                        Constants.Preferences.isShowFabTextDefaultValue
+                        Constants.Preferences.isShowFabTextDefaultValue,
                     )
-                ) addFAB.shrink()
-                else addFAB.extend()
+                ) {
+                    addFAB.shrink()
+                } else {
+                    addFAB.extend()
+                }
             }
             app.isSettingsChanged = false
             return
@@ -219,18 +226,21 @@ class MainScreen : Fragment() {
         binding.apply {
             searchBar.apply {
                 title = getString(R.string.app_name)
-                addMenuProvider(object : MenuProvider {
-                    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                        inflateMenu(R.menu.menu_main)
-                    }
-
-                    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                        when (menuItem.itemId) {
-                            R.id.menu_settings -> navController.navigate(R.id.nav_settings_screen)
+                addMenuProvider(
+                    object : MenuProvider {
+                        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                            inflateMenu(R.menu.menu_main)
                         }
-                        return true
-                    }
-                }, viewLifecycleOwner)
+
+                        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                            when (menuItem.itemId) {
+                                R.id.menu_settings -> navController.navigate(R.id.nav_settings_screen)
+                            }
+                            return true
+                        }
+                    },
+                    viewLifecycleOwner,
+                )
             }
             searchView.apply {
                 editText.apply {
@@ -268,10 +278,13 @@ class MainScreen : Fragment() {
             }
             if (!sp.getBoolean(
                     Constants.Preferences.isShowFabTextKey,
-                    Constants.Preferences.isShowFabTextDefaultValue
+                    Constants.Preferences.isShowFabTextDefaultValue,
                 )
-            ) addFAB.shrink()
-            else addFAB.extend()
+            ) {
+                addFAB.shrink()
+            } else {
+                addFAB.extend()
+            }
         }
 
         notesViewModel.notesList.observe(viewLifecycleOwner) {
@@ -279,9 +292,11 @@ class MainScreen : Fragment() {
             searchAdapter.submitList(it)
 
             binding.hintInclude.textView.setText(R.string.emptyRecyclerView)
-            if (it.isEmpty()) showEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)
-            else hideEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)
-
+            if (it.isEmpty()) {
+                showEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)
+            } else {
+                hideEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)
+            }
         }
 
         notesViewModel.selectedNotes.observe(viewLifecycleOwner) {
@@ -295,8 +310,11 @@ class MainScreen : Fragment() {
 
                 actionMode?.apply {
                     title = count.toString()
-                    if (count == 0) finish()
-                    else invalidate()
+                    if (count == 0) {
+                        finish()
+                    } else {
+                        invalidate()
+                    }
                 }
             }
         }
@@ -321,7 +339,6 @@ class MainScreen : Fragment() {
                     hideEmptyImage(binding.searchRecyclerView, binding.searchHintInclude.root)
                 }
             }
-
         }
 
         notesViewModel.searchViewText.observe(viewLifecycleOwner) {
@@ -337,16 +354,17 @@ class MainScreen : Fragment() {
     }
 
     private fun getFilteredNotes(text: String?, notesList: List<NoteItem>?): MutableList<NoteItem>? {
-        return if (text.isNullOrEmpty())
+        return if (text.isNullOrEmpty()) {
             null // Clear and show all notes
-        else {
+        } else {
             val filteredList = mutableListOf<NoteItem>()
             if (notesList == null) return filteredList
             for (noteItem in notesList) {
                 val parsedTitle =
                     JSONObject(noteItem.title).getString(com.pandacorp.noteui.domain.utils.Constants.text)
-                if (parsedTitle.lowercase().contains(text.lowercase(Locale.getDefault())))
+                if (parsedTitle.lowercase().contains(text.lowercase(Locale.getDefault()))) {
                     filteredList.add(noteItem)
+                }
             }
             filteredList
         }

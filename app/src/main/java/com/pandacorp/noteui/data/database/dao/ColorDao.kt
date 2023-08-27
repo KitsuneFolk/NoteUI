@@ -8,19 +8,19 @@ import kotlinx.coroutines.flow.Flow
 interface ColorDao {
     @Query("SELECT * FROM color_table ORDER BY id DESC")
     fun getAll(): Flow<MutableList<ColorDataItem>>
-    
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun update(colorItem: ColorDataItem)
-    
+
     @Insert
     fun insert(colorItem: ColorDataItem)
 
     @Insert
     fun insert(list: List<ColorDataItem>)
-    
+
     @Delete
     fun remove(colorItem: ColorDataItem)
-    
+
     @Query("DELETE FROM color_table")
     fun removeAll()
 }

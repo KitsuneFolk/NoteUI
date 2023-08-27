@@ -36,11 +36,9 @@ class ImagesAdapter : ListAdapter<Drawable, ImagesAdapter.ViewHolder>(DiffCallba
         return ViewHolder(ItemImageBinding.inflate(inflater, parent, false))
     }
 
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(currentList[position])
     }
-
 
     override fun submitList(list: List<Drawable>?) {
         super.submitList(list?.let { ArrayList(it) })

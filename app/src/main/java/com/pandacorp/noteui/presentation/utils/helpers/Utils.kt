@@ -37,7 +37,7 @@ class Utils {
             R.drawable.image_nature,
             R.drawable.image_mountain,
             R.drawable.image_colors,
-            R.drawable.image_speed
+            R.drawable.image_speed,
         )
 
         /**
@@ -50,7 +50,7 @@ class Utils {
             ColorItem(id = 4, color = ContextCompat.getColor(context, R.color.light_blue)),
             ColorItem(id = 5, color = ContextCompat.getColor(context, R.color.light_pink)),
             ColorItem(id = 6, color = ContextCompat.getColor(context, R.color.light_purple)),
-            ColorItem(id = 7, color = ContextCompat.getColor(context, R.color.light_red))
+            ColorItem(id = 7, color = ContextCompat.getColor(context, R.color.light_red)),
         )
 
         /**
@@ -82,10 +82,11 @@ class Utils {
                     .into(imageView)
             } catch (e: ArrayIndexOutOfBoundsException) { // note.background is a color.
                 val typedValue = TypedValue()
-                if (isAdapter)
+                if (isAdapter) {
                     imageView.context.theme.resolveAttribute(android.R.attr.colorPrimary, typedValue, true)
-                else
+                } else {
                     imageView.context.theme.resolveAttribute(android.R.attr.colorBackground, typedValue, true)
+                }
                 val color = typedValue.data
 
                 if (!isUseGlide) {
@@ -158,7 +159,8 @@ class Utils {
                 root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     updateMargins(
                         top = posTop,
-                        bottom = posBottom)
+                        bottom = posBottom,
+                    )
                 }
                 insets
             }

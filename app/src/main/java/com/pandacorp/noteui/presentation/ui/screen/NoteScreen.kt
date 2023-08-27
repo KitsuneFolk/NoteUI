@@ -64,7 +64,6 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
 class NoteScreen : Fragment() {
     private var _binding: ScreenNoteBinding? = null
     private val binding get() = _binding!!
@@ -88,7 +87,6 @@ class NoteScreen : Fragment() {
                     Constants.ClickedActionButton.FOREGROUND ->
                         editText.changeTextForegroundColor(colorItem.color)
 
-
                     Constants.ClickedActionButton.BACKGROUND ->
                         editText.changeTextBackgroundColor(colorItem.color)
 
@@ -97,18 +95,22 @@ class NoteScreen : Fragment() {
             }
 
             setOnLongClickListener { colorItem ->
-                if (colorItem.color == ColorItem.ADD) resetColorsDialog.apply {
-                    setOnRemoveClickListener {
-                        colorsViewModel.removeColor(colorItem)
-                        dismiss()
+                if (colorItem.color == ColorItem.ADD) {
+                    resetColorsDialog.apply {
+                        setOnRemoveClickListener {
+                            colorsViewModel.removeColor(colorItem)
+                            dismiss()
+                        }
+                        show()
                     }
-                    show()
-                } else colorClickDialog.apply {
-                    setOnRemoveClickListener {
-                        colorsViewModel.removeColor(colorItem)
-                        dismiss()
+                } else {
+                    colorClickDialog.apply {
+                        setOnRemoveClickListener {
+                            colorsViewModel.removeColor(colorItem)
+                            dismiss()
+                        }
+                        show()
                     }
-                    show()
                 }
             }
 
@@ -165,7 +167,7 @@ class NoteScreen : Fragment() {
     private lateinit var undoRedoContentEditTextHelper: UndoRedoHelper
 
     private val pickNoteBackgroundImageResult = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
+        ActivityResultContracts.StartActivityForResult(),
     ) {
         if (it.resultCode == AppCompatActivity.RESULT_OK) {
             val imageUri = it.data!!.data
@@ -176,7 +178,7 @@ class NoteScreen : Fragment() {
     }
 
     private val pickImageToAddResult = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
+        ActivityResultContracts.StartActivityForResult(),
     ) {
         if (it.resultCode == AppCompatActivity.RESULT_OK) {
             val imageUri = it.data!!.data
@@ -193,14 +195,16 @@ class NoteScreen : Fragment() {
         super.onAttach(context)
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (binding.drawerMenu.isDrawerOpen(GravityCompat.END))
+                if (binding.drawerMenu.isDrawerOpen(GravityCompat.END)) {
                     binding.drawerMenu.closeDrawer(GravityCompat.END)
-                else navController.popBackStack()
+                } else {
+                    navController.popBackStack()
+                }
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(
             this,
-            callback
+            callback,
         )
     }
 
@@ -271,7 +275,8 @@ class NoteScreen : Fragment() {
     private fun initViews() {
         Utils.changeNoteBackground(
             currentNoteViewModel.note.value!!.background,
-            binding.noteBackgroundImageView, isUseGlide = false
+            binding.noteBackgroundImageView,
+            isUseGlide = false,
         )
 
         binding.drawerMenu.setOnApplyWindowInsetsListener { _, windowInsets ->
@@ -280,7 +285,7 @@ class NoteScreen : Fragment() {
             if (isHorizontal) {
                 // Don't resize if the user is in the landscape orientation, due to small screen size
                 requireActivity().window?.setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN,
                 )
                 return@setOnApplyWindowInsetsListener windowInsets
             }
@@ -293,7 +298,7 @@ class NoteScreen : Fragment() {
             } else {
                 @Suppress("DEPRECATION")
                 requireActivity().window?.setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE,
                 )
             }
             windowInsets
@@ -307,9 +312,9 @@ class NoteScreen : Fragment() {
         addStopSwipeOnTouch(binding.colorsRoot)
 
         binding.toolbar.title = null
-        binding.toolbar.background = if (currentNoteViewModel.note.value!!.isShowTransparentActionBar)
+        binding.toolbar.background = if (currentNoteViewModel.note.value!!.isShowTransparentActionBar) {
             ColorDrawable(Color.TRANSPARENT)
-        else {
+        } else {
             val tv = TypedValue()
             requireContext().theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
             ColorDrawable(tv.data)
@@ -317,7 +322,9 @@ class NoteScreen : Fragment() {
         binding.toolbar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
         binding.toolbar.setNavigationOnClickListener {
             val editText = getFocusedEditText()
-            if (editText == null) navController.popBackStack() else {
+            if (editText == null) {
+                navController.popBackStack()
+            } else {
                 // Clear focus and close the keyboard
                 editText.clearFocus()
                 val imm =
@@ -336,57 +343,72 @@ class NoteScreen : Fragment() {
                     when (menuItem.itemId) {
                         R.id.menu_note_hamburger -> {
                             binding.drawerMenu.apply {
-                                if (isDrawerOpen(GravityCompat.END)) closeDrawer(GravityCompat.END)
-                                else openDrawer(GravityCompat.END)
+                                if (isDrawerOpen(GravityCompat.END)) {
+                                    closeDrawer(GravityCompat.END)
+                                } else {
+                                    openDrawer(GravityCompat.END)
+                                }
                             }
                         }
 
                         R.id.menu_note_extended_undo -> {
-                            if (binding.titleEditText.hasFocus())
-                                if (undoRedoTitleEditTextHelper.canUndo)
+                            if (binding.titleEditText.hasFocus()) {
+                                if (undoRedoTitleEditTextHelper.canUndo) {
                                     undoRedoTitleEditTextHelper.undo()
+                                }
+                            }
 
-                            if (binding.contentEditText.hasFocus())
-                                if (undoRedoContentEditTextHelper.canUndo)
+                            if (binding.contentEditText.hasFocus()) {
+                                if (undoRedoContentEditTextHelper.canUndo) {
                                     undoRedoContentEditTextHelper.undo()
+                                }
+                            }
                         }
 
                         R.id.menu_note_extended_redo -> {
-                            if (binding.titleEditText.hasFocus())
+                            if (binding.titleEditText.hasFocus()) {
                                 undoRedoContentEditTextHelper.redo()
-                            if (binding.contentEditText.hasFocus())
+                            }
+                            if (binding.contentEditText.hasFocus()) {
                                 undoRedoContentEditTextHelper.redo()
+                            }
                         }
                     }
                     return true
                 }
-
-            }, viewLifecycleOwner
+            },
+            viewLifecycleOwner,
         )
         binding.titleEditText.setOnFocusChangeListener { _, hasFocus ->
-            if (isHideToolbarWhileScrolling)
+            if (isHideToolbarWhileScrolling) {
                 binding.toolbar.hideToolbarWhileScrollingUseCase(!hasFocus)
+            }
             binding.toolbar.menu.clear()
-            if (hasFocus)
+            if (hasFocus) {
                 binding.toolbar.inflateMenu(R.menu.menu_note_extended)
-            else binding.toolbar.inflateMenu(R.menu.menu_note)
+            } else {
+                binding.toolbar.inflateMenu(R.menu.menu_note)
+            }
         }
         binding.contentEditText.setOnFocusChangeListener { _, hasFocus ->
-            if (isHideToolbarWhileScrolling)
+            if (isHideToolbarWhileScrolling) {
                 binding.toolbar.hideToolbarWhileScrollingUseCase(!hasFocus)
+            }
             binding.toolbar.menu.clear()
-            if (hasFocus)
+            if (hasFocus) {
                 binding.toolbar.inflateMenu(R.menu.menu_note_extended)
-            else binding.toolbar.inflateMenu(R.menu.menu_note)
+            } else {
+                binding.toolbar.inflateMenu(R.menu.menu_note)
+            }
         }
 
         binding.contentEditText.textSize = sp.getInt(
             Constants.Preferences.contentTextSizeKey,
-            Constants.Preferences.contentTextSizeDefaultValue
+            Constants.Preferences.contentTextSizeDefaultValue,
         ).toFloat()
         binding.titleEditText.textSize = sp.getInt(
             Constants.Preferences.titleTextSizeKey,
-            Constants.Preferences.titleTextSizeDefaultValue
+            Constants.Preferences.titleTextSizeDefaultValue,
         ).toFloat()
 
         binding.titleEditText.setSpannableFromJson(currentNoteViewModel.note.value!!.title)
@@ -410,8 +432,8 @@ class NoteScreen : Fragment() {
             binding.contentEditText,
             sp.getInt(
                 Constants.Preferences.disableDrawerAnimationKey,
-                Constants.Preferences.disableDrawerAnimationDefaultValue
-            )
+                Constants.Preferences.disableDrawerAnimationDefaultValue,
+            ),
         )
 
         binding.motionDrawerLayout.loadLayoutDescription(R.xml.drawer_layout_motion_scene) // Set programmatically to remove lags
@@ -428,17 +450,18 @@ class NoteScreen : Fragment() {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
 
             override fun onDrawerStateChanged(newState: Int) {
-                if (newState == DrawerLayout.STATE_DRAGGING)
+                if (newState == DrawerLayout.STATE_DRAGGING) {
                     swipeBackFragment.setScrollingEnabled(false)
+                }
             }
         })
         binding.expandChangeBackgroundButton.apply {
             val showMoreDrawable =
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_show_more_animated)
-                        as AnimatedVectorDrawable
+                    as AnimatedVectorDrawable
             val showLessDrawable =
                 ContextCompat.getDrawable(requireContext(), R.drawable.ic_show_less_animated)
-                        as AnimatedVectorDrawable
+                    as AnimatedVectorDrawable
             setOnClickListener {
                 if (binding.changeBackgroundExpandableLayout.isExpanded) {
                     binding.changeBackgroundButtonImageView.setImageDrawable(showLessDrawable)
@@ -467,7 +490,7 @@ class NoteScreen : Fragment() {
             requireContext().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
             val colorBackground = tv.data
             binding.noteBackgroundImageView.setImageDrawable(
-                ColorDrawable(colorBackground)
+                ColorDrawable(colorBackground),
             )
             currentNoteViewModel.note.value!!.background = colorBackground.toString()
         }
@@ -476,9 +499,9 @@ class NoteScreen : Fragment() {
             isChecked = currentNoteViewModel.note.value!!.isShowTransparentActionBar
             setOnCheckedChangeListener { _, isChecked ->
                 binding.toolbar.background =
-                    if (isChecked)
+                    if (isChecked) {
                         ColorDrawable(Color.TRANSPARENT)
-                    else {
+                    } else {
                         val tv = TypedValue()
                         requireContext().theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
                         ColorDrawable(tv.data)
@@ -559,10 +582,11 @@ class NoteScreen : Fragment() {
         }
 
         binding.addImage.setOnClickListener {
-            if (getFocusedEditText() == binding.contentEditText)
+            if (getFocusedEditText() == binding.contentEditText) {
                 ImagePicker.Builder(activity = requireActivity()).createIntent { resultIntent ->
                     pickImageToAddResult.launch(resultIntent)
                 }
+            }
         }
 
         binding.actionMenuButtonBold.setOnClickListener {
@@ -576,9 +600,13 @@ class NoteScreen : Fragment() {
     }
 
     private fun getFocusedEditText(): EditText? {
-        return if (binding.titleEditText.isFocused) binding.titleEditText
-        else if (binding.contentEditText.isFocused) binding.contentEditText
-        else null
+        return if (binding.titleEditText.isFocused) {
+            binding.titleEditText
+        } else if (binding.contentEditText.isFocused) {
+            binding.contentEditText
+        } else {
+            null
+        }
     }
 
     private fun addStopSwipeOnTouch(view: View) {
