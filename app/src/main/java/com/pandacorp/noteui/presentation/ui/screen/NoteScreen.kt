@@ -367,10 +367,14 @@ class NoteScreen : Fragment() {
 
                         R.id.menu_note_extended_redo -> {
                             if (binding.titleEditText.hasFocus()) {
-                                undoRedoContentEditTextHelper.redo()
+                                if (undoRedoContentEditTextHelper.canRedo) {
+                                    undoRedoContentEditTextHelper.redo()
+                                }
                             }
                             if (binding.contentEditText.hasFocus()) {
-                                undoRedoContentEditTextHelper.redo()
+                                if (undoRedoContentEditTextHelper.canRedo) {
+                                    undoRedoContentEditTextHelper.redo()
+                                }
                             }
                         }
                     }

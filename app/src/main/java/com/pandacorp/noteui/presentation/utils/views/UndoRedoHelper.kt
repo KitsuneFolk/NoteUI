@@ -31,22 +31,6 @@ class UndoRedoHelper(
         }
     }
 
-    fun disconnect() {
-        mTextView.removeTextChangedListener(mChangeListener)
-    }
-
-    /**
-     * Set the maximum history size. If size is negative, then history size is
-     * only limited by the device memory.
-     */
-    fun setMaxHistorySize(maxHistorySize: Int) {
-        editHistory.setMaxHistorySize(maxHistorySize)
-    }
-
-    fun clearHistory() {
-        editHistory.clear()
-    }
-
     val canUndo: Boolean
         get() {
             return editHistory.mmPosition > 0
@@ -91,9 +75,6 @@ class UndoRedoHelper(
         Selection.setSelection(text, if (edit.mmAfter == null) start else start + edit.mmAfter.length)
     }
 
-    private val currentHistorySize: Int
-        get() = editHistory.mmHistory.size
-
     class EditHistory {
         val mmHistory = LinkedList<EditItem>()
 
@@ -112,13 +93,6 @@ class UndoRedoHelper(
             }
             mmHistory.add(item)
             mmPosition++
-            if (mmMaxHistorySize >= 0) {
-                trimHistory()
-            }
-        }
-
-        fun setMaxHistorySize(maxHistorySize: Int) {
-            mmMaxHistorySize = maxHistorySize
             if (mmMaxHistorySize >= 0) {
                 trimHistory()
             }
