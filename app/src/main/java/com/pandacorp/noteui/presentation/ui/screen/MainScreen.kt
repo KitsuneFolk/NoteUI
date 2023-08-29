@@ -13,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
+import androidx.core.util.isEmpty
+import androidx.core.util.isNotEmpty
 import androidx.core.view.MenuProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -349,6 +351,16 @@ class MainScreen : Fragment() {
                     val filteredNotes = getFilteredNotes(it, notesViewModel.notesList.value)
                     notesViewModel.filteredNotes.postValue(filteredNotes)
                 }
+            }
+        }
+
+        notesViewModel.selectedNotes.observe(viewLifecycleOwner) {
+            binding.addFAB.isEnabled = it.isEmpty()
+            // Hide the FAB if there is selection
+            if (it.isNotEmpty()) {
+                binding.addFAB.hide()
+            } else {
+                binding.addFAB.show()
             }
         }
     }
