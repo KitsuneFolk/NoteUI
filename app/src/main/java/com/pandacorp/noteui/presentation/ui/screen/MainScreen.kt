@@ -120,16 +120,14 @@ class MainScreen : Fragment() {
         requireActivity().window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         currentNoteViewModel.clearData()
         if (app.isSettingsChanged) {
-            binding.apply {
-                if (!sp.getBoolean(
-                        Constants.Preferences.isShowFabTextKey,
-                        Constants.Preferences.isShowFabTextDefaultValue,
-                    )
-                ) {
-                    addFAB.shrink()
-                } else {
-                    addFAB.extend()
-                }
+            val isShowFab = sp.getBoolean(
+                Constants.Preferences.isShowFabTextKey,
+                Constants.Preferences.isShowFabTextDefaultValue
+            )
+            if (!isShowFab) {
+                binding.addFAB.shrink()
+            } else {
+                binding.addFAB.extend()
             }
             app.isSettingsChanged = false
             return
@@ -225,68 +223,61 @@ class MainScreen : Fragment() {
     }
 
     private fun initViews(bundle: Bundle?) {
-        binding.apply {
-            searchBar.apply {
-                title = getString(R.string.app_name)
-                addMenuProvider(
-                    object : MenuProvider {
-                        override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                            inflateMenu(R.menu.menu_main)
-                        }
-
-                        override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                            when (menuItem.itemId) {
-                                R.id.menu_settings -> navController.navigate(R.id.nav_settings_screen)
-                            }
-                            return true
-                        }
-                    },
-                    viewLifecycleOwner,
-                )
-            }
-            searchView.apply {
-                editText.apply {
-                    addTextChangedListener {
-                        notesViewModel.searchViewText.postValue(text.toString())
+        binding.searchBar.apply {
+            addMenuProvider(
+                object : MenuProvider {
+                    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                        inflateMenu(R.menu.menu_main)
                     }
-                }
 
-                val onBackPressedCallback: OnBackPressedCallback =
-                    object : OnBackPressedCallback(false) {
-                        override fun handleOnBackPressed() {
-                            hide()
+                    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                        when (menuItem.itemId) {
+                            R.id.menu_settings -> navController.navigate(R.id.nav_settings_screen)
                         }
+                        return true
                     }
-                requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
-                addTransitionListener { _, _, newState ->
-                    onBackPressedCallback.isEnabled = newState == TransitionState.SHOWN
-                }
-                if (bundle == null) searchBar.startOnLoadAnimation()
-            }
-            notesRecyclerView.adapter = notesAdapter
-            searchRecyclerView.adapter = searchAdapter
-            addFAB.setOnClickListener {
-                val tv = TypedValue()
-                requireContext().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+                },
+                viewLifecycleOwner,
+            )
+        }
+        binding.searchView.editText.addTextChangedListener {
+            notesViewModel.searchViewText.postValue(binding.searchView.text.toString())
+        }
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    val noteItem = NoteItem(background = tv.data.toString())
-                    noteItem.id = notesViewModel.addNote(noteItem)
-                    currentNoteViewModel.setNote(noteItem)
-                    withContext(Dispatchers.Main) {
-                        navController.navigate(R.id.nav_note_screen)
-                    }
+        val onBackPressedCallback: OnBackPressedCallback =
+            object : OnBackPressedCallback(false) {
+                override fun handleOnBackPressed() {
+                    binding.searchView.hide()
                 }
             }
-            if (!sp.getBoolean(
-                    Constants.Preferences.isShowFabTextKey,
-                    Constants.Preferences.isShowFabTextDefaultValue,
-                )
-            ) {
-                addFAB.shrink()
-            } else {
-                addFAB.extend()
+        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
+        binding.searchView.addTransitionListener { _, _, newState ->
+            onBackPressedCallback.isEnabled = newState == TransitionState.SHOWN
+        }
+        if (bundle == null) binding.searchBar.startOnLoadAnimation()
+        binding.notesRecyclerView.adapter = notesAdapter
+        binding.searchRecyclerView.adapter = searchAdapter
+        binding.addFAB.setOnClickListener {
+            val tv = TypedValue()
+            requireContext().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+
+            CoroutineScope(Dispatchers.IO).launch {
+                val noteItem = NoteItem(background = tv.data.toString())
+                noteItem.id = notesViewModel.addNote(noteItem)
+                currentNoteViewModel.setNote(noteItem)
+                withContext(Dispatchers.Main) {
+                    navController.navigate(R.id.nav_note_screen)
+                }
             }
+        }
+        if (!sp.getBoolean(
+                Constants.Preferences.isShowFabTextKey,
+                Constants.Preferences.isShowFabTextDefaultValue,
+            )
+        ) {
+            binding.addFAB.shrink()
+        } else {
+            binding.addFAB.extend()
         }
 
         notesViewModel.notesList.observe(viewLifecycleOwner) {
