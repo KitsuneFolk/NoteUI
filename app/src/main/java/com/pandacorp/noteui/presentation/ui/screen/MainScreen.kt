@@ -363,8 +363,13 @@ class MainScreen : Fragment() {
             val filteredList = mutableListOf<NoteItem>()
             if (notesList == null) return filteredList
             for (noteItem in notesList) {
-                val parsedTitle =
-                    JSONObject(noteItem.title).getString(com.pandacorp.noteui.domain.utils.Constants.text)
+                val title = noteItem.title
+                val parsedTitle = if (title.isEmpty()) { // Sometimes can be empty though idk why, can't reproduce anymore
+                    ""
+                }
+                else {
+                    JSONObject(title).getString(com.pandacorp.noteui.domain.utils.Constants.text)
+                }
                 if (parsedTitle.lowercase().contains(text.lowercase(Locale.getDefault()))) {
                     filteredList.add(noteItem)
                 }
