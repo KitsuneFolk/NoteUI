@@ -70,9 +70,4 @@
         <item name="android:textColorSecondary">@color/PurpleTheme_textColorSecondary</item>
     </style>
 
-    <style name="SplashTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
 </resources>
