@@ -119,10 +119,6 @@ internal class SearchBarAnimationHelper {
         }
     }
 
-    private interface OnLoadAnimationInvocation {
-        operator fun invoke(onLoadAnimationCallback: SearchBar.OnLoadAnimationCallback?)
-    }
-
     private fun getDefaultCenterViewAnimator(centerView: View?): Animator {
         val fadeInAnimator = ValueAnimator.ofFloat(0f, 1f)
         fadeInAnimator.addUpdateListener(MultiViewUpdateListener.alphaListener(centerView))
@@ -321,7 +317,7 @@ internal class SearchBarAnimationHelper {
         val children = getFadeChildren(searchBar)
         val animator = ValueAnimator.ofFloat(1f, 0f)
         animator.addUpdateListener(MultiViewUpdateListener.alphaListener(children))
-        animator.addUpdateListener { animation: ValueAnimator? ->
+        animator.addUpdateListener {
             // Ensures that the expanded view is not visible while the children are fading out, in
             // the case where ActionMode is used.
             expandedView.alpha = 0f
@@ -352,9 +348,8 @@ internal class SearchBarAnimationHelper {
         val isRtl = ViewUtils.isLayoutRtl(expandedView)
         val endAnchoredViews: MutableList<View> = ArrayList()
         if (expandedView is ViewGroup) {
-            val viewGroup = expandedView
-            for (i in 0 until viewGroup.childCount) {
-                val child = viewGroup.getChildAt(i)
+            for (i in 0 until expandedView.childCount) {
+                val child = expandedView.getChildAt(i)
                 if (!isRtl && child is ActionMenuView || isRtl && child !is ActionMenuView) {
                     endAnchoredViews.add(child)
                 }

@@ -40,7 +40,6 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.Dimension
 import androidx.annotation.MenuRes
-import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.content.res.AppCompatResources
@@ -63,7 +62,7 @@ import com.google.android.material.shape.MaterialShapeUtils
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
 
-@SuppressLint("RestrictedApi")
+@SuppressLint("RestrictedApi", "PrivateResource")
 class SearchBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -81,7 +80,7 @@ class SearchBar @JvmOverloads constructor(
     private var centerView: View? = null
     private var navigationIconTint: Int? = null
     private var originalNavigationIconBackground: Drawable? = null
-    var menuResId = -1
+    private var menuResId = -1
         private set
     private var defaultScrollFlagsEnabled: Boolean
     private var backgroundShape: MaterialShapeDrawable? = null
@@ -92,9 +91,8 @@ class SearchBar @JvmOverloads constructor(
         }
 
     init {
-        var context = context
         // Ensure we are using the correctly themed context rather than the context that was passed in.
-        context = getContext()
+        val context = getContext()
         validateAttributes(attrs)
         defaultNavigationIcon = AppCompatResources.getDrawable(context, R.drawable.ic_search_black_24)
         searchBarAnimationHelper = SearchBarAnimationHelper()
@@ -215,13 +213,8 @@ class SearchBar @JvmOverloads constructor(
         val backgroundColor = MaterialColors.getColor(this, R.attr.colorSurface)
         val rippleColor = MaterialColors.getColor(this, R.attr.colorControlHighlight)
         val background: Drawable
-        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            backgroundShape!!.fillColor = ColorStateList.valueOf(backgroundColor)
-            background = RippleDrawable(ColorStateList.valueOf(rippleColor), backgroundShape, backgroundShape)
-        } else {
-            backgroundShape!!.fillColor = getCompatBackgroundColorStateList(backgroundColor, rippleColor)
-            background = backgroundShape as MaterialShapeDrawable
-        }
+        backgroundShape!!.fillColor = ColorStateList.valueOf(backgroundColor)
+        background = RippleDrawable(ColorStateList.valueOf(rippleColor), backgroundShape, backgroundShape)
         ViewCompat.setBackground(this, background)
     }
 
@@ -246,7 +239,6 @@ class SearchBar @JvmOverloads constructor(
         super.addView(child, index, params)
     }
 
-    @RequiresApi(VERSION_CODES.LOLLIPOP)
     override fun setElevation(elevation: Float) {
         super.setElevation(elevation)
         if (backgroundShape != null) {
@@ -275,7 +267,7 @@ class SearchBar @JvmOverloads constructor(
             return
         }
         super.setNavigationOnClickListener(listener)
-        setNavigationIconDecorative(listener == null)
+        setNavigationIconDecorative(false)
     }
 
     override fun setNavigationIcon(navigationIcon: Drawable?) {
@@ -313,9 +305,7 @@ class SearchBar @JvmOverloads constructor(
         // Even if the navigation icon is not clickable/focusable, a ripple will still show up when the
         // parent view (overall search bar) is clicked. So here we set the background to null to avoid
         // that, and restore the original background when the icon becomes clickable.
-        navigationIconButton.setBackgroundDrawable(
-            if (decorative) null else originalNavigationIconBackground
-        )
+        navigationIconButton.background = if (decorative) null else originalNavigationIconBackground
     }
 
     override fun inflateMenu(@MenuRes resId: Int) {
@@ -714,9 +704,8 @@ class SearchBar @JvmOverloads constructor(
             super.onRestoreInstanceState(state)
             return
         }
-        val savedState = state
-        super.onRestoreInstanceState(savedState.superState)
-        text = savedState.text
+        super.onRestoreInstanceState(state.superState)
+        text = state.text
     }
 
     internal class SavedState : AbsSavedState {
@@ -734,22 +723,6 @@ class SearchBar @JvmOverloads constructor(
             dest.writeString(text)
         }
 
-        companion object {
-            @JvmField
-            val CREATOR: Creator<SavedState> = object : ClassLoaderCreator<SavedState> {
-                override fun createFromParcel(source: Parcel, loader: ClassLoader): SavedState {
-                    return SavedState(source, loader)
-                }
-
-                override fun createFromParcel(source: Parcel): SavedState {
-                    return SavedState(source)
-                }
-
-                override fun newArray(size: Int): Array<SavedState?> {
-                    return arrayOfNulls(size)
-                }
-            }
-        }
     }
 
     companion object {
