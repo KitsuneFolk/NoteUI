@@ -58,7 +58,7 @@ class MainScreen : Fragment() {
         NotesAdapter().apply {
             setOnClickListener(object : NotesAdapter.OnNoteItemClickListener {
                 override fun onClick(noteItem: NoteItem, position: Int) {
-                    if (actionMode != null) {
+                    if (binding.searchBar.isCountModeEnabled) {
                         select(position)
                     } else {
                         currentNoteViewModel.setNote(notesViewModel.getNoteById(noteItem.id))
@@ -99,8 +99,6 @@ class MainScreen : Fragment() {
         }
     }
 
-    private var actionModeCallback = ActionModeCallback()
-    private var actionMode: ActionMode? = null
     private var searchJob: Job? = null
 
     override fun onCreateView(
@@ -136,7 +134,6 @@ class MainScreen : Fragment() {
 
     override fun onDestroy() {
         _binding = null
-        actionMode = null
         super.onDestroy()
     }
 
@@ -179,7 +176,6 @@ class MainScreen : Fragment() {
 
         override fun onDestroyActionMode(mode: ActionMode) {
             notesViewModel.selectedNotes.postValue(SparseBooleanArray())
-            actionMode = null
         }
 
         private fun removeSelectedNotes() {
@@ -293,21 +289,27 @@ class MainScreen : Fragment() {
         }
 
         notesViewModel.selectedNotes.observe(viewLifecycleOwner) {
+            val count = it.size()
+            // Hide the FAB if there is selection
+            binding.addFAB.isEnabled = it.isEmpty()
+            if (it.isNotEmpty()) {
+                binding.addFAB.hide()
+            } else {
+                binding.addFAB.show()
+            }
+
             notesAdapter.selectList(it.clone()) // Set a list, but not a reference
-            CoroutineScope(Dispatchers.Main).launch { // Without the Main coroutine startActionMode returns null
-                val count = it.size()
 
-                if (count > 0 && actionMode == null) {
-                    actionMode = binding.searchBar.startActionMode(actionModeCallback)
-                }
-
-                actionMode?.apply {
-                    title = count.toString()
-                    if (count == 0) {
-                        finish()
-                    } else {
-                        invalidate()
-                    }
+            binding.searchBar.post { // Use inside of post to resolve the bug when searchbar doesn't respond after rotation
+                if (count <= 0) {
+                    binding.searchBar.stopCountMode()
+                    binding.searchBar.textView.text = binding.searchBar.hint
+                    binding.searchBar.menu.clear()
+                    binding.searchBar.inflateMenu(R.menu.menu_main)
+                } else {
+                    binding.searchBar.startCountMode()
+                    binding.searchBar.textView.text = count.toString()
+                    binding.searchBar.menu.clear()
                 }
             }
         }
@@ -344,16 +346,6 @@ class MainScreen : Fragment() {
                 }
             }
         }
-
-        notesViewModel.selectedNotes.observe(viewLifecycleOwner) {
-            binding.addFAB.isEnabled = it.isEmpty()
-            // Hide the FAB if there is selection
-            if (it.isNotEmpty()) {
-                binding.addFAB.hide()
-            } else {
-                binding.addFAB.show()
-            }
-        }
     }
 
     private fun getFilteredNotes(text: String?, notesList: List<NoteItem>?): MutableList<NoteItem>? {
@@ -364,11 +356,12 @@ class MainScreen : Fragment() {
             if (notesList == null) return filteredList
             for (noteItem in notesList) {
                 val title = noteItem.title
-                val parsedTitle = if (title.isEmpty()) { // Sometimes can be empty though idk why, can't reproduce anymore
-                    ""
-                } else {
-                    JSONObject(title).getString(com.pandacorp.noteui.domain.utils.Constants.text)
-                }
+                val parsedTitle =
+                    if (title.isEmpty()) { // Sometimes can be empty though idk why, can't reproduce anymore
+                        ""
+                    } else {
+                        JSONObject(title).getString(com.pandacorp.noteui.domain.utils.Constants.text)
+                    }
                 if (parsedTitle.lowercase().contains(text.lowercase(Locale.getDefault()))) {
                     filteredList.add(noteItem)
                 }

@@ -73,13 +73,13 @@ class SearchBar @JvmOverloads constructor(
     private val defaultMarginsEnabled: Boolean
     private val searchBarAnimationHelper: SearchBarAnimationHelper
     private val defaultNavigationIcon: Drawable?
+    private val defaultCountModeIcon: Drawable?
     private val tintNavigationIcon: Boolean
     private val forceDefaultNavigationOnClickListener: Boolean
     private var centerView: View? = null
     private var navigationIconTint: Int? = null
     private var originalNavigationIconBackground: Drawable? = null
     private var menuResId = -1
-        private set
     private var defaultScrollFlagsEnabled: Boolean
     private var backgroundShape: MaterialShapeDrawable? = null
     private val accessibilityManager: AccessibilityManager?
@@ -87,12 +87,14 @@ class SearchBar @JvmOverloads constructor(
         AccessibilityManagerCompat.TouchExplorationStateChangeListener { enabled: Boolean ->
             isFocusableInTouchMode = enabled
         }
+    var isCountModeEnabled = false
 
     init {
         // Ensure we are using the correctly themed context rather than the context that was passed in.
         val context = getContext()
         validateAttributes(attrs)
         defaultNavigationIcon = AppCompatResources.getDrawable(context, R.drawable.ic_search_black_24)
+        defaultCountModeIcon = AppCompatResources.getDrawable(context, R.drawable.ic_arrow_back_black_24)
         searchBarAnimationHelper = SearchBarAnimationHelper()
         val a = ThemeEnforcement.obtainStyledAttributes(
             context,
@@ -650,6 +652,16 @@ class SearchBar @JvmOverloads constructor(
             return true
         }
         return false
+    }
+
+    fun startCountMode() {
+        isCountModeEnabled = true
+        navigationIcon = defaultCountModeIcon
+    }
+
+    fun stopCountMode() {
+        isCountModeEnabled = false
+        navigationIcon = defaultNavigationIcon
     }
 
     /**
