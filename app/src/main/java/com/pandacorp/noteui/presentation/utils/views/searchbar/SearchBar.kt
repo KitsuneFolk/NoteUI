@@ -26,8 +26,6 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Parcel
 import android.os.Parcelable
-import android.os.Parcelable.ClassLoaderCreator
-import android.os.Parcelable.Creator
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -97,7 +95,11 @@ class SearchBar @JvmOverloads constructor(
         defaultNavigationIcon = AppCompatResources.getDrawable(context, R.drawable.ic_search_black_24)
         searchBarAnimationHelper = SearchBarAnimationHelper()
         val a = ThemeEnforcement.obtainStyledAttributes(
-            context, attrs, R.styleable.SearchBar, defStyleAttr, DEF_STYLE_RES
+            context,
+            attrs,
+            R.styleable.SearchBar,
+            defStyleAttr,
+            DEF_STYLE_RES,
         )
         val shapeAppearanceModel =
             ShapeAppearanceModel.builder(context, attrs, defStyleAttr, DEF_STYLE_RES).build()
@@ -144,16 +146,19 @@ class SearchBar @JvmOverloads constructor(
                 object : OnAttachStateChangeListener {
                     override fun onViewAttachedToWindow(ignored: View) {
                         AccessibilityManagerCompat.addTouchExplorationStateChangeListener(
-                            accessibilityManager, touchExplorationStateChangeListener
+                            accessibilityManager,
+                            touchExplorationStateChangeListener,
                         )
                     }
 
                     override fun onViewDetachedFromWindow(ignored: View) {
                         AccessibilityManagerCompat.removeTouchExplorationStateChangeListener(
-                            accessibilityManager, touchExplorationStateChangeListener
+                            accessibilityManager,
+                            touchExplorationStateChangeListener,
                         )
                     }
-                })
+                },
+            )
         }
     }
 
@@ -163,12 +168,12 @@ class SearchBar @JvmOverloads constructor(
         }
         if (attributeSet.getAttributeValue(NAMESPACE_APP, "title") != null) {
             throw UnsupportedOperationException(
-                "SearchBar does not support title. Use hint or text instead."
+                "SearchBar does not support title. Use hint or text instead.",
             )
         }
         if (attributeSet.getAttributeValue(NAMESPACE_APP, "subtitle") != null) {
             throw UnsupportedOperationException(
-                "SearchBar does not support subtitle. Use hint or text instead."
+                "SearchBar does not support subtitle. Use hint or text instead.",
             )
         }
     }
@@ -193,7 +198,7 @@ class SearchBar @JvmOverloads constructor(
             MarginLayoutParamsCompat.setMarginStart(
                 (textView.layoutParams as MarginLayoutParams),
                 resources
-                    .getDimensionPixelSize(R.dimen.m3_searchbar_text_margin_start_no_navigation_icon)
+                    .getDimensionPixelSize(R.dimen.m3_searchbar_text_margin_start_no_navigation_icon),
             )
         }
     }
@@ -219,12 +224,13 @@ class SearchBar @JvmOverloads constructor(
     }
 
     private fun getCompatBackgroundColorStateList(
-        @ColorInt backgroundColor: Int, @ColorInt rippleColor: Int,
+        @ColorInt backgroundColor: Int,
+        @ColorInt rippleColor: Int,
     ): ColorStateList {
         val states = arrayOf(
             intArrayOf(android.R.attr.state_pressed),
             intArrayOf(android.R.attr.state_focused),
-            intArrayOf()
+            intArrayOf(),
         )
         val pressedBackgroundColor = MaterialColors.layer(backgroundColor, rippleColor)
         val colors = intArrayOf(pressedBackgroundColor, pressedBackgroundColor, backgroundColor)
@@ -278,9 +284,11 @@ class SearchBar @JvmOverloads constructor(
         if (!tintNavigationIcon || navigationIcon == null) {
             return navigationIcon
         }
-        val navigationIconColor: Int = if (navigationIconTint != null) (
-            navigationIconTint!!
-        ) else {
+        val navigationIconColor: Int = if (navigationIconTint != null) {
+            (
+                navigationIconTint!!
+                )
+        } else {
             // Navigational icons such as the "hamburger", back arrow, etc. are supposed to be emphasized
             // with colorOnSurface as opposed to colorOnSurfaceVariant. Here we assume any icon that's not
             // the default search icon is navigational.
@@ -427,6 +435,7 @@ class SearchBar @JvmOverloads constructor(
     var text: CharSequence?
         /** Returns the text of main [TextView], which usually represents the search text.  */
         get() = textView.text
+
         /** Sets the text of main [TextView].  */
         set(text) {
             textView.text = text
@@ -445,6 +454,7 @@ class SearchBar @JvmOverloads constructor(
     var hint: CharSequence?
         /** Returns the hint of main [TextView].  */
         get() = textView.hint
+
         /** Sets the hint of main [TextView].  */
         set(hint) {
             textView.hint = hint
@@ -459,6 +469,7 @@ class SearchBar @JvmOverloads constructor(
     var strokeColor: Int
         /** Returns the color of the [SearchBar] outline stroke.  */
         get() = backgroundShape!!.strokeColor!!.defaultColor
+
         /** Sets the color of the [SearchBar] outline stroke.  */
         set(strokeColor) {
             if (this.strokeColor != strokeColor) {
@@ -470,6 +481,7 @@ class SearchBar @JvmOverloads constructor(
     var strokeWidth: Float
         /** Returns the width in pixels of the [SearchBar] outline stroke.  */
         get() = backgroundShape!!.strokeWidth
+
         /** Sets the width in pixels of the [SearchBar] outline stroke.  */
         set(strokeWidth) {
             if (this.strokeWidth != strokeWidth) {
@@ -478,7 +490,7 @@ class SearchBar @JvmOverloads constructor(
         }
     val cornerSize: Float
         /** Returns the size in pixels of the [SearchBar] corners.  */
-        get() =// Assume all corner sizes are the same.
+        get() = // Assume all corner sizes are the same.
             backgroundShape!!.topLeftCornerResolvedSize
 
     /**
@@ -514,6 +526,7 @@ class SearchBar @JvmOverloads constructor(
     var isOnLoadAnimationFadeInEnabled: Boolean
         /** Returns whether the fade in part is enabled for the on load animation.  */
         get() = searchBarAnimationHelper.isOnLoadAnimationFadeInEnabled
+
         /** Sets whether the fade in part is enabled for the on load animation.  */
         set(onLoadAnimationFadeInEnabled) {
             searchBarAnimationHelper.isOnLoadAnimationFadeInEnabled = onLoadAnimationFadeInEnabled
@@ -543,12 +556,12 @@ class SearchBar @JvmOverloads constructor(
 
     /** See [SearchBar.expand].  */
     fun expand(expandedView: View): Boolean {
-        return expand(expandedView,  /* appBarLayout= */null)
+        return expand(expandedView, null)
     }
 
     /** See [SearchBar.expand].  */
     fun expand(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
-        return expand(expandedView, appBarLayout,  /* skipAnimation= */false)
+        return expand(expandedView, appBarLayout, false)
     }
 
     /**
@@ -562,13 +575,18 @@ class SearchBar @JvmOverloads constructor(
      * @return whether or not the expand animation was started
      */
     fun expand(
-        expandedView: View, appBarLayout: AppBarLayout?, skipAnimation: Boolean,
+        expandedView: View,
+        appBarLayout: AppBarLayout?,
+        skipAnimation: Boolean,
     ): Boolean {
         // Start the expand if the expanded view is not already showing or in the process of expanding,
         // or if the expanded view is collapsing since the final state should be expanded.
         if (expandedView.visibility != VISIBLE && !isExpanding || isCollapsing) {
             searchBarAnimationHelper.startExpandAnimation(
-                this, expandedView, appBarLayout, skipAnimation
+                this,
+                expandedView,
+                appBarLayout,
+                skipAnimation,
             )
             return true
         }
@@ -616,13 +634,18 @@ class SearchBar @JvmOverloads constructor(
      * @return whether or not the collapse animation was started
      */
     fun collapse(
-        expandedView: View, appBarLayout: AppBarLayout?, skipAnimation: Boolean,
+        expandedView: View,
+        appBarLayout: AppBarLayout?,
+        skipAnimation: Boolean,
     ): Boolean {
         // Start the collapse if the expanded view is showing and not in the process of collapsing, or
         // if the expanded view is expanding since the final state should be collapsed.
         if (expandedView.visibility == VISIBLE && !isCollapsing || isExpanding) {
             searchBarAnimationHelper.startCollapseAnimation(
-                this, expandedView, appBarLayout, skipAnimation
+                this,
+                expandedView,
+                appBarLayout,
+                skipAnimation,
             )
             return true
         }
@@ -656,7 +679,9 @@ class SearchBar @JvmOverloads constructor(
         constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
 
         override fun onDependentViewChanged(
-            parent: CoordinatorLayout, child: View, dependency: View,
+            parent: CoordinatorLayout,
+            child: View,
+            dependency: View,
         ): Boolean {
             val changed = super.onDependentViewChanged(parent, child, dependency)
             if (!initialized && dependency is AppBarLayout) {
@@ -722,15 +747,16 @@ class SearchBar @JvmOverloads constructor(
             super.writeToParcel(dest, flags)
             dest.writeString(text)
         }
-
     }
 
     companion object {
         private val DEF_STYLE_RES = R.style.Widget_Material3_SearchBar
-        private const val DEFAULT_SCROLL_FLAGS = (AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-            or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
-            or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
-            or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP_MARGINS)
+        private const val DEFAULT_SCROLL_FLAGS = (
+            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+                or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
+                or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP_MARGINS
+            )
         private const val NAMESPACE_APP = "http://schemas.android.com/apk/res-auto"
     }
 }

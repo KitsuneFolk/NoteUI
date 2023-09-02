@@ -82,7 +82,8 @@ internal class SearchBarAnimationHelper {
                         centerView.visibility = View.GONE
                         secondaryViewAnimator.start()
                     }
-                })
+                },
+            )
             defaultCenterViewAnimator.start()
         } else {
             secondaryViewAnimator.start()
@@ -138,7 +139,8 @@ internal class SearchBarAnimationHelper {
     }
 
     private fun getSecondaryViewAnimator(
-        textView: TextView, secondaryActionMenuItemView: View?,
+        textView: TextView,
+        secondaryActionMenuItemView: View?,
     ): Animator {
         val animatorSet = AnimatorSet()
         animatorSet.startDelay = ON_LOAD_ANIM_SECONDARY_START_DELAY_MS
@@ -190,7 +192,8 @@ internal class SearchBarAnimationHelper {
                     override fun onAnimationEnd(animation: Animator) {
                         runningExpandOrCollapseAnimator = null
                     }
-                })
+                },
+            )
             for (listener in expandAnimationListeners) {
                 fadeAndExpandAnimatorSet.addListener(listener)
             }
@@ -203,7 +206,9 @@ internal class SearchBarAnimationHelper {
     }
 
     private fun getExpandAnimator(
-        searchBar: SearchBar, expandedView: View, appBarLayout: AppBarLayout?,
+        searchBar: SearchBar,
+        expandedView: View,
+        appBarLayout: AppBarLayout?,
     ): Animator {
         return getExpandCollapseAnimationHelper(searchBar, expandedView, appBarLayout)
             .setDuration(EXPAND_DURATION_MS)
@@ -216,7 +221,8 @@ internal class SearchBarAnimationHelper {
                     override fun onAnimationEnd(animation: Animator) {
                         isExpanding = false
                     }
-                })
+                },
+            )
             .expandAnimator
     }
 
@@ -249,7 +255,8 @@ internal class SearchBarAnimationHelper {
                 override fun onAnimationEnd(animation: Animator) {
                     runningExpandOrCollapseAnimator = null
                 }
-            })
+            },
+        )
         for (listener in collapseAnimationListeners) {
             collapseAndFadeAnimatorSet.addListener(listener)
         }
@@ -261,7 +268,9 @@ internal class SearchBarAnimationHelper {
     }
 
     private fun getCollapseAnimator(
-        searchBar: SearchBar, expandedView: View, appBarLayout: AppBarLayout?,
+        searchBar: SearchBar,
+        expandedView: View,
+        appBarLayout: AppBarLayout?,
     ): Animator {
         return getExpandCollapseAnimationHelper(searchBar, expandedView, appBarLayout)
             .setDuration(COLLAPSE_DURATION_MS)
@@ -275,7 +284,8 @@ internal class SearchBarAnimationHelper {
                         searchBar.visibility = View.VISIBLE
                         isCollapsing = false
                     }
-                })
+                },
+            )
             .collapseAnimator
     }
 
@@ -288,18 +298,21 @@ internal class SearchBarAnimationHelper {
     }
 
     private fun getExpandCollapseAnimationHelper(
-        searchBar: SearchBar, expandedView: View, appBarLayout: AppBarLayout?,
+        searchBar: SearchBar,
+        expandedView: View,
+        appBarLayout: AppBarLayout?,
     ): ExpandCollapseAnimationHelper {
         return ExpandCollapseAnimationHelper(searchBar, expandedView)
             .setAdditionalUpdateListener(
-                getExpandedViewBackgroundUpdateListener(searchBar, expandedView)
+                getExpandedViewBackgroundUpdateListener(searchBar, expandedView),
             )
             .setCollapsedViewOffsetY(appBarLayout?.top ?: 0)
             .addEndAnchoredViews(getEndAnchoredViews(expandedView))
     }
 
     private fun getExpandedViewBackgroundUpdateListener(
-        searchBar: SearchBar, expandedView: View,
+        searchBar: SearchBar,
+        expandedView: View,
     ): AnimatorUpdateListener {
         val expandedViewBackground = MaterialShapeDrawable.createWithElevationOverlay(expandedView.context)
         expandedViewBackground.setCornerSize(searchBar.cornerSize)
