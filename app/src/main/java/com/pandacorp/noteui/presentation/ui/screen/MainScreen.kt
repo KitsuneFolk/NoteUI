@@ -1,13 +1,8 @@
 package com.pandacorp.noteui.presentation.ui.screen
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.SparseBooleanArray
 import android.util.TypedValue
-import android.view.ActionMode
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -22,14 +17,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import com.google.android.material.search.SearchView.TransitionState
-import com.google.android.material.snackbar.Snackbar
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.ScreenMainBinding
 import com.pandacorp.noteui.domain.model.NoteItem
 import com.pandacorp.noteui.presentation.ui.adapter.notes.NotesAdapter
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import com.pandacorp.noteui.presentation.utils.helpers.app
-import com.pandacorp.noteui.presentation.utils.helpers.showFabIfHidden
 import com.pandacorp.noteui.presentation.utils.helpers.sp
 import com.pandacorp.noteui.presentation.viewModels.CurrentNoteViewModel
 import com.pandacorp.noteui.presentation.viewModels.NotesViewModel
@@ -133,87 +126,6 @@ class MainScreen : Fragment() {
     override fun onDestroy() {
         _binding = null
         super.onDestroy()
-    }
-
-    // Class needed for notes selection
-    inner class ActionModeCallback : ActionMode.Callback {
-        override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
-            mode.menuInflater.inflate(R.menu.menu_item_selection, menu)
-            return true
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean = false
-
-        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
-            when (item.itemId) {
-                R.id.recyclerview_menu_delete -> {
-                    removeSelectedNotes()
-                    binding.addFAB.showFabIfHidden()
-                    mode.finish()
-                    return true
-                }
-
-                R.id.recyclerview_menu_select_all -> {
-                    val newList = SparseBooleanArray()
-                    if (notesViewModel.selectedNotes.value!!.size() == notesAdapter.itemCount) {
-                        // Unselect all
-                        newList.clear()
-                    } else {
-                        // Select all
-                        newList.apply {
-                            repeat(notesAdapter.currentList.size) {
-                                put(it, true)
-                            }
-                        }
-                    }
-                    notesViewModel.selectedNotes.postValue(newList)
-                }
-            }
-            return false
-        }
-
-        override fun onDestroyActionMode(mode: ActionMode) {
-            notesViewModel.selectedNotes.postValue(SparseBooleanArray())
-        }
-
-        private fun removeSelectedNotes() {
-            val selectedNotesPositions = mutableListOf<Int>().apply {
-                repeat(notesViewModel.selectedNotes.value!!.size()) { adapterPosition ->
-                    add(notesViewModel.selectedNotes.value!!.keyAt(adapterPosition))
-                }
-            }
-
-            if (selectedNotesPositions.isEmpty()) return
-
-            val removedNotes = mutableListOf<NoteItem>().apply {
-                for (i in selectedNotesPositions) {
-                    add(notesAdapter.currentList[i])
-                }
-            }
-            notesViewModel.removeNotes(removedNotes)
-
-            val snackBarUndoTitle = resources.getText(R.string.snackbar_undo_title)
-                .toString() + " " + removedNotes.size.toString()
-            val tv = TypedValue()
-            requireContext().theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
-            val colorAccent = tv.data
-
-            Snackbar.make(binding.addFAB, snackBarUndoTitle, Constants.SNACKBAR_DURATION).apply {
-                animationMode = Snackbar.ANIMATION_MODE_SLIDE
-                setTextColor(Color.WHITE)
-                setActionTextColor(colorAccent)
-                setAction(R.string.undo) {
-                    notesViewModel.restoreNotes(removedNotes)
-                    Snackbar.make(binding.addFAB, snackBarUndoTitle, Constants.SNACKBAR_DURATION).apply {
-                        setText(R.string.successfully)
-                        duration = 1_000
-                        setTextColor(Color.WHITE)
-                        show()
-                    }
-                }
-                show()
-            }
-        }
     }
 
     private fun initViews(bundle: Bundle?) {
