@@ -7,7 +7,6 @@ import android.util.TypedValue
 import android.view.ActionMode
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.core.util.isEmpty
 import androidx.core.util.isNotEmpty
-import androidx.core.view.MenuProvider
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -219,22 +217,13 @@ class MainScreen : Fragment() {
     }
 
     private fun initViews(bundle: Bundle?) {
-        binding.searchBar.apply {
-            addMenuProvider(
-                object : MenuProvider {
-                    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                        inflateMenu(R.menu.menu_main)
-                    }
-
-                    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                        when (menuItem.itemId) {
-                            R.id.menu_settings -> navController.navigate(R.id.nav_settings_screen)
-                        }
-                        return true
-                    }
-                },
-                viewLifecycleOwner,
-            )
+        binding.searchBar.menu.clear()
+        binding.searchBar.inflateMenu(R.menu.menu_main)
+        binding.searchBar.setOnMenuItemClickListener {
+            if (it.itemId == R.id.menu_settings) {
+                navController.navigate(R.id.nav_settings_screen)
+            }
+            true
         }
         binding.searchView.editText.addTextChangedListener {
             notesViewModel.searchViewText.postValue(binding.searchView.text.toString())
