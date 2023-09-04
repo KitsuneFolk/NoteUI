@@ -35,6 +35,7 @@ import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.Dimension
 import androidx.annotation.MenuRes
@@ -79,7 +80,7 @@ class SearchBar @JvmOverloads constructor(
     private var centerView: View? = null
     private var navigationIconTint: Int? = null
     private var originalNavigationIconBackground: Drawable? = null
-    private var menuResId = -1
+    var menuResId = -1
     private var defaultScrollFlagsEnabled: Boolean
     private var backgroundShape: MaterialShapeDrawable? = null
     private val accessibilityManager: AccessibilityManager?
@@ -225,20 +226,6 @@ class SearchBar @JvmOverloads constructor(
         ViewCompat.setBackground(this, background)
     }
 
-    private fun getCompatBackgroundColorStateList(
-        @ColorInt backgroundColor: Int,
-        @ColorInt rippleColor: Int,
-    ): ColorStateList {
-        val states = arrayOf(
-            intArrayOf(android.R.attr.state_pressed),
-            intArrayOf(android.R.attr.state_focused),
-            intArrayOf(),
-        )
-        val pressedBackgroundColor = MaterialColors.layer(backgroundColor, rippleColor)
-        val colors = intArrayOf(pressedBackgroundColor, pressedBackgroundColor, backgroundColor)
-        return ColorStateList(states, colors)
-    }
-
     override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
         if (layoutInflated && centerView == null && child !is ActionMenuView) {
             centerView = child
@@ -249,9 +236,7 @@ class SearchBar @JvmOverloads constructor(
 
     override fun setElevation(elevation: Float) {
         super.setElevation(elevation)
-        if (backgroundShape != null) {
-            backgroundShape!!.elevation = elevation
-        }
+        backgroundShape?.elevation = elevation
     }
 
     override fun onInitializeAccessibilityNodeInfo(info: AccessibilityNodeInfo) {
@@ -269,13 +254,13 @@ class SearchBar @JvmOverloads constructor(
         info.text = text
     }
 
-    override fun setNavigationOnClickListener(listener: OnClickListener) {
+    override fun setNavigationOnClickListener(listener: OnClickListener?) {
         if (forceDefaultNavigationOnClickListener) {
             // Ignore the listener if forcing of the default navigation icon is enabled.
             return
         }
         super.setNavigationOnClickListener(listener)
-        setNavigationIconDecorative(false)
+        setNavigationIconDecorative(listener == null)
     }
 
     override fun setNavigationIcon(navigationIcon: Drawable?) {
@@ -286,18 +271,10 @@ class SearchBar @JvmOverloads constructor(
         if (!tintNavigationIcon || navigationIcon == null) {
             return navigationIcon
         }
-        val navigationIconColor: Int = if (navigationIconTint != null) {
-            (
-                navigationIconTint!!
-                )
-        } else {
-            // Navigational icons such as the "hamburger", back arrow, etc. are supposed to be emphasized
-            // with colorOnSurface as opposed to colorOnSurfaceVariant. Here we assume any icon that's not
-            // the default search icon is navigational.
-            val navigationIconColorAttr =
-                if (navigationIcon === defaultNavigationIcon) R.attr.colorOnSurfaceVariant else R.attr.colorOnSurface
-            MaterialColors.getColor(this, navigationIconColorAttr)
-        }
+        val navigationIconColor: Int = navigationIconTint ?: MaterialColors.getColor(
+            this,
+            if (navigationIcon === defaultNavigationIcon) R.attr.colorOnSurfaceVariant else R.attr.colorOnSurface
+        )
         val wrappedNavigationIcon = DrawableCompat.wrap(navigationIcon.mutate())
         DrawableCompat.setTint(wrappedNavigationIcon, navigationIconColor)
         return wrappedNavigationIcon
@@ -363,7 +340,6 @@ class SearchBar @JvmOverloads constructor(
 
     private fun setDefaultMargins() {
         if (defaultMarginsEnabled && layoutParams is MarginLayoutParams) {
-            val resources = resources
             val marginHorizontal = resources.getDimensionPixelSize(R.dimen.m3_searchbar_margin_horizontal)
             val marginVertical = resources.getDimensionPixelSize(R.dimen.m3_searchbar_margin_vertical)
             val lp = layoutParams as MarginLayoutParams
@@ -374,9 +350,7 @@ class SearchBar @JvmOverloads constructor(
         }
     }
 
-    private fun defaultIfZero(value: Int, defValue: Int): Int {
-        return if (value == 0) defValue else value
-    }
+    private fun defaultIfZero(value: Int, defValue: Int) = if (value == 0) defValue else value
 
     private fun setOrClearDefaultScrollFlags() {
         if (layoutParams is AppBarLayout.LayoutParams) {
@@ -394,9 +368,7 @@ class SearchBar @JvmOverloads constructor(
     }
 
     private fun measureCenterView(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        if (centerView != null) {
-            centerView!!.measure(widthMeasureSpec, heightMeasureSpec)
-        }
+        centerView?.measure(widthMeasureSpec, heightMeasureSpec)
     }
 
     private fun layoutCenterView() {
@@ -437,7 +409,6 @@ class SearchBar @JvmOverloads constructor(
     var text: CharSequence?
         /** Returns the text of main [TextView], which usually represents the search text.  */
         get() = textView.text
-
         /** Sets the text of main [TextView].  */
         set(text) {
             textView.text = text
@@ -456,7 +427,6 @@ class SearchBar @JvmOverloads constructor(
     var hint: CharSequence?
         /** Returns the hint of main [TextView].  */
         get() = textView.hint
-
         /** Sets the hint of main [TextView].  */
         set(hint) {
             textView.hint = hint
@@ -471,7 +441,6 @@ class SearchBar @JvmOverloads constructor(
     var strokeColor: Int
         /** Returns the color of the [SearchBar] outline stroke.  */
         get() = backgroundShape!!.strokeColor!!.defaultColor
-
         /** Sets the color of the [SearchBar] outline stroke.  */
         set(strokeColor) {
             if (this.strokeColor != strokeColor) {
@@ -483,7 +452,6 @@ class SearchBar @JvmOverloads constructor(
     var strokeWidth: Float
         /** Returns the width in pixels of the [SearchBar] outline stroke.  */
         get() = backgroundShape!!.strokeWidth
-
         /** Sets the width in pixels of the [SearchBar] outline stroke.  */
         set(strokeWidth) {
             if (this.strokeWidth != strokeWidth) {
@@ -528,7 +496,6 @@ class SearchBar @JvmOverloads constructor(
     var isOnLoadAnimationFadeInEnabled: Boolean
         /** Returns whether the fade in part is enabled for the on load animation.  */
         get() = searchBarAnimationHelper.isOnLoadAnimationFadeInEnabled
-
         /** Sets whether the fade in part is enabled for the on load animation.  */
         set(onLoadAnimationFadeInEnabled) {
             searchBarAnimationHelper.isOnLoadAnimationFadeInEnabled = onLoadAnimationFadeInEnabled
@@ -555,17 +522,17 @@ class SearchBar @JvmOverloads constructor(
     val isExpanding: Boolean
         /** Returns whether the expand animation is running.  */
         get() = searchBarAnimationHelper.isExpanding
-
+    @CanIgnoreReturnValue
     /** See [SearchBar.expand].  */
     fun expand(expandedView: View): Boolean {
         return expand(expandedView, null)
     }
-
+    @CanIgnoreReturnValue
     /** See [SearchBar.expand].  */
     fun expand(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
         return expand(expandedView, appBarLayout, false)
     }
-
+    @CanIgnoreReturnValue
     /**
      * Starts an expand animation, if it's not already started, which transitions from the [ ] to the `expandedView`, e.g., a contextual [Toolbar].
      *
@@ -581,6 +548,7 @@ class SearchBar @JvmOverloads constructor(
         appBarLayout: AppBarLayout?,
         skipAnimation: Boolean,
     ): Boolean {
+        Toast.makeText(context, "Expand", Toast.LENGTH_SHORT).show()
         // Start the expand if the expanded view is not already showing or in the process of expanding,
         // or if the expanded view is collapsing since the final state should be expanded.
         if (expandedView.visibility != VISIBLE && !isExpanding || isCollapsing) {
@@ -615,15 +583,17 @@ class SearchBar @JvmOverloads constructor(
         /** Returns whether the collapse animation is running.  */
         get() = searchBarAnimationHelper.isCollapsing
 
+    @CanIgnoreReturnValue
     /** See [SearchBar.collapse].  */
     fun collapse(expandedView: View): Boolean {
         return collapse(expandedView, null)
     }
-
+    @CanIgnoreReturnValue
     /** See [SearchBar.collapse].  */
     fun collapse(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
         return collapse(expandedView, appBarLayout, false)
     }
+    @CanIgnoreReturnValue
 
     /**
      * Starts a collapse animation, if it's not already started, which transitions from the `expandedView`, e.g., a contextual [Toolbar], to the [SearchBar].
@@ -640,6 +610,7 @@ class SearchBar @JvmOverloads constructor(
         appBarLayout: AppBarLayout?,
         skipAnimation: Boolean,
     ): Boolean {
+        Toast.makeText(context, "Collapse", Toast.LENGTH_SHORT).show()
         // Start the collapse if the expanded view is showing and not in the process of collapsing, or
         // if the expanded view is expanding since the final state should be collapsed.
         if (expandedView.visibility == VISIBLE && !isCollapsing || isExpanding) {

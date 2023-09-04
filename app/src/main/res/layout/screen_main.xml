@@ -57,7 +57,7 @@
             app:strokeWidth="@dimen/stroke" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.search.SearchView
+    <com.pandacorp.noteui.presentation.utils.views.searchbar.searchview.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -88,6 +88,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </FrameLayout>
-    </com.google.android.material.search.SearchView>
+    </com.pandacorp.noteui.presentation.utils.views.searchbar.searchview.SearchView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

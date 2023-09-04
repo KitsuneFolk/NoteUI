@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
-import com.google.android.material.search.SearchView.TransitionState
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.ScreenMainBinding
 import com.pandacorp.noteui.domain.model.NoteItem
@@ -24,6 +23,7 @@ import com.pandacorp.noteui.presentation.ui.adapter.notes.NotesAdapter
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import com.pandacorp.noteui.presentation.utils.helpers.app
 import com.pandacorp.noteui.presentation.utils.helpers.sp
+import com.pandacorp.noteui.presentation.utils.views.searchbar.searchview.SearchView
 import com.pandacorp.noteui.presentation.viewModels.CurrentNoteViewModel
 import com.pandacorp.noteui.presentation.viewModels.NotesViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -149,7 +149,7 @@ class MainScreen : Fragment() {
             }
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
         binding.searchView.addTransitionListener { _, _, newState ->
-            onBackPressedCallback.isEnabled = newState == TransitionState.SHOWN
+            onBackPressedCallback.isEnabled = newState == SearchView.TransitionState.SHOWN
         }
         if (bundle == null) binding.searchBar.startOnLoadAnimation()
         binding.notesRecyclerView.adapter = notesAdapter
