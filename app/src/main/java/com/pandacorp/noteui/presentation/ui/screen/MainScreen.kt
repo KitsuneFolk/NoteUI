@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.core.util.isEmpty
 import androidx.core.util.isNotEmpty
 import androidx.core.widget.addTextChangedListener
@@ -204,12 +205,12 @@ class MainScreen : Fragment() {
             binding.searchBar.post { // Use inside of post to resolve the bug when searchbar doesn't respond after rotation
                 if (count <= 0) {
                     binding.searchBar.stopCountMode()
-                    binding.searchBar.textView.text = binding.searchBar.hint
+                    binding.searchBar.hint = ContextCompat.getString(requireContext(), R.string.search_hint)
                     binding.searchBar.menu.clear()
                     binding.searchBar.inflateMenu(R.menu.menu_main)
                 } else {
                     binding.searchBar.startCountMode()
-                    binding.searchBar.textView.text = count.toString()
+                    binding.searchBar.hint = count.toString()
                     binding.searchBar.menu.clear()
                 }
             }
