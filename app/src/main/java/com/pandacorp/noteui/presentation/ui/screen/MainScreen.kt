@@ -1,6 +1,7 @@
 package com.pandacorp.noteui.presentation.ui.screen
 
 import android.os.Bundle
+import android.util.SparseBooleanArray
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -208,10 +209,14 @@ class MainScreen : Fragment() {
                     binding.searchBar.hint = ContextCompat.getString(requireContext(), R.string.search_hint)
                     binding.searchBar.menu.clear()
                     binding.searchBar.inflateMenu(R.menu.menu_main)
+                    binding.searchBar.setNavigationOnClickListener(null)
                 } else {
                     binding.searchBar.startCountMode()
                     binding.searchBar.hint = count.toString()
                     binding.searchBar.menu.clear()
+                    binding.searchBar.setNavigationOnClickListener {
+                        notesViewModel.selectedNotes.postValue(SparseBooleanArray())
+                    }
                 }
             }
         }
