@@ -35,7 +35,6 @@ import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.Dimension
 import androidx.annotation.MenuRes
@@ -522,17 +521,17 @@ class SearchBar @JvmOverloads constructor(
     val isExpanding: Boolean
         /** Returns whether the expand animation is running.  */
         get() = searchBarAnimationHelper.isExpanding
-    @CanIgnoreReturnValue
+
     /** See [SearchBar.expand].  */
     fun expand(expandedView: View): Boolean {
         return expand(expandedView, null)
     }
-    @CanIgnoreReturnValue
+
     /** See [SearchBar.expand].  */
     fun expand(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
         return expand(expandedView, appBarLayout, false)
     }
-    @CanIgnoreReturnValue
+
     /**
      * Starts an expand animation, if it's not already started, which transitions from the [ ] to the `expandedView`, e.g., a contextual [Toolbar].
      *
@@ -548,7 +547,6 @@ class SearchBar @JvmOverloads constructor(
         appBarLayout: AppBarLayout?,
         skipAnimation: Boolean,
     ): Boolean {
-        Toast.makeText(context, "Expand", Toast.LENGTH_SHORT).show()
         // Start the expand if the expanded view is not already showing or in the process of expanding,
         // or if the expanded view is collapsing since the final state should be expanded.
         if (expandedView.visibility != VISIBLE && !isExpanding || isCollapsing) {
@@ -583,17 +581,15 @@ class SearchBar @JvmOverloads constructor(
         /** Returns whether the collapse animation is running.  */
         get() = searchBarAnimationHelper.isCollapsing
 
-    @CanIgnoreReturnValue
     /** See [SearchBar.collapse].  */
     fun collapse(expandedView: View): Boolean {
         return collapse(expandedView, null)
     }
-    @CanIgnoreReturnValue
+
     /** See [SearchBar.collapse].  */
     fun collapse(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
         return collapse(expandedView, appBarLayout, false)
     }
-    @CanIgnoreReturnValue
 
     /**
      * Starts a collapse animation, if it's not already started, which transitions from the `expandedView`, e.g., a contextual [Toolbar], to the [SearchBar].
@@ -610,7 +606,6 @@ class SearchBar @JvmOverloads constructor(
         appBarLayout: AppBarLayout?,
         skipAnimation: Boolean,
     ): Boolean {
-        Toast.makeText(context, "Collapse", Toast.LENGTH_SHORT).show()
         // Start the collapse if the expanded view is showing and not in the process of collapsing, or
         // if the expanded view is expanding since the final state should be collapsed.
         if (expandedView.visibility == VISIBLE && !isCollapsing || isExpanding) {
