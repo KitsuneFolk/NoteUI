@@ -205,18 +205,22 @@ class MainScreen : Fragment() {
 
             binding.searchBar.post { // Use inside of post to resolve the bug when searchbar doesn't respond after rotation
                 if (count <= 0) {
-                    binding.searchBar.stopCountMode()
-                    binding.searchBar.hint = ContextCompat.getString(requireContext(), R.string.search_hint)
-                    binding.searchBar.menu.clear()
-                    binding.searchBar.inflateMenu(R.menu.menu_main)
-                    binding.searchBar.setNavigationOnClickListener(null)
-                } else {
-                    binding.searchBar.startCountMode()
-                    binding.searchBar.hint = count.toString()
-                    binding.searchBar.menu.clear()
-                    binding.searchBar.setNavigationOnClickListener {
-                        notesViewModel.selectedNotes.postValue(SparseBooleanArray())
+                    if (binding.searchBar.isCountModeEnabled) {
+                        binding.searchBar.stopCountMode()
+                        binding.searchBar.hint = ContextCompat.getString(requireContext(), R.string.search_hint)
+                        binding.searchBar.menu.clear()
+                        binding.searchBar.inflateMenu(R.menu.menu_main)
+                        binding.searchBar.setNavigationOnClickListener(null)
                     }
+                } else {
+                    if (!binding.searchBar.isCountModeEnabled) {
+                        binding.searchBar.startCountMode()
+                        binding.searchBar.menu.clear()
+                        binding.searchBar.setNavigationOnClickListener {
+                            notesViewModel.selectedNotes.postValue(SparseBooleanArray())
+                        }
+                    }
+                    binding.searchBar.hint = count.toString()
                 }
             }
         }

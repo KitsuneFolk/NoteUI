@@ -59,6 +59,7 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.MaterialShapeUtils
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
+import com.pandacorp.noteui.presentation.utils.helpers.animateAlpha
 
 @SuppressLint("RestrictedApi", "PrivateResource")
 class SearchBar @JvmOverloads constructor(
@@ -622,12 +623,18 @@ class SearchBar @JvmOverloads constructor(
 
     fun startCountMode() {
         isCountModeEnabled = true
-        navigationIcon = defaultCountModeIcon
+        navigationIcon?.animateAlpha(1f, 0f, 200) {
+            navigationIcon = defaultCountModeIcon
+            navigationIcon?.animateAlpha(0f, 1f, 200)
+        }
     }
 
     fun stopCountMode() {
         isCountModeEnabled = false
-        navigationIcon = defaultNavigationIcon
+        navigationIcon?.animateAlpha(1f, 0f, 200) {
+            navigationIcon = defaultNavigationIcon
+            navigationIcon?.animateAlpha(0f, 1f, 200)
+        }
     }
 
     /**

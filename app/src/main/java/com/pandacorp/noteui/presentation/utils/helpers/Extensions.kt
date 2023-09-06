@@ -1,18 +1,18 @@
 package com.pandacorp.noteui.presentation.utils.helpers
 
+import android.animation.Animator
+import android.animation.ValueAnimator
 import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.appcompat.widget.Toolbar
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.behavior.HideBottomViewOnScrollBehavior
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.pandacorp.noteui.presentation.di.app.App
 
 val Fragment.sp: SharedPreferences
@@ -31,10 +31,24 @@ fun Toolbar.hideToolbarWhileScrollingUseCase(isHide: Boolean) {
     this.layoutParams = layoutParams
 }
 
-fun ExtendedFloatingActionButton.showFabIfHidden() {
-    val layoutParams = layoutParams as CoordinatorLayout.LayoutParams
-    val behavior = layoutParams.behavior as HideBottomViewOnScrollBehavior
-    behavior.slideUp(this)
+fun Drawable.animateAlpha(fromAlpha: Float, toAlpha: Float, duration: Long, onAnimationEnd: (() -> Unit)? = null) {
+    val animator = ValueAnimator.ofFloat(fromAlpha, toAlpha).apply {
+        this.duration = duration
+        addUpdateListener {
+            alpha = ((it.animatedValue as Float) * 255).toInt()
+        }
+        onAnimationEnd?.let {
+            addListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {}
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationRepeat(animation: Animator) {}
+                override fun onAnimationEnd(animation: Animator) {
+                    it.invoke()
+                }
+            })
+        }
+    }
+    animator.start()
 }
 
 /**
