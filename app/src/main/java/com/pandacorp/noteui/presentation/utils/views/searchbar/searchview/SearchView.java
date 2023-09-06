@@ -478,7 +478,11 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         this.searchBar = searchBar;
         searchViewAnimationHelper.setSearchBar(searchBar);
         if (searchBar != null) {
-            searchBar.setOnClickListener(v -> show());
+            searchBar.setOnClickListener(v -> {
+                if (!searchBar.isCountModeEnabled()) {
+                    show();
+                }
+            });
         }
         updateNavigationIconIfNeeded();
         setUpBackgroundViewElevationOverlay();
