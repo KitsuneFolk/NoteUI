@@ -209,17 +209,19 @@ class MainScreen : Fragment() {
                     if (binding.searchBar.isCountModeEnabled) {
                         binding.searchBar.stopCountMode()
                         binding.searchBar.textView.animateAlpha(1f, 0f, 200) {
-                            binding.searchBar.hint = ContextCompat.getString(requireContext(), R.string.search_hint)
+                            binding.searchBar.hint =
+                                ContextCompat.getString(requireContext(), R.string.search_hint)
                             binding.searchBar.textView.animateAlpha(0f, 1f, 200)
                         }
+                        binding.searchBar.setNavigationOnClickListener(null)
                         binding.searchBar.menu.clear()
                         binding.searchBar.inflateMenu(R.menu.menu_main)
-                        binding.searchBar.setNavigationOnClickListener(null)
+                        // Alpha animation for Settings Icon
+                        binding.searchBar.getChildAt(binding.searchBar.childCount - 1).animateAlpha(0f, 1f, 200)
                     }
                 } else {
                     if (!binding.searchBar.isCountModeEnabled) {
                         binding.searchBar.startCountMode()
-                        binding.searchBar.menu.clear()
                         binding.searchBar.setNavigationOnClickListener {
                             notesViewModel.selectedNotes.postValue(SparseBooleanArray())
                         }
@@ -227,8 +229,12 @@ class MainScreen : Fragment() {
                             binding.searchBar.hint = count.toString()
                             binding.searchBar.textView.animateAlpha(0f, 1f, 200)
                         }
+                        // Alpha animation for Settings Icon
+                        binding.searchBar.getChildAt(binding.searchBar.childCount - 1).animateAlpha(1f, 0f, 200) {
+                            binding.searchBar.menu.clear()
+                        }
                     } else {
-                       binding.searchBar.hint = count.toString()
+                        binding.searchBar.hint = count.toString()
                     }
                 }
             }
