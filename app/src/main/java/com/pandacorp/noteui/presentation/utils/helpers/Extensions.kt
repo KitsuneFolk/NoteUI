@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
@@ -31,11 +32,31 @@ fun Toolbar.hideToolbarWhileScrollingUseCase(isHide: Boolean) {
     this.layoutParams = layoutParams
 }
 
-fun Drawable.animateAlpha(fromAlpha: Float, toAlpha: Float, duration: Long, onAnimationEnd: (() -> Unit)? = null) {
+fun Drawable.animateAlpha(fromAlpha: Int, toAlpha: Int, duration: Long, onAnimationEnd: (() -> Unit)? = null) {
+    val animator = ValueAnimator.ofInt(fromAlpha, toAlpha).apply {
+        this.duration = duration
+        addUpdateListener {
+            alpha = it.animatedValue as Int
+        }
+        onAnimationEnd?.let {
+            addListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {}
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationRepeat(animation: Animator) {}
+                override fun onAnimationEnd(animation: Animator) {
+                    it.invoke()
+                }
+            })
+        }
+    }
+    animator.start()
+}
+
+fun View.animateAlpha(fromAlpha: Float, toAlpha: Float, duration: Long, onAnimationEnd: (() -> Unit)? = null) {
     val animator = ValueAnimator.ofFloat(fromAlpha, toAlpha).apply {
         this.duration = duration
         addUpdateListener {
-            alpha = ((it.animatedValue as Float) * 255).toInt()
+            alpha = it.animatedValue as Float
         }
         onAnimationEnd?.let {
             addListener(object : Animator.AnimatorListener {

@@ -623,17 +623,17 @@ class SearchBar @JvmOverloads constructor(
 
     fun startCountMode() {
         isCountModeEnabled = true
-        navigationIcon?.animateAlpha(1f, 0f, 200) {
+        navigationIcon?.animateAlpha(255, 0, 200) {
             navigationIcon = defaultCountModeIcon
-            navigationIcon?.animateAlpha(0f, 1f, 200)
+            navigationIcon?.animateAlpha(0, 255, 200)
         }
     }
 
     fun stopCountMode() {
         isCountModeEnabled = false
-        navigationIcon?.animateAlpha(1f, 0f, 200) {
+        navigationIcon?.animateAlpha(255, 0, 200) {
             navigationIcon = defaultNavigationIcon
-            navigationIcon?.animateAlpha(0f, 1f, 200)
+            navigationIcon?.animateAlpha(0, 255, 200)
         }
     }
 

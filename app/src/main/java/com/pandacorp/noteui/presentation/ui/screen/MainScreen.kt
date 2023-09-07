@@ -23,6 +23,7 @@ import com.pandacorp.noteui.app.databinding.ScreenMainBinding
 import com.pandacorp.noteui.domain.model.NoteItem
 import com.pandacorp.noteui.presentation.ui.adapter.notes.NotesAdapter
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
+import com.pandacorp.noteui.presentation.utils.helpers.animateAlpha
 import com.pandacorp.noteui.presentation.utils.helpers.app
 import com.pandacorp.noteui.presentation.utils.helpers.sp
 import com.pandacorp.noteui.presentation.utils.views.searchbar.searchview.SearchView
@@ -207,7 +208,10 @@ class MainScreen : Fragment() {
                 if (count <= 0) {
                     if (binding.searchBar.isCountModeEnabled) {
                         binding.searchBar.stopCountMode()
-                        binding.searchBar.hint = ContextCompat.getString(requireContext(), R.string.search_hint)
+                        binding.searchBar.textView.animateAlpha(1f, 0f, 200) {
+                            binding.searchBar.hint = ContextCompat.getString(requireContext(), R.string.search_hint)
+                            binding.searchBar.textView.animateAlpha(0f, 1f, 200)
+                        }
                         binding.searchBar.menu.clear()
                         binding.searchBar.inflateMenu(R.menu.menu_main)
                         binding.searchBar.setNavigationOnClickListener(null)
@@ -219,8 +223,13 @@ class MainScreen : Fragment() {
                         binding.searchBar.setNavigationOnClickListener {
                             notesViewModel.selectedNotes.postValue(SparseBooleanArray())
                         }
+                        binding.searchBar.textView.animateAlpha(1f, 0f, 200) {
+                            binding.searchBar.hint = count.toString()
+                            binding.searchBar.textView.animateAlpha(0f, 1f, 200)
+                        }
+                    } else {
+                       binding.searchBar.hint = count.toString()
                     }
-                    binding.searchBar.hint = count.toString()
                 }
             }
         }
