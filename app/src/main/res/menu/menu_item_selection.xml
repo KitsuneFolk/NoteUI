@@ -6,11 +6,13 @@
         android:id="@+id/recyclerview_menu_delete"
         android:icon="@drawable/ic_delete"
         android:title="@string/remove"
-        app:showAsAction="ifRoom|collapseActionView"
+        android:contentDescription="@string/remove"
+        app:showAsAction="ifRoom"
         />
     <item
         android:id="@+id/recyclerview_menu_select_all"
         android:icon="@drawable/ic_select_all"
         android:title="@string/select_all"
-        app:showAsAction="ifRoom|collapseActionView"/>
+        android:contentDescription="@string/select_all"
+        app:showAsAction="ifRoom"/>
 </menu>
