@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
+import com.google.android.material.snackbar.Snackbar
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.ScreenMainBinding
 import com.pandacorp.noteui.domain.model.NoteItem
@@ -134,9 +135,60 @@ class MainScreen : Fragment() {
     private fun initViews(bundle: Bundle?) {
         binding.searchBar.menu.clear()
         binding.searchBar.inflateMenu(R.menu.menu_main)
-        binding.searchBar.setOnMenuItemClickListener {
-            if (it.itemId == R.id.menu_settings) {
-                navController.navigate(R.id.nav_settings_screen)
+        binding.searchBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_settings -> {
+                    navController.navigate(R.id.nav_settings_screen)
+                }
+
+                R.id.menu_select_all -> {
+                    val newList = SparseBooleanArray()
+                    // Select all notes, else unselect all
+                    if (notesViewModel.selectedNotes.value!!.size() != notesAdapter.itemCount) {
+                        repeat(notesAdapter.currentList.size) {
+                            newList.put(it, true)
+                        }
+                    }
+                    notesViewModel.selectedNotes.postValue(newList)
+                }
+
+                R.id.menu_remove -> {
+                    val notes = notesViewModel.selectedNotes.value!!
+                    if (notes.isEmpty()) return@setOnMenuItemClickListener true
+
+                    val selectedNotesPositions = mutableListOf<Int>().apply {
+                        repeat(notes.size()) { adapterPosition ->
+                            add(notes.keyAt(adapterPosition))
+                        }
+                    }
+
+                    val removedNotes = mutableListOf<NoteItem>().apply {
+                        selectedNotesPositions.forEach { i ->
+                            add(notesAdapter.currentList.getOrNull(i) ?: return@apply)
+                        }
+                    }
+                    notesViewModel.removeNotes(removedNotes)
+                    notesViewModel.selectedNotes.postValue(SparseBooleanArray())
+
+                    val snackBarUndoTitle = resources.getText(R.string.snackbar_undo_title)
+                        .toString() + " " + removedNotes.size.toString()
+
+                    Snackbar.make(binding.addFAB, snackBarUndoTitle, Constants.SNACKBAR_DURATION).apply {
+                        animationMode = Snackbar.ANIMATION_MODE_SLIDE
+                        val tv = TypedValue()
+                        requireContext().theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
+                        setActionTextColor(tv.data)
+                        setAction(R.string.undo) {
+                            notesViewModel.restoreNotes(removedNotes)
+                            Snackbar.make(binding.addFAB, snackBarUndoTitle, Constants.SNACKBAR_DURATION).apply {
+                                setText(R.string.successfully)
+                                duration = 1_000
+                                show()
+                            }
+                        }
+                        show()
+                    }
+                }
             }
             true
         }
@@ -236,7 +288,7 @@ class MainScreen : Fragment() {
                         val menuIcons = binding.searchBar.getChildAt(binding.searchBar.childCount - 1)
                         menuIcons.animateAlpha(1f, 0f, 200) {
                             binding.searchBar.menu.clear()
-                            binding.searchBar.inflateMenu(R.menu.menu_item_selection)
+                            binding.searchBar.inflateMenu(R.menu.menu_notes_selection)
                             menuIcons.animateAlpha(0f, 1f, 200)
                         }
                     } else {
