@@ -244,58 +244,63 @@ class MainScreen : Fragment() {
             }
         }
 
-        notesViewModel.selectedNotes.observe(viewLifecycleOwner) {
-            val count = it.size()
-            // Hide the FAB if there is selection
-            binding.addFAB.isEnabled = it.isEmpty()
-            if (it.isNotEmpty()) {
-                binding.addFAB.hide()
-            } else {
-                binding.addFAB.show()
-            }
+        notesViewModel.selectedNotes.apply {
+            var shouldAnimate = false
 
-            notesAdapter.selectList(it.clone()) // Set a list, but not a reference
-
-            binding.searchBar.post { // Use inside of post to resolve the bug when searchbar doesn't respond after rotation
-                if (count <= 0) {
-                    if (binding.searchBar.isCountModeEnabled) {
-                        binding.searchBar.stopCountMode()
-                        binding.searchBar.setNavigationOnClickListener(null)
-                        binding.searchBar.textView.animateAlpha(1f, 0f, 200) {
-                            binding.searchBar.text = notesViewModel.searchViewText.value
-                            binding.searchBar.hint =
-                                ContextCompat.getString(requireContext(), R.string.search_hint)
-                            binding.searchBar.textView.animateAlpha(0f, 1f, 200)
-                        }
-                        // Alpha animation for the Menu Icons
-                        val menuIcons = binding.searchBar.getChildAt(binding.searchBar.childCount - 1)
-                        menuIcons.animateAlpha(1f, 0f, 200) {
-                            binding.searchBar.menu.clear()
-                            binding.searchBar.inflateMenu(R.menu.menu_main)
-                            menuIcons.animateAlpha(0f, 1f, 200)
-                        }
-                    }
+            observe(viewLifecycleOwner) {
+                val count = it.size()
+                // Hide the FAB if there is selection
+                binding.addFAB.isEnabled = it.isEmpty()
+                if (it.isNotEmpty()) {
+                    binding.addFAB.hide()
                 } else {
-                    if (!binding.searchBar.isCountModeEnabled) {
-                        binding.searchBar.startCountMode()
-                        binding.searchBar.setNavigationOnClickListener {
-                            notesViewModel.selectedNotes.postValue(SparseBooleanArray())
-                        }
-                        binding.searchBar.textView.animateAlpha(1f, 0f, 200) {
-                            binding.searchBar.text = null
-                            binding.searchBar.hint = count.toString()
-                            binding.searchBar.textView.animateAlpha(0f, 1f, 200)
-                        }
-                        // Alpha animation for the Menu Icons
-                        val menuIcons = binding.searchBar.getChildAt(binding.searchBar.childCount - 1)
-                        menuIcons.animateAlpha(1f, 0f, 200) {
-                            binding.searchBar.menu.clear()
-                            binding.searchBar.inflateMenu(R.menu.menu_notes_selection)
-                            menuIcons.animateAlpha(0f, 1f, 200)
+                    binding.addFAB.show()
+                }
+
+                notesAdapter.selectList(it.clone()) // Set a list, but not a reference
+
+                binding.searchBar.post { // Use inside of post to resolve the bug when searchbar doesn't respond after rotation
+                    if (count <= 0) {
+                        if (binding.searchBar.isCountModeEnabled) {
+                            binding.searchBar.stopCountMode()
+                            binding.searchBar.setNavigationOnClickListener(null)
+                            binding.searchBar.textView.animateAlpha(shouldAnimate, 1f, 0f, 200) {
+                                binding.searchBar.text = notesViewModel.searchViewText.value
+                                binding.searchBar.hint =
+                                    ContextCompat.getString(requireContext(), R.string.search_hint)
+                                binding.searchBar.textView.animateAlpha(shouldAnimate, 0f, 1f, 200)
+                            }
+                            // Alpha animation for the Menu Icons
+                            val menuIcons = binding.searchBar.getChildAt(binding.searchBar.childCount - 1)
+                            menuIcons.animateAlpha(shouldAnimate, 1f, 0f, 200) {
+                                binding.searchBar.menu.clear()
+                                binding.searchBar.inflateMenu(R.menu.menu_main)
+                                menuIcons.animateAlpha(shouldAnimate, 0f, 1f, 200)
+                            }
                         }
                     } else {
-                        binding.searchBar.hint = count.toString()
+                        if (!binding.searchBar.isCountModeEnabled) {
+                            binding.searchBar.startCountMode(shouldAnimate)
+                            binding.searchBar.setNavigationOnClickListener {
+                                notesViewModel.selectedNotes.postValue(SparseBooleanArray())
+                            }
+                            binding.searchBar.textView.animateAlpha(shouldAnimate, 1f, 0f, 200) {
+                                binding.searchBar.text = null
+                                binding.searchBar.hint = count.toString()
+                                binding.searchBar.textView.animateAlpha(shouldAnimate, 0f, 1f, 200)
+                            }
+                            // Alpha animation for the Menu Icons
+                            val menuIcons = binding.searchBar.getChildAt(binding.searchBar.childCount - 1)
+                            menuIcons.animateAlpha(shouldAnimate, 1f, 0f, 200) {
+                                binding.searchBar.menu.clear()
+                                binding.searchBar.inflateMenu(R.menu.menu_notes_selection)
+                                menuIcons.animateAlpha(shouldAnimate, 0f, 1f, 200)
+                            }
+                        } else {
+                            binding.searchBar.hint = count.toString()
+                        }
                     }
+                    shouldAnimate = true
                 }
             }
         }

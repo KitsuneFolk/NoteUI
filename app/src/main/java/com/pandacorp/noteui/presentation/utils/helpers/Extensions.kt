@@ -52,24 +52,34 @@ fun Drawable.animateAlpha(fromAlpha: Int, toAlpha: Int, duration: Long, onAnimat
     animator.start()
 }
 
-fun View.animateAlpha(fromAlpha: Float, toAlpha: Float, duration: Long, onAnimationEnd: (() -> Unit)? = null) {
-    val animator = ValueAnimator.ofFloat(fromAlpha, toAlpha).apply {
-        this.duration = duration
-        addUpdateListener {
-            alpha = it.animatedValue as Float
+fun View.animateAlpha(
+    isAnimating: Boolean = true,
+    fromAlpha: Float,
+    toAlpha: Float,
+    duration: Long,
+    onAnimationEnd: (() -> Unit)? = null,
+) {
+    if (isAnimating) {
+        val animator = ValueAnimator.ofFloat(fromAlpha, toAlpha).apply {
+            this.duration = duration
+            addUpdateListener {
+                alpha = it.animatedValue as Float
+            }
+            onAnimationEnd?.let {
+                addListener(object : Animator.AnimatorListener {
+                    override fun onAnimationStart(animation: Animator) {}
+                    override fun onAnimationCancel(animation: Animator) {}
+                    override fun onAnimationRepeat(animation: Animator) {}
+                    override fun onAnimationEnd(animation: Animator) {
+                        it.invoke()
+                    }
+                })
+            }
         }
-        onAnimationEnd?.let {
-            addListener(object : Animator.AnimatorListener {
-                override fun onAnimationStart(animation: Animator) {}
-                override fun onAnimationCancel(animation: Animator) {}
-                override fun onAnimationRepeat(animation: Animator) {}
-                override fun onAnimationEnd(animation: Animator) {
-                    it.invoke()
-                }
-            })
-        }
+        animator.start()
+    } else {
+        onAnimationEnd?.invoke()
     }
-    animator.start()
 }
 
 /**
