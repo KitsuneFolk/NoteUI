@@ -262,6 +262,7 @@ class MainScreen : Fragment() {
                         binding.searchBar.stopCountMode()
                         binding.searchBar.setNavigationOnClickListener(null)
                         binding.searchBar.textView.animateAlpha(1f, 0f, 200) {
+                            binding.searchBar.text = notesViewModel.searchViewText.value
                             binding.searchBar.hint =
                                 ContextCompat.getString(requireContext(), R.string.search_hint)
                             binding.searchBar.textView.animateAlpha(0f, 1f, 200)
@@ -281,6 +282,7 @@ class MainScreen : Fragment() {
                             notesViewModel.selectedNotes.postValue(SparseBooleanArray())
                         }
                         binding.searchBar.textView.animateAlpha(1f, 0f, 200) {
+                            binding.searchBar.text = null
                             binding.searchBar.hint = count.toString()
                             binding.searchBar.textView.animateAlpha(0f, 1f, 200)
                         }
