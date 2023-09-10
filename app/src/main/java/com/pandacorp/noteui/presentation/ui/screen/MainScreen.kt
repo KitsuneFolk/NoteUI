@@ -103,7 +103,7 @@ class MainScreen : Fragment() {
     ): View {
         _binding = ScreenMainBinding.inflate(inflater, container, false)
 
-        initViews(savedInstanceState)
+        initViews()
 
         return binding.root
     }
@@ -132,7 +132,7 @@ class MainScreen : Fragment() {
         super.onDestroy()
     }
 
-    private fun initViews(bundle: Bundle?) {
+    private fun initViews() {
         binding.searchBar.menu.clear()
         binding.searchBar.inflateMenu(R.menu.menu_main)
         binding.searchBar.setOnMenuItemClickListener { menuItem ->
@@ -206,7 +206,6 @@ class MainScreen : Fragment() {
         binding.searchView.addTransitionListener { _, _, newState ->
             onBackPressedCallback.isEnabled = newState == SearchView.TransitionState.SHOWN
         }
-        if (bundle == null) binding.searchBar.startOnLoadAnimation()
         binding.notesRecyclerView.adapter = notesAdapter
         binding.searchRecyclerView.adapter = searchAdapter
         binding.addFAB.setOnClickListener {
