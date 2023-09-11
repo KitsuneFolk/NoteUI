@@ -28,6 +28,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,8 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.ActionMenuView
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.MarginLayoutParamsCompat
 import androidx.core.view.ViewCompat
@@ -621,7 +624,7 @@ class SearchBar @JvmOverloads constructor(
         return false
     }
 
-    fun startCountMode(withAnimation: Boolean) {
+    fun startCountMode(withAnimation: Boolean, count: Int, onBackArrowClick: () -> Unit = {}) {
         isCountModeEnabled = true
         if (withAnimation) {
             navigationIcon?.animateAlpha(255, 0, 200) {
@@ -631,13 +634,40 @@ class SearchBar @JvmOverloads constructor(
         } else {
             navigationIcon = defaultCountModeIcon
         }
+
+        setNavigationOnClickListener {
+            onBackArrowClick()
+        }
+        textView.animateAlpha(withAnimation, 1f, 0f, 200) {
+            text = null
+            hint = count.toString()
+            textView.animateAlpha(withAnimation, 0f, 1f, 200)
+        }
+        val menuIcons = getChildAt(childCount - 1)
+        menuIcons.animateAlpha(withAnimation, 1f, 0f, 200) {
+            menu.clear()
+            inflateMenu(com.pandacorp.noteui.app.R.menu.menu_notes_selection)
+            menuIcons.animateAlpha(withAnimation, 0f, 1f, 200)
+        }
     }
 
-    fun stopCountMode() {
+    fun stopCountMode(restoredText: String?, restoredHint: CharSequence) {
         isCountModeEnabled = false
         navigationIcon?.animateAlpha(255, 0, 200) {
             navigationIcon = defaultNavigationIcon
             navigationIcon?.animateAlpha(0, 255, 200)
+        }
+        setNavigationOnClickListener(null)
+        textView.animateAlpha(true, 1f, 0f, 200) {
+            text = restoredText
+            hint = restoredHint
+            textView.animateAlpha(true, 0f, 1f, 200)
+        }
+        val menuIcons = getChildAt(childCount - 1)
+        menuIcons.animateAlpha(true, 1f, 0f, 200) {
+            menu.clear()
+            inflateMenu(com.pandacorp.noteui.app.R.menu.menu_main)
+            menuIcons.animateAlpha(true, 0f, 1f, 200)
         }
     }
 

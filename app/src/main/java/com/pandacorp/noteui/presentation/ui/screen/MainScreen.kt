@@ -10,7 +10,6 @@ import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.util.isEmpty
-import androidx.core.util.isNotEmpty
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -24,7 +23,6 @@ import com.pandacorp.noteui.app.databinding.ScreenMainBinding
 import com.pandacorp.noteui.domain.model.NoteItem
 import com.pandacorp.noteui.presentation.ui.adapter.notes.NotesAdapter
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
-import com.pandacorp.noteui.presentation.utils.helpers.animateAlpha
 import com.pandacorp.noteui.presentation.utils.helpers.app
 import com.pandacorp.noteui.presentation.utils.helpers.sp
 import com.pandacorp.noteui.presentation.utils.views.searchbar.searchview.SearchView
@@ -244,62 +242,43 @@ class MainScreen : Fragment() {
         }
 
         notesViewModel.selectedNotes.apply {
-            var shouldAnimate = false
+            // Variable to not animate the count mode on rotation the first time the observer is called
+            var startWithAnimation = false
+            observe(viewLifecycleOwner) { selectedNotes ->
+                val count = selectedNotes.size()
+                val isEmpty = count == 0
 
-            observe(viewLifecycleOwner) {
-                val count = it.size()
-                // Hide the FAB if there is selection
-                binding.addFAB.isEnabled = it.isEmpty()
-                if (it.isNotEmpty()) {
-                    binding.addFAB.hide()
-                } else {
+                // Hide/show the FAB based on selection
+                binding.addFAB.isEnabled = isEmpty
+                if (isEmpty) {
                     binding.addFAB.show()
+                } else {
+                    binding.addFAB.hide()
                 }
 
-                notesAdapter.selectList(it.clone()) // Set a list, but not a reference
+                notesAdapter.selectList(selectedNotes.clone())
 
-                binding.searchBar.post { // Use inside of post to resolve the bug when searchbar doesn't respond after rotation
-                    if (count <= 0) {
-                        if (binding.searchBar.isCountModeEnabled) {
-                            binding.searchBar.stopCountMode()
-                            binding.searchBar.setNavigationOnClickListener(null)
-                            binding.searchBar.textView.animateAlpha(shouldAnimate, 1f, 0f, 200) {
-                                binding.searchBar.text = notesViewModel.searchViewText.value
-                                binding.searchBar.hint =
-                                    ContextCompat.getString(requireContext(), R.string.search_hint)
-                                binding.searchBar.textView.animateAlpha(shouldAnimate, 0f, 1f, 200)
-                            }
-                            // Alpha animation for the Menu Icons
-                            val menuIcons = binding.searchBar.getChildAt(binding.searchBar.childCount - 1)
-                            menuIcons.animateAlpha(shouldAnimate, 1f, 0f, 200) {
-                                binding.searchBar.menu.clear()
-                                binding.searchBar.inflateMenu(R.menu.menu_main)
-                                menuIcons.animateAlpha(shouldAnimate, 0f, 1f, 200)
-                            }
+                binding.searchBar.post { // Use inside of post to ensure correct work after rotation
+                    val searchBar = binding.searchBar
+                    if (isEmpty) {
+                        if (searchBar.isCountModeEnabled) {
+                            val restoredText = notesViewModel.searchViewText.value
+                            val restoredHint = ContextCompat.getString(requireContext(), R.string.search_hint)
+                            searchBar.stopCountMode(restoredText, restoredHint)
                         }
                     } else {
-                        if (!binding.searchBar.isCountModeEnabled) {
-                            binding.searchBar.startCountMode(shouldAnimate)
-                            binding.searchBar.setNavigationOnClickListener {
+                        if (!searchBar.isCountModeEnabled) {
+                            searchBar.startCountMode(startWithAnimation, count) {
                                 notesViewModel.selectedNotes.postValue(SparseBooleanArray())
                             }
-                            binding.searchBar.textView.animateAlpha(shouldAnimate, 1f, 0f, 200) {
-                                binding.searchBar.text = null
-                                binding.searchBar.hint = count.toString()
-                                binding.searchBar.textView.animateAlpha(shouldAnimate, 0f, 1f, 200)
-                            }
-                            // Alpha animation for the Menu Icons
-                            val menuIcons = binding.searchBar.getChildAt(binding.searchBar.childCount - 1)
-                            menuIcons.animateAlpha(shouldAnimate, 1f, 0f, 200) {
-                                binding.searchBar.menu.clear()
-                                binding.searchBar.inflateMenu(R.menu.menu_notes_selection)
-                                menuIcons.animateAlpha(shouldAnimate, 0f, 1f, 200)
-                            }
                         } else {
-                            binding.searchBar.hint = count.toString()
+                            searchBar.hint = count.toString()
+                        }
+                        searchBar.setNavigationOnClickListener {
+                            notesViewModel.selectedNotes.postValue(SparseBooleanArray())
                         }
                     }
-                    shouldAnimate = true
+                    startWithAnimation = true // Always animate after the first time observer is called
                 }
             }
         }
