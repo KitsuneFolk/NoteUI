@@ -16,8 +16,6 @@ package com.pandacorp.noteui.presentation.utils.views.searchbar.searchview;
  * limitations under the License.
  */
 
-import com.google.android.material.R;
-
 import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP;
 import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
 
@@ -26,14 +24,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.Build.VERSION_CODES;
 import android.os.Parcel;
 import android.os.Parcelable;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -48,20 +40,24 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import androidx.annotation.MenuRes;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
-import androidx.annotation.RequiresApi;
 import androidx.annotation.RestrictTo;
 import androidx.annotation.StringRes;
 import androidx.annotation.StyleRes;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.customview.view.AbsSavedState;
+
+import com.google.android.material.R;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.elevation.ElevationOverlayProvider;
@@ -78,11 +74,11 @@ import com.pandacorp.noteui.presentation.utils.views.searchbar.SearchBar;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * Layout that provides a full screen search view and can be used with {@link SearchBar}.
- *
  *
  * <p>The example below shows how to use the {@link SearchBar} and {@link SearchView} together:
  *
@@ -147,9 +143,9 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
 
     @Nullable private SearchBar searchBar;
     private int softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
-    private boolean animatedNavigationIcon;
-    private boolean animatedMenuItems;
-    private boolean autoShowKeyboard;
+    private final boolean animatedNavigationIcon;
+    private final boolean animatedMenuItems;
+    private final boolean autoShowKeyboard;
     private boolean useWindowInsetsController;
     private boolean statusBarSpacerEnabledOverride;
     @NonNull private TransitionState currentTransitionState = TransitionState.HIDDEN;
@@ -388,18 +384,18 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         } else {
             Drawable navigationIconDrawable =
                     DrawableCompat.wrap(
-                            AppCompatResources.getDrawable(getContext(), navigationIcon).mutate());
+                            Objects.requireNonNull(AppCompatResources.getDrawable(getContext(), navigationIcon)).mutate());
             if (toolbar.getNavigationIconTint() != null) {
                 DrawableCompat.setTint(navigationIconDrawable, toolbar.getNavigationIconTint());
             }
             toolbar.setNavigationIcon(
-                    new FadeThroughDrawable(searchBar.getNavigationIcon(), navigationIconDrawable));
+                    new FadeThroughDrawable(Objects.requireNonNull(searchBar.getNavigationIcon()), navigationIconDrawable));
             updateNavigationIconProgressIfNeeded();
         }
     }
 
     private boolean isNavigationIconDrawerArrowDrawable(@NonNull Toolbar toolbar) {
-        return DrawableCompat.unwrap(toolbar.getNavigationIcon()) instanceof DrawerArrowDrawable;
+        return DrawableCompat.unwrap(Objects.requireNonNull(toolbar.getNavigationIcon())) instanceof DrawerArrowDrawable;
     }
 
     /**
@@ -500,42 +496,12 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         headerContainer.setVisibility(VISIBLE);
     }
 
-    /** Remove a header view from the section above the search text area. */
-    public void removeHeaderView(@NonNull View headerView) {
-        headerContainer.removeView(headerView);
-        if (headerContainer.getChildCount() == 0) {
-            headerContainer.setVisibility(GONE);
-        }
-    }
-
-    /** Remove all header views from the section above the search text area. */
-    public void removeAllHeaderViews() {
-        headerContainer.removeAllViews();
-        headerContainer.setVisibility(GONE);
-    }
-
-    /**
-     * Sets whether the navigation icon should be animated from the {@link SearchBar} to {@link
-     * SearchView}.
-     */
-    public void setAnimatedNavigationIcon(boolean animatedNavigationIcon) {
-        this.animatedNavigationIcon = animatedNavigationIcon;
-    }
-
     /**
      * Returns whether the navigation icon should be animated from the {@link SearchBar} to {@link
      * SearchView}.
      */
     public boolean isAnimatedNavigationIcon() {
         return animatedNavigationIcon;
-    }
-
-    /**
-     * Sets whether the menu items should be animated from the {@link SearchBar} to {@link
-     * SearchView}.
-     */
-    public void setMenuItemsAnimated(boolean menuItemsAnimated) {
-        this.animatedMenuItems = menuItemsAnimated;
     }
 
     /**
@@ -546,34 +512,13 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         return animatedMenuItems;
     }
 
-    /** Sets whether the soft keyboard should be shown when the {@link SearchView} is shown. */
-    public void setAutoShowKeyboard(boolean autoShowKeyboard) {
-        this.autoShowKeyboard = autoShowKeyboard;
-    }
-
-    /** Returns whether the soft keyboard should be shown when the {@link SearchView} is shown. */
-    public boolean isAutoShowKeyboard() {
-        return autoShowKeyboard;
-    }
-
     /**
      * Sets whether the soft keyboard should be shown with {@code WindowInsetsController}.
      *
-     * @hide
      */
     @RestrictTo(LIBRARY_GROUP)
     public void setUseWindowInsetsController(boolean useWindowInsetsController) {
         this.useWindowInsetsController = useWindowInsetsController;
-    }
-
-    /**
-     * Returns whether the soft keyboard should be shown with {@code WindowInsetsController}.
-     *
-     * @hide
-     */
-    @RestrictTo(LIBRARY_GROUP)
-    public boolean isUseWindowInsetsController() {
-        return useWindowInsetsController;
     }
 
     /** Adds a listener to handle {@link SearchView} transitions such as showing and closing. */
@@ -581,44 +526,10 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         transitionListeners.add(transitionListener);
     }
 
-    /** Removes a listener to handle {@link SearchView} transitions such as showing and closing. */
-    public void removeTransitionListener(@NonNull TransitionListener transitionListener) {
-        transitionListeners.remove(transitionListener);
-    }
-
-    /** Inflate a menu to provide additional options. */
-    public void inflateMenu(@MenuRes int menuResId) {
-        toolbar.inflateMenu(menuResId);
-    }
-
-    /** Set a listener to handle menu item clicks. */
-    public void setOnMenuItemClickListener(
-            @Nullable OnMenuItemClickListener onMenuItemClickListener) {
-        toolbar.setOnMenuItemClickListener(onMenuItemClickListener);
-    }
-
-    /** Returns the search prefix {@link TextView}, which appears before the main {@link EditText}. */
-    @NonNull
-    public TextView getSearchPrefix() {
-        return searchPrefix;
-    }
-
     /** Sets the search prefix text. */
     public void setSearchPrefixText(@Nullable CharSequence searchPrefixText) {
         searchPrefix.setText(searchPrefixText);
         searchPrefix.setVisibility(TextUtils.isEmpty(searchPrefixText) ? GONE : VISIBLE);
-    }
-
-    /** Returns the search prefix text. */
-    @Nullable
-    public CharSequence getSearchPrefixText() {
-        return searchPrefix.getText();
-    }
-
-    /** Returns the {@link Toolbar} used by the {@link SearchView}. */
-    @NonNull
-    public Toolbar getToolbar() {
-        return toolbar;
     }
 
     /** Returns the main {@link EditText} which can be used for hint and search text. */
@@ -650,28 +561,6 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         editText.setText("");
     }
 
-    /** Returns the hint of main {@link EditText}. */
-    @Nullable
-    public CharSequence getHint() {
-        return editText.getHint();
-    }
-
-    /** Sets the hint of main {@link EditText}. */
-    public void setHint(@Nullable CharSequence hint) {
-        editText.setHint(hint);
-    }
-
-    /** Sets the hint of main {@link EditText}. */
-    public void setHint(@StringRes int hintResId) {
-        editText.setHint(hintResId);
-    }
-
-    /** Returns the current value of this {@link SearchView}'s soft input mode. */
-    @SuppressLint("KotlinPropertyAccess") // This is a not property.
-    public int getSoftInputMode() {
-        return softInputMode;
-    }
-
     /**
      * Sets the soft input mode for this {@link SearchView}. This is important because the {@link
      * SearchView} will use this to determine whether the keyboard should be shown/hidden at the same
@@ -693,7 +582,6 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
      * automatically by the {@link SearchView} during initial render, but make sure to invoke this if
      * you would like to override the default behavior.
      *
-     * @hide
      */
     @RestrictTo(LIBRARY_GROUP)
     public void setStatusBarSpacerEnabled(boolean enabled) {
@@ -703,12 +591,6 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
 
     private void setStatusBarSpacerEnabledInternal(boolean enabled) {
         statusBarSpacer.setVisibility(enabled ? VISIBLE : GONE);
-    }
-
-    /** Returns the current {@link TransitionState} for this {@link SearchView}. */
-    @NonNull
-    public TransitionState getCurrentTransitionState() {
-        return currentTransitionState;
     }
 
     void setTransitionState(@NonNull TransitionState state) {
@@ -722,12 +604,6 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         for (TransitionListener listener : listeners) {
             listener.onStateChanged(this, previousState, state);
         }
-    }
-
-    /** Returns whether the {@link SearchView}'s main content view is shown or showing. */
-    public boolean isShowing() {
-        return currentTransitionState.equals(TransitionState.SHOWN)
-                || currentTransitionState.equals(TransitionState.SHOWING);
     }
 
     /**
@@ -834,7 +710,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     public void setModalForAccessibility(boolean isSearchViewModal) {
         ViewGroup rootView = (ViewGroup) this.getRootView();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && isSearchViewModal) {
+        if (isSearchViewModal) {
             childImportantForAccessibilityMap = new HashMap<>(rootView.getChildCount());
         }
         updateChildImportantForAccessibility(rootView, isSearchViewModal);
@@ -842,17 +718,6 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         if (!isSearchViewModal) {
             // When SearchView is not modal, reset the important for accessibility map.
             childImportantForAccessibilityMap = null;
-        }
-    }
-
-    /**
-     * Sets the 'touchscreenBlocksFocus' attribute of the nested toolbar. The attribute defaults to
-     * 'true' for API level 26+. We need to set it to 'false' if keyboard navigation is needed for the
-     * search results.
-     */
-    public void setToolbarTouchscreenBlocksFocus(boolean touchscreenBlocksFocus) {
-        if (Build.VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
-            toolbar.setTouchscreenBlocksFocus(touchscreenBlocksFocus);
         }
     }
 
@@ -879,9 +744,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
                 }
             } else {
                 // Saves the important for accessibility value of the child view.
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    childImportantForAccessibilityMap.put(child, child.getImportantForAccessibility());
-                }
+                childImportantForAccessibilityMap.put(child, child.getImportantForAccessibility());
 
                 ViewCompat.setImportantForAccessibility(
                         child, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
@@ -893,10 +756,6 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     public static class Behavior extends CoordinatorLayout.Behavior<SearchView> {
 
         public Behavior() {}
-
-        public Behavior(@NonNull Context context, @Nullable AttributeSet attrs) {
-            super(context, attrs);
-        }
 
         @Override
         public boolean onDependentViewChanged(
@@ -938,12 +797,11 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof SavedState)) {
+        if (!(state instanceof SavedState savedState)) {
             super.onRestoreInstanceState(state);
             return;
         }
 
-        SavedState savedState = (SavedState) state;
         super.onRestoreInstanceState(savedState.getSuperState());
         setText(savedState.text);
         setVisible(savedState.visibility == VISIBLE);
@@ -969,7 +827,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR =
-                new ClassLoaderCreator<SavedState>() {
+                new ClassLoaderCreator<>() {
 
                     @Override
                     public SavedState createFromParcel(Parcel source, ClassLoader loader) {

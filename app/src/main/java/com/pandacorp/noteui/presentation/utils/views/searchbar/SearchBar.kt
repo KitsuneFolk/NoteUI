@@ -15,7 +15,6 @@
  */
 package com.pandacorp.noteui.presentation.utils.views.searchbar
 
-import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
@@ -28,7 +27,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.text.TextUtils
 import android.util.AttributeSet
-import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,14 +37,10 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.Dimension
 import androidx.annotation.MenuRes
-import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.ActionMenuView
 import androidx.appcompat.widget.Toolbar
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.MarginLayoutParamsCompat
 import androidx.core.view.ViewCompat
@@ -72,7 +66,7 @@ class SearchBar @JvmOverloads constructor(
 ) :
     Toolbar(MaterialThemeOverlay.wrap(context, attrs, defStyleAttr, DEF_STYLE_RES), attrs, defStyleAttr) {
     /** Returns the main [TextView] which can be used for hint and search text.  */
-    val textView: TextView
+    private val textView: TextView
     private val layoutInflated: Boolean
     private val defaultMarginsEnabled: Boolean
     private val searchBarAnimationHelper: SearchBarAnimationHelper
@@ -95,20 +89,20 @@ class SearchBar @JvmOverloads constructor(
 
     init {
         // Ensure we are using the correctly themed context rather than the context that was passed in.
-        val context = getContext()
+        val ensuredContext = getContext()
         validateAttributes(attrs)
-        defaultNavigationIcon = AppCompatResources.getDrawable(context, R.drawable.ic_search_black_24)
-        defaultCountModeIcon = AppCompatResources.getDrawable(context, R.drawable.ic_arrow_back_black_24)
+        defaultNavigationIcon = AppCompatResources.getDrawable(ensuredContext, R.drawable.ic_search_black_24)
+        defaultCountModeIcon = AppCompatResources.getDrawable(ensuredContext, R.drawable.ic_arrow_back_black_24)
         searchBarAnimationHelper = SearchBarAnimationHelper()
         val a = ThemeEnforcement.obtainStyledAttributes(
-            context,
+            ensuredContext,
             attrs,
             R.styleable.SearchBar,
             defStyleAttr,
             DEF_STYLE_RES,
         )
         val shapeAppearanceModel =
-            ShapeAppearanceModel.builder(context, attrs, defStyleAttr, DEF_STYLE_RES).build()
+            ShapeAppearanceModel.builder(ensuredContext, attrs, defStyleAttr, DEF_STYLE_RES).build()
         val elevation = a.getDimension(R.styleable.SearchBar_elevation, 0f)
         defaultMarginsEnabled = a.getBoolean(R.styleable.SearchBar_defaultMarginsEnabled, true)
         defaultScrollFlagsEnabled = a.getBoolean(R.styleable.SearchBar_defaultScrollFlagsEnabled, true)
@@ -130,7 +124,7 @@ class SearchBar @JvmOverloads constructor(
         }
         isClickable = true
         isFocusable = true
-        LayoutInflater.from(context).inflate(R.layout.mtrl_search_bar, this)
+        LayoutInflater.from(ensuredContext).inflate(R.layout.mtrl_search_bar, this)
         layoutInflated = true
         textView = findViewById(R.id.search_bar_text_view)
         ViewCompat.setElevation(this, elevation)
@@ -400,15 +394,6 @@ class SearchBar @JvmOverloads constructor(
         return centerView
     }
 
-    /** Sets the center view as a child. Pass in null for `view` to remove the center view.  */
-    fun setCenterView(view: View?) {
-        if (centerView != null) {
-            removeView(centerView)
-            centerView = null
-        }
-        view?.let { addView(it) }
-    }
-
     var text: CharSequence?
         /** Returns the text of main [TextView], which usually represents the search text.  */
         get() = textView.text
@@ -417,16 +402,6 @@ class SearchBar @JvmOverloads constructor(
             textView.text = text
         }
 
-    /** Sets the text of main [TextView].  */
-    fun setText(@StringRes textResId: Int) {
-        textView.setText(textResId)
-    }
-
-    /** Clears the text of main [TextView].  */
-    fun clearText() {
-        textView.text = ""
-    }
-
     var hint: CharSequence?
         /** Returns the hint of main [TextView].  */
         get() = textView.hint
@@ -434,11 +409,6 @@ class SearchBar @JvmOverloads constructor(
         set(hint) {
             textView.hint = hint
         }
-
-    /** Sets the hint of main [TextView].  */
-    fun setHint(@StringRes hintResId: Int) {
-        textView.setHint(hintResId)
-    }
 
     @get:ColorInt
     var strokeColor: Int
@@ -467,72 +437,23 @@ class SearchBar @JvmOverloads constructor(
             backgroundShape!!.topLeftCornerResolvedSize
 
     /**
-     * Returns whether the default [AppBarLayout] scroll flags are enabled. See [ ][SearchBar.DEFAULT_SCROLL_FLAGS].
-     */
-    fun isDefaultScrollFlagsEnabled(): Boolean {
-        return defaultScrollFlagsEnabled
-    }
-
-    /**
-     * Sets whether the default [AppBarLayout] scroll flags are enabled. See [ ][SearchBar.DEFAULT_SCROLL_FLAGS].
-     */
-    fun setDefaultScrollFlagsEnabled(defaultScrollFlagsEnabled: Boolean) {
-        this.defaultScrollFlagsEnabled = defaultScrollFlagsEnabled
-        setOrClearDefaultScrollFlags()
-    }
-
-    /**
-     * Starts the on load animation which transitions from the center view to the hint [ ].
-     */
-    fun startOnLoadAnimation() {
-        // Use a post() to make sure the SearchBar's menu is inflated before the animation starts.
-        post { searchBarAnimationHelper.startOnLoadAnimation(this) }
-    }
-
-    /**
      * Stops the on load animation which transitions from the center view to the hint [ ].
      */
     fun stopOnLoadAnimation() {
         searchBarAnimationHelper.stopOnLoadAnimation(this)
     }
 
-    var isOnLoadAnimationFadeInEnabled: Boolean
-        /** Returns whether the fade in part is enabled for the on load animation.  */
-        get() = searchBarAnimationHelper.isOnLoadAnimationFadeInEnabled
-        /** Sets whether the fade in part is enabled for the on load animation.  */
-        set(onLoadAnimationFadeInEnabled) {
-            searchBarAnimationHelper.isOnLoadAnimationFadeInEnabled = onLoadAnimationFadeInEnabled
-        }
-
-    /**
-     * Registers a callback for the On Load Animation, started and stopped via [ ][.startOnLoadAnimation] and [.stopOnLoadAnimation].
-     */
-    fun addOnLoadAnimationCallback(
-        onLoadAnimationCallback: OnLoadAnimationCallback,
-    ) {
-        searchBarAnimationHelper.addOnLoadAnimationCallback(onLoadAnimationCallback)
-    }
-
-    /**
-     * Unregisters a callback for the On Load Animation, started and stopped via [ ][.startOnLoadAnimation] and [.stopOnLoadAnimation].
-     */
-    fun removeOnLoadAnimationCallback(
-        onLoadAnimationCallback: OnLoadAnimationCallback,
-    ): Boolean {
-        return searchBarAnimationHelper.removeOnLoadAnimationCallback(onLoadAnimationCallback)
-    }
-
-    val isExpanding: Boolean
+    private val isExpanding: Boolean
         /** Returns whether the expand animation is running.  */
         get() = searchBarAnimationHelper.isExpanding
 
     /** See [SearchBar.expand].  */
-    fun expand(expandedView: View): Boolean {
+    private fun expand(expandedView: View): Boolean {
         return expand(expandedView, null)
     }
 
     /** See [SearchBar.expand].  */
-    fun expand(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
+    private fun expand(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
         return expand(expandedView, appBarLayout, false)
     }
 
@@ -546,7 +467,7 @@ class SearchBar @JvmOverloads constructor(
      *
      * @return whether or not the expand animation was started
      */
-    fun expand(
+    private fun expand(
         expandedView: View,
         appBarLayout: AppBarLayout?,
         skipAnimation: Boolean,
@@ -565,33 +486,17 @@ class SearchBar @JvmOverloads constructor(
         return false
     }
 
-    /**
-     * Adds a listener for the expand animation started via [.expand] and [ ][.expand].
-     */
-    fun addExpandAnimationListener(listener: AnimatorListenerAdapter) {
-        searchBarAnimationHelper.addExpandAnimationListener(listener)
-    }
-
-    /**
-     * Removes a listener for the expand animation started via [.expand] and [ ][.expand].
-     *
-     * @return true if a listener was removed as a result of this call
-     */
-    fun removeExpandAnimationListener(listener: AnimatorListenerAdapter): Boolean {
-        return searchBarAnimationHelper.removeExpandAnimationListener(listener)
-    }
-
-    val isCollapsing: Boolean
+    private val isCollapsing: Boolean
         /** Returns whether the collapse animation is running.  */
         get() = searchBarAnimationHelper.isCollapsing
 
     /** See [SearchBar.collapse].  */
-    fun collapse(expandedView: View): Boolean {
+    private fun collapse(expandedView: View): Boolean {
         return collapse(expandedView, null)
     }
 
     /** See [SearchBar.collapse].  */
-    fun collapse(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
+    private fun collapse(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
         return collapse(expandedView, appBarLayout, false)
     }
 
@@ -605,7 +510,7 @@ class SearchBar @JvmOverloads constructor(
      *
      * @return whether or not the collapse animation was started
      */
-    fun collapse(
+    private fun collapse(
         expandedView: View,
         appBarLayout: AppBarLayout?,
         skipAnimation: Boolean,
@@ -671,70 +576,8 @@ class SearchBar @JvmOverloads constructor(
         }
     }
 
-    /**
-     * Adds a listener for the collapse animation started via [.collapse] and [ ][.collapse].
-     */
-    fun addCollapseAnimationListener(listener: AnimatorListenerAdapter) {
-        searchBarAnimationHelper.addCollapseAnimationListener(listener)
-    }
-
-    /**
-     * Removes a listener for the collapse animation started via [.collapse] and [ ][.collapse].
-     *
-     * @return true if a listener was removed as a result of this call
-     */
-    fun removeCollapseAnimationListener(listener: AnimatorListenerAdapter): Boolean {
-        return searchBarAnimationHelper.removeCollapseAnimationListener(listener)
-    }
-
     val compatElevation: Float
         get() = if (backgroundShape != null) backgroundShape!!.elevation else ViewCompat.getElevation(this)
-
-    /** Behavior that sets up the scroll-away mode for an [SearchBar].  */
-    class ScrollingViewBehavior : AppBarLayout.ScrollingViewBehavior {
-        private var initialized = false
-
-        constructor()
-        constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
-
-        override fun onDependentViewChanged(
-            parent: CoordinatorLayout,
-            child: View,
-            dependency: View,
-        ): Boolean {
-            val changed = super.onDependentViewChanged(parent, child, dependency)
-            if (!initialized && dependency is AppBarLayout) {
-                initialized = true
-                setAppBarLayoutTransparent(dependency)
-            }
-            return changed
-        }
-
-        private fun setAppBarLayoutTransparent(appBarLayout: AppBarLayout) {
-            appBarLayout.setBackgroundColor(Color.TRANSPARENT)
-
-            // Remove AppBarLayout elevation shadow
-            if (VERSION.SDK_INT == VERSION_CODES.LOLLIPOP) {
-                // Workaround for elevation crash that only happens on Android 5.0
-                // Similar to https://stackoverflow.com/q/40928788
-                appBarLayout.outlineProvider = null
-            } else {
-                appBarLayout.targetElevation = 0f
-            }
-        }
-
-        override fun shouldHeaderOverlapScrollingChild(): Boolean {
-            return true
-        }
-    }
-
-    /**
-     * Callback for the animation started and stopped via [.startOnLoadAnimation] and [ ][.stopOnLoadAnimation].
-     */
-    abstract class OnLoadAnimationCallback {
-        fun onAnimationStart() {}
-        fun onAnimationEnd() {}
-    }
 
     override fun onSaveInstanceState(): Parcelable {
         val savedState = SavedState(super.onSaveInstanceState())
@@ -752,15 +595,8 @@ class SearchBar @JvmOverloads constructor(
         text = state.text
     }
 
-    internal class SavedState : AbsSavedState {
+    internal class SavedState(superState: Parcelable?) : AbsSavedState(superState!!) {
         var text: String? = null
-
-        @JvmOverloads
-        constructor(source: Parcel, classLoader: ClassLoader? = null) : super(source, classLoader) {
-            text = source.readString()
-        }
-
-        constructor(superState: Parcelable?) : super(superState!!)
 
         override fun writeToParcel(dest: Parcel, flags: Int) {
             super.writeToParcel(dest, flags)
