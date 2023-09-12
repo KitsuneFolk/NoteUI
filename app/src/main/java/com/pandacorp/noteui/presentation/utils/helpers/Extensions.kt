@@ -21,7 +21,7 @@ val Fragment.sp: SharedPreferences
 
 val Fragment.app get() = (requireActivity().application as App)
 
-fun Toolbar.hideToolbarWhileScrollingUseCase(isHide: Boolean) {
+fun Toolbar.hideToolbarWhileScrolling(isHide: Boolean) {
     val layoutParams = layoutParams as AppBarLayout.LayoutParams
     if (isHide) {
         layoutParams.scrollFlags =

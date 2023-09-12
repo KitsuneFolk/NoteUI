@@ -48,7 +48,7 @@ import com.pandacorp.noteui.presentation.utils.helpers.changeTextBackgroundColor
 import com.pandacorp.noteui.presentation.utils.helpers.changeTextForegroundColor
 import com.pandacorp.noteui.presentation.utils.helpers.changeTextGravity
 import com.pandacorp.noteui.presentation.utils.helpers.getJson
-import com.pandacorp.noteui.presentation.utils.helpers.hideToolbarWhileScrollingUseCase
+import com.pandacorp.noteui.presentation.utils.helpers.hideToolbarWhileScrolling
 import com.pandacorp.noteui.presentation.utils.helpers.insertImage
 import com.pandacorp.noteui.presentation.utils.helpers.makeTextBold
 import com.pandacorp.noteui.presentation.utils.helpers.makeTextItalic
@@ -332,7 +332,7 @@ class NoteScreen : Fragment() {
                 imm.hideSoftInputFromWindow(editText.windowToken, 0)
             }
         }
-        binding.toolbar.hideToolbarWhileScrollingUseCase(isHideToolbarWhileScrolling)
+        binding.toolbar.hideToolbarWhileScrolling(isHideToolbarWhileScrolling)
         binding.toolbar.addMenuProvider(
             object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -385,7 +385,7 @@ class NoteScreen : Fragment() {
         )
         binding.titleEditText.setOnFocusChangeListener { _, hasFocus ->
             if (isHideToolbarWhileScrolling) {
-                binding.toolbar.hideToolbarWhileScrollingUseCase(!hasFocus)
+                binding.toolbar.hideToolbarWhileScrolling(!hasFocus)
             }
             binding.toolbar.menu.clear()
             if (hasFocus) {
@@ -396,7 +396,7 @@ class NoteScreen : Fragment() {
         }
         binding.contentEditText.setOnFocusChangeListener { _, hasFocus ->
             if (isHideToolbarWhileScrolling) {
-                binding.toolbar.hideToolbarWhileScrollingUseCase(!hasFocus)
+                binding.toolbar.hideToolbarWhileScrolling(!hasFocus)
             }
             binding.toolbar.menu.clear()
             if (hasFocus) {
