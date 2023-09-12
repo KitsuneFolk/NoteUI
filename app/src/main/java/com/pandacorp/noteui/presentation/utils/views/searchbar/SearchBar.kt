@@ -270,7 +270,7 @@ class SearchBar @JvmOverloads constructor(
         }
         val navigationIconColor: Int = navigationIconTint ?: MaterialColors.getColor(
             this,
-            if (navigationIcon === defaultNavigationIcon) R.attr.colorOnSurfaceVariant else R.attr.colorOnSurface
+            if (navigationIcon === defaultNavigationIcon) R.attr.colorOnSurfaceVariant else R.attr.colorOnSurface,
         )
         val wrappedNavigationIcon = DrawableCompat.wrap(navigationIcon.mutate())
         DrawableCompat.setTint(wrappedNavigationIcon, navigationIconColor)
@@ -397,6 +397,7 @@ class SearchBar @JvmOverloads constructor(
     var text: CharSequence?
         /** Returns the text of main [TextView], which usually represents the search text.  */
         get() = textView.text
+
         /** Sets the text of main [TextView].  */
         set(text) {
             textView.text = text
@@ -405,6 +406,7 @@ class SearchBar @JvmOverloads constructor(
     var hint: CharSequence?
         /** Returns the hint of main [TextView].  */
         get() = textView.hint
+
         /** Sets the hint of main [TextView].  */
         set(hint) {
             textView.hint = hint
@@ -414,6 +416,7 @@ class SearchBar @JvmOverloads constructor(
     var strokeColor: Int
         /** Returns the color of the [SearchBar] outline stroke.  */
         get() = backgroundShape!!.strokeColor!!.defaultColor
+
         /** Sets the color of the [SearchBar] outline stroke.  */
         set(strokeColor) {
             if (this.strokeColor != strokeColor) {
@@ -425,6 +428,7 @@ class SearchBar @JvmOverloads constructor(
     var strokeWidth: Float
         /** Returns the width in pixels of the [SearchBar] outline stroke.  */
         get() = backgroundShape!!.strokeWidth
+
         /** Sets the width in pixels of the [SearchBar] outline stroke.  */
         set(strokeWidth) {
             if (this.strokeWidth != strokeWidth) {
