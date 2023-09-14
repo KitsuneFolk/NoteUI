@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This file contains overrides for Theme.SplashScreen.Common to resolve a bug where it lacks the necessary
+     attributes:
+     - <item name="android:windowActionBar">false</item>
+     - <item name="android:windowNoTitle">true</item>
+     This bug causes an unwanted action bar to appear. -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.SplashScreen" parent="Theme.SplashScreen.Common" tools:override="true">
+        <item name="postSplashScreenTheme">?android:attr/theme</item>
+        <item name="windowSplashScreenAnimationDuration" tools:ignore="PrivateResource">
+            @integer/default_icon_animation_duration
+        </item>
+        <item name="windowSplashScreenBackground">?android:colorBackground</item>
+        <item name="windowSplashScreenAnimatedIcon">@android:drawable/sym_def_app_icon</item>
+
+    </style>
+    <style name="Theme.SplashScreen.Common" parent="Base.Theme.SplashScreen.DayNight" tools:override="true">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground" tools:ignore="PrivateResource">
+            @drawable/compat_splash_screen_no_icon_background
+        </item>
+        <item name="android:opacity">opaque</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:fitsSystemWindows">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="splashScreenIconSize" tools:ignore="PrivateResource">@dimen/splashscreen_icon_size_no_background</item>
+    </style>
+    <style name="Theme.SplashScreen.IconBackground" parent="Theme.SplashScreen">
+        <item name="android:windowBackground" tools:ignore="PrivateResource">@drawable/compat_splash_screen</item>
+        <item name="splashScreenIconSize" tools:ignore="PrivateResource">@dimen/splashscreen_icon_size_with_background</item>
+    </style>
+</resources>
