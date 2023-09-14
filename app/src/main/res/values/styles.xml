@@ -72,10 +72,4 @@
         <item name="elevation">0dp</item>
     </style>
 
-    <style name="ActionModeStyle" parent="Widget.Material3.ActionMode">
-        <item name="background">?colorPrimary</item>
-        <item name="height">?android:attr/actionBarSize</item>
-    </style>
-
-    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 </resources>
