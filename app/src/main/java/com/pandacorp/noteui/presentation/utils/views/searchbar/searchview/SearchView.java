@@ -30,6 +30,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -267,8 +268,9 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         if (elevationOverlayProvider == null || backgroundView == null) {
             return;
         }
-        int backgroundColor =
-                elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(elevation);
+        var tv = new TypedValue();
+        getContext().getTheme().resolveAttribute(android.R.attr.colorBackground, tv, true);
+        int backgroundColor = elevationOverlayProvider.compositeOverlayIfNeeded(tv.data, elevation);
         backgroundView.setBackgroundColor(backgroundColor);
     }
 

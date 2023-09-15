@@ -190,20 +190,22 @@ class MainScreen : Fragment() {
             }
             true
         }
-        binding.searchView.editText.addTextChangedListener {
-            notesViewModel.searchViewText.postValue(binding.searchView.text.toString())
-        }
-
         val onBackPressedCallback: OnBackPressedCallback =
             object : OnBackPressedCallback(false) {
                 override fun handleOnBackPressed() {
                     binding.searchView.hide()
                 }
             }
-        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
-        binding.searchView.addTransitionListener { _, _, newState ->
-            onBackPressedCallback.isEnabled = newState == SearchView.TransitionState.SHOWN
+        binding.searchView.apply {
+            editText.addTextChangedListener {
+                notesViewModel.searchViewText.postValue(binding.searchView.text.toString())
+            }
+            addTransitionListener { _, _, newState ->
+                onBackPressedCallback.isEnabled = newState == SearchView.TransitionState.SHOWN
+            }
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
         binding.notesRecyclerView.adapter = notesAdapter
         binding.searchRecyclerView.adapter = searchAdapter
         binding.addFAB.setOnClickListener {
