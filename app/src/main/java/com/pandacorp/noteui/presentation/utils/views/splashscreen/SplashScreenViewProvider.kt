@@ -86,7 +86,7 @@ class SplashScreenViewProvider internal constructor(ctx: Activity) {
             FrameLayout.inflate(
                 activity,
                 R.layout.splash_screen_view,
-                null
+                null,
             ) as ViewGroup
         }
 
@@ -126,7 +126,7 @@ class SplashScreenViewProvider internal constructor(ctx: Activity) {
             platformView.remove()
             ThemeUtils.Api31.applyThemesSystemBarAppearance(
                 activity.theme,
-                activity.window.decorView
+                activity.window.decorView,
             )
         }
     }
