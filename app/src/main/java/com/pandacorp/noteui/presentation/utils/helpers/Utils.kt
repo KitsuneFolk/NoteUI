@@ -164,6 +164,5 @@ class Utils {
                 root.layoutParams = lp
             }
         }
-
     }
 }

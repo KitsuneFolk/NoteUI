@@ -164,7 +164,7 @@ class NoteScreen : Fragment() {
     private val isHideToolbarWhileScrolling by lazy {
         sp.getBoolean(
             Constants.Preferences.isHideActionBarOnScrollKey,
-            Constants.Preferences.isHideActionBarOnScrollDefaultValue
+            Constants.Preferences.isHideActionBarOnScrollDefaultValue,
         )
     }
 
