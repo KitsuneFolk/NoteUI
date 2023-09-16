@@ -8,7 +8,6 @@ import com.fragula2.animation.SwipeController
 import com.fragula2.utils.findSwipeController
 import com.pandacorp.noteui.app.databinding.ActivityMainBinding
 import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
-import com.pandacorp.noteui.presentation.utils.helpers.Utils
 import com.pandacorp.noteui.presentation.utils.views.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : AppCompatActivity() {
@@ -26,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         PreferenceHandler.setTheme(this)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Utils.setUiWindowInsets(this, binding.root) // Apply insets manually
 
         initViews()
     }

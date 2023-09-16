@@ -17,6 +17,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -44,6 +45,7 @@ import com.pandacorp.noteui.presentation.utils.dialog.CustomBottomSheetDialog
 import com.pandacorp.noteui.presentation.utils.dialog.DialogColorPicker
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import com.pandacorp.noteui.presentation.utils.helpers.Utils
+import com.pandacorp.noteui.presentation.utils.helpers.Utils.Companion.setDecorFitsSystemWindows
 import com.pandacorp.noteui.presentation.utils.helpers.changeTextBackgroundColor
 import com.pandacorp.noteui.presentation.utils.helpers.changeTextForegroundColor
 import com.pandacorp.noteui.presentation.utils.helpers.changeTextGravity
@@ -160,7 +162,10 @@ class NoteScreen : Fragment() {
     }
 
     private val isHideToolbarWhileScrolling by lazy {
-        sp.getBoolean(Constants.Preferences.isHideActionBarOnScrollKey, Constants.Preferences.isHideActionBarOnScrollDefaultValue)
+        sp.getBoolean(
+            Constants.Preferences.isHideActionBarOnScrollKey,
+            Constants.Preferences.isHideActionBarOnScrollDefaultValue
+        )
     }
 
     private lateinit var undoRedoTitleEditTextHelper: UndoRedoHelper
@@ -211,7 +216,7 @@ class NoteScreen : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = ScreenNoteBinding.inflate(inflater, container, false)
 
@@ -226,6 +231,7 @@ class NoteScreen : Fragment() {
         noteItem.content = binding.contentEditText.getJson()
         currentNoteViewModel.updateNote(noteItem)
         super.onPause()
+        setDecorFitsSystemWindows(binding.root, true)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -279,29 +285,34 @@ class NoteScreen : Fragment() {
             isUseGlide = false,
         )
 
-        binding.drawerMenu.setOnApplyWindowInsetsListener { _, windowInsets ->
-            val isHorizontal = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        val isHorizontal = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            requireActivity().window.decorView.setOnApplyWindowInsetsListener { _, windowInsets ->
+                if (isHorizontal) {
+                    // Don't resize in the landscape orientation, due to small screen size
+                    return@setOnApplyWindowInsetsListener windowInsets
+                }
+
+                val imeHeight = windowInsets.getInsets(WindowInsets.Type.ime()).bottom
+                val layoutParams = binding.actionMenuRoot.layoutParams as MarginLayoutParams
+                layoutParams.bottomMargin = imeHeight
+                binding.actionMenuRoot.layoutParams = layoutParams
+
+                windowInsets
+            }
+        } else {
             if (isHorizontal) {
-                // Don't resize if the user is in the landscape orientation, due to small screen size
+                // Don't resize in the landscape orientation, due to small screen size
                 requireActivity().window?.setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN,
                 )
-                return@setOnApplyWindowInsetsListener windowInsets
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                val imeHeight = windowInsets.getInsets(WindowInsets.Type.ime()).bottom
-                val layoutParams = (binding.actionMenuRoot.layoutParams as ViewGroup.MarginLayoutParams)
-                layoutParams.bottomMargin = imeHeight
-                binding.actionMenuRoot.layoutParams = layoutParams
             } else {
                 @Suppress("DEPRECATION")
                 requireActivity().window?.setSoftInputMode(
                     WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE,
                 )
             }
-            windowInsets
         }
 
         addStopSwipeOnTouch(binding.titleEditText)
@@ -390,8 +401,10 @@ class NoteScreen : Fragment() {
             binding.toolbar.menu.clear()
             if (hasFocus) {
                 binding.toolbar.inflateMenu(R.menu.menu_note_extended)
+                setDecorFitsSystemWindows(binding.root, false) // Needed to elevate the action menu on API 30+
             } else {
                 binding.toolbar.inflateMenu(R.menu.menu_note)
+                setDecorFitsSystemWindows(binding.root, true)
             }
         }
         binding.contentEditText.setOnFocusChangeListener { _, hasFocus ->
@@ -401,8 +414,10 @@ class NoteScreen : Fragment() {
             binding.toolbar.menu.clear()
             if (hasFocus) {
                 binding.toolbar.inflateMenu(R.menu.menu_note_extended)
+                setDecorFitsSystemWindows(binding.root, false) // Needed to elevate the action menu on API 30+
             } else {
                 binding.toolbar.inflateMenu(R.menu.menu_note)
+                setDecorFitsSystemWindows(binding.root, true)
             }
         }
 

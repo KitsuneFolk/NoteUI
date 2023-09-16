@@ -1,6 +1,5 @@
 package com.pandacorp.noteui.presentation.utils.helpers
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -9,12 +8,11 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updateMargins
+import androidx.fragment.app.Fragment
 import androidx.transition.Slide
 import androidx.transition.Transition
 import androidx.transition.TransitionManager
@@ -64,7 +62,7 @@ class Utils {
             background: String,
             imageView: ImageView,
             isAdapter: Boolean = false,
-            isUseGlide: Boolean = true
+            isUseGlide: Boolean = true,
         ) {
             try {
                 // note.background is an image drawable from Utils
@@ -118,7 +116,7 @@ class Utils {
          */
         fun animateViewSliding(
             showingView: View,
-            hidingView: View
+            hidingView: View,
         ) {
             val parent = showingView.parent as ViewGroup
             val showingAnimation = Slide(Gravity.BOTTOM).apply {
@@ -145,25 +143,27 @@ class Utils {
         }
 
         /**
-         * Method to apply insets to window to set soft input method SOFT_INPUT_ADJUST_RESIZE for api >= 30
+         * Sets the system window insets behavior for the fragment's window.
+         *
+         * @param root The Root view of the layout
+         * @param fitsSystemWindows True to fit system windows, false otherwise.
          */
-        fun setUiWindowInsets(activity: Activity, root: View) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) activity.window.setDecorFitsSystemWindows(false)
-            var posTop = 0
-            var posBottom = 0
-            ViewCompat.setOnApplyWindowInsetsListener(root) { _, insets ->
-                if (posBottom == 0) {
-                    posTop = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
-                    posBottom = insets.getInsets(WindowInsetsCompat.Type.systemBars()).bottom
+        fun Fragment.setDecorFitsSystemWindows(root: View, fitsSystemWindows: Boolean) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                requireActivity().window.setDecorFitsSystemWindows(fitsSystemWindows)
+
+                val lp = root.layoutParams as MarginLayoutParams
+                if (fitsSystemWindows) {
+                    lp.topMargin = 0
+                } else {
+                    // When not fitting system windows, set top margin to the system bar height so there's overlap
+                    val insets = requireActivity().window.decorView.rootWindowInsets
+                        .getInsets(WindowInsetsCompat.Type.systemBars())
+                    lp.topMargin = insets.top
                 }
-                root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    updateMargins(
-                        top = posTop,
-                        bottom = posBottom,
-                    )
-                }
-                insets
+                root.layoutParams = lp
             }
         }
+
     }
 }
