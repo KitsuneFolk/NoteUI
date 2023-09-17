@@ -877,9 +877,12 @@ public class AnimatedTextView extends View {
     private final AnimatedTextDrawable drawable;
     private int lastMaxWidth, maxWidth;
 
+    private int textColor;
+    public CharSequence text;
+    public CharSequence hint;
+
     private CharSequence toSetText;
     private boolean toSetMoveDown;
-    public boolean adaptWidth = true;
 
     public AnimatedTextView(Context context) {
         this(context, false, false, false);
@@ -912,11 +915,14 @@ public class AnimatedTextView extends View {
         }
         if (lastMaxWidth != width && getLayoutParams().width != 0) {
             drawable.setBounds(getPaddingLeft(), getPaddingTop(), width - getPaddingRight(), height - getPaddingBottom());
-            setText(drawable.getText(), false);
+            setTextInternal(drawable.getText(), false, true);
         }
         lastMaxWidth = width;
-        if (adaptWidth && MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.AT_MOST) {
+        if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.AT_MOST || width == 0) {
             width = getPaddingLeft() + (int) Math.ceil(drawable.getWidth()) + getPaddingRight();
+        }
+        if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.AT_MOST || height == 0) {
+            height = getPaddingTop() + (int) Math.ceil(drawable.getHeight()) + getPaddingBottom();
         }
         setMeasuredDimension(width, height);
     }
@@ -947,8 +953,17 @@ public class AnimatedTextView extends View {
         drawable.ignoreRTL = value;
     }
 
+    public void setText(CharSequence text, boolean withAnimation, boolean moveDown) {
+        this.text = text;
+        if (this.text != null && this.text.length() > 0) {
+            setTextInternal(text, withAnimation, moveDown);
+        } else {
+            setHint(hint, withAnimation, moveDown);
+        }
+    }
+
     private boolean first = true;
-    public void setText(CharSequence text, boolean animated, boolean moveDown) {
+    private void setTextInternal(CharSequence text, boolean animated, boolean moveDown) {
         animated = !first && animated;
         first = false;
         if (animated) {
@@ -971,12 +986,27 @@ public class AnimatedTextView extends View {
         }
     }
 
+    public final void setHint(CharSequence hint, boolean withAnimation, boolean moveDown) {
+        this.hint = TextUtils.stringOrSpannedString(hint);
+        if (text == null || text.length() == 0) {
+            setHintInternal(hint, withAnimation, moveDown);
+        }
+    }
+
+    private void setHintInternal(CharSequence hint, boolean withAnimation, boolean moveDown) {
+        setTextInternal(hint, withAnimation, moveDown);
+    }
+
+    public CharSequence getHint() {
+        return hint;
+    }
+
     public int width() {
         return getPaddingLeft() + (int) Math.ceil(drawable.getCurrentWidth()) + getPaddingRight();
     }
 
     public CharSequence getText() {
-        return drawable.getText();
+        return text;
     }
 
     public int getTextHeight() {
@@ -988,7 +1018,8 @@ public class AnimatedTextView extends View {
     }
 
     public void setTextColor(int color) {
-        drawable.setTextColor(color);
+        textColor = color;
+        drawable.setTextColor(textColor);
         invalidate();
     }
 

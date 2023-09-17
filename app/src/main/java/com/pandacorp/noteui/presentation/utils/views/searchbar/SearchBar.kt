@@ -30,14 +30,14 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.EditText
-import android.widget.TextView
+import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.Dimension
 import androidx.annotation.MenuRes
-import androidx.annotation.StyleRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.ActionMenuView
 import androidx.appcompat.widget.Toolbar
@@ -45,7 +45,6 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.MarginLayoutParamsCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.accessibility.AccessibilityManagerCompat
-import androidx.core.widget.TextViewCompat
 import androidx.customview.view.AbsSavedState
 import com.google.android.material.R
 import com.google.android.material.appbar.AppBarLayout
@@ -57,6 +56,10 @@ import com.google.android.material.shape.MaterialShapeUtils
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
 import com.pandacorp.noteui.presentation.utils.helpers.animateAlpha
+import com.pandacorp.noteui.presentation.utils.views.AndroidUtilities
+import com.pandacorp.noteui.presentation.utils.views.AnimatedTextView
+import com.pandacorp.noteui.presentation.utils.views.CubicBezierInterpolator
+import com.pandacorp.noteui.app.R as nativeR
 
 @SuppressLint("RestrictedApi", "PrivateResource")
 class SearchBar @JvmOverloads constructor(
@@ -65,8 +68,8 @@ class SearchBar @JvmOverloads constructor(
     defStyleAttr: Int = R.attr.materialSearchBarStyle,
 ) :
     Toolbar(MaterialThemeOverlay.wrap(context, attrs, defStyleAttr, DEF_STYLE_RES), attrs, defStyleAttr) {
-    /** Returns the main [TextView] which can be used for hint and search text.  */
-    private val textView: TextView
+    /** Returns the main [AnimatedTextView] which can be used for hint and search text.  */
+    private val textView: AnimatedTextView
     private val layoutInflated: Boolean
     private val defaultMarginsEnabled: Boolean
     private val searchBarAnimationHelper: SearchBarAnimationHelper
@@ -86,6 +89,33 @@ class SearchBar @JvmOverloads constructor(
             isFocusableInTouchMode = enabled
         }
     var isCountModeEnabled = false
+
+    var text: CharSequence?
+
+    private var hint: CharSequence?
+
+    @get:ColorInt
+    var strokeColor: Int
+        /** Returns the color of the [SearchBar] outline stroke.  */
+        get() = backgroundShape!!.strokeColor!!.defaultColor
+        /** Sets the color of the [SearchBar] outline stroke.  */
+        set(strokeColor) {
+            if (this.strokeColor != strokeColor) {
+                backgroundShape!!.strokeColor = ColorStateList.valueOf(strokeColor)
+            }
+        }
+
+    @get:Dimension
+    var strokeWidth: Float
+        get() = backgroundShape!!.strokeWidth
+        set(strokeWidth) {
+            if (this.strokeWidth != strokeWidth) {
+                backgroundShape!!.strokeWidth = strokeWidth
+            }
+        }
+    val cornerSize: Float
+        get() = // Assume all corner sizes are the same.
+            backgroundShape!!.topLeftCornerResolvedSize
 
     init {
         // Ensure we are using the correctly themed context rather than the context that was passed in.
@@ -113,9 +143,10 @@ class SearchBar @JvmOverloads constructor(
         if (a.hasValue(R.styleable.SearchBar_navigationIconTint)) {
             navigationIconTint = a.getColor(R.styleable.SearchBar_navigationIconTint, -1)
         }
-        val textAppearanceResId = a.getResourceId(R.styleable.SearchBar_android_textAppearance, -1)
         val text = a.getString(R.styleable.SearchBar_android_text)
         val hint = a.getString(R.styleable.SearchBar_android_hint)
+        this.text = text
+        this.hint = hint
         val strokeWidth = a.getDimension(R.styleable.SearchBar_strokeWidth, -1f)
         val strokeColor = a.getColor(R.styleable.SearchBar_strokeColor, Color.TRANSPARENT)
         a.recycle()
@@ -124,11 +155,15 @@ class SearchBar @JvmOverloads constructor(
         }
         isClickable = true
         isFocusable = true
-        LayoutInflater.from(ensuredContext).inflate(R.layout.mtrl_search_bar, this)
+
+        LayoutInflater.from(ensuredContext).inflate(nativeR.layout.mtrl_search_bar, this)
         layoutInflated = true
-        textView = findViewById(R.id.search_bar_text_view)
+        textView = AnimatedTextView(context)
+        initTextView()
+        val frameLayout = findViewById<FrameLayout>(nativeR.id.frameLayout)
+        frameLayout.addView(textView)
+
         ViewCompat.setElevation(this, elevation)
-        initTextView(textAppearanceResId, text, hint)
         initBackground(shapeAppearanceModel, elevation, strokeWidth, strokeColor)
         accessibilityManager = getContext().getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
         setupTouchExplorationStateChangeListener()
@@ -188,12 +223,20 @@ class SearchBar @JvmOverloads constructor(
         setNavigationIconDecorative(true)
     }
 
-    private fun initTextView(@StyleRes textAppearanceResId: Int, text: String?, hint: String?) {
-        if (textAppearanceResId != -1) {
-            TextViewCompat.setTextAppearance(textView, textAppearanceResId)
+    private fun initTextView() {
+        textView.layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
+        textView.setPadding(AndroidUtilities.dp(5f), 0, AndroidUtilities.dp(5f), 0)
+        textView.setAnimationProperties(1f, 0, 800, CubicBezierInterpolator.EASE_OUT_QUINT)
+        textView.setTextSize(AndroidUtilities.dp(30f).toFloat())
+        textView.drawable.setAllowCancel(true)
+        textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+        textView.textColor = MaterialColors.getColor(this, R.attr.colorOnSurface)
+
+        post {
+            setText(text, withAnimation = false, moveDown = false)
+            setHint(hint, withAnimation = false, moveDown = false)
         }
-        this.text = text
-        this.hint = hint
+
         if (navigationIcon == null) {
             MarginLayoutParamsCompat.setMarginStart(
                 (textView.layoutParams as MarginLayoutParams),
@@ -221,6 +264,16 @@ class SearchBar @JvmOverloads constructor(
         backgroundShape!!.fillColor = ColorStateList.valueOf(backgroundColor)
         background = RippleDrawable(ColorStateList.valueOf(rippleColor), backgroundShape, backgroundShape)
         ViewCompat.setBackground(this, background)
+    }
+
+    fun setText(text: CharSequence?, withAnimation: Boolean = true, moveDown: Boolean = true) {
+        this.text = text
+        textView.setText(text, withAnimation, moveDown)
+    }
+
+    fun setHint(hint: CharSequence?, withAnimation: Boolean = true, moveDown: Boolean = true) {
+        this.hint = hint
+        textView.setHint(hint, withAnimation, moveDown)
     }
 
     override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
@@ -394,52 +447,6 @@ class SearchBar @JvmOverloads constructor(
         return centerView
     }
 
-    var text: CharSequence?
-        /** Returns the text of main [TextView], which usually represents the search text.  */
-        get() = textView.text
-
-        /** Sets the text of main [TextView].  */
-        set(text) {
-            textView.text = text
-        }
-
-    var hint: CharSequence?
-        /** Returns the hint of main [TextView].  */
-        get() = textView.hint
-
-        /** Sets the hint of main [TextView].  */
-        set(hint) {
-            textView.hint = hint
-        }
-
-    @get:ColorInt
-    var strokeColor: Int
-        /** Returns the color of the [SearchBar] outline stroke.  */
-        get() = backgroundShape!!.strokeColor!!.defaultColor
-
-        /** Sets the color of the [SearchBar] outline stroke.  */
-        set(strokeColor) {
-            if (this.strokeColor != strokeColor) {
-                backgroundShape!!.strokeColor = ColorStateList.valueOf(strokeColor)
-            }
-        }
-
-    @get:Dimension
-    var strokeWidth: Float
-        /** Returns the width in pixels of the [SearchBar] outline stroke.  */
-        get() = backgroundShape!!.strokeWidth
-
-        /** Sets the width in pixels of the [SearchBar] outline stroke.  */
-        set(strokeWidth) {
-            if (this.strokeWidth != strokeWidth) {
-                backgroundShape!!.strokeWidth = strokeWidth
-            }
-        }
-    val cornerSize: Float
-        /** Returns the size in pixels of the [SearchBar] corners.  */
-        get() = // Assume all corner sizes are the same.
-            backgroundShape!!.topLeftCornerResolvedSize
-
     /**
      * Stops the on load animation which transitions from the center view to the hint [ ].
      */
@@ -548,8 +555,8 @@ class SearchBar @JvmOverloads constructor(
             onBackArrowClick()
         }
         textView.animateAlpha(withAnimation, 1f, 0f, 200) {
-            text = null
-            hint = count.toString()
+            setText(null, false)
+            setHint(count.toString(), false)
             textView.animateAlpha(withAnimation, 0f, 1f, 200)
         }
         val menuIcons = getChildAt(childCount - 1)
@@ -568,8 +575,8 @@ class SearchBar @JvmOverloads constructor(
         }
         setNavigationOnClickListener(null)
         textView.animateAlpha(true, 1f, 0f, 200) {
-            text = restoredText
-            hint = restoredHint
+            setText(restoredText, false)
+            setHint(restoredHint, false)
             textView.animateAlpha(true, 0f, 1f, 200)
         }
         val menuIcons = getChildAt(childCount - 1)
@@ -585,7 +592,6 @@ class SearchBar @JvmOverloads constructor(
 
     override fun onSaveInstanceState(): Parcelable {
         val savedState = SavedState(super.onSaveInstanceState())
-        val text = text
         savedState.text = text?.toString()
         return savedState
     }
@@ -596,7 +602,7 @@ class SearchBar @JvmOverloads constructor(
             return
         }
         super.onRestoreInstanceState(state.superState)
-        text = state.text
+        setText(text)
     }
 
     internal class SavedState(superState: Parcelable?) : AbsSavedState(superState!!) {

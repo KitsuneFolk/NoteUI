@@ -246,6 +246,7 @@ class MainScreen : Fragment() {
         notesViewModel.selectedNotes.apply {
             // Variable to not animate the count mode on rotation the first time the observer is called
             var startWithAnimation = false
+            var previousCount = 0
             observe(viewLifecycleOwner) { selectedNotes ->
                 val count = selectedNotes.size()
                 val isEmpty = count == 0
@@ -260,6 +261,8 @@ class MainScreen : Fragment() {
 
                 notesAdapter.selectList(selectedNotes.clone())
 
+                val moveDown = previousCount < count
+                previousCount = count
                 binding.searchBar.post { // Use inside of post to ensure correct work after rotation
                     val searchBar = binding.searchBar
                     if (isEmpty) {
@@ -274,7 +277,7 @@ class MainScreen : Fragment() {
                                 notesViewModel.selectedNotes.postValue(SparseBooleanArray())
                             }
                         } else {
-                            searchBar.hint = count.toString()
+                            searchBar.setHint(count.toString(), true, moveDown)
                         }
                         searchBar.setNavigationOnClickListener {
                             notesViewModel.selectedNotes.postValue(SparseBooleanArray())
@@ -309,7 +312,7 @@ class MainScreen : Fragment() {
 
         notesViewModel.searchViewText.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
-                binding.searchBar.text = it
+                binding.searchBar.setText(it, false)
                 searchJob?.cancel()
                 searchJob = CoroutineScope(Dispatchers.Main).launch {
                     val filteredNotes = getFilteredNotes(it, notesViewModel.notesList.value)
