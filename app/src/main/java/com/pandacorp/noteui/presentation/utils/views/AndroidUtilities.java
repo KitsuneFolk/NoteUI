@@ -1,13 +1,10 @@
 package com.pandacorp.noteui.presentation.utils.views;
 
 import android.graphics.Point;
-import android.graphics.RectF;
 
 public class AndroidUtilities {
     public static Point displaySize = new Point();
     public static float density = 1;
-
-    public static final RectF rectTmp = new RectF();
 
     public static float lerp(float a, float b, float f) {
         return a + f * (b - a);

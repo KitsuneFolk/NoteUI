@@ -230,7 +230,7 @@ class SearchBar @JvmOverloads constructor(
         textView.setTextSize(AndroidUtilities.dp(30f).toFloat())
         textView.drawable.setAllowCancel(true)
         textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
-        textView.textColor = MaterialColors.getColor(this, R.attr.colorOnSurface)
+        textView.setTextColor(MaterialColors.getColor(this, R.attr.colorOnSurface))
 
         post {
             setText(text, withAnimation = false, moveDown = false)
