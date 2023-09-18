@@ -47,4 +47,6 @@
     <color name="light_lime">#81D4FA</color>
     <color name="light_green">#A7FFEB</color>
     <color name="light_yellow">#FFF59D</color>
+
+    <color name="ic_launcher_background">#3F48CC</color>
 </resources>
