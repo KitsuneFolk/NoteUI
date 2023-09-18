@@ -27,6 +27,8 @@ object AndroidUtilities {
     fun dp(value: Float): Int {
         return if (value == 0f) {
             0
-        } else ceil((density * value).toDouble()).toInt()
+        } else {
+            ceil((density * value).toDouble()).toInt()
+        }
     }
 }

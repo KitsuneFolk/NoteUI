@@ -135,7 +135,7 @@ class MainScreen : Fragment() {
             binding.searchBar.setHint(
                 hint = resources.getString(R.string.search_hint),
                 withAnimation = false,
-                moveDown = false
+                moveDown = false,
             )
         }
         binding.searchBar.menu.clear()

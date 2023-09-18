@@ -53,7 +53,6 @@ class AnimatedTextView @JvmOverloads constructor(
         private class Part(var layout: StaticLayout?, var offset: Float, var toOppositeIndex: Int) {
             var left = if (layout == null || layout!!.lineCount <= 0) 0f else layout!!.getLineLeft(0)
             var width = if (layout == null || layout!!.lineCount <= 0) 0f else layout!!.getLineWidth(0)
-
         }
 
         private var t = 0f
@@ -228,9 +227,10 @@ class AnimatedTextView @JvmOverloads constructor(
                 // order execution matters
                 val onEqualRegion = RegionCallback { part, _, _ ->
                     val layout = makeLayout(
-                        part, width - ceil(
-                            currentWidth.coerceAtMost(oldWidth).toDouble()
-                        ).toInt()
+                        part,
+                        width - ceil(
+                            currentWidth.coerceAtMost(oldWidth).toDouble(),
+                        ).toInt(),
                     )
                     val currentPart = Part(layout, currentWidth, oldParts.size)
                     val oldPart = Part(layout, oldWidth, oldParts.size)
@@ -300,7 +300,6 @@ class AnimatedTextView @JvmOverloads constructor(
                     this.interpolator = animateInterpolator
                 }
                 animator?.start()
-
             } else {
                 if (animator != null) {
                     animator!!.cancel()
@@ -334,7 +333,9 @@ class AnimatedTextView @JvmOverloads constructor(
         fun getCurrentWidth(): Float {
             return if (currentParts != null && oldParts != null) {
                 AndroidUtilities.lerp(oldWidth, currentWidth, t)
-            } else currentWidth
+            } else {
+                currentWidth
+            }
         }
 
         private fun makeLayout(textPart: CharSequence, width: Int): StaticLayout {
@@ -362,7 +363,7 @@ class AnimatedTextView @JvmOverloads constructor(
                     0f,
                     false,
                     TextUtils.TruncateAt.END,
-                    newWidth
+                    newWidth,
                 )
             }
         }
@@ -396,7 +397,9 @@ class AnimatedTextView @JvmOverloads constructor(
             fun wordAt(i: Int): CharSequence? {
                 return if (i < 0 || i >= words.size) {
                     null
-                } else words[i]
+                } else {
+                    words[i]
+                }
             }
 
             override val length: Int
