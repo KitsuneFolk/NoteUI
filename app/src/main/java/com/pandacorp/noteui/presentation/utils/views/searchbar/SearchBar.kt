@@ -56,9 +56,9 @@ import com.google.android.material.shape.MaterialShapeUtils
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
 import com.pandacorp.noteui.presentation.utils.helpers.animateAlpha
-import com.pandacorp.noteui.presentation.utils.views.AndroidUtilities
-import com.pandacorp.noteui.presentation.utils.views.AnimatedTextView
-import com.pandacorp.noteui.presentation.utils.views.CubicBezierInterpolator
+import com.pandacorp.noteui.presentation.utils.views.animatedtextview.AndroidUtilities
+import com.pandacorp.noteui.presentation.utils.views.animatedtextview.AnimatedTextView
+import com.pandacorp.noteui.presentation.utils.views.animatedtextview.CubicBezierInterpolator
 import com.pandacorp.noteui.app.R as nativeR
 
 @SuppressLint("RestrictedApi", "PrivateResource")
@@ -228,7 +228,7 @@ class SearchBar @JvmOverloads constructor(
         textView.setPadding(AndroidUtilities.dp(5f), 0, AndroidUtilities.dp(5f), 0)
         textView.setAnimationProperties(1f, 0, 800, CubicBezierInterpolator.EASE_OUT_QUINT)
         textView.setTextSize(AndroidUtilities.dp(30f).toFloat())
-        textView.drawable.setAllowCancel(true)
+        textView.drawable.allowCancel = true
         textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
         textView.setTextColor(MaterialColors.getColor(this, R.attr.colorOnSurface))
 
