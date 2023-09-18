@@ -232,11 +232,6 @@ class SearchBar @JvmOverloads constructor(
         textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
         textView.setTextColor(MaterialColors.getColor(this, R.attr.colorOnSurface))
 
-        post {
-            setText(text, withAnimation = false, moveDown = false)
-            setHint(hint, withAnimation = false, moveDown = false)
-        }
-
         if (navigationIcon == null) {
             MarginLayoutParamsCompat.setMarginStart(
                 (textView.layoutParams as MarginLayoutParams),

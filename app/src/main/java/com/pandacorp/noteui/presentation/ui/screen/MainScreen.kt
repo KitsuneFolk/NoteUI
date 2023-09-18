@@ -131,6 +131,13 @@ class MainScreen : Fragment() {
     }
 
     private fun initViews() {
+        binding.searchBar.post {
+            binding.searchBar.setHint(
+                hint = resources.getString(R.string.search_hint),
+                withAnimation = false,
+                moveDown = false
+            )
+        }
         binding.searchBar.menu.clear()
         binding.searchBar.inflateMenu(R.menu.menu_main)
         binding.searchBar.setOnMenuItemClickListener { menuItem ->
@@ -312,7 +319,9 @@ class MainScreen : Fragment() {
 
         notesViewModel.searchViewText.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
-                binding.searchBar.setText(it, false)
+                binding.searchBar.post {
+                    binding.searchBar.setText(it, false)
+                }
                 searchJob?.cancel()
                 searchJob = CoroutineScope(Dispatchers.Main).launch {
                     val filteredNotes = getFilteredNotes(it, notesViewModel.notesList.value)
