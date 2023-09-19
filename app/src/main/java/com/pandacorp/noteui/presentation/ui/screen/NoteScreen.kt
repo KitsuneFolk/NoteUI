@@ -288,7 +288,7 @@ class NoteScreen : Fragment() {
         val isHorizontal = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            requireActivity().window.decorView.setOnApplyWindowInsetsListener { _, windowInsets ->
+            binding.root.setOnApplyWindowInsetsListener { _, windowInsets ->
                 if (isHorizontal) {
                     // Don't resize in the landscape orientation, due to small screen size
                     return@setOnApplyWindowInsetsListener windowInsets
@@ -401,10 +401,14 @@ class NoteScreen : Fragment() {
             binding.toolbar.menu.clear()
             if (hasFocus) {
                 binding.toolbar.inflateMenu(R.menu.menu_note_extended)
-                setDecorFitsSystemWindows(binding.root, false) // Needed to elevate the action menu on API 30+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    setDecorFitsSystemWindows(binding.root, false) // Needed to elevate the action menu on API 30+
+                }
             } else {
                 binding.toolbar.inflateMenu(R.menu.menu_note)
-                setDecorFitsSystemWindows(binding.root, true)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    setDecorFitsSystemWindows(binding.root, true)
+                }
             }
         }
         binding.contentEditText.setOnFocusChangeListener { _, hasFocus ->
