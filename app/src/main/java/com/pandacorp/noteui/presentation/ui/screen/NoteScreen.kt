@@ -42,7 +42,7 @@ import com.pandacorp.noteui.domain.model.ColorItem
 import com.pandacorp.noteui.presentation.ui.adapter.notes.ColorsAdapter
 import com.pandacorp.noteui.presentation.ui.adapter.notes.ImagesAdapter
 import com.pandacorp.noteui.presentation.utils.dialog.CustomBottomSheetDialog
-import com.pandacorp.noteui.presentation.utils.dialog.DialogColorPicker
+import com.pandacorp.noteui.presentation.utils.dialog.colorpicker.DialogColorPicker
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import com.pandacorp.noteui.presentation.utils.helpers.Utils
 import com.pandacorp.noteui.presentation.utils.helpers.Utils.Companion.setDecorFitsSystemWindows

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <!--  Stroke, can't define it in drawable, because it is not seen after changing the background tint color.  -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="54dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:src="@drawable/colorpicker_buble"
+        android:tint="@android:color/darker_gray"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/bubble"
+        android:layout_width="52dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:src="@drawable/colorpicker_buble" />
+</FrameLayout>
