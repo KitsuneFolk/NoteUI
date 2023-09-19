@@ -21,6 +21,7 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
+import com.pandacorp.noteui.presentation.utils.views.animatedtextview.AnimatedTextView.AnimatedTextDrawable.RegionCallback
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -30,12 +31,12 @@ class AnimatedTextView @JvmOverloads constructor(
     context: Context?,
     splitByWords: Boolean = false,
     preserveIndex: Boolean = false,
-    startFromEnd: Boolean = false
+    startFromEnd: Boolean = false,
 ) : View(context) {
     class AnimatedTextDrawable(
         private val splitByWords: Boolean,
         private val preserveIndex: Boolean,
-        private val startFromEnd: Boolean
+        private val startFromEnd: Boolean,
     ) : Drawable() {
         private val textPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
         private var gravity = 0
@@ -438,7 +439,7 @@ class AnimatedTextView @JvmOverloads constructor(
             newText: CharSequence,
             onEqualPart: RegionCallback,
             onNewPart: RegionCallback,
-            onOldPart: RegionCallback
+            onOldPart: RegionCallback,
         ) {
             if (updateAll) {
                 onOldPart.run(oldText, 0, oldText.length)
@@ -571,7 +572,7 @@ class AnimatedTextView @JvmOverloads constructor(
             moveAmplitude: Float,
             startDelay: Long,
             duration: Long,
-            interpolator: TimeInterpolator
+            interpolator: TimeInterpolator,
         ) {
             this.moveAmplitude = moveAmplitude
             animateDelay = startDelay
@@ -722,15 +723,16 @@ class AnimatedTextView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun setTextSize(textSizePx: Float) {
-        drawable.textSize = textSizePx
+    fun setTextSize(textSizeSp: Float) {
+        val screenDensity = context.resources.displayMetrics.density
+        drawable.textSize = textSizeSp * screenDensity
     }
 
     fun setAnimationProperties(
         moveAmplitude: Float,
         startDelay: Long,
         duration: Long,
-        interpolator: TimeInterpolator
+        interpolator: TimeInterpolator,
     ) {
         drawable.setAnimationProperties(moveAmplitude, startDelay, duration, interpolator)
     }
