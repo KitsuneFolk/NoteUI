@@ -157,10 +157,9 @@ class Utils {
                     lp.topMargin = 0
                     lp.bottomMargin = 0
                 } else {
-                    // When not fitting system windows, set top margin to the system bar height so there's overlap
-                    val insets = requireActivity().window.decorView.rootWindowInsets
-                        .getInsets(WindowInsetsCompat.Type.statusBars())
-                    lp.topMargin = insets.top
+                    // When not fitting system windows, set top margin to the system bar height so there's no overlap
+                    lp.topMargin = requireActivity().window.decorView.rootWindowInsets
+                        .getInsets(WindowInsetsCompat.Type.statusBars()).top
                 }
                 root.layoutParams = lp
             }

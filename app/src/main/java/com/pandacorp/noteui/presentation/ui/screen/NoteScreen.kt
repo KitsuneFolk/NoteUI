@@ -18,7 +18,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
-import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -28,6 +27,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.fragment.app.Fragment
@@ -288,18 +289,19 @@ class NoteScreen : Fragment() {
         val isHorizontal = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            binding.root.setOnApplyWindowInsetsListener { _, windowInsets ->
-                if (isHorizontal) {
-                    // Don't resize in the landscape orientation, due to small screen size
-                    return@setOnApplyWindowInsetsListener windowInsets
+            if (isHorizontal) {
+                // Don't resize in the landscape orientation, due to small screen size
+                requireActivity().window?.setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN,
+                )
+            } else {
+                ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+                    val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+                    val layoutParams = binding.actionMenuRoot.layoutParams as MarginLayoutParams
+                    layoutParams.bottomMargin = imeHeight
+                    binding.actionMenuRoot.layoutParams = layoutParams
+                    ViewCompat.onApplyWindowInsets(v, insets)
                 }
-
-                val imeHeight = windowInsets.getInsets(WindowInsets.Type.ime()).bottom
-                val layoutParams = binding.actionMenuRoot.layoutParams as MarginLayoutParams
-                layoutParams.bottomMargin = imeHeight
-                binding.actionMenuRoot.layoutParams = layoutParams
-
-                windowInsets
             }
         } else {
             if (isHorizontal) {
@@ -401,14 +403,10 @@ class NoteScreen : Fragment() {
             binding.toolbar.menu.clear()
             if (hasFocus) {
                 binding.toolbar.inflateMenu(R.menu.menu_note_extended)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    setDecorFitsSystemWindows(binding.root, false) // Needed to elevate the action menu on API 30+
-                }
+                setDecorFitsSystemWindows(binding.root, false) // Needed to elevate the action menu on API 30+
             } else {
                 binding.toolbar.inflateMenu(R.menu.menu_note)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    setDecorFitsSystemWindows(binding.root, true)
-                }
+                setDecorFitsSystemWindows(binding.root, true)
             }
         }
         binding.contentEditText.setOnFocusChangeListener { _, hasFocus ->
