@@ -39,11 +39,11 @@ class DialogNumberPickerEditText(private val context: Context, private val prefe
         }
 
         binding.ok.setOnClickListener {
+            cancel()
             val value = binding.editText.text.toString().toIntOrNull() ?: 0
             if (sp.getInt(preferenceKey, -1) == value) return@setOnClickListener
             sp.edit().putInt(preferenceKey, value).apply()
             onValueAppliedListener(value.toString())
-            cancel()
         }
 
         binding.numberPicker.apply {

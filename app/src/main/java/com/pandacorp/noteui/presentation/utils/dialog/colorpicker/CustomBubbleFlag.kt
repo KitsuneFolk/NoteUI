@@ -1,6 +1,5 @@
 package com.pandacorp.noteui.presentation.utils.dialog.colorpicker
 
-
 import android.content.Context
 import android.content.res.ColorStateList
 import androidx.appcompat.widget.AppCompatImageView
@@ -19,6 +18,5 @@ class CustomBubbleFlag(context: Context?) : FlagView(context, R.layout.colorpick
      */
     override fun onRefresh(colorEnvelope: ColorEnvelope) {
         ImageViewCompat.setImageTintList(bubble, ColorStateList.valueOf(colorEnvelope.color))
-
     }
 }

@@ -8,7 +8,6 @@ import com.pandacorp.noteui.presentation.utils.dialog.CustomDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import com.skydoves.colorpickerview.preference.ColorPickerPreferenceManager
 
-
 class DialogColorPicker(private val context: Context) : CustomDialog(context) {
     private var _binding: DialogColorPickerBinding? = null
     private val binding get() = _binding!!

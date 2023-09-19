@@ -42,11 +42,11 @@ class DialogListView(private val context: Context, private val preferenceKey: St
         }
         val adapter = SettingsAdapter(context, itemsList, preferenceKey).apply {
             setOnClickListener { listItem ->
+                cancel()
                 val value = listItem.value
                 if (sp.getString(preferenceKey, "") == value) return@setOnClickListener
                 sp.edit().putString(preferenceKey, value).apply()
                 onValueAppliedListener(value)
-                cancel()
             }
         }
         binding.dialogListViewListView.adapter = adapter

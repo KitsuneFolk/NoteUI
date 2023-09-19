@@ -45,7 +45,7 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vib.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION, 35))
+            vib.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION, 15))
         } else {
             @Suppress("DEPRECATION")
             vib.vibrate(VIBRATION_DURATION)

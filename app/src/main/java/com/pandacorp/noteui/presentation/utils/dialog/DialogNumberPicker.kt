@@ -50,11 +50,11 @@ open class DialogNumberPicker(private val context: Context, private val preferen
         }
 
         binding.ok.setOnClickListener {
+            cancel()
             val value = textSizesList[binding.numberPicker.value]
             if (sp.getInt(preferenceKey, defaultValue) == value) return@setOnClickListener
             sp.edit().putInt(preferenceKey, value).apply()
             onValueAppliedListener(value.toString())
-            cancel()
         }
 
         binding.numberPicker.apply {
