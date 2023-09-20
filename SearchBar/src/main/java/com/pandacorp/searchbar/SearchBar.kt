@@ -97,6 +97,7 @@ class SearchBar @JvmOverloads constructor(
     var strokeColor: Int
         /** Returns the color of the [SearchBar] outline stroke.  */
         get() = backgroundShape!!.strokeColor!!.defaultColor
+
         /** Sets the color of the [SearchBar] outline stroke.  */
         set(strokeColor) {
             if (this.strokeColor != strokeColor) {
