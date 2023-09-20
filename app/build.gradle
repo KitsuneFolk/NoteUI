@@ -66,6 +66,7 @@ dependencies {
     // Modules
     implementation project(path: ':AnimatedTextView')
     implementation project(path: ':SplashScreen')
+    implementation project(path: ':SearchBar')
 }
 repositories {
     mavenCentral()

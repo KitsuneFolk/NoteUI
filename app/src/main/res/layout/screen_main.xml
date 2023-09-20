@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:background="?colorPrimary">
 
-        <com.pandacorp.noteui.presentation.utils.views.searchbar.SearchBar
+        <com.pandacorp.searchbar.SearchBar
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
             app:strokeWidth="@dimen/stroke" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.pandacorp.noteui.presentation.utils.views.searchbar.searchview.SearchView
+    <com.pandacorp.searchbar.searchview.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -88,6 +88,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </FrameLayout>
-    </com.pandacorp.noteui.presentation.utils.views.searchbar.searchview.SearchView>
+    </com.pandacorp.searchbar.searchview.SearchView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

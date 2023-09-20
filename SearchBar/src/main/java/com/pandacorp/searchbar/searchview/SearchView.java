@@ -1,4 +1,4 @@
-package com.pandacorp.noteui.presentation.utils.views.searchbar.searchview;
+package com.pandacorp.searchbar.searchview;
 
 /*
  * Copyright 2022 The Android Open Source Project
@@ -70,7 +70,7 @@ import com.google.android.material.internal.ToolbarUtils;
 import com.google.android.material.internal.TouchObserverFrameLayout;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.shape.MaterialShapeUtils;
-import com.pandacorp.noteui.presentation.utils.views.searchbar.SearchBar;
+import com.pandacorp.searchbar.SearchBar;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -268,7 +268,7 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         if (elevationOverlayProvider == null || backgroundView == null) {
             return;
         }
-        var tv = new TypedValue();
+        TypedValue tv = new TypedValue();
         getContext().getTheme().resolveAttribute(android.R.attr.colorBackground, tv, true);
         int backgroundColor = elevationOverlayProvider.compositeOverlayIfNeeded(tv.data, elevation);
         backgroundView.setBackgroundColor(backgroundColor);

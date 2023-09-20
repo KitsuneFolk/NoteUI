@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pandacorp.noteui.presentation.utils.views.searchbar
+package com.pandacorp.searchbar
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

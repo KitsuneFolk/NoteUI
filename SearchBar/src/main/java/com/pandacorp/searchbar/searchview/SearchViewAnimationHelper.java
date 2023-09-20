@@ -1,4 +1,4 @@
-package com.pandacorp.noteui.presentation.utils.views.searchbar.searchview;
+package com.pandacorp.searchbar.searchview;
 
 /*
  * Copyright 2022 The Android Open Source Project
@@ -47,7 +47,7 @@ import com.google.android.material.internal.ReversableAnimatedValueInterpolator;
 import com.google.android.material.internal.ToolbarUtils;
 import com.google.android.material.internal.TouchObserverFrameLayout;
 import com.google.android.material.internal.ViewUtils;
-import com.pandacorp.noteui.presentation.utils.views.searchbar.SearchBar;
+import com.pandacorp.searchbar.SearchBar;
 
 /** Helper class for {@link SearchView} animations. */
 @SuppressWarnings("RestrictTo")

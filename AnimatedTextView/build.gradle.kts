@@ -1,6 +1,3 @@
-plugins {
-}
-
 android {
     namespace = "com.pandacorp.animatedtextview"
     compileSdk = 33
@@ -18,7 +15,4 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-}
-
-dependencies {
 }

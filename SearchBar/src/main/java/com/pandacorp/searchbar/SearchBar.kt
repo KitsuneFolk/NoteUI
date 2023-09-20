@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pandacorp.noteui.presentation.utils.views.searchbar
+package com.pandacorp.searchbar
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -58,8 +58,7 @@ import com.google.android.material.theme.overlay.MaterialThemeOverlay
 import com.pandacorp.animatedtextview.AndroidUtilities
 import com.pandacorp.animatedtextview.AnimatedTextView
 import com.pandacorp.animatedtextview.CubicBezierInterpolator
-import com.pandacorp.noteui.presentation.utils.helpers.animateAlpha
-import com.pandacorp.noteui.app.R as nativeR
+import com.pandacorp.searchbar.R as nativeR
 
 @SuppressLint("RestrictedApi", "PrivateResource")
 class SearchBar @JvmOverloads constructor(
@@ -98,7 +97,6 @@ class SearchBar @JvmOverloads constructor(
     var strokeColor: Int
         /** Returns the color of the [SearchBar] outline stroke.  */
         get() = backgroundShape!!.strokeColor!!.defaultColor
-
         /** Sets the color of the [SearchBar] outline stroke.  */
         set(strokeColor) {
             if (this.strokeColor != strokeColor) {
@@ -157,7 +155,7 @@ class SearchBar @JvmOverloads constructor(
         isClickable = true
         isFocusable = true
 
-        LayoutInflater.from(ensuredContext).inflate(nativeR.layout.mtrl_search_bar, this)
+        LayoutInflater.from(ensuredContext).inflate(R.layout.mtrl_search_bar, this)
         layoutInflated = true
         textView = AnimatedTextView(context)
         initTextView()
@@ -536,7 +534,7 @@ class SearchBar @JvmOverloads constructor(
         return false
     }
 
-    fun startCountMode(withAnimation: Boolean, count: Int, onBackArrowClick: () -> Unit = {}) {
+    fun startCountMode(withAnimation: Boolean, count: Int, @MenuRes menuId: Int, onBackArrowClick: () -> Unit = {}) {
         isCountModeEnabled = true
         if (withAnimation) {
             navigationIcon?.animateAlpha(255, 0, 200) {
@@ -558,12 +556,12 @@ class SearchBar @JvmOverloads constructor(
         val menuIcons = getChildAt(childCount - 1)
         menuIcons.animateAlpha(withAnimation, 1f, 0f, 200) {
             menu.clear()
-            inflateMenu(com.pandacorp.noteui.app.R.menu.menu_notes_selection)
+            inflateMenu(menuId)
             menuIcons.animateAlpha(withAnimation, 0f, 1f, 200)
         }
     }
 
-    fun stopCountMode(restoredText: String?, restoredHint: CharSequence) {
+    fun stopCountMode(restoredText: String?, restoredHint: CharSequence, @MenuRes menuId: Int) {
         isCountModeEnabled = false
         navigationIcon?.animateAlpha(255, 0, 200) {
             navigationIcon = defaultNavigationIcon
@@ -578,7 +576,7 @@ class SearchBar @JvmOverloads constructor(
         val menuIcons = getChildAt(childCount - 1)
         menuIcons.animateAlpha(true, 1f, 0f, 200) {
             menu.clear()
-            inflateMenu(com.pandacorp.noteui.app.R.menu.menu_main)
+            inflateMenu(menuId)
             menuIcons.animateAlpha(true, 0f, 1f, 200)
         }
     }

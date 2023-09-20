@@ -25,9 +25,9 @@ import com.pandacorp.noteui.presentation.ui.adapter.notes.NotesAdapter
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import com.pandacorp.noteui.presentation.utils.helpers.app
 import com.pandacorp.noteui.presentation.utils.helpers.sp
-import com.pandacorp.noteui.presentation.utils.views.searchbar.searchview.SearchView
 import com.pandacorp.noteui.presentation.viewModels.CurrentNoteViewModel
 import com.pandacorp.noteui.presentation.viewModels.NotesViewModel
+import com.pandacorp.searchbar.searchview.SearchView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -203,6 +203,7 @@ class MainScreen : Fragment() {
                     binding.searchView.hide()
                 }
             }
+        com.google.android.material.R.styleable.SearchBar
         binding.searchView.apply {
             editText.addTextChangedListener {
                 notesViewModel.searchViewText.postValue(binding.searchView.text.toString())
@@ -276,11 +277,11 @@ class MainScreen : Fragment() {
                         if (searchBar.isCountModeEnabled) {
                             val restoredText = notesViewModel.searchViewText.value
                             val restoredHint = ContextCompat.getString(requireContext(), R.string.search_hint)
-                            searchBar.stopCountMode(restoredText, restoredHint)
+                            searchBar.stopCountMode(restoredText, restoredHint, R.menu.menu_main)
                         }
                     } else {
                         if (!searchBar.isCountModeEnabled) {
-                            searchBar.startCountMode(startWithAnimation, count) {
+                            searchBar.startCountMode(startWithAnimation, count, R.menu.menu_notes_selection) {
                                 notesViewModel.selectedNotes.postValue(SparseBooleanArray())
                             }
                         } else {
