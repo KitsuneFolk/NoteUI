@@ -1,0 +1,7 @@
+This is a module that contains files from `com.google.android.material.search` that has SearchBar and SearchView
+in it. The module contains several code modifications, such as:
+1. `SearchView.setUpBackgroundViewElevationOverlay` backgroundView backgroundColor is changed
+to the layout background color.
+2. Added `CountMode`to SearchBar.
+3. Replaced the SearchView's textview with AnimatedTextView, which is a custom view that has an animation when
+changing its text.

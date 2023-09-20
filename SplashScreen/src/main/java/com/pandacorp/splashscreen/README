@@ -1,0 +1,12 @@
+This is a module that contains files from `androidx.core:core-splashscreen:1.0.1`.
+The module contains several code modifications, such as:
+1. Removing the following lines to resolve the issue on android 12+ when the statusBar and navigationBar colors
+can't be set from themes.xml
+```
+    (activity.window.decorView as ViewGroup).setOnHierarchyChangeListener(hierarchyListener)
+```
+2. Added the following lines to the file `v31\styles` to remove the unwanted actionbar:
+```
+     <item name="android:windowActionBar">false</item>
+     <item name="android:windowNoTitle">true</item>
+```
