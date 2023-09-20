@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pandacorp.noteui.presentation.utils.views.splashscreen
+package com.pandacorp.splashscreen
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -23,7 +23,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.window.SplashScreenView
 import androidx.annotation.RequiresApi
-import androidx.core.splashscreen.R
 
 /**
  * Contains a copy of the splash screen used to create a custom animation from the splash screen
@@ -74,7 +73,7 @@ class SplashScreenViewProvider internal constructor(ctx: Activity) {
      * Remove the SplashScreen's view from the view hierarchy.
      *
      * This always needs to be called when an
-     * [androidx.core.splashscreen.SplashScreen.OnExitAnimationListener]
+     * [SplashScreen.OnExitAnimationListener]
      * is set.
      */
     fun remove(): Unit = impl.remove()

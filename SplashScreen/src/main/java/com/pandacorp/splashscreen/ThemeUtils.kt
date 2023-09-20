@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.pandacorp.noteui.presentation.utils.views.splashscreen
+package com.pandacorp.splashscreen
 
 import android.content.res.Resources
 import android.util.TypedValue

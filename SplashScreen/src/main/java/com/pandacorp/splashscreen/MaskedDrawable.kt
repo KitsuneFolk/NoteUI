@@ -1,4 +1,4 @@
-package com.pandacorp.noteui.presentation.utils.views.splashscreen
+package com.pandacorp.splashscreen
 
 import android.graphics.Canvas
 import android.graphics.ColorFilter

@@ -8,7 +8,7 @@ import com.fragula2.animation.SwipeController
 import com.fragula2.utils.findSwipeController
 import com.pandacorp.noteui.app.databinding.ActivityMainBinding
 import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
-import com.pandacorp.noteui.presentation.utils.views.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.pandacorp.splashscreen.SplashScreen.Companion.installSplashScreen
 
 class MainActivity : AppCompatActivity() {
     private var fragulaNavController: NavController? = null

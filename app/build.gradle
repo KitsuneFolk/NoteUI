@@ -47,13 +47,11 @@ dependencies {
     implementation "com.github.skydoves:colorpickerview:2.2.4"
     implementation "com.github.cachapa:expandablelayout:2.9.2"
     implementation 'com.fragula2:fragula-core:2.9'
-    implementation 'androidx.core:core-splashscreen:1.0.1'
     implementation 'com.github.dhaval2404:imagepicker:2.1'
     implementation 'com.github.yalantis:ucrop:2.2.8'
 
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.15.1'
-    implementation project(path: ':AnimatedTextView')
     ksp 'com.github.bumptech.glide:compiler:4.15.1'
 
     // Koin
@@ -64,6 +62,10 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.5.2'
     implementation 'androidx.room:room-ktx:2.5.2'
     ksp 'androidx.room:room-compiler:2.5.2'
+
+    // Modules
+    implementation project(path: ':AnimatedTextView')
+    implementation project(path: ':SplashScreen')
 }
 repositories {
     mavenCentral()

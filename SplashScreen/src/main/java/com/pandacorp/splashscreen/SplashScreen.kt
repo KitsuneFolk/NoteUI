@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.pandacorp.noteui.presentation.utils.views.splashscreen
+package com.pandacorp.splashscreen
 
-import android.R.attr
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.res.Resources
@@ -33,7 +32,6 @@ import android.window.SplashScreenView
 import androidx.annotation.MainThread
 import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.splashscreen.R
 
 /**
  * Provides control over the splash screen once the application is started.
@@ -432,15 +430,15 @@ class SplashScreen private constructor(activity: Activity) {
             val theme = activity.theme
             val window = activity.window
 
-            if (theme.resolveAttribute(attr.statusBarColor, tv, true)) {
+            if (theme.resolveAttribute(android.R.attr.statusBarColor, tv, true)) {
                 window.statusBarColor = tv.data
             }
 
-            if (theme.resolveAttribute(attr.navigationBarColor, tv, true)) {
+            if (theme.resolveAttribute(android.R.attr.navigationBarColor, tv, true)) {
                 window.navigationBarColor = tv.data
             }
 
-            if (theme.resolveAttribute(attr.windowDrawsSystemBarBackgrounds, tv, true)) {
+            if (theme.resolveAttribute(android.R.attr.windowDrawsSystemBarBackgrounds, tv, true)) {
                 if (tv.data != 0) {
                     window.addFlags(LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
                 } else {
@@ -448,11 +446,11 @@ class SplashScreen private constructor(activity: Activity) {
                 }
             }
 
-            if (theme.resolveAttribute(attr.enforceNavigationBarContrast, tv, true)) {
+            if (theme.resolveAttribute(android.R.attr.enforceNavigationBarContrast, tv, true)) {
                 window.isNavigationBarContrastEnforced = tv.data != 0
             }
 
-            if (theme.resolveAttribute(attr.enforceStatusBarContrast, tv, true)) {
+            if (theme.resolveAttribute(android.R.attr.enforceStatusBarContrast, tv, true)) {
                 window.isStatusBarContrastEnforced = tv.data != 0
             }
 
