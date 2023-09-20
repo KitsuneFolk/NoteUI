@@ -55,10 +55,10 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.MaterialShapeUtils
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
+import com.pandacorp.animatedtextview.AndroidUtilities
+import com.pandacorp.animatedtextview.AnimatedTextView
+import com.pandacorp.animatedtextview.CubicBezierInterpolator
 import com.pandacorp.noteui.presentation.utils.helpers.animateAlpha
-import com.pandacorp.noteui.presentation.utils.views.animatedtextview.AndroidUtilities
-import com.pandacorp.noteui.presentation.utils.views.animatedtextview.AnimatedTextView
-import com.pandacorp.noteui.presentation.utils.views.animatedtextview.CubicBezierInterpolator
 import com.pandacorp.noteui.app.R as nativeR
 
 @SuppressLint("RestrictedApi", "PrivateResource")

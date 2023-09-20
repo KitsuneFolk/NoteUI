@@ -1,4 +1,4 @@
-package com.pandacorp.noteui.presentation.utils.views.animatedtextview
+package com.pandacorp.animatedtextview
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -21,7 +21,7 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
-import com.pandacorp.noteui.presentation.utils.views.animatedtextview.AnimatedTextView.AnimatedTextDrawable.RegionCallback
+import com.pandacorp.animatedtextview.AnimatedTextView.AnimatedTextDrawable.RegionCallback
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min

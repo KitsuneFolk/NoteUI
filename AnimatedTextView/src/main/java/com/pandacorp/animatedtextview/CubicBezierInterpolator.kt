@@ -1,4 +1,4 @@
-package com.pandacorp.noteui.presentation.utils.views.animatedtextview
+package com.pandacorp.animatedtextview
 
 import android.graphics.PointF
 import android.view.animation.Interpolator
