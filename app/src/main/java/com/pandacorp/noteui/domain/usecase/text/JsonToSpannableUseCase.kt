@@ -18,7 +18,10 @@ import org.json.JSONObject
 
 class JsonToSpannableUseCase(private val context: Context) {
     @Throws(JSONException::class)
-    operator fun invoke(type: Int, jsonString: String): Spannable? {
+    operator fun invoke(
+        type: Int,
+        jsonString: String
+    ): Spannable? {
         val json: JSONObject?
         try {
             // Check if jsonString is empty
@@ -68,7 +71,10 @@ class JsonToSpannableUseCase(private val context: Context) {
         return builder
     }
 
-    private fun addForegroundSpans(jsonArray: JSONArray, spannableString: Spannable) {
+    private fun addForegroundSpans(
+        jsonArray: JSONArray,
+        spannableString: Spannable
+    ) {
         for (i in 0 until jsonArray.length()) {
             val foregroundSpan = jsonArray.getJSONObject(i)
             val foregroundColor = foregroundSpan.getInt(Constants.ForegroundSpans.color)
@@ -83,7 +89,10 @@ class JsonToSpannableUseCase(private val context: Context) {
         }
     }
 
-    private fun addBackgroundSpans(jsonArray: JSONArray, spannableString: Spannable) {
+    private fun addBackgroundSpans(
+        jsonArray: JSONArray,
+        spannableString: Spannable
+    ) {
         for (i in 0 until jsonArray.length()) {
             val backgroundSpan = jsonArray.getJSONObject(i)
             val backgroundColor = backgroundSpan.getInt(Constants.BackgroundSpans.color)
@@ -98,17 +107,21 @@ class JsonToSpannableUseCase(private val context: Context) {
         }
     }
 
-    private fun addAlignmentSpans(jsonArray: JSONArray, spannableString: Spannable) {
+    private fun addAlignmentSpans(
+        jsonArray: JSONArray,
+        spannableString: Spannable
+    ) {
         for (i in 0 until jsonArray.length()) {
             val alignmentSpan = jsonArray.getJSONObject(i)
-            val alignment = when (alignmentSpan.getInt(Constants.AlignmentSpans.gravity)) {
-                Gravity.START -> Layout.Alignment.ALIGN_NORMAL
-                Gravity.CENTER -> Layout.Alignment.ALIGN_CENTER
-                Gravity.END -> Layout.Alignment.ALIGN_OPPOSITE
-                else -> {
-                    Layout.Alignment.ALIGN_NORMAL
+            val alignment =
+                when (alignmentSpan.getInt(Constants.AlignmentSpans.gravity)) {
+                    Gravity.START -> Layout.Alignment.ALIGN_NORMAL
+                    Gravity.CENTER -> Layout.Alignment.ALIGN_CENTER
+                    Gravity.END -> Layout.Alignment.ALIGN_OPPOSITE
+                    else -> {
+                        Layout.Alignment.ALIGN_NORMAL
+                    }
                 }
-            }
             val alignmentStart = alignmentSpan.getInt(Constants.AlignmentSpans.start)
             val alignmentEnd = alignmentSpan.getInt(Constants.AlignmentSpans.end)
             spannableString.setSpan(
@@ -120,7 +133,11 @@ class JsonToSpannableUseCase(private val context: Context) {
         }
     }
 
-    private fun addImagesSpans(type: Int, jsonArray: JSONArray, text: SpannableStringBuilder) {
+    private fun addImagesSpans(
+        type: Int,
+        jsonArray: JSONArray,
+        text: SpannableStringBuilder
+    ) {
         for (i in 0 until jsonArray.length()) {
             val imageJson = jsonArray.getJSONObject(i)
             val stringUri = imageJson.getString(Constants.ImageSpans.uri)
@@ -172,7 +189,10 @@ class JsonToSpannableUseCase(private val context: Context) {
         }
     }
 
-    private fun addBoldSpans(jsonArray: JSONArray, spannableString: Spannable) {
+    private fun addBoldSpans(
+        jsonArray: JSONArray,
+        spannableString: Spannable
+    ) {
         for (i in 0 until jsonArray.length()) {
             val boldSpan = jsonArray.getJSONObject(i)
             val start = boldSpan.getInt(Constants.BoldSpans.start)
@@ -180,7 +200,11 @@ class JsonToSpannableUseCase(private val context: Context) {
             spannableString.setSpan(StyleSpan(Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
-    private fun addItalicSpans(jsonArray: JSONArray, spannableString: Spannable) {
+
+    private fun addItalicSpans(
+        jsonArray: JSONArray,
+        spannableString: Spannable
+    ) {
         for (i in 0 until jsonArray.length()) {
             val boldSpan = jsonArray.getJSONObject(i)
             val start = boldSpan.getInt(Constants.ItalicSpans.start)

@@ -75,6 +75,5 @@ class DialogNumberPickerEditText(private val context: Context, private val prefe
         }
     }
 
-    private fun getListValues(): IntArray =
-        context.resources.getIntArray(R.array.DisableMenuAnimation_values)
+    private fun getListValues(): IntArray = context.resources.getIntArray(R.array.DisableMenuAnimation_values)
 }

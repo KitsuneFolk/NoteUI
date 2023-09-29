@@ -76,19 +76,21 @@ class SettingsScreen : Fragment() {
                 themeDialog.show()
             }
             binding.themeTextView.apply {
-                val themeKey = sp.getString(
-                    Constants.Preferences.themesKey,
-                    requireContext().resources.getString(R.string.settings_theme_default_value),
-                )!!
+                val themeKey =
+                    sp.getString(
+                        Constants.Preferences.themesKey,
+                        requireContext().resources.getString(R.string.settings_theme_default_value),
+                    )!!
                 text = getThemeFromKey(themeKey)
             }
         }
         binding.languageLayout.apply {
             binding.languageTextView.apply {
-                val languageKey = sp.getString(
-                    Constants.Preferences.languagesKey,
-                    requireContext().resources.getString(R.string.settings_language_default_value),
-                )!!
+                val languageKey =
+                    sp.getString(
+                        Constants.Preferences.languagesKey,
+                        requireContext().resources.getString(R.string.settings_language_default_value),
+                    )!!
                 text = getLanguageFromKey(languageKey)
             }
             setOnClickListener {
@@ -98,10 +100,11 @@ class SettingsScreen : Fragment() {
         }
 
         binding.showFabTextLayout.apply {
-            binding.showFabTextSwitch.isChecked = sp.getBoolean(
-                Constants.Preferences.isShowFabTextKey,
-                Constants.Preferences.isShowFabTextDefaultValue,
-            )
+            binding.showFabTextSwitch.isChecked =
+                sp.getBoolean(
+                    Constants.Preferences.isShowFabTextKey,
+                    Constants.Preferences.isShowFabTextDefaultValue,
+                )
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
                 val newValue = !binding.showFabTextSwitch.isChecked
@@ -113,10 +116,11 @@ class SettingsScreen : Fragment() {
             }
         }
         binding.hideActionBarLayout.apply {
-            binding.hideActionBarSwitch.isChecked = sp.getBoolean(
-                Constants.Preferences.isHideActionBarOnScrollKey,
-                Constants.Preferences.isHideActionBarOnScrollDefaultValue,
-            )
+            binding.hideActionBarSwitch.isChecked =
+                sp.getBoolean(
+                    Constants.Preferences.isHideActionBarOnScrollKey,
+                    Constants.Preferences.isHideActionBarOnScrollDefaultValue,
+                )
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
                 val newValue = !binding.hideActionBarSwitch.isChecked
@@ -132,30 +136,33 @@ class SettingsScreen : Fragment() {
         }
 
         binding.drawerMenuAnimationLayout.apply {
-            binding.drawerAnimationtTextView.text = sp.getInt(
-                Constants.Preferences.disableDrawerAnimationKey,
-                Constants.Preferences.disableDrawerAnimationDefaultValue,
-            ).toString()
+            binding.drawerAnimationtTextView.text =
+                sp.getInt(
+                    Constants.Preferences.disableDrawerAnimationKey,
+                    Constants.Preferences.disableDrawerAnimationDefaultValue,
+                ).toString()
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
                 drawerAnimationDialog.show()
             }
         }
         binding.titleSizeLayout.apply {
-            binding.titleSizeTextView.text = sp.getInt(
-                Constants.Preferences.titleTextSizeKey,
-                Constants.Preferences.titleTextSizeDefaultValue,
-            ).toString()
+            binding.titleSizeTextView.text =
+                sp.getInt(
+                    Constants.Preferences.titleTextSizeKey,
+                    Constants.Preferences.titleTextSizeDefaultValue,
+                ).toString()
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
                 titleDialog.show()
             }
         }
         binding.contentSizeLayout.apply {
-            binding.contentSizeTextView.text = sp.getInt(
-                Constants.Preferences.contentTextSizeKey,
-                Constants.Preferences.contentTextSizeDefaultValue,
-            ).toString()
+            binding.contentSizeTextView.text =
+                sp.getInt(
+                    Constants.Preferences.contentTextSizeKey,
+                    Constants.Preferences.contentTextSizeDefaultValue,
+                ).toString()
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
                 contentDialog.show()
@@ -182,7 +189,11 @@ class SettingsScreen : Fragment() {
     private fun isDialogShown(): Boolean =
         (contentDialog.isShowing || languageDialog.isShowing || themeDialog.isShowing || titleDialog.isShowing)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = ScreenSettingsBinding.inflate(layoutInflater)
         initViews()
         return binding.root
@@ -191,27 +202,28 @@ class SettingsScreen : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         var savedValue: Int? = null
-        val dialogKey = when {
-            themeDialog.isShowing -> Constants.Preferences.themesKey
-            languageDialog.isShowing -> Constants.Preferences.languagesKey
+        val dialogKey =
+            when {
+                themeDialog.isShowing -> Constants.Preferences.themesKey
+                languageDialog.isShowing -> Constants.Preferences.languagesKey
 
-            titleDialog.isShowing -> {
-                savedValue = titleDialog.getSavedValues()
-                Constants.Preferences.titleTextSizeKey
+                titleDialog.isShowing -> {
+                    savedValue = titleDialog.getSavedValues()
+                    Constants.Preferences.titleTextSizeKey
+                }
+
+                contentDialog.isShowing -> {
+                    savedValue = contentDialog.getSavedValues()
+                    Constants.Preferences.contentTextSizeKey
+                }
+
+                drawerAnimationDialog.isShowing -> {
+                    savedValue = drawerAnimationDialog.getValue()
+                    Constants.Preferences.disableDrawerAnimationKey
+                }
+
+                else -> null
             }
-
-            contentDialog.isShowing -> {
-                savedValue = contentDialog.getSavedValues()
-                Constants.Preferences.contentTextSizeKey
-            }
-
-            drawerAnimationDialog.isShowing -> {
-                savedValue = drawerAnimationDialog.getValue()
-                Constants.Preferences.disableDrawerAnimationKey
-            }
-
-            else -> null
-        }
 
         outState.apply {
             putString(Constants.Preferences.SHOWED_DIALOG, dialogKey)
@@ -225,20 +237,23 @@ class SettingsScreen : Fragment() {
         when (savedInstanceState?.getString(Constants.Preferences.SHOWED_DIALOG, null)) {
             Constants.Preferences.themesKey -> themeDialog.show()
             Constants.Preferences.languagesKey -> languageDialog.show()
-            Constants.Preferences.titleTextSizeKey -> titleDialog.apply {
-                show()
-                restoreSavedValues(savedValue ?: return@apply)
-            }
+            Constants.Preferences.titleTextSizeKey ->
+                titleDialog.apply {
+                    show()
+                    restoreSavedValues(savedValue ?: return@apply)
+                }
 
-            Constants.Preferences.contentTextSizeKey -> contentDialog.apply {
-                show()
-                restoreSavedValues(savedValue ?: return@apply)
-            }
+            Constants.Preferences.contentTextSizeKey ->
+                contentDialog.apply {
+                    show()
+                    restoreSavedValues(savedValue ?: return@apply)
+                }
 
-            Constants.Preferences.disableDrawerAnimationKey -> drawerAnimationDialog.apply {
-                show()
-                restoreValue(savedValue ?: return@apply)
-            }
+            Constants.Preferences.disableDrawerAnimationKey ->
+                drawerAnimationDialog.apply {
+                    show()
+                    restoreValue(savedValue ?: return@apply)
+                }
         }
     }
 

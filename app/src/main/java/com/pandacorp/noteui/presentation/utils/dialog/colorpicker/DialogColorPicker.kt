@@ -13,6 +13,7 @@ class DialogColorPicker(private val context: Context) : CustomDialog(context) {
     private val binding get() = _binding!!
 
     private var colorEnvelopeListener: ColorEnvelopeListener? = null
+
     private fun initViews() {
         binding.title.setText(R.string.addColor)
 

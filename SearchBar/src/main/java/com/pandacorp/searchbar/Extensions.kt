@@ -15,23 +15,34 @@ import android.view.View
  *
  * @throws IllegalArgumentException if [fromAlpha] or [toAlpha] is not within the range [0, 255].
  */
-fun Drawable.animateAlpha(fromAlpha: Int, toAlpha: Int, duration: Long, onAnimationEnd: (() -> Unit)? = null) {
-    val animator = ValueAnimator.ofInt(fromAlpha, toAlpha).apply {
-        this.duration = duration
-        addUpdateListener {
-            alpha = it.animatedValue as Int
+fun Drawable.animateAlpha(
+    fromAlpha: Int,
+    toAlpha: Int,
+    duration: Long,
+    onAnimationEnd: (() -> Unit)? = null
+) {
+    val animator =
+        ValueAnimator.ofInt(fromAlpha, toAlpha).apply {
+            this.duration = duration
+            addUpdateListener {
+                alpha = it.animatedValue as Int
+            }
+            onAnimationEnd?.let {
+                addListener(
+                    object : Animator.AnimatorListener {
+                        override fun onAnimationStart(animation: Animator) {}
+
+                        override fun onAnimationCancel(animation: Animator) {}
+
+                        override fun onAnimationRepeat(animation: Animator) {}
+
+                        override fun onAnimationEnd(animation: Animator) {
+                            it.invoke()
+                        }
+                    },
+                )
+            }
         }
-        onAnimationEnd?.let {
-            addListener(object : Animator.AnimatorListener {
-                override fun onAnimationStart(animation: Animator) {}
-                override fun onAnimationCancel(animation: Animator) {}
-                override fun onAnimationRepeat(animation: Animator) {}
-                override fun onAnimationEnd(animation: Animator) {
-                    it.invoke()
-                }
-            })
-        }
-    }
     animator.start()
 }
 
@@ -55,22 +66,28 @@ fun View.animateAlpha(
     onAnimationEnd: (() -> Unit)? = null,
 ) {
     if (isAnimating) {
-        val animator = ValueAnimator.ofFloat(fromAlpha, toAlpha).apply {
-            this.duration = duration
-            addUpdateListener {
-                alpha = it.animatedValue as Float
+        val animator =
+            ValueAnimator.ofFloat(fromAlpha, toAlpha).apply {
+                this.duration = duration
+                addUpdateListener {
+                    alpha = it.animatedValue as Float
+                }
+                onAnimationEnd?.let {
+                    addListener(
+                        object : Animator.AnimatorListener {
+                            override fun onAnimationStart(animation: Animator) {}
+
+                            override fun onAnimationCancel(animation: Animator) {}
+
+                            override fun onAnimationRepeat(animation: Animator) {}
+
+                            override fun onAnimationEnd(animation: Animator) {
+                                it.invoke()
+                            }
+                        },
+                    )
+                }
             }
-            onAnimationEnd?.let {
-                addListener(object : Animator.AnimatorListener {
-                    override fun onAnimationStart(animation: Animator) {}
-                    override fun onAnimationCancel(animation: Animator) {}
-                    override fun onAnimationRepeat(animation: Animator) {}
-                    override fun onAnimationEnd(animation: Animator) {
-                        it.invoke()
-                    }
-                })
-            }
-        }
         animator.start()
     } else {
         onAnimationEnd?.invoke()

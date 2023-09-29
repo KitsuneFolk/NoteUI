@@ -37,7 +37,10 @@ fun Toolbar.hideToolbarWhileScrolling(isHide: Boolean) {
  * @param flags Additional flags to control the behavior of the method.
  * @return A PackageInfo object containing information about the specified package.
  */
-fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): PackageInfo =
+fun PackageManager.getPackageInfoCompat(
+    packageName: String,
+    flags: Int = 0
+): PackageInfo =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(flags.toLong()))
     } else {
@@ -53,14 +56,18 @@ fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): Pa
  * @param clazz The class of the extra to retrieve.
  * @return The Parcelable extra with the specified name and class, or null if it does not exist.
  */
-inline fun <reified T : Parcelable> Bundle.getParcelableExtraSupport(name: String, clazz: Class<T>): T? {
-    val extra = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        getParcelable(name, clazz)
-    } else {
-        @Suppress("DEPRECATION")
-        getParcelable(name)
-            as? T
-    }
+inline fun <reified T : Parcelable> Bundle.getParcelableExtraSupport(
+    name: String,
+    clazz: Class<T>
+): T? {
+    val extra =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getParcelable(name, clazz)
+        } else {
+            @Suppress("DEPRECATION")
+            getParcelable(name)
+                as? T
+        }
     if (extra is T) return extra
     return null
 }

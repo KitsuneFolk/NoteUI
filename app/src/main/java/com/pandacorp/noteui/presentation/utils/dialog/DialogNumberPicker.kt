@@ -26,11 +26,12 @@ open class DialogNumberPicker(private val context: Context, private val preferen
     }
 
     private fun initViews() {
-        val defaultValue = when (preferenceKey) {
-            Constants.Preferences.contentTextSizeKey -> Constants.Preferences.contentTextSizeDefaultValue
-            Constants.Preferences.titleTextSizeKey -> Constants.Preferences.titleTextSizeDefaultValue
-            else -> throw IllegalArgumentException("preferenceKey = $preferenceKey")
-        }
+        val defaultValue =
+            when (preferenceKey) {
+                Constants.Preferences.contentTextSizeKey -> Constants.Preferences.contentTextSizeDefaultValue
+                Constants.Preferences.titleTextSizeKey -> Constants.Preferences.titleTextSizeDefaultValue
+                else -> throw IllegalArgumentException("preferenceKey = $preferenceKey")
+            }
 
         val preferenceValue = sp.getInt(preferenceKey, defaultValue)
 
@@ -71,6 +72,5 @@ open class DialogNumberPicker(private val context: Context, private val preferen
         }
     }
 
-    private fun getTextSizeList(): IntArray =
-        context.resources.getIntArray(R.array.TextSizes_values)
+    private fun getTextSizeList(): IntArray = context.resources.getIntArray(R.array.TextSizes_values)
 }

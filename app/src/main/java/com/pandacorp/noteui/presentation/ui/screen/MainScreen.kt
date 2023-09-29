@@ -49,46 +49,62 @@ class MainScreen : Fragment() {
 
     private val notesAdapter by lazy {
         NotesAdapter().apply {
-            setOnClickListener(object : NotesAdapter.OnNoteItemClickListener {
-                override fun onClick(noteItem: NoteItem, position: Int) {
-                    if (binding.searchBar.isCountModeEnabled) {
-                        select(position)
-                    } else {
-                        currentNoteViewModel.setNote(notesViewModel.getNoteById(noteItem.id))
-                        navController.navigate(R.id.nav_note_screen)
-                    }
-                }
-
-                override fun onLongClick(noteItem: NoteItem, position: Int) {
-                    select(position)
-                }
-
-                private fun select(position: Int) {
-                    val selectedNotesList = notesViewModel.selectedNotes.value!!
-                    selectedNotesList.apply {
-                        if (get(position, false)) {
-                            delete(position)
+            setOnClickListener(
+                object : NotesAdapter.OnNoteItemClickListener {
+                    override fun onClick(
+                        noteItem: NoteItem,
+                        position: Int
+                    ) {
+                        if (binding.searchBar.isCountModeEnabled) {
+                            select(position)
                         } else {
-                            put(position, true)
+                            currentNoteViewModel.setNote(notesViewModel.getNoteById(noteItem.id))
+                            navController.navigate(R.id.nav_note_screen)
                         }
-                        notesViewModel.selectedNotes.postValue(this)
                     }
-                }
-            })
+
+                    override fun onLongClick(
+                        noteItem: NoteItem,
+                        position: Int
+                    ) {
+                        select(position)
+                    }
+
+                    private fun select(position: Int) {
+                        val selectedNotesList = notesViewModel.selectedNotes.value!!
+                        selectedNotesList.apply {
+                            if (get(position, false)) {
+                                delete(position)
+                            } else {
+                                put(position, true)
+                            }
+                            notesViewModel.selectedNotes.postValue(this)
+                        }
+                    }
+                },
+            )
         }
     }
 
     private val searchAdapter by lazy {
         NotesAdapter().apply {
             isSelectionEnabled = false
-            setOnClickListener(object : NotesAdapter.OnNoteItemClickListener {
-                override fun onClick(noteItem: NoteItem, position: Int) {
-                    currentNoteViewModel.setNote(notesViewModel.getNoteById(noteItem.id))
-                    navController.navigate(R.id.nav_note_screen)
-                }
+            setOnClickListener(
+                object : NotesAdapter.OnNoteItemClickListener {
+                    override fun onClick(
+                        noteItem: NoteItem,
+                        position: Int
+                    ) {
+                        currentNoteViewModel.setNote(notesViewModel.getNoteById(noteItem.id))
+                        navController.navigate(R.id.nav_note_screen)
+                    }
 
-                override fun onLongClick(noteItem: NoteItem, position: Int) {}
-            })
+                    override fun onLongClick(
+                        noteItem: NoteItem,
+                        position: Int
+                    ) {}
+                },
+            )
         }
     }
 
@@ -111,10 +127,11 @@ class MainScreen : Fragment() {
         requireActivity().window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         currentNoteViewModel.clearData()
         if (app.isSettingsChanged) {
-            val isShowFab = sp.getBoolean(
-                Constants.Preferences.isShowFabTextKey,
-                Constants.Preferences.isShowFabTextDefaultValue,
-            )
+            val isShowFab =
+                sp.getBoolean(
+                    Constants.Preferences.isShowFabTextKey,
+                    Constants.Preferences.isShowFabTextDefaultValue,
+                )
             if (!isShowFab) {
                 binding.addFAB.shrink()
             } else {
@@ -161,22 +178,25 @@ class MainScreen : Fragment() {
                     val notes = notesViewModel.selectedNotes.value!!
                     if (notes.isEmpty()) return@setOnMenuItemClickListener true
 
-                    val selectedNotesPositions = mutableListOf<Int>().apply {
-                        repeat(notes.size()) { adapterPosition ->
-                            add(notes.keyAt(adapterPosition))
+                    val selectedNotesPositions =
+                        mutableListOf<Int>().apply {
+                            repeat(notes.size()) { adapterPosition ->
+                                add(notes.keyAt(adapterPosition))
+                            }
                         }
-                    }
 
-                    val removedNotes = mutableListOf<NoteItem>().apply {
-                        selectedNotesPositions.forEach { i ->
-                            add(notesAdapter.currentList.getOrNull(i) ?: return@apply)
+                    val removedNotes =
+                        mutableListOf<NoteItem>().apply {
+                            selectedNotesPositions.forEach { i ->
+                                add(notesAdapter.currentList.getOrNull(i) ?: return@apply)
+                            }
                         }
-                    }
                     notesViewModel.removeNotes(removedNotes)
                     notesViewModel.selectedNotes.postValue(SparseBooleanArray())
 
-                    val snackBarUndoTitle = resources.getText(R.string.snackbar_undo_title)
-                        .toString() + " " + removedNotes.size.toString()
+                    val snackBarUndoTitle =
+                        resources.getText(R.string.snackbar_undo_title)
+                            .toString() + " " + removedNotes.size.toString()
 
                     Snackbar.make(binding.addFAB, snackBarUndoTitle, Constants.SNACKBAR_DURATION).apply {
                         animationMode = Snackbar.ANIMATION_MODE_SLIDE
@@ -324,15 +344,19 @@ class MainScreen : Fragment() {
                     binding.searchBar.setText(it, false)
                 }
                 searchJob?.cancel()
-                searchJob = CoroutineScope(Dispatchers.Main).launch {
-                    val filteredNotes = getFilteredNotes(it, notesViewModel.notesList.value)
-                    notesViewModel.filteredNotes.postValue(filteredNotes)
-                }
+                searchJob =
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val filteredNotes = getFilteredNotes(it, notesViewModel.notesList.value)
+                        notesViewModel.filteredNotes.postValue(filteredNotes)
+                    }
             }
         }
     }
 
-    private fun getFilteredNotes(text: String?, notesList: List<NoteItem>?): MutableList<NoteItem>? {
+    private fun getFilteredNotes(
+        text: String?,
+        notesList: List<NoteItem>?
+    ): MutableList<NoteItem>? {
         return if (text.isNullOrEmpty()) {
             null // Clear and show all notes
         } else {
@@ -354,23 +378,31 @@ class MainScreen : Fragment() {
         }
     }
 
-    private fun showEmptyImage(recyclerView: RecyclerView, hint: View) {
-        val transition = Fade().apply {
-            duration = Constants.ANIMATION_DURATION
-            addTarget(recyclerView)
-            addTarget(hint)
-        }
+    private fun showEmptyImage(
+        recyclerView: RecyclerView,
+        hint: View
+    ) {
+        val transition =
+            Fade().apply {
+                duration = Constants.ANIMATION_DURATION
+                addTarget(recyclerView)
+                addTarget(hint)
+            }
         TransitionManager.beginDelayedTransition(binding.root, transition)
         recyclerView.visibility = View.GONE
         hint.visibility = View.VISIBLE
     }
 
-    private fun hideEmptyImage(recyclerView: RecyclerView, hint: View) {
-        val transition = Fade().apply {
-            duration = Constants.ANIMATION_DURATION
-            addTarget(recyclerView)
-            addTarget(hint)
-        }
+    private fun hideEmptyImage(
+        recyclerView: RecyclerView,
+        hint: View
+    ) {
+        val transition =
+            Fade().apply {
+                duration = Constants.ANIMATION_DURATION
+                addTarget(recyclerView)
+                addTarget(hint)
+            }
         TransitionManager.beginDelayedTransition(binding.root, transition)
         recyclerView.visibility = View.VISIBLE
         hint.visibility = View.GONE

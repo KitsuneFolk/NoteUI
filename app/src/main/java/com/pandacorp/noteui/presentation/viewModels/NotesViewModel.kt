@@ -12,11 +12,12 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class NotesViewModel(private val noteRepository: NoteRepository) : ViewModel() {
-    val notesList = runBlocking {
-        withContext(Dispatchers.IO) {
-            noteRepository.getAll()
+    val notesList =
+        runBlocking {
+            withContext(Dispatchers.IO) {
+                noteRepository.getAll()
+            }
         }
-    }
     var selectedNotes = MutableLiveData(SparseBooleanArray())
 
     var filteredNotes = MutableLiveData<MutableList<NoteItem>>(null)

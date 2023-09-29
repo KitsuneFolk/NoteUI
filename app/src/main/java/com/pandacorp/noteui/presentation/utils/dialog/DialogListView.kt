@@ -35,20 +35,22 @@ class DialogListView(private val context: Context, private val preferenceKey: St
             cancel()
         }
 
-        val itemsList: MutableList<SettingsItem> = when (preferenceKey) {
-            Constants.Preferences.themesKey -> fillThemesList()
-            Constants.Preferences.languagesKey -> fillLanguagesList()
-            else -> throw IllegalArgumentException()
-        }
-        val adapter = SettingsAdapter(context, itemsList, preferenceKey).apply {
-            setOnClickListener { listItem ->
-                cancel()
-                val value = listItem.value
-                if (sp.getString(preferenceKey, "") == value) return@setOnClickListener
-                sp.edit().putString(preferenceKey, value).apply()
-                onValueAppliedListener(value)
+        val itemsList: MutableList<SettingsItem> =
+            when (preferenceKey) {
+                Constants.Preferences.themesKey -> fillThemesList()
+                Constants.Preferences.languagesKey -> fillLanguagesList()
+                else -> throw IllegalArgumentException()
             }
-        }
+        val adapter =
+            SettingsAdapter(context, itemsList, preferenceKey).apply {
+                setOnClickListener { listItem ->
+                    cancel()
+                    val value = listItem.value
+                    if (sp.getString(preferenceKey, "") == value) return@setOnClickListener
+                    sp.edit().putString(preferenceKey, value).apply()
+                    onValueAppliedListener(value)
+                }
+            }
         binding.dialogListViewListView.adapter = adapter
     }
 

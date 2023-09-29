@@ -30,6 +30,7 @@ fun TextView.setSpannableFromJson(jsonString: String) {
 fun EditText.setSpannableFromJson(jsonString: String) {
     setText(JsonToSpannableUseCase(context)(EDIT_TEXT, jsonString))
 }
+
 fun EditText.getJson(): String = SpannableToJsonUseCase()(text)
 
 fun EditText.getSelectedLineStart(): Int {
@@ -50,14 +51,17 @@ fun EditText.getSelectedLineEnd(): Int {
     return selectedLineEnd
 }
 
-fun EditText.changeTextForegroundColor(@ColorInt foregroundColor: Int? = null) {
+fun EditText.changeTextForegroundColor(
+    @ColorInt foregroundColor: Int? = null
+) {
     val spannable = text.toSpannable()
 
-    val spans: Array<ForegroundColorSpan> = spannable.getSpans(
-        selectionStart,
-        selectionEnd,
-        ForegroundColorSpan::class.java,
-    )
+    val spans: Array<ForegroundColorSpan> =
+        spannable.getSpans(
+            selectionStart,
+            selectionEnd,
+            ForegroundColorSpan::class.java,
+        )
     spans.forEach {
         val selectedSpanStart = spannable.getSpanStart(it)
         val selectedSpanEnd = spannable.getSpanEnd(it)
@@ -77,14 +81,17 @@ fun EditText.changeTextForegroundColor(@ColorInt foregroundColor: Int? = null) {
     setSelection(savedSelectionStart, savedSelectionEnd)
 }
 
-fun EditText.changeTextBackgroundColor(@ColorInt backgroundColor: Int? = null) {
+fun EditText.changeTextBackgroundColor(
+    @ColorInt backgroundColor: Int? = null
+) {
     val spannable = text.toSpannable()
 
-    val spans: Array<BackgroundColorSpan> = spannable.getSpans(
-        selectionStart,
-        selectionEnd,
-        BackgroundColorSpan::class.java,
-    )
+    val spans: Array<BackgroundColorSpan> =
+        spannable.getSpans(
+            selectionStart,
+            selectionEnd,
+            BackgroundColorSpan::class.java,
+        )
     spans.forEach {
         val selectedSpanStart = spannable.getSpanStart(it)
         val selectedSpanEnd = spannable.getSpanEnd(it)
@@ -111,23 +118,25 @@ fun EditText.changeTextGravity(gravity: Int) {
     val selectedLineEnd = getSelectedLineEnd()
 
     val spannable = text.toSpannable()
-    val spans: Array<AlignmentSpan> = spannable.getSpans(
-        selectedLineStart,
-        selectedLineEnd,
-        AlignmentSpan::class.java,
-    )
+    val spans: Array<AlignmentSpan> =
+        spannable.getSpans(
+            selectedLineStart,
+            selectedLineEnd,
+            AlignmentSpan::class.java,
+        )
     spans.forEach {
         val selectedSpanStart = spannable.getSpanStart(it)
         val selectedSpanEnd = spannable.getSpanEnd(it)
         if (selectedSpanStart >= selectedLineStart && selectedSpanEnd <= selectedLineEnd) spannable.removeSpan(it)
     }
 
-    val alignment = when (gravity) {
-        Gravity.START -> Layout.Alignment.ALIGN_NORMAL
-        Gravity.CENTER -> Layout.Alignment.ALIGN_CENTER
-        Gravity.END -> Layout.Alignment.ALIGN_OPPOSITE
-        else -> throw IllegalArgumentException("gravity = $gravity")
-    }
+    val alignment =
+        when (gravity) {
+            Gravity.START -> Layout.Alignment.ALIGN_NORMAL
+            Gravity.CENTER -> Layout.Alignment.ALIGN_CENTER
+            Gravity.END -> Layout.Alignment.ALIGN_OPPOSITE
+            else -> throw IllegalArgumentException("gravity = $gravity")
+        }
     spannable.setSpan(
         AlignmentSpan.Standard(alignment),
         selectedLineStart,
@@ -143,14 +152,16 @@ fun EditText.changeTextGravity(gravity: Int) {
 
 fun EditText.insertImage(uri: Uri) {
     val inputStream = context.contentResolver.openInputStream(uri)
-    val drawable = Drawable.createFromStream(inputStream, uri.toString())?.apply {
-        setBounds(0, 0, intrinsicWidth, intrinsicHeight)
-    } ?: return // In case user chose an invalid image
+    val drawable =
+        Drawable.createFromStream(inputStream, uri.toString())?.apply {
+            setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+        } ?: return // In case user chose an invalid image
 
     val imageSpan = ImageSpan(drawable, uri.toString(), ImageSpan.ALIGN_BASELINE)
-    val builder = SpannableStringBuilder(Constants.ImageSpans.imgId).apply {
-        setSpan(imageSpan, 0, Constants.ImageSpans.imgId.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-    }
+    val builder =
+        SpannableStringBuilder(Constants.ImageSpans.imgId).apply {
+            setSpan(imageSpan, 0, Constants.ImageSpans.imgId.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
 
     val savedSelectionStart = selectionStart
     text.replace(selectionStart, selectionStart, builder)
@@ -179,7 +190,7 @@ fun EditText.makeTextBold() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
     } else {
-        /* remove the spans, what we do above */
+        // remove the spans, what we do above
     }
 
     val savedSelectionStart = selectionStart
@@ -213,7 +224,7 @@ fun EditText.makeTextItalic() {
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
     } else {
-        /* remove the spans, what we do above */
+        // remove the spans, what we do above
     }
 
     val savedSelectionStart = selectionStart

@@ -22,8 +22,9 @@ object PreferenceHandler {
 
     fun setTheme(
         context: Context,
-        theme: String = PreferenceManager.getDefaultSharedPreferences(context)
-            .getString(Constants.Preferences.themesKey, themeDefault)!!,
+        theme: String =
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(Constants.Preferences.themesKey, themeDefault)!!,
     ) {
         when (theme) {
             themeFollowSystem -> {
@@ -43,11 +44,12 @@ object PreferenceHandler {
 
     fun setLanguage(
         context: Context,
-        language: String = PreferenceManager.getDefaultSharedPreferences(context)
-            .getString(
-                Constants.Preferences.languagesKey,
-                context.resources.getString(R.string.settings_language_default_value),
-            )!!,
+        language: String =
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(
+                    Constants.Preferences.languagesKey,
+                    context.resources.getString(R.string.settings_language_default_value),
+                )!!,
     ) {
         Locale.setDefault(Locale(language))
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language))

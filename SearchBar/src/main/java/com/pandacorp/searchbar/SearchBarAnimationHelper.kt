@@ -205,7 +205,10 @@ internal class SearchBarAnimationHelper {
         }
     }
 
-    private fun getFadeOutChildrenAnimator(searchBar: SearchBar, expandedView: View): Animator {
+    private fun getFadeOutChildrenAnimator(
+        searchBar: SearchBar,
+        expandedView: View
+    ): Animator {
         val children = getFadeChildren(searchBar)
         val animator = ValueAnimator.ofFloat(1f, 0f)
         animator.addUpdateListener(MultiViewUpdateListener.alphaListener(children))

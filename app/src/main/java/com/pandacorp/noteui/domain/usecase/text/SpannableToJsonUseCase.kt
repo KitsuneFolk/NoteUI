@@ -13,9 +13,10 @@ import org.json.JSONObject
 class SpannableToJsonUseCase {
     @Throws(JSONException::class)
     operator fun invoke(spannable: Spannable): String {
-        val json = JSONObject().apply {
-            put(Constants.text, spannable.toString())
-        }
+        val json =
+            JSONObject().apply {
+                put(Constants.text, spannable.toString())
+            }
 
         // foreground spans
         val foregroundSpans =
@@ -57,11 +58,12 @@ class SpannableToJsonUseCase {
         val jsonArray = JSONArray()
 
         for (span in spans) {
-            val spansJO = JSONObject().apply {
-                put(Constants.ForegroundSpans.color, span.foregroundColor)
-                put(Constants.ForegroundSpans.start, spannable.getSpanStart(span))
-                put(Constants.ForegroundSpans.end, spannable.getSpanEnd(span))
-            }
+            val spansJO =
+                JSONObject().apply {
+                    put(Constants.ForegroundSpans.color, span.foregroundColor)
+                    put(Constants.ForegroundSpans.start, spannable.getSpanStart(span))
+                    put(Constants.ForegroundSpans.end, spannable.getSpanEnd(span))
+                }
             jsonArray.put(spansJO)
         }
         json.put(Constants.ForegroundSpans.key, jsonArray)
@@ -75,11 +77,12 @@ class SpannableToJsonUseCase {
         val jsonArray = JSONArray()
 
         for (span in spans) {
-            val spansJO = JSONObject().apply {
-                put(Constants.BackgroundSpans.color, span.backgroundColor)
-                put(Constants.BackgroundSpans.start, spannable.getSpanStart(span))
-                put(Constants.BackgroundSpans.end, spannable.getSpanEnd(span))
-            }
+            val spansJO =
+                JSONObject().apply {
+                    put(Constants.BackgroundSpans.color, span.backgroundColor)
+                    put(Constants.BackgroundSpans.start, spannable.getSpanStart(span))
+                    put(Constants.BackgroundSpans.end, spannable.getSpanEnd(span))
+                }
             jsonArray.put(spansJO)
         }
         json.put(Constants.BackgroundSpans.key, jsonArray)
@@ -93,58 +96,75 @@ class SpannableToJsonUseCase {
         val jsonArray = JSONArray()
 
         for (span in spans) {
-            val alignmentInt = when (span.alignment) {
-                Layout.Alignment.ALIGN_NORMAL -> Gravity.START
-                Layout.Alignment.ALIGN_CENTER -> Gravity.CENTER
-                Layout.Alignment.ALIGN_OPPOSITE -> Gravity.END
-                null -> Gravity.START
-            }
-            val spansJO = JSONObject().apply {
-                put(Constants.AlignmentSpans.gravity, alignmentInt)
-                put(Constants.AlignmentSpans.start, spannable.getSpanStart(span))
-                put(Constants.AlignmentSpans.end, spannable.getSpanEnd(span))
-            }
+            val alignmentInt =
+                when (span.alignment) {
+                    Layout.Alignment.ALIGN_NORMAL -> Gravity.START
+                    Layout.Alignment.ALIGN_CENTER -> Gravity.CENTER
+                    Layout.Alignment.ALIGN_OPPOSITE -> Gravity.END
+                    null -> Gravity.START
+                }
+            val spansJO =
+                JSONObject().apply {
+                    put(Constants.AlignmentSpans.gravity, alignmentInt)
+                    put(Constants.AlignmentSpans.start, spannable.getSpanStart(span))
+                    put(Constants.AlignmentSpans.end, spannable.getSpanEnd(span))
+                }
 
             jsonArray.put(spansJO)
         }
         json.put(Constants.AlignmentSpans.key, jsonArray)
     }
 
-    private fun addImageSpans(spannable: Spannable, json: JSONObject, spans: Array<ImageSpan>) {
+    private fun addImageSpans(
+        spannable: Spannable,
+        json: JSONObject,
+        spans: Array<ImageSpan>
+    ) {
         val jsonArray = JSONArray()
 
         for (span in spans) {
             val stringUri = span.source
-            val spansJO = JSONObject().apply {
-                put(Constants.ImageSpans.uri, stringUri)
-                put(Constants.ImageSpans.start, spannable.getSpanStart(span))
-                put(Constants.ImageSpans.end, spannable.getSpanEnd(span))
-            }
+            val spansJO =
+                JSONObject().apply {
+                    put(Constants.ImageSpans.uri, stringUri)
+                    put(Constants.ImageSpans.start, spannable.getSpanStart(span))
+                    put(Constants.ImageSpans.end, spannable.getSpanEnd(span))
+                }
             jsonArray.put(spansJO)
         }
         json.put(Constants.ImageSpans.key, jsonArray)
     }
 
-    private fun makeBold(spannable: Spannable, json: JSONObject, spans: List<StyleSpan>) {
+    private fun makeBold(
+        spannable: Spannable,
+        json: JSONObject,
+        spans: List<StyleSpan>
+    ) {
         val jsonArray = JSONArray()
 
         for (span in spans) {
-            val spansJO = JSONObject().apply {
-                put(Constants.BoldSpans.start, spannable.getSpanStart(span))
-                put(Constants.BoldSpans.end, spannable.getSpanEnd(span))
-            }
+            val spansJO =
+                JSONObject().apply {
+                    put(Constants.BoldSpans.start, spannable.getSpanStart(span))
+                    put(Constants.BoldSpans.end, spannable.getSpanEnd(span))
+                }
             jsonArray.put(spansJO)
         }
         json.put(Constants.BoldSpans.key, jsonArray)
     }
 
-    private fun makeItalic(spannable: Spannable, json: JSONObject, spans: List<StyleSpan>) {
+    private fun makeItalic(
+        spannable: Spannable,
+        json: JSONObject,
+        spans: List<StyleSpan>
+    ) {
         val jsonArray = JSONArray()
         for (span in spans) {
-            val spansJO = JSONObject().apply {
-                put(Constants.ItalicSpans.start, spannable.getSpanStart(span))
-                put(Constants.ItalicSpans.end, spannable.getSpanEnd(span))
-            }
+            val spansJO =
+                JSONObject().apply {
+                    put(Constants.ItalicSpans.start, spannable.getSpanStart(span))
+                    put(Constants.ItalicSpans.end, spannable.getSpanEnd(span))
+                }
             jsonArray.put(spansJO)
         }
         json.put(Constants.ItalicSpans.key, jsonArray)

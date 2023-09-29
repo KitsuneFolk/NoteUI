@@ -8,11 +8,12 @@ import com.pandacorp.noteui.domain.model.NoteItem
 import com.pandacorp.noteui.domain.repository.NoteRepository
 
 class NoteRepositoryImpl(private val dao: NoteDao, private val mapper: NoteMapper) : NoteRepository {
-    override fun getAll(): LiveData<List<NoteItem>> = dao.getAll().map { list ->
-        list.map {
-            mapper.toNoteItem(it)
+    override fun getAll(): LiveData<List<NoteItem>> =
+        dao.getAll().map { list ->
+            list.map {
+                mapper.toNoteItem(it)
+            }
         }
-    }
 
     override fun update(item: NoteItem) = dao.update(mapper.toNoteDataItem(item))
 

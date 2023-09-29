@@ -13,11 +13,12 @@ import kotlinx.coroutines.withContext
 
 class ColorViewModel(private val application: Application, private val colorRepository: ColorRepository) :
     AndroidViewModel(application) {
-    val colorsList = runBlocking {
-        withContext(Dispatchers.IO) {
-            colorRepository.getAll()
+    val colorsList =
+        runBlocking {
+            withContext(Dispatchers.IO) {
+                colorRepository.getAll()
+            }
         }
-    }
 
     fun addColor(colorItem: ColorItem) {
         viewModelScope.launch {

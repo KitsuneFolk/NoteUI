@@ -12,11 +12,15 @@ import com.pandacorp.noteui.domain.model.ColorItem
 
 class ColorsAdapter : ListAdapter<ColorItem, ColorsAdapter.ViewHolder>(DiffCallback()) {
     class DiffCallback : DiffUtil.ItemCallback<ColorItem>() {
-        override fun areItemsTheSame(oldItem: ColorItem, newItem: ColorItem): Boolean =
-            oldItem.id == newItem.id
+        override fun areItemsTheSame(
+            oldItem: ColorItem,
+            newItem: ColorItem
+        ): Boolean = oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: ColorItem, newItem: ColorItem): Boolean =
-            oldItem == newItem
+        override fun areContentsTheSame(
+            oldItem: ColorItem,
+            newItem: ColorItem
+        ): Boolean = oldItem == newItem
     }
 
     inner class ViewHolder(private val binding: ItemColorBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -39,6 +43,7 @@ class ColorsAdapter : ListAdapter<ColorItem, ColorsAdapter.ViewHolder>(DiffCallb
     fun interface OnColorItemClickListener {
         fun onClick(colorItem: ColorItem)
     }
+
     fun interface OnColorItemLongClickListener {
         fun onLongClick(colorItem: ColorItem)
     }
@@ -49,6 +54,7 @@ class ColorsAdapter : ListAdapter<ColorItem, ColorsAdapter.ViewHolder>(DiffCallb
     fun setOnClickListener(onColorItemClickListener: OnColorItemClickListener) {
         this.onColorItemClickListener = onColorItemClickListener
     }
+
     fun setOnLongClickListener(onColorItemLongClickListener: OnColorItemLongClickListener) {
         this.onColorItemLongClickListener = onColorItemLongClickListener
     }
@@ -60,12 +66,18 @@ class ColorsAdapter : ListAdapter<ColorItem, ColorsAdapter.ViewHolder>(DiffCallb
         super.submitList(newList)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return ViewHolder(ItemColorBinding.inflate(inflater, parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int
+    ) {
         holder.bind(currentList[position])
     }
 }

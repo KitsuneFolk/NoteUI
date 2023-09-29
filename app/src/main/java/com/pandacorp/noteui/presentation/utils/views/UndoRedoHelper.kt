@@ -11,6 +11,7 @@ import java.util.LinkedList
  * THIS CLASS IS PROVIDED TO THE PUBLIC DOMAIN FOR FREE WITHOUT ANY
  * RESTRICTIONS OR ANY WARRANTY.
  */
+
 /**
  * A generic undo/redo implementation for TextViews.
  */

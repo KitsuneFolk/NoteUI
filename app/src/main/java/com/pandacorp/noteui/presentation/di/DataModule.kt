@@ -17,33 +17,36 @@ import kotlinx.coroutines.launch
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-val dataModule = module {
-    single {
-        Room.databaseBuilder(get(), Database::class.java, "NoteUIDatabase")
-            .addCallback(object :
-                RoomDatabase.Callback() {
-                override fun onCreate(db: SupportSQLiteDatabase) {
-                    super.onCreate(db)
-                    CoroutineScope(Dispatchers.IO).launch {
-                        get<ColorRepository>().insert(Utils.getDefaultColorsList(get()))
-                    }
-                }
-            })
-            .build()
-    }
-    single {
-        get<Database>().noteDao()
-    }
-    single {
-        get<Database>().colorDao()
-    }
-    singleOf(::ColorMapper)
-    singleOf(::NoteMapper)
+val dataModule =
+    module {
+        single {
+            Room.databaseBuilder(get(), Database::class.java, "NoteUIDatabase")
+                .addCallback(
+                    object :
+                        RoomDatabase.Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            CoroutineScope(Dispatchers.IO).launch {
+                                get<ColorRepository>().insert(Utils.getDefaultColorsList(get()))
+                            }
+                        }
+                    },
+                )
+                .build()
+        }
+        single {
+            get<Database>().noteDao()
+        }
+        single {
+            get<Database>().colorDao()
+        }
+        singleOf(::ColorMapper)
+        singleOf(::NoteMapper)
 
-    single<ColorRepository> {
-        ColorRepositoryImpl(get(), get())
+        single<ColorRepository> {
+            ColorRepositoryImpl(get(), get())
+        }
+        single<NoteRepository> {
+            NoteRepositoryImpl(get(), get())
+        }
     }
-    single<NoteRepository> {
-        NoteRepositoryImpl(get(), get())
-    }
-}

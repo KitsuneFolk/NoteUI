@@ -19,6 +19,7 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
     companion object {
         private const val VIBRATION_DURATION = 100L
     }
+
     protected val sp: SharedPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(context)
     }
@@ -35,14 +36,15 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
     }
 
     protected fun vibrate() {
-        val vib = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val vibratorManager =
-                context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-            vibratorManager.defaultVibrator
-        } else {
-            @Suppress("DEPRECATION")
-            context.getSystemService(VIBRATOR_SERVICE) as Vibrator
-        }
+        val vib =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val vibratorManager =
+                    context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                vibratorManager.defaultVibrator
+            } else {
+                @Suppress("DEPRECATION")
+                context.getSystemService(VIBRATOR_SERVICE) as Vibrator
+            }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vib.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION, 15))

@@ -21,16 +21,27 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
     private var selectedNotes = SparseBooleanArray()
 
     interface OnNoteItemClickListener {
-        fun onClick(noteItem: NoteItem, position: Int)
-        fun onLongClick(noteItem: NoteItem, position: Int)
+        fun onClick(
+            noteItem: NoteItem,
+            position: Int
+        )
+
+        fun onLongClick(
+            noteItem: NoteItem,
+            position: Int
+        )
     }
 
     class DiffCallback : DiffUtil.ItemCallback<NoteItem>() {
-        override fun areItemsTheSame(oldItem: NoteItem, newItem: NoteItem): Boolean =
-            oldItem.id == newItem.id
+        override fun areItemsTheSame(
+            oldItem: NoteItem,
+            newItem: NoteItem
+        ): Boolean = oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: NoteItem, newItem: NoteItem): Boolean =
-            oldItem == newItem
+        override fun areContentsTheSame(
+            oldItem: NoteItem,
+            newItem: NoteItem
+        ): Boolean = oldItem == newItem
     }
 
     inner class ViewHolder(private val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -71,16 +82,25 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
         super.submitList(list?.let { ArrayList(it) })
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return ViewHolder(ItemNoteBinding.inflate(inflater, parent, false))
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int
+    ) {
         holder.bind(currentList[position])
     }
 
-    private fun selectNote(binding: ItemNoteBinding, isSelect: Boolean) {
+    private fun selectNote(
+        binding: ItemNoteBinding,
+        isSelect: Boolean
+    ) {
         val tv = TypedValue()
         binding.root.context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
         val selectionColor = tv.data

@@ -130,11 +130,12 @@ class NoteScreen : Fragment() {
                 binding.noteBackgroundImageView.setImageDrawable(drawable)
                 currentNoteViewModel.note.value!!.background = position.toString()
             }
-            val imagesList = mutableListOf<Drawable>().apply {
-                Utils.backgroundDrawablesList.forEach {
-                    add(ContextCompat.getDrawable(requireContext(), it)!!)
+            val imagesList =
+                mutableListOf<Drawable>().apply {
+                    Utils.backgroundDrawablesList.forEach {
+                        add(ContextCompat.getDrawable(requireContext(), it)!!)
+                    }
                 }
-            }
             submitList(imagesList)
         }
     }
@@ -172,42 +173,45 @@ class NoteScreen : Fragment() {
     private lateinit var undoRedoTitleEditTextHelper: UndoRedoHelper
     private lateinit var undoRedoContentEditTextHelper: UndoRedoHelper
 
-    private val pickNoteBackgroundImageResult = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-    ) {
-        if (it.resultCode == AppCompatActivity.RESULT_OK) {
-            val imageUri = it.data!!.data
+    private val pickNoteBackgroundImageResult =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) {
+            if (it.resultCode == AppCompatActivity.RESULT_OK) {
+                val imageUri = it.data!!.data
 
-            binding.noteBackgroundImageView.setImageURI(imageUri)
-            currentNoteViewModel.note.value!!.background = imageUri.toString()
-        }
-    }
-
-    private val pickImageToAddResult = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-    ) {
-        if (it.resultCode == AppCompatActivity.RESULT_OK) {
-            val imageUri = it.data!!.data
-            val editText: EditText =
-                getFocusedEditText()!!
-            // Get a drawable from uri
-            imageUri?.also {
-                editText.insertImage(imageUri)
+                binding.noteBackgroundImageView.setImageURI(imageUri)
+                currentNoteViewModel.note.value!!.background = imageUri.toString()
             }
         }
-    }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (binding.drawerMenu.isDrawerOpen(GravityCompat.END)) {
-                    binding.drawerMenu.closeDrawer(GravityCompat.END)
-                } else {
-                    navController.popBackStack()
+    private val pickImageToAddResult =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) {
+            if (it.resultCode == AppCompatActivity.RESULT_OK) {
+                val imageUri = it.data!!.data
+                val editText: EditText =
+                    getFocusedEditText()!!
+                // Get a drawable from uri
+                imageUri?.also {
+                    editText.insertImage(imageUri)
                 }
             }
         }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (binding.drawerMenu.isDrawerOpen(GravityCompat.END)) {
+                        binding.drawerMenu.closeDrawer(GravityCompat.END)
+                    } else {
+                        navController.popBackStack()
+                    }
+                }
+            }
         requireActivity().onBackPressedDispatcher.addCallback(
             this,
             callback,
@@ -236,10 +240,11 @@ class NoteScreen : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        val dialogKey = when {
-            addColorDialog.isShowing -> Constants.DialogKey.COLOR_DIALOG
-            else -> Constants.DialogKey.NULL
-        }
+        val dialogKey =
+            when {
+                addColorDialog.isShowing -> Constants.DialogKey.COLOR_DIALOG
+                else -> Constants.DialogKey.NULL
+            }
         outState.apply {
             putInt(Constants.DialogKey.KEY, dialogKey)
         }
@@ -325,13 +330,14 @@ class NoteScreen : Fragment() {
         addStopSwipeOnTouch(binding.colorsRoot)
 
         binding.toolbar.title = null
-        binding.toolbar.background = if (currentNoteViewModel.note.value!!.isShowTransparentActionBar) {
-            ColorDrawable(Color.TRANSPARENT)
-        } else {
-            val tv = TypedValue()
-            requireContext().theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
-            ColorDrawable(tv.data)
-        }
+        binding.toolbar.background =
+            if (currentNoteViewModel.note.value!!.isShowTransparentActionBar) {
+                ColorDrawable(Color.TRANSPARENT)
+            } else {
+                val tv = TypedValue()
+                requireContext().theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
+                ColorDrawable(tv.data)
+            }
         binding.toolbar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
         binding.toolbar.setNavigationOnClickListener {
             val editText = getFocusedEditText()
@@ -348,7 +354,10 @@ class NoteScreen : Fragment() {
         binding.toolbar.hideToolbarWhileScrolling(isHideToolbarWhileScrolling)
         binding.toolbar.addMenuProvider(
             object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                override fun onCreateMenu(
+                    menu: Menu,
+                    menuInflater: MenuInflater
+                ) {
                     menuInflater.inflate(R.menu.menu_note, menu)
                 }
 
@@ -423,14 +432,16 @@ class NoteScreen : Fragment() {
             }
         }
 
-        binding.contentEditText.textSize = sp.getInt(
-            Constants.Preferences.contentTextSizeKey,
-            Constants.Preferences.contentTextSizeDefaultValue,
-        ).toFloat()
-        binding.titleEditText.textSize = sp.getInt(
-            Constants.Preferences.titleTextSizeKey,
-            Constants.Preferences.titleTextSizeDefaultValue,
-        ).toFloat()
+        binding.contentEditText.textSize =
+            sp.getInt(
+                Constants.Preferences.contentTextSizeKey,
+                Constants.Preferences.contentTextSizeDefaultValue,
+            ).toFloat()
+        binding.titleEditText.textSize =
+            sp.getInt(
+                Constants.Preferences.titleTextSizeKey,
+                Constants.Preferences.titleTextSizeDefaultValue,
+            ).toFloat()
 
         binding.titleEditText.setSpannableFromJson(currentNoteViewModel.note.value!!.title)
         binding.contentEditText.setSpannableFromJson(currentNoteViewModel.note.value!!.content)
@@ -445,109 +456,124 @@ class NoteScreen : Fragment() {
         initActionBottomMenu()
     }
 
-    private fun initDrawerMenu() = CoroutineScope(Dispatchers.Main).launch {
-        delay(300) // Add delay to remove lags
-        binding.imageRecyclerView.adapter = imagesAdapter
+    private fun initDrawerMenu() =
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(300) // Add delay to remove lags
+            binding.imageRecyclerView.adapter = imagesAdapter
 
-        binding.motionDrawerLayout.attachEditText(
-            binding.contentEditText,
-            sp.getInt(
-                Constants.Preferences.disableDrawerAnimationKey,
-                Constants.Preferences.disableDrawerAnimationDefaultValue,
-            ),
-        )
-
-        binding.motionDrawerLayout.loadLayoutDescription(R.xml.drawer_layout_motion_scene) // Set programmatically to remove lags
-
-        binding.drawerMenu.addDrawerListener(object : DrawerListener {
-            override fun onDrawerOpened(drawerView: View) {
-                swipeBackFragment.setScrollingEnabled(false)
-            }
-
-            override fun onDrawerClosed(drawerView: View) {
-                swipeBackFragment.setScrollingEnabled(true)
-            }
-
-            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
-
-            override fun onDrawerStateChanged(newState: Int) {
-                if (newState == DrawerLayout.STATE_DRAGGING) {
-                    swipeBackFragment.setScrollingEnabled(false)
-                }
-            }
-        })
-        binding.expandChangeBackgroundButton.apply {
-            val showMoreDrawable =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_show_more_animated)
-                    as AnimatedVectorDrawable
-            val showLessDrawable =
-                ContextCompat.getDrawable(requireContext(), R.drawable.ic_show_less_animated)
-                    as AnimatedVectorDrawable
-            setOnClickListener {
-                if (binding.changeBackgroundExpandableLayout.isExpanded) {
-                    binding.changeBackgroundButtonImageView.setImageDrawable(showLessDrawable)
-                    showLessDrawable.start()
-                    binding.changeBackgroundExpandableLayout.collapse()
-                } else {
-                    binding.changeBackgroundButtonImageView.setImageDrawable(showMoreDrawable)
-                    showMoreDrawable.start()
-                    binding.changeBackgroundExpandableLayout.expand()
-                }
-            }
-        }
-        binding.drawerMenuSelectImageButton.setOnClickListener {
-            val dm = resources.displayMetrics
-            val height = dm.heightPixels.toFloat()
-            val width = dm.widthPixels.toFloat()
-
-            ImagePicker.with(activity = requireActivity())
-                .crop(width, height)
-                .createIntent {
-                    pickNoteBackgroundImageResult.launch(it)
-                }
-        }
-        binding.drawerMenuResetButton.setOnClickListener {
-            val tv = TypedValue()
-            requireContext().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
-            val colorBackground = tv.data
-            binding.noteBackgroundImageView.setImageDrawable(
-                ColorDrawable(colorBackground),
+            binding.motionDrawerLayout.attachEditText(
+                binding.contentEditText,
+                sp.getInt(
+                    Constants.Preferences.disableDrawerAnimationKey,
+                    Constants.Preferences.disableDrawerAnimationDefaultValue,
+                ),
             )
-            currentNoteViewModel.note.value!!.background = colorBackground.toString()
-        }
 
-        binding.transparentActionBarSwitch.apply {
-            isChecked = currentNoteViewModel.note.value!!.isShowTransparentActionBar
-            setOnCheckedChangeListener { _, isChecked ->
-                binding.toolbar.background =
-                    if (isChecked) {
-                        ColorDrawable(Color.TRANSPARENT)
-                    } else {
-                        val tv = TypedValue()
-                        requireContext().theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
-                        ColorDrawable(tv.data)
+            binding.motionDrawerLayout.loadLayoutDescription(R.xml.drawer_layout_motion_scene) // Set programmatically to remove lags
+
+            binding.drawerMenu.addDrawerListener(
+                object : DrawerListener {
+                    override fun onDrawerOpened(drawerView: View) {
+                        swipeBackFragment.setScrollingEnabled(false)
                     }
-                currentNoteViewModel.note.value!!.isShowTransparentActionBar = isChecked
+
+                    override fun onDrawerClosed(drawerView: View) {
+                        swipeBackFragment.setScrollingEnabled(true)
+                    }
+
+                    override fun onDrawerSlide(
+                        drawerView: View,
+                        slideOffset: Float
+                    ) {}
+
+                    override fun onDrawerStateChanged(newState: Int) {
+                        if (newState == DrawerLayout.STATE_DRAGGING) {
+                            swipeBackFragment.setScrollingEnabled(false)
+                        }
+                    }
+                },
+            )
+            binding.expandChangeBackgroundButton.apply {
+                val showMoreDrawable =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_show_more_animated)
+                        as AnimatedVectorDrawable
+                val showLessDrawable =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_show_less_animated)
+                        as AnimatedVectorDrawable
+                setOnClickListener {
+                    if (binding.changeBackgroundExpandableLayout.isExpanded) {
+                        binding.changeBackgroundButtonImageView.setImageDrawable(showLessDrawable)
+                        showLessDrawable.start()
+                        binding.changeBackgroundExpandableLayout.collapse()
+                    } else {
+                        binding.changeBackgroundButtonImageView.setImageDrawable(showMoreDrawable)
+                        showMoreDrawable.start()
+                        binding.changeBackgroundExpandableLayout.expand()
+                    }
+                }
+            }
+            binding.drawerMenuSelectImageButton.setOnClickListener {
+                val dm = resources.displayMetrics
+                val height = dm.heightPixels.toFloat()
+                val width = dm.widthPixels.toFloat()
+
+                ImagePicker.with(activity = requireActivity())
+                    .crop(width, height)
+                    .createIntent {
+                        pickNoteBackgroundImageResult.launch(it)
+                    }
+            }
+            binding.drawerMenuResetButton.setOnClickListener {
+                val tv = TypedValue()
+                requireContext().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+                val colorBackground = tv.data
+                binding.noteBackgroundImageView.setImageDrawable(
+                    ColorDrawable(colorBackground),
+                )
+                currentNoteViewModel.note.value!!.background = colorBackground.toString()
+            }
+
+            binding.transparentActionBarSwitch.apply {
+                isChecked = currentNoteViewModel.note.value!!.isShowTransparentActionBar
+                setOnCheckedChangeListener { _, isChecked ->
+                    binding.toolbar.background =
+                        if (isChecked) {
+                            ColorDrawable(Color.TRANSPARENT)
+                        } else {
+                            val tv = TypedValue()
+                            requireContext().theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
+                            ColorDrawable(tv.data)
+                        }
+                    currentNoteViewModel.note.value!!.isShowTransparentActionBar = isChecked
+                }
             }
         }
-    }
 
     private fun initActionBottomMenu() {
         binding.colorsRecyclerView.post {
             binding.colorsRecyclerView.adapter = colorsAdapter
             // Code needed to resolve the bug when RecyclerView is not scrollable inside of ViewPager
-            binding.colorsRecyclerView.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
-                override fun onInterceptTouchEvent(view: RecyclerView, event: MotionEvent): Boolean {
-                    when (event.action) {
-                        MotionEvent.ACTION_DOWN ->
-                            binding.colorsRecyclerView.parent?.requestDisallowInterceptTouchEvent(true)
+            binding.colorsRecyclerView.addOnItemTouchListener(
+                object : RecyclerView.OnItemTouchListener {
+                    override fun onInterceptTouchEvent(
+                        view: RecyclerView,
+                        event: MotionEvent
+                    ): Boolean {
+                        when (event.action) {
+                            MotionEvent.ACTION_DOWN ->
+                                binding.colorsRecyclerView.parent?.requestDisallowInterceptTouchEvent(true)
+                        }
+                        return false
                     }
-                    return false
-                }
 
-                override fun onTouchEvent(view: RecyclerView, event: MotionEvent) {}
-                override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
-            })
+                    override fun onTouchEvent(
+                        view: RecyclerView,
+                        event: MotionEvent
+                    ) {}
+
+                    override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
+                },
+            )
         }
 
         binding.gravityStartButton.setOnClickListener {
