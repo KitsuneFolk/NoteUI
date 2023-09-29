@@ -10,27 +10,31 @@ class Constants {
     }
 
     object Preferences {
-        const val languagesKey = "Languages"
-        const val themesKey = "Themes"
-        const val isShowFabTextKey = "isShowFabTextKey"
-        const val isShowFabTextDefaultValue = true
-        const val isHideActionBarOnScrollKey = "isHideActionBarOnScrollKey"
-        const val isHideActionBarOnScrollDefaultValue = true
-        const val disableDrawerAnimationKey = "disableDrawerAnimationKey"
-        const val disableDrawerAnimationDefaultValue = 10000
-        const val contentTextSizeKey = "ContentTextSize"
-        const val titleTextSizeKey = "TitleTextSizeKey"
-        const val contentTextSizeDefaultValue = 18
-        const val titleTextSizeDefaultValue = 20
+        object Key {
+            const val LANGUAGE = "Languages"
+            const val THEME = "Themes"
+            const val SHOW_FAB = "isShowFabTextKey"
+            const val CONTENT_TEXT_SIZE = "ContentTextSize"
+            const val TITLE_TEXT_SIZE = "TitleTextSizeKey"
+            const val HIDE_ACTIONBAR_ON_SCROLL = "isHideActionBarOnScrollKey"
+            const val DRAWER_ANIMATION = "disableDrawerAnimationKey"
+        }
 
-        const val SHOWED_DIALOG = "preferenceBundleKey"
-        const val SAVED_VALUE = "SAVED_VALUE"
+        object DefaultValue {
+            const val SHOW_FAB = true
+            const val HIDE_ACTIONBAR_ON_SCROLL = true
+            const val DRAWER_ANIMATION = 10000
+            const val CONTENT_TEXT_SIZE = 18
+            const val TITLE_TEXT_SIZE = 20
+        }
     }
 
     object DialogKey {
         const val KEY = "DialogKey"
         const val NULL = 0
         const val COLOR_DIALOG = 1
+        const val SHOWED_DIALOG = "SHOWED_DIALOG"
+        const val SAVED_VALUE = "SAVED_VALUE"
     }
 
     companion object {

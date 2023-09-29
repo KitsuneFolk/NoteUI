@@ -1,47 +1,47 @@
 package com.pandacorp.noteui.domain.utils
 
 object Constants {
-    const val text = "text"
+    const val TEXT = "text"
 
     object ForegroundSpans {
-        const val key = "foregroundSpans"
-        const val color = "foregroundColor"
-        const val start = "foregroundStart"
-        const val end = "foregroundEnd"
+        const val KEY = "foregroundSpans"
+        const val COLOR = "foregroundColor"
+        const val START = "foregroundStart"
+        const val END = "foregroundEnd"
     }
 
     object BackgroundSpans {
-        const val key = "backgroundSpans"
-        const val color = "backgroundColor"
-        const val start = "backgroundStart"
-        const val end = "backgroundEnd"
+        const val KEY = "backgroundSpans"
+        const val COLOR = "backgroundColor"
+        const val START = "backgroundStart"
+        const val END = "backgroundEnd"
     }
 
     object AlignmentSpans {
-        const val key = "alignmentSpans"
-        const val gravity = "alignment"
-        const val start = "alignmentStart"
-        const val end = "alignmentEnd"
+        const val KEY = "alignmentSpans"
+        const val GRAVITY = "alignment"
+        const val START = "alignmentStart"
+        const val END = "alignmentEnd"
     }
 
     object ImageSpans {
-        const val key = "imageSpans"
-        const val imgId = "?"
-        const val uri = "uri"
-        const val start = "imageStart"
-        const val end = "imageEnd"
+        const val KEY = "imageSpans"
+        const val IMG_ID = "?"
+        const val URI = "uri"
+        const val START = "imageStart"
+        const val END = "imageEnd"
     }
 
     object BoldSpans {
-        const val key = "boldSpans"
-        const val start = "boldStart"
-        const val end = "boldEnd"
+        const val KEY = "boldSpans"
+        const val START = "boldStart"
+        const val END = "boldEnd"
     }
 
     object ItalicSpans {
-        const val key = "italicSpans"
-        const val start = "italicStart"
-        const val end = "italicEnd"
+        const val KEY = "italicSpans"
+        const val START = "italicStart"
+        const val END = "italicEnd"
     }
 
     object Type {

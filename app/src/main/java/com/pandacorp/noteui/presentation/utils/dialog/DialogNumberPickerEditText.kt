@@ -30,7 +30,7 @@ class DialogNumberPickerEditText(private val context: Context, private val prefe
     private fun initViews() {
         binding.title.setText(
             when (preferenceKey) {
-                Constants.Preferences.disableDrawerAnimationKey -> R.string.preferencesDisableDrawerMenuAnimation
+                Constants.Preferences.Key.DRAWER_ANIMATION -> R.string.preferencesDisableDrawerMenuAnimation
                 else -> throw IllegalArgumentException()
             },
         )
@@ -51,8 +51,8 @@ class DialogNumberPickerEditText(private val context: Context, private val prefe
                 sp.getInt(
                     preferenceKey,
                     when (preferenceKey) {
-                        Constants.Preferences.disableDrawerAnimationKey ->
-                            Constants.Preferences.disableDrawerAnimationDefaultValue
+                        Constants.Preferences.Key.DRAWER_ANIMATION ->
+                            Constants.Preferences.DefaultValue.DRAWER_ANIMATION
 
                         else -> throw IllegalArgumentException("preferenceKey = $preferenceKey")
                     },

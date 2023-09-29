@@ -11,7 +11,7 @@ import android.text.SpannableStringBuilder
 import android.text.style.*
 import android.view.Gravity
 import com.pandacorp.noteui.domain.utils.Constants
-import com.pandacorp.noteui.domain.utils.Constants.ImageSpans.imgId
+import com.pandacorp.noteui.domain.utils.Constants.ImageSpans.IMG_ID
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -29,41 +29,41 @@ class JsonToSpannableUseCase(private val context: Context) {
         } catch (jsonException: JSONException) {
             return null
         }
-        val spannableString = SpannableString(json.getString(Constants.text))
+        val spannableString = SpannableString(json.getString(Constants.TEXT))
         val builder = SpannableStringBuilder(spannableString)
         try {
-            val foregroundSpansJsonArray = json.getJSONArray(Constants.ForegroundSpans.key)
+            val foregroundSpansJsonArray = json.getJSONArray(Constants.ForegroundSpans.KEY)
             addForegroundSpans(foregroundSpansJsonArray, builder)
         } catch (e: Exception) {
             // foregroundSpansJsonArray == null
         }
 
         try {
-            val backgroundSpansJsonArray = json.getJSONArray(Constants.BackgroundSpans.key)
+            val backgroundSpansJsonArray = json.getJSONArray(Constants.BackgroundSpans.KEY)
             addBackgroundSpans(backgroundSpansJsonArray, builder)
         } catch (e: Exception) {
             // backgroundSpansJsonArray == null
         }
         try {
-            val alignmentSpansJsonArray = json.getJSONArray(Constants.AlignmentSpans.key)
+            val alignmentSpansJsonArray = json.getJSONArray(Constants.AlignmentSpans.KEY)
             addAlignmentSpans(alignmentSpansJsonArray, builder)
         } catch (e: Exception) {
             // alignmentSpansJsonArray == null
         }
         try {
-            val imagesSpansJsonArray = json.getJSONArray(Constants.ImageSpans.key)
+            val imagesSpansJsonArray = json.getJSONArray(Constants.ImageSpans.KEY)
             addImagesSpans(type, imagesSpansJsonArray, builder)
         } catch (e: Exception) {
             // imagesSpansJsonArray == null
         }
         try {
-            val boldSpansJsonArray = json.getJSONArray(Constants.BoldSpans.key)
+            val boldSpansJsonArray = json.getJSONArray(Constants.BoldSpans.KEY)
             addBoldSpans(boldSpansJsonArray, builder)
         } catch (e: Exception) {
             // boldSpansJsonArray == null
         }
         try {
-            val italicSpansJsonArray = json.getJSONArray(Constants.ItalicSpans.key)
+            val italicSpansJsonArray = json.getJSONArray(Constants.ItalicSpans.KEY)
             addItalicSpans(italicSpansJsonArray, builder)
         } catch (e: Exception) {
             // italicSpansJsonArray == null
@@ -77,9 +77,9 @@ class JsonToSpannableUseCase(private val context: Context) {
     ) {
         for (i in 0 until jsonArray.length()) {
             val foregroundSpan = jsonArray.getJSONObject(i)
-            val foregroundColor = foregroundSpan.getInt(Constants.ForegroundSpans.color)
-            val foregroundStart = foregroundSpan.getInt(Constants.ForegroundSpans.start)
-            val foregroundEnd = foregroundSpan.getInt(Constants.ForegroundSpans.end)
+            val foregroundColor = foregroundSpan.getInt(Constants.ForegroundSpans.COLOR)
+            val foregroundStart = foregroundSpan.getInt(Constants.ForegroundSpans.START)
+            val foregroundEnd = foregroundSpan.getInt(Constants.ForegroundSpans.END)
             spannableString.setSpan(
                 ForegroundColorSpan(foregroundColor),
                 foregroundStart,
@@ -95,9 +95,9 @@ class JsonToSpannableUseCase(private val context: Context) {
     ) {
         for (i in 0 until jsonArray.length()) {
             val backgroundSpan = jsonArray.getJSONObject(i)
-            val backgroundColor = backgroundSpan.getInt(Constants.BackgroundSpans.color)
-            val backgroundStart = backgroundSpan.getInt(Constants.BackgroundSpans.start)
-            val backgroundEnd = backgroundSpan.getInt(Constants.BackgroundSpans.end)
+            val backgroundColor = backgroundSpan.getInt(Constants.BackgroundSpans.COLOR)
+            val backgroundStart = backgroundSpan.getInt(Constants.BackgroundSpans.START)
+            val backgroundEnd = backgroundSpan.getInt(Constants.BackgroundSpans.END)
             spannableString.setSpan(
                 BackgroundColorSpan(backgroundColor),
                 backgroundStart,
@@ -114,7 +114,7 @@ class JsonToSpannableUseCase(private val context: Context) {
         for (i in 0 until jsonArray.length()) {
             val alignmentSpan = jsonArray.getJSONObject(i)
             val alignment =
-                when (alignmentSpan.getInt(Constants.AlignmentSpans.gravity)) {
+                when (alignmentSpan.getInt(Constants.AlignmentSpans.GRAVITY)) {
                     Gravity.START -> Layout.Alignment.ALIGN_NORMAL
                     Gravity.CENTER -> Layout.Alignment.ALIGN_CENTER
                     Gravity.END -> Layout.Alignment.ALIGN_OPPOSITE
@@ -122,8 +122,8 @@ class JsonToSpannableUseCase(private val context: Context) {
                         Layout.Alignment.ALIGN_NORMAL
                     }
                 }
-            val alignmentStart = alignmentSpan.getInt(Constants.AlignmentSpans.start)
-            val alignmentEnd = alignmentSpan.getInt(Constants.AlignmentSpans.end)
+            val alignmentStart = alignmentSpan.getInt(Constants.AlignmentSpans.START)
+            val alignmentEnd = alignmentSpan.getInt(Constants.AlignmentSpans.END)
             spannableString.setSpan(
                 AlignmentSpan.Standard(alignment),
                 alignmentStart,
@@ -140,7 +140,7 @@ class JsonToSpannableUseCase(private val context: Context) {
     ) {
         for (i in 0 until jsonArray.length()) {
             val imageJson = jsonArray.getJSONObject(i)
-            val stringUri = imageJson.getString(Constants.ImageSpans.uri)
+            val stringUri = imageJson.getString(Constants.ImageSpans.URI)
 
             val inputStream = context.contentResolver.openInputStream(Uri.parse(stringUri))
             val drawable = Drawable.createFromStream(inputStream, stringUri.toString())!!
@@ -179,11 +179,11 @@ class JsonToSpannableUseCase(private val context: Context) {
                 }
             }
 
-            val start = imageJson.getInt(Constants.ImageSpans.start)
-            val end = imageJson.getInt(Constants.ImageSpans.end)
+            val start = imageJson.getInt(Constants.ImageSpans.START)
+            val end = imageJson.getInt(Constants.ImageSpans.END)
             val imageSpan = ImageSpan(drawable, stringUri, ImageSpan.ALIGN_BOTTOM)
-            val builder = SpannableStringBuilder(imgId)
-            builder.setSpan(imageSpan, 0, imgId.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            val builder = SpannableStringBuilder(IMG_ID)
+            builder.setSpan(imageSpan, 0, IMG_ID.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             text.replace(start, end, builder)
         }
@@ -195,8 +195,8 @@ class JsonToSpannableUseCase(private val context: Context) {
     ) {
         for (i in 0 until jsonArray.length()) {
             val boldSpan = jsonArray.getJSONObject(i)
-            val start = boldSpan.getInt(Constants.BoldSpans.start)
-            val end = boldSpan.getInt(Constants.BoldSpans.end)
+            val start = boldSpan.getInt(Constants.BoldSpans.START)
+            val end = boldSpan.getInt(Constants.BoldSpans.END)
             spannableString.setSpan(StyleSpan(Typeface.BOLD), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }
@@ -207,8 +207,8 @@ class JsonToSpannableUseCase(private val context: Context) {
     ) {
         for (i in 0 until jsonArray.length()) {
             val boldSpan = jsonArray.getJSONObject(i)
-            val start = boldSpan.getInt(Constants.ItalicSpans.start)
-            val end = boldSpan.getInt(Constants.ItalicSpans.end)
+            val start = boldSpan.getInt(Constants.ItalicSpans.START)
+            val end = boldSpan.getInt(Constants.ItalicSpans.END)
             spannableString.setSpan(StyleSpan(Typeface.ITALIC), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
     }

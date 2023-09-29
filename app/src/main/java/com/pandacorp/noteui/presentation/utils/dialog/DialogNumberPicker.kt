@@ -28,8 +28,8 @@ open class DialogNumberPicker(private val context: Context, private val preferen
     private fun initViews() {
         val defaultValue =
             when (preferenceKey) {
-                Constants.Preferences.contentTextSizeKey -> Constants.Preferences.contentTextSizeDefaultValue
-                Constants.Preferences.titleTextSizeKey -> Constants.Preferences.titleTextSizeDefaultValue
+                Constants.Preferences.Key.CONTENT_TEXT_SIZE -> Constants.Preferences.DefaultValue.CONTENT_TEXT_SIZE
+                Constants.Preferences.Key.TITLE_TEXT_SIZE -> Constants.Preferences.DefaultValue.TITLE_TEXT_SIZE
                 else -> throw IllegalArgumentException("preferenceKey = $preferenceKey")
             }
 
@@ -39,8 +39,8 @@ open class DialogNumberPicker(private val context: Context, private val preferen
 
         binding.title.setText(
             when (preferenceKey) {
-                Constants.Preferences.contentTextSizeKey -> R.string.contentTextSize
-                Constants.Preferences.titleTextSizeKey -> R.string.titleTextSize
+                Constants.Preferences.Key.CONTENT_TEXT_SIZE -> R.string.contentTextSize
+                Constants.Preferences.Key.TITLE_TEXT_SIZE -> R.string.titleTextSize
                 else -> throw IllegalArgumentException()
             },
         )

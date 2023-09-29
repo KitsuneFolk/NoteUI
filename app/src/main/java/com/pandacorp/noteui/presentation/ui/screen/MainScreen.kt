@@ -129,8 +129,8 @@ class MainScreen : Fragment() {
         if (app.isSettingsChanged) {
             val isShowFab =
                 sp.getBoolean(
-                    Constants.Preferences.isShowFabTextKey,
-                    Constants.Preferences.isShowFabTextDefaultValue,
+                    Constants.Preferences.Key.SHOW_FAB,
+                    Constants.Preferences.DefaultValue.SHOW_FAB,
                 )
             if (!isShowFab) {
                 binding.addFAB.shrink()
@@ -250,8 +250,8 @@ class MainScreen : Fragment() {
             }
         }
         if (!sp.getBoolean(
-                Constants.Preferences.isShowFabTextKey,
-                Constants.Preferences.isShowFabTextDefaultValue,
+                Constants.Preferences.Key.SHOW_FAB,
+                Constants.Preferences.DefaultValue.SHOW_FAB,
             )
         ) {
             binding.addFAB.shrink()
@@ -368,7 +368,7 @@ class MainScreen : Fragment() {
                     if (title.isEmpty()) { // Sometimes can be empty though idk why, can't reproduce anymore
                         ""
                     } else {
-                        JSONObject(title).getString(com.pandacorp.noteui.domain.utils.Constants.text)
+                        JSONObject(title).getString(com.pandacorp.noteui.domain.utils.Constants.TEXT)
                     }
                 if (parsedTitle.lowercase().contains(text.lowercase(Locale.getDefault()))) {
                     filteredList.add(noteItem)

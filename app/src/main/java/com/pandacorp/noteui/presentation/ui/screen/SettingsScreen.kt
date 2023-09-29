@@ -20,35 +20,35 @@ class SettingsScreen : Fragment() {
     private val binding get() = _binding!!
 
     private val languageDialog by lazy {
-        DialogListView(requireActivity(), Constants.Preferences.languagesKey).apply {
+        DialogListView(requireActivity(), Constants.Preferences.Key.LANGUAGE).apply {
             setOnValueAppliedListener {
                 requireActivity().recreate()
             }
         }
     }
     private val themeDialog by lazy {
-        DialogListView(requireActivity(), Constants.Preferences.themesKey).apply {
+        DialogListView(requireActivity(), Constants.Preferences.Key.THEME).apply {
             setOnValueAppliedListener {
                 requireActivity().recreate()
             }
         }
     }
     private val titleDialog by lazy {
-        DialogNumberPicker(requireActivity(), Constants.Preferences.titleTextSizeKey).apply {
+        DialogNumberPicker(requireActivity(), Constants.Preferences.Key.TITLE_TEXT_SIZE).apply {
             setOnValueAppliedListener {
                 binding.titleSizeTextView.text = it
             }
         }
     }
     private val contentDialog by lazy {
-        DialogNumberPicker(requireActivity(), Constants.Preferences.contentTextSizeKey).apply {
+        DialogNumberPicker(requireActivity(), Constants.Preferences.Key.CONTENT_TEXT_SIZE).apply {
             setOnValueAppliedListener {
                 binding.contentSizeTextView.text = it
             }
         }
     }
     private val drawerAnimationDialog by lazy {
-        DialogNumberPickerEditText(requireActivity(), Constants.Preferences.disableDrawerAnimationKey).apply {
+        DialogNumberPickerEditText(requireActivity(), Constants.Preferences.Key.DRAWER_ANIMATION).apply {
             setOnValueAppliedListener {
                 binding.drawerAnimationtTextView.text = it
             }
@@ -78,7 +78,7 @@ class SettingsScreen : Fragment() {
             binding.themeTextView.apply {
                 val themeKey =
                     sp.getString(
-                        Constants.Preferences.themesKey,
+                        Constants.Preferences.Key.THEME,
                         requireContext().resources.getString(R.string.settings_theme_default_value),
                     )!!
                 text = getThemeFromKey(themeKey)
@@ -88,7 +88,7 @@ class SettingsScreen : Fragment() {
             binding.languageTextView.apply {
                 val languageKey =
                     sp.getString(
-                        Constants.Preferences.languagesKey,
+                        Constants.Preferences.Key.LANGUAGE,
                         requireContext().resources.getString(R.string.settings_language_default_value),
                     )!!
                 text = getLanguageFromKey(languageKey)
@@ -102,14 +102,14 @@ class SettingsScreen : Fragment() {
         binding.showFabTextLayout.apply {
             binding.showFabTextSwitch.isChecked =
                 sp.getBoolean(
-                    Constants.Preferences.isShowFabTextKey,
-                    Constants.Preferences.isShowFabTextDefaultValue,
+                    Constants.Preferences.Key.SHOW_FAB,
+                    Constants.Preferences.DefaultValue.SHOW_FAB,
                 )
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
                 val newValue = !binding.showFabTextSwitch.isChecked
                 sp.edit()
-                    .putBoolean(Constants.Preferences.isShowFabTextKey, newValue)
+                    .putBoolean(Constants.Preferences.Key.DRAWER_ANIMATION, newValue)
                     .apply()
                 binding.showFabTextSwitch.isChecked = newValue
                 app.isSettingsChanged = true
@@ -118,15 +118,15 @@ class SettingsScreen : Fragment() {
         binding.hideActionBarLayout.apply {
             binding.hideActionBarSwitch.isChecked =
                 sp.getBoolean(
-                    Constants.Preferences.isHideActionBarOnScrollKey,
-                    Constants.Preferences.isHideActionBarOnScrollDefaultValue,
+                    Constants.Preferences.Key.HIDE_ACTIONBAR_ON_SCROLL,
+                    Constants.Preferences.DefaultValue.HIDE_ACTIONBAR_ON_SCROLL,
                 )
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
                 val newValue = !binding.hideActionBarSwitch.isChecked
                 sp.edit()
                     .putBoolean(
-                        Constants.Preferences.isHideActionBarOnScrollKey,
+                        Constants.Preferences.Key.HIDE_ACTIONBAR_ON_SCROLL,
                         newValue,
                     )
                     .apply()
@@ -138,8 +138,8 @@ class SettingsScreen : Fragment() {
         binding.drawerMenuAnimationLayout.apply {
             binding.drawerAnimationtTextView.text =
                 sp.getInt(
-                    Constants.Preferences.disableDrawerAnimationKey,
-                    Constants.Preferences.disableDrawerAnimationDefaultValue,
+                    Constants.Preferences.Key.DRAWER_ANIMATION,
+                    Constants.Preferences.DefaultValue.DRAWER_ANIMATION,
                 ).toString()
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
@@ -149,8 +149,8 @@ class SettingsScreen : Fragment() {
         binding.titleSizeLayout.apply {
             binding.titleSizeTextView.text =
                 sp.getInt(
-                    Constants.Preferences.titleTextSizeKey,
-                    Constants.Preferences.titleTextSizeDefaultValue,
+                    Constants.Preferences.Key.TITLE_TEXT_SIZE,
+                    Constants.Preferences.DefaultValue.TITLE_TEXT_SIZE,
                 ).toString()
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
@@ -160,8 +160,8 @@ class SettingsScreen : Fragment() {
         binding.contentSizeLayout.apply {
             binding.contentSizeTextView.text =
                 sp.getInt(
-                    Constants.Preferences.contentTextSizeKey,
-                    Constants.Preferences.contentTextSizeDefaultValue,
+                    Constants.Preferences.Key.CONTENT_TEXT_SIZE,
+                    Constants.Preferences.DefaultValue.CONTENT_TEXT_SIZE,
                 ).toString()
             setOnClickListener {
                 if (isDialogShown()) return@setOnClickListener
@@ -204,52 +204,52 @@ class SettingsScreen : Fragment() {
         var savedValue: Int? = null
         val dialogKey =
             when {
-                themeDialog.isShowing -> Constants.Preferences.themesKey
-                languageDialog.isShowing -> Constants.Preferences.languagesKey
+                themeDialog.isShowing -> Constants.Preferences.Key.THEME
+                languageDialog.isShowing -> Constants.Preferences.Key.LANGUAGE
 
                 titleDialog.isShowing -> {
                     savedValue = titleDialog.getSavedValues()
-                    Constants.Preferences.titleTextSizeKey
+                    Constants.Preferences.Key.TITLE_TEXT_SIZE
                 }
 
                 contentDialog.isShowing -> {
                     savedValue = contentDialog.getSavedValues()
-                    Constants.Preferences.contentTextSizeKey
+                    Constants.Preferences.Key.CONTENT_TEXT_SIZE
                 }
 
                 drawerAnimationDialog.isShowing -> {
                     savedValue = drawerAnimationDialog.getValue()
-                    Constants.Preferences.disableDrawerAnimationKey
+                    Constants.Preferences.Key.DRAWER_ANIMATION
                 }
 
                 else -> null
             }
 
         outState.apply {
-            putString(Constants.Preferences.SHOWED_DIALOG, dialogKey)
-            putInt(Constants.Preferences.SAVED_VALUE, savedValue ?: return@apply)
+            putString(Constants.DialogKey.SHOWED_DIALOG, dialogKey)
+            putInt(Constants.DialogKey.SAVED_VALUE, savedValue ?: return@apply)
         }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
-        val savedValue = savedInstanceState?.getInt(Constants.Preferences.SAVED_VALUE)
-        when (savedInstanceState?.getString(Constants.Preferences.SHOWED_DIALOG, null)) {
-            Constants.Preferences.themesKey -> themeDialog.show()
-            Constants.Preferences.languagesKey -> languageDialog.show()
-            Constants.Preferences.titleTextSizeKey ->
+        val savedValue = savedInstanceState?.getInt(Constants.DialogKey.SAVED_VALUE)
+        when (savedInstanceState?.getString(Constants.DialogKey.SHOWED_DIALOG, null)) {
+            Constants.Preferences.Key.THEME -> themeDialog.show()
+            Constants.Preferences.Key.LANGUAGE -> languageDialog.show()
+            Constants.Preferences.Key.TITLE_TEXT_SIZE ->
                 titleDialog.apply {
                     show()
                     restoreSavedValues(savedValue ?: return@apply)
                 }
 
-            Constants.Preferences.contentTextSizeKey ->
+            Constants.Preferences.Key.CONTENT_TEXT_SIZE ->
                 contentDialog.apply {
                     show()
                     restoreSavedValues(savedValue ?: return@apply)
                 }
 
-            Constants.Preferences.disableDrawerAnimationKey ->
+            Constants.Preferences.Key.DRAWER_ANIMATION ->
                 drawerAnimationDialog.apply {
                     show()
                     restoreValue(savedValue ?: return@apply)

@@ -159,8 +159,8 @@ fun EditText.insertImage(uri: Uri) {
 
     val imageSpan = ImageSpan(drawable, uri.toString(), ImageSpan.ALIGN_BASELINE)
     val builder =
-        SpannableStringBuilder(Constants.ImageSpans.imgId).apply {
-            setSpan(imageSpan, 0, Constants.ImageSpans.imgId.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        SpannableStringBuilder(Constants.ImageSpans.IMG_ID).apply {
+            setSpan(imageSpan, 0, Constants.ImageSpans.IMG_ID.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
 
     val savedSelectionStart = selectionStart

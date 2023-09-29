@@ -165,8 +165,8 @@ class NoteScreen : Fragment() {
 
     private val isHideToolbarWhileScrolling by lazy {
         sp.getBoolean(
-            Constants.Preferences.isHideActionBarOnScrollKey,
-            Constants.Preferences.isHideActionBarOnScrollDefaultValue,
+            Constants.Preferences.Key.HIDE_ACTIONBAR_ON_SCROLL,
+            Constants.Preferences.DefaultValue.HIDE_ACTIONBAR_ON_SCROLL,
         )
     }
 
@@ -434,13 +434,13 @@ class NoteScreen : Fragment() {
 
         binding.contentEditText.textSize =
             sp.getInt(
-                Constants.Preferences.contentTextSizeKey,
-                Constants.Preferences.contentTextSizeDefaultValue,
+                Constants.Preferences.Key.CONTENT_TEXT_SIZE,
+                Constants.Preferences.DefaultValue.CONTENT_TEXT_SIZE,
             ).toFloat()
         binding.titleEditText.textSize =
             sp.getInt(
-                Constants.Preferences.titleTextSizeKey,
-                Constants.Preferences.titleTextSizeDefaultValue,
+                Constants.Preferences.Key.TITLE_TEXT_SIZE,
+                Constants.Preferences.DefaultValue.TITLE_TEXT_SIZE,
             ).toFloat()
 
         binding.titleEditText.setSpannableFromJson(currentNoteViewModel.note.value!!.title)
@@ -464,8 +464,8 @@ class NoteScreen : Fragment() {
             binding.motionDrawerLayout.attachEditText(
                 binding.contentEditText,
                 sp.getInt(
-                    Constants.Preferences.disableDrawerAnimationKey,
-                    Constants.Preferences.disableDrawerAnimationDefaultValue,
+                    Constants.Preferences.Key.DRAWER_ANIMATION,
+                    Constants.Preferences.DefaultValue.DRAWER_ANIMATION,
                 ),
             )
 

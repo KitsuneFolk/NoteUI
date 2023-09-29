@@ -25,8 +25,8 @@ class DialogListView(private val context: Context, private val preferenceKey: St
     private fun initViews() {
         binding.dialogListViewTitle.setText(
             when (preferenceKey) {
-                Constants.Preferences.themesKey -> R.string.theme
-                Constants.Preferences.languagesKey -> R.string.language
+                Constants.Preferences.Key.THEME -> R.string.theme
+                Constants.Preferences.Key.LANGUAGE -> R.string.language
                 else -> throw IllegalArgumentException("PreferenceKey = $preferenceKey")
             },
         )
@@ -37,8 +37,8 @@ class DialogListView(private val context: Context, private val preferenceKey: St
 
         val itemsList: MutableList<SettingsItem> =
             when (preferenceKey) {
-                Constants.Preferences.themesKey -> fillThemesList()
-                Constants.Preferences.languagesKey -> fillLanguagesList()
+                Constants.Preferences.Key.THEME -> fillThemesList()
+                Constants.Preferences.Key.LANGUAGE -> fillLanguagesList()
                 else -> throw IllegalArgumentException()
             }
         val adapter =

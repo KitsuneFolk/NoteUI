@@ -40,7 +40,7 @@ class SettingsAdapter(
                 text = listItem.title
             }
             findViewById<CardView>(R.id.ListItemCardView).apply {
-                if (preferenceKey == Constants.Preferences.themesKey) radius = 80f
+                if (preferenceKey == Constants.Preferences.Key.THEME) radius = 80f
             }
         }
         return view
