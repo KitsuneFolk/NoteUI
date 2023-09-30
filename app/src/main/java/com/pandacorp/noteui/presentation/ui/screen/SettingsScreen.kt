@@ -109,7 +109,7 @@ class SettingsScreen : Fragment() {
                 if (isDialogShown()) return@setOnClickListener
                 val newValue = !binding.showFabTextSwitch.isChecked
                 sp.edit()
-                    .putBoolean(Constants.Preferences.Key.DRAWER_ANIMATION, newValue)
+                    .putBoolean(Constants.Preferences.Key.SHOW_FAB, newValue)
                     .apply()
                 binding.showFabTextSwitch.isChecked = newValue
                 app.isSettingsChanged = true

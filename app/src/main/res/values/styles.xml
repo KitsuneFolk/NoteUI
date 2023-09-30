@@ -18,7 +18,7 @@
         <item name="cornerSizeTopLeft">@dimen/corners_radius</item>
     </style>
 
-    <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
+    <style name="ToolbarStyle" parent="Widget.Material3.Toolbar">
         <item name="android:colorPrimary">?android:attr/textColor</item>
         <item name="android:background">?colorPrimary</item>
     </style>
