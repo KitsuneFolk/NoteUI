@@ -55,6 +55,86 @@ class SettingsScreen : Fragment() {
         }
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = ScreenSettingsBinding.inflate(layoutInflater)
+
+        initViews()
+
+        return binding.root
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        var savedValue: Int? = null
+        val dialogKey =
+            when {
+                themeDialog.isShowing -> Constants.Preferences.Key.THEME
+                languageDialog.isShowing -> Constants.Preferences.Key.LANGUAGE
+
+                titleDialog.isShowing -> {
+                    savedValue = titleDialog.getSavedValues()
+                    Constants.Preferences.Key.TITLE_TEXT_SIZE
+                }
+
+                contentDialog.isShowing -> {
+                    savedValue = contentDialog.getSavedValues()
+                    Constants.Preferences.Key.CONTENT_TEXT_SIZE
+                }
+
+                drawerAnimationDialog.isShowing -> {
+                    savedValue = drawerAnimationDialog.getValue()
+                    Constants.Preferences.Key.DRAWER_ANIMATION
+                }
+
+                else -> null
+            }
+
+        outState.apply {
+            putString(Constants.DialogKey.SHOWED_DIALOG, dialogKey)
+            putInt(Constants.DialogKey.SAVED_VALUE, savedValue ?: return@apply)
+        }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        val savedValue = savedInstanceState?.getInt(Constants.DialogKey.SAVED_VALUE)
+        when (savedInstanceState?.getString(Constants.DialogKey.SHOWED_DIALOG, null)) {
+            Constants.Preferences.Key.THEME -> themeDialog.show()
+            Constants.Preferences.Key.LANGUAGE -> languageDialog.show()
+            Constants.Preferences.Key.TITLE_TEXT_SIZE ->
+                titleDialog.apply {
+                    show()
+                    restoreSavedValues(savedValue ?: return@apply)
+                }
+
+            Constants.Preferences.Key.CONTENT_TEXT_SIZE ->
+                contentDialog.apply {
+                    show()
+                    restoreSavedValues(savedValue ?: return@apply)
+                }
+
+            Constants.Preferences.Key.DRAWER_ANIMATION ->
+                drawerAnimationDialog.apply {
+                    show()
+                    restoreValue(savedValue ?: return@apply)
+                }
+        }
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        titleDialog.dismiss()
+        contentDialog.dismiss()
+        themeDialog.dismiss()
+        languageDialog.dismiss()
+        drawerAnimationDialog.dismiss()
+        super.onDestroy()
+    }
+
     private fun initViews() {
         binding.toolbarInclude.toolbar.apply {
             binding.toolbarInclude.toolbar.setTitle(R.string.settings)
@@ -188,82 +268,4 @@ class SettingsScreen : Fragment() {
 
     private fun isDialogShown(): Boolean =
         (contentDialog.isShowing || languageDialog.isShowing || themeDialog.isShowing || titleDialog.isShowing)
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = ScreenSettingsBinding.inflate(layoutInflater)
-        initViews()
-        return binding.root
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        var savedValue: Int? = null
-        val dialogKey =
-            when {
-                themeDialog.isShowing -> Constants.Preferences.Key.THEME
-                languageDialog.isShowing -> Constants.Preferences.Key.LANGUAGE
-
-                titleDialog.isShowing -> {
-                    savedValue = titleDialog.getSavedValues()
-                    Constants.Preferences.Key.TITLE_TEXT_SIZE
-                }
-
-                contentDialog.isShowing -> {
-                    savedValue = contentDialog.getSavedValues()
-                    Constants.Preferences.Key.CONTENT_TEXT_SIZE
-                }
-
-                drawerAnimationDialog.isShowing -> {
-                    savedValue = drawerAnimationDialog.getValue()
-                    Constants.Preferences.Key.DRAWER_ANIMATION
-                }
-
-                else -> null
-            }
-
-        outState.apply {
-            putString(Constants.DialogKey.SHOWED_DIALOG, dialogKey)
-            putInt(Constants.DialogKey.SAVED_VALUE, savedValue ?: return@apply)
-        }
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        val savedValue = savedInstanceState?.getInt(Constants.DialogKey.SAVED_VALUE)
-        when (savedInstanceState?.getString(Constants.DialogKey.SHOWED_DIALOG, null)) {
-            Constants.Preferences.Key.THEME -> themeDialog.show()
-            Constants.Preferences.Key.LANGUAGE -> languageDialog.show()
-            Constants.Preferences.Key.TITLE_TEXT_SIZE ->
-                titleDialog.apply {
-                    show()
-                    restoreSavedValues(savedValue ?: return@apply)
-                }
-
-            Constants.Preferences.Key.CONTENT_TEXT_SIZE ->
-                contentDialog.apply {
-                    show()
-                    restoreSavedValues(savedValue ?: return@apply)
-                }
-
-            Constants.Preferences.Key.DRAWER_ANIMATION ->
-                drawerAnimationDialog.apply {
-                    show()
-                    restoreValue(savedValue ?: return@apply)
-                }
-        }
-    }
-
-    override fun onDestroy() {
-        _binding = null
-        titleDialog.dismiss()
-        contentDialog.dismiss()
-        themeDialog.dismiss()
-        languageDialog.dismiss()
-        drawerAnimationDialog.dismiss()
-        super.onDestroy()
-    }
 }
