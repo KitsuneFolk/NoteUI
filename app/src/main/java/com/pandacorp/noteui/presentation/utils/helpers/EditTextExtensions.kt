@@ -22,6 +22,7 @@ import com.pandacorp.noteui.domain.usecase.text.SpannableToJsonUseCase
 import com.pandacorp.noteui.domain.utils.Constants
 import com.pandacorp.noteui.domain.utils.Constants.Type.EDIT_TEXT
 import com.pandacorp.noteui.domain.utils.Constants.Type.TEXT_VIEW
+import com.pandacorp.noteui.presentation.utils.CustomUnderlineSpan
 
 fun TextView.setSpannableFromJson(jsonString: String) {
     text = JsonToSpannableUseCase(context)(TEXT_VIEW, jsonString)
@@ -219,6 +220,37 @@ fun EditText.makeTextItalic() {
     if (italicSpans.isEmpty()) {
         spannable.setSpan(
             StyleSpan(Typeface.ITALIC),
+            selectionStart,
+            selectionEnd,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+        )
+    } else {
+        // remove the spans, what we do above
+    }
+
+    val savedSelectionStart = selectionStart
+    val savedSelectionEnd = selectionEnd
+    text = SpannableStringBuilder(spannable)
+    setSelection(savedSelectionStart, savedSelectionEnd)
+}
+
+fun EditText.makeTextUnderline() {
+    val spannable = text.toSpannable()
+
+    val spans: Array<CustomUnderlineSpan> =
+        spannable.getSpans(
+            selectionStart,
+            selectionEnd,
+            CustomUnderlineSpan::class.java,
+        )
+    spans.forEach { span ->
+        if (spannable.getSpanStart(span) >= selectionStart && spannable.getSpanEnd(span) <= selectionEnd) {
+            spannable.removeSpan(span)
+        }
+    }
+    if (spans.isEmpty()) {
+        spannable.setSpan(
+            CustomUnderlineSpan(),
             selectionStart,
             selectionEnd,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,

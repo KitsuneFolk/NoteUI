@@ -44,6 +44,12 @@ object Constants {
         const val END = "italicEnd"
     }
 
+    object UnderlineSpans {
+        const val KEY = "underlineSpans"
+        const val START = "underlineStart"
+        const val END = "underlineEnd"
+    }
+
     object Type {
         const val TEXT_VIEW = 0
         const val EDIT_TEXT = 1

@@ -55,6 +55,7 @@ import com.pandacorp.noteui.presentation.utils.helpers.hideToolbarWhileScrolling
 import com.pandacorp.noteui.presentation.utils.helpers.insertImage
 import com.pandacorp.noteui.presentation.utils.helpers.makeTextBold
 import com.pandacorp.noteui.presentation.utils.helpers.makeTextItalic
+import com.pandacorp.noteui.presentation.utils.helpers.makeTextUnderline
 import com.pandacorp.noteui.presentation.utils.helpers.setSpannableFromJson
 import com.pandacorp.noteui.presentation.utils.helpers.sp
 import com.pandacorp.noteui.presentation.utils.views.UndoRedoHelper
@@ -643,6 +644,10 @@ class NoteScreen : Fragment() {
         binding.actionMenuButtonItalic.setOnClickListener {
             val editText = getFocusedEditText() ?: return@setOnClickListener
             editText.makeTextItalic()
+        }
+        binding.actionMenuButtonUnderline.setOnClickListener {
+            val editText = getFocusedEditText() ?: return@setOnClickListener
+            editText.makeTextUnderline()
         }
     }
 

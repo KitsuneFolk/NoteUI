@@ -6,6 +6,7 @@ import android.text.Spannable
 import android.text.style.*
 import android.view.Gravity
 import com.pandacorp.noteui.domain.utils.Constants
+import com.pandacorp.noteui.presentation.utils.CustomUnderlineSpan
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -37,7 +38,6 @@ class SpannableToJsonUseCase {
         addImageSpans(spannable, json, imagesSpans)
 
         // bold and italic spans
-
         val boldSpans: MutableList<StyleSpan> = mutableListOf()
         val italicSpans: MutableList<StyleSpan> = mutableListOf()
         spannable.getSpans(0, spannable.length, StyleSpan::class.java).onEach { styleSpan ->
@@ -46,6 +46,10 @@ class SpannableToJsonUseCase {
         }
         makeBold(spannable, json, boldSpans)
         makeItalic(spannable, json, italicSpans)
+
+        // underline spans
+        val underlineSpans = spannable.getSpans(0, spannable.length, CustomUnderlineSpan::class.java)
+        makeUnderline(spannable, json, underlineSpans)
 
         return json.toString()
     }
@@ -168,5 +172,22 @@ class SpannableToJsonUseCase {
             jsonArray.put(spansJO)
         }
         json.put(Constants.ItalicSpans.KEY, jsonArray)
+    }
+
+    private fun makeUnderline(
+        spannable: Spannable,
+        json: JSONObject,
+        spans: Array<CustomUnderlineSpan>
+    ) {
+        val jsonArray = JSONArray()
+        for (span in spans) {
+            val spansJO =
+                JSONObject().apply {
+                    put(Constants.UnderlineSpans.START, spannable.getSpanStart(span))
+                    put(Constants.UnderlineSpans.END, spannable.getSpanEnd(span))
+                }
+            jsonArray.put(spansJO)
+        }
+        json.put(Constants.UnderlineSpans.KEY, jsonArray)
     }
 }

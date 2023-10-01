@@ -5,6 +5,7 @@ import android.text.Selection
 import android.text.TextWatcher
 import android.text.style.UnderlineSpan
 import android.widget.TextView
+import com.pandacorp.noteui.presentation.utils.CustomUnderlineSpan
 import java.util.LinkedList
 
 /*
@@ -49,7 +50,9 @@ class UndoRedoHelper(
         // This will get rid of underlines inserted when editor tries to come
         // up with a suggestion.
         for (o in text.getSpans(0, text.length, UnderlineSpan::class.java)) {
-            text.removeSpan(o)
+            if (o !is CustomUnderlineSpan) {
+                text.removeSpan(o)
+            }
         }
         Selection.setSelection(text, if (edit.mmBefore == null) start else start + edit.mmBefore.length)
     }
@@ -71,7 +74,9 @@ class UndoRedoHelper(
         // This will get rid of underlines inserted when editor tries to come
         // up with a suggestion.
         for (o in text.getSpans(0, text.length, UnderlineSpan::class.java)) {
-            text.removeSpan(o)
+            if (o !is CustomUnderlineSpan) {
+                text.removeSpan(o)
+            }
         }
         Selection.setSelection(text, if (edit.mmAfter == null) start else start + edit.mmAfter.length)
     }

@@ -167,6 +167,14 @@
                             android:src="@drawable/ic_note_italic" />
 
                         <ImageView
+                            android:id="@+id/actionMenuButtonUnderline"
+                            android:layout_width="@dimen/actionMenuButtonsSize"
+                            android:layout_height="@dimen/actionMenuButtonsSize"
+                            android:layout_marginStart="20dp"
+                            android:background="?selectableItemBackgroundBorderless"
+                            android:src="@drawable/ic_note_underline" />
+
+                        <ImageView
                             android:id="@+id/changeTextForegroundColor"
                             android:layout_width="@dimen/actionMenuButtonsSize"
                             android:layout_height="@dimen/actionMenuButtonsSize"
