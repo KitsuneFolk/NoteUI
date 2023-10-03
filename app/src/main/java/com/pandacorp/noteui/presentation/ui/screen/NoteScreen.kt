@@ -304,7 +304,15 @@ class NoteScreen : Fragment() {
                 ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
                     val imeHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
                     val layoutParams = binding.actionMenuRoot.layoutParams as MarginLayoutParams
-                    layoutParams.bottomMargin = imeHeight
+                    if (imeHeight == 0) {
+                        layoutParams.bottomMargin = 0
+                    } else {
+                        // The inset manually set in Fragment.setDecorFitsSystemWindows
+                        val bottomInset =
+                            requireActivity().window.decorView.rootWindowInsets
+                                .getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+                        layoutParams.bottomMargin = imeHeight - bottomInset
+                    }
                     binding.actionMenuRoot.layoutParams = layoutParams
                     ViewCompat.onApplyWindowInsets(v, insets)
                 }

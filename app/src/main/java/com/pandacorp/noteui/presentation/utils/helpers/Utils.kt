@@ -171,10 +171,13 @@ class Utils {
                     lp.topMargin = 0
                     lp.bottomMargin = 0
                 } else {
-                    // When not fitting system windows, set top margin to the system bar height so there's no overlap
+                    // Set margins manually
                     lp.topMargin =
                         requireActivity().window.decorView.rootWindowInsets
                             .getInsets(WindowInsetsCompat.Type.statusBars()).top
+                    lp.bottomMargin =
+                        requireActivity().window.decorView.rootWindowInsets
+                            .getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
                 }
                 root.layoutParams = lp
             }
