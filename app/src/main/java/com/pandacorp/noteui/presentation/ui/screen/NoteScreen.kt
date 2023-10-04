@@ -261,17 +261,17 @@ class NoteScreen : Fragment() {
                 Constants.ClickedActionButton.NULL -> {}
 
                 Constants.ClickedActionButton.FOREGROUND -> {
-                    binding.actionMenuScrollView.visibility = View.GONE
+                    binding.buttonsRoot.visibility = View.GONE
                     binding.colorsRoot.visibility = View.VISIBLE
                 }
 
                 Constants.ClickedActionButton.BACKGROUND -> {
-                    binding.actionMenuScrollView.visibility = View.GONE
+                    binding.buttonsRoot.visibility = View.GONE
                     binding.colorsRoot.visibility = View.VISIBLE
                 }
 
                 Constants.ClickedActionButton.GRAVITY -> {
-                    binding.actionMenuScrollView.visibility = View.GONE
+                    binding.buttonsRoot.visibility = View.GONE
                     binding.gravityRoot.visibility = View.VISIBLE
                 }
             }
@@ -602,20 +602,20 @@ class NoteScreen : Fragment() {
         }
 
         binding.gravityCloseButton.setOnClickListener {
-            Utils.animateViewSliding(binding.actionMenuScrollView, binding.gravityRoot)
+            Utils.animateViewSliding(binding.buttonsRoot, binding.gravityRoot)
             currentNoteViewModel.clickedActionMenuButton.value = Constants.ClickedActionButton.NULL
         }
 
         binding.changeTextForegroundColor.setOnClickListener {
-            Utils.animateViewSliding(binding.colorsRoot, binding.actionMenuScrollView)
+            Utils.animateViewSliding(binding.colorsRoot, binding.buttonsRoot)
             currentNoteViewModel.clickedActionMenuButton.value = Constants.ClickedActionButton.FOREGROUND
         }
         binding.changeTextGravity.setOnClickListener {
-            Utils.animateViewSliding(binding.gravityRoot, binding.actionMenuScrollView)
+            Utils.animateViewSliding(binding.gravityRoot, binding.buttonsRoot)
             currentNoteViewModel.clickedActionMenuButton.value = Constants.ClickedActionButton.GRAVITY
         }
         binding.changeTextBackgroundColor.setOnClickListener {
-            Utils.animateViewSliding(binding.colorsRoot, binding.actionMenuScrollView)
+            Utils.animateViewSliding(binding.colorsRoot, binding.buttonsRoot)
             currentNoteViewModel.clickedActionMenuButton.value = Constants.ClickedActionButton.BACKGROUND
         }
 
@@ -633,7 +633,7 @@ class NoteScreen : Fragment() {
             }
         }
         binding.colorsClose.setOnClickListener {
-            Utils.animateViewSliding(binding.actionMenuScrollView, binding.colorsRoot)
+            Utils.animateViewSliding(binding.buttonsRoot, binding.colorsRoot)
             currentNoteViewModel.clickedActionMenuButton.value = Constants.ClickedActionButton.NULL
         }
 

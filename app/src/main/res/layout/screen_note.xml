@@ -133,81 +133,95 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <HorizontalScrollView
-                    android:id="@+id/actionMenuScrollView"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/buttonsRoot"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:scrollbarSize="0dp"
-                    tools:visibility="visible">
+                    android:gravity="center">
 
-                    <LinearLayout
-                        android:id="@+id/buttonsRoot"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                    <HorizontalScrollView
+                        android:id="@+id/actionMenuScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:gravity="center">
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:clipChildren="true"
+                        android:scrollbarSize="0dp"
+                        tools:visibility="visible">
 
-                        <ImageView
-                            android:id="@+id/actionMenuButtonBold"
-                            android:layout_width="@dimen/actionMenuButtonsSize"
-                            android:layout_height="@dimen/actionMenuButtonsSize"
-                            android:layout_marginStart="20dp"
-                            android:background="?selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_note_bold" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent">
 
-                        <ImageView
-                            android:id="@+id/actionMenuButtonItalic"
-                            android:layout_width="@dimen/actionMenuButtonsSize"
-                            android:layout_height="@dimen/actionMenuButtonsSize"
-                            android:layout_marginStart="20dp"
-                            android:background="?selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_note_italic" />
+                            <ImageView
+                                android:id="@+id/actionMenuButtonBold"
+                                android:layout_width="@dimen/actionMenuButtonsSize"
+                                android:layout_height="@dimen/actionMenuButtonsSize"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="?selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_note_bold" />
 
-                        <ImageView
-                            android:id="@+id/actionMenuButtonUnderline"
-                            android:layout_width="@dimen/actionMenuButtonsSize"
-                            android:layout_height="@dimen/actionMenuButtonsSize"
-                            android:layout_marginStart="20dp"
-                            android:background="?selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_note_underline" />
+                            <ImageView
+                                android:id="@+id/actionMenuButtonItalic"
+                                android:layout_width="@dimen/actionMenuButtonsSize"
+                                android:layout_height="@dimen/actionMenuButtonsSize"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="?selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_note_italic" />
 
-                        <ImageView
-                            android:id="@+id/changeTextForegroundColor"
-                            android:layout_width="@dimen/actionMenuButtonsSize"
-                            android:layout_height="@dimen/actionMenuButtonsSize"
-                            android:layout_marginStart="20dp"
-                            android:background="?selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_note_change_text_foreground" />
+                            <ImageView
+                                android:id="@+id/actionMenuButtonUnderline"
+                                android:layout_width="@dimen/actionMenuButtonsSize"
+                                android:layout_height="@dimen/actionMenuButtonsSize"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="?selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_note_underline" />
 
-                        <ImageView
-                            android:id="@+id/changeTextGravity"
-                            android:layout_width="@dimen/actionMenuButtonsSize"
-                            android:layout_height="@dimen/actionMenuButtonsSize"
-                            android:layout_marginStart="20dp"
-                            android:background="?selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_note_change_text_gravity" />
+                            <ImageView
+                                android:id="@+id/changeTextForegroundColor"
+                                android:layout_width="@dimen/actionMenuButtonsSize"
+                                android:layout_height="@dimen/actionMenuButtonsSize"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="?selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_note_change_text_foreground" />
 
-                        <ImageView
-                            android:id="@+id/changeTextBackgroundColor"
-                            android:layout_width="@dimen/actionMenuButtonsSize"
-                            android:layout_height="@dimen/actionMenuButtonsSize"
-                            android:layout_marginStart="20dp"
-                            android:background="?selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_note_change_text_background" />
+                            <ImageView
+                                android:id="@+id/changeTextGravity"
+                                android:layout_width="@dimen/actionMenuButtonsSize"
+                                android:layout_height="@dimen/actionMenuButtonsSize"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="?selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_note_change_text_gravity" />
 
-                        <ImageView
-                            android:id="@+id/addImage"
-                            android:layout_width="@dimen/actionMenuButtonsSize"
-                            android:layout_height="@dimen/actionMenuButtonsSize"
-                            android:layout_marginStart="20dp"
-                            android:background="?selectableItemBackgroundBorderless"
-                            android:src="@drawable/ic_note_add_image" />
-                    </LinearLayout>
+                            <ImageView
+                                android:id="@+id/changeTextBackgroundColor"
+                                android:layout_width="@dimen/actionMenuButtonsSize"
+                                android:layout_height="@dimen/actionMenuButtonsSize"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="?selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_note_change_text_background" />
 
-                </HorizontalScrollView>
+                            <ImageView
+                                android:id="@+id/addImage"
+                                android:layout_width="@dimen/actionMenuButtonsSize"
+                                android:layout_height="@dimen/actionMenuButtonsSize"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:background="?selectableItemBackgroundBorderless"
+                                android:src="@drawable/ic_note_add_image" />
+                        </LinearLayout>
+
+                    </HorizontalScrollView>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/colorsRoot"
