@@ -88,4 +88,18 @@
 
     <string name="emptyRecyclerView">Empty. Add an item using the button</string>
     <string name="notesNotFound">Couldn\'t find the searched notes</string>
+
+    <!--  content_description  -->
+    <string name="bold_description">Bold</string>
+    <string name="italic_description">Italic</string>
+    <string name="underline_description">Underline</string>
+    <string name="foreground_description">Foreground color</string>
+    <string name="gravity_description">Gravity</string>
+    <string name="background_description">Background</string>
+    <string name="add_image_description">Add Image</string>
+    <string name="colors_clear_description">Set default color</string>
+    <string name="close_description">Close</string>
+    <string name="gravity_start_description">Start</string>
+    <string name="gravity_center_description">Center</string>
+    <string name="gravity_end_description">End</string>
 </resources>

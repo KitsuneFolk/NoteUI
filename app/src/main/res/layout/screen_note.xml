@@ -28,6 +28,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
                     tools:src="@drawable/image_night_city" />
 
             </ScrollView>
@@ -133,6 +134,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
+                <!-- We need this LinearLayout to center ScrollView -->
                 <LinearLayout
                     android:id="@+id/buttonsRoot"
                     android:layout_width="wrap_content"
@@ -149,6 +151,7 @@
                         android:layout_marginEnd="10dp"
                         android:clipChildren="true"
                         android:scrollbarSize="0dp"
+                        tools:ignore="UselessParent"
                         tools:visibility="visible">
 
                         <LinearLayout
@@ -162,6 +165,7 @@
                                 android:layout_marginStart="10dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="?selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/bold_description"
                                 android:src="@drawable/ic_note_bold" />
 
                             <ImageView
@@ -171,6 +175,7 @@
                                 android:layout_marginStart="10dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="?selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/italic_description"
                                 android:src="@drawable/ic_note_italic" />
 
                             <ImageView
@@ -180,6 +185,7 @@
                                 android:layout_marginStart="10dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="?selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/underline_description"
                                 android:src="@drawable/ic_note_underline" />
 
                             <ImageView
@@ -189,6 +195,7 @@
                                 android:layout_marginStart="10dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="?selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/foreground_description"
                                 android:src="@drawable/ic_note_change_text_foreground" />
 
                             <ImageView
@@ -198,6 +205,7 @@
                                 android:layout_marginStart="10dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="?selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/gravity_description"
                                 android:src="@drawable/ic_note_change_text_gravity" />
 
                             <ImageView
@@ -207,6 +215,7 @@
                                 android:layout_marginStart="10dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="?selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/background_description"
                                 android:src="@drawable/ic_note_change_text_background" />
 
                             <ImageView
@@ -216,6 +225,7 @@
                                 android:layout_marginStart="10dp"
                                 android:layout_marginEnd="10dp"
                                 android:background="?selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/add_image_description"
                                 android:src="@drawable/ic_note_add_image" />
                         </LinearLayout>
 
@@ -241,6 +251,7 @@
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="15dp"
                         android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/colors_clear_description"
                         android:src="@drawable/ic_note_action_remove" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -261,6 +272,7 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
                         android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/close_description"
                         android:src="@drawable/ic_close" />
 
                 </LinearLayout>
@@ -284,6 +296,7 @@
                         android:layout_height="@dimen/actionMenuButtonsSize"
                         android:layout_marginStart="10dp"
                         android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/gravity_start_description"
                         android:src="@drawable/ic_note_change_text_gravity_left" />
 
                     <ImageView
@@ -292,6 +305,7 @@
                         android:layout_height="@dimen/actionMenuButtonsSize"
                         android:layout_marginStart="50dp"
                         android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/gravity_center_description"
                         android:src="@drawable/ic_note_change_text_gravity_center" />
 
                     <ImageView
@@ -300,6 +314,7 @@
                         android:layout_height="@dimen/actionMenuButtonsSize"
                         android:layout_marginStart="50dp"
                         android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/gravity_end_description"
                         android:src="@drawable/ic_note_change_text_gravity_right" />
 
                     <ImageView
@@ -308,6 +323,7 @@
                         android:layout_height="32dp"
                         android:layout_marginStart="50dp"
                         android:background="?selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/close_description"
                         android:src="@drawable/ic_close" />
                 </LinearLayout>
             </FrameLayout>
@@ -359,6 +375,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginEnd="@dimen/mediumMargin"
+                        android:contentDescription="@string/close_description"
                         android:src="@drawable/ic_show_more_animated"
                         app:layout_constraintBottom_toBottomOf="@id/changeBackgroundButtonTextView"
                         app:layout_constraintEnd_toEndOf="parent"

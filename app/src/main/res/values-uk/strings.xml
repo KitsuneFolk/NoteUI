@@ -82,4 +82,17 @@
     <string name="emptyRecyclerView">Порожньо. Додайте елемент за допомогою кнопки</string>
     <string name="notesNotFound">Не було знайдено нiяких нотаток</string>
 
+    <!-- content_description -->
+    <string name="bold_description">Жирний</string>
+    <string name="italic_description">Курсив</string>
+    <string name="underline_description">Підкреслений</string>
+    <string name="foreground_description">Колір тексту</string>
+    <string name="gravity_description">Гравітація</string>
+    <string name="background_description">Задній фон тексту</string>
+    <string name="add_image_description">Додати зображення</string>
+    <string name="colors_clear_description">Встановити колір за замовчуванням</string>
+    <string name="close_description">Закрити</string>
+    <string name="gravity_start_description">Початок</string>
+    <string name="gravity_center_description">Центр</string>
+    <string name="gravity_end_description">Кінець</string>
 </resources>

@@ -81,4 +81,18 @@
 
     <string name="emptyRecyclerView">Пусто. Добавьте элемент с помощью кнопки</string>
     <string name="notesNotFound">Не было найдено никаких заметок</string>
+
+    <!-- content_description -->
+    <string name="bold_description">Полужирный</string>
+    <string name="italic_description">Курсив</string>
+    <string name="underline_description">Подчеркивание</string>
+    <string name="foreground_description">Цвет текста</string>
+    <string name="gravity_description">Гравитация</string>
+    <string name="background_description">Задний фон текста</string>
+    <string name="add_image_description">Добавить изображение</string>
+    <string name="colors_clear_description">Установить цвет по умолчанию</string>
+    <string name="close_description">Закрыть</string>
+    <string name="gravity_start_description">Начало</string>
+    <string name="gravity_center_description">Центр</string>
+    <string name="gravity_end_description">Конец</string>
 </resources>
