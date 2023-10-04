@@ -65,7 +65,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class NoteScreen : Fragment() {
@@ -75,7 +75,7 @@ class NoteScreen : Fragment() {
     private val navController by lazy { findNavController() }
     private val swipeBackFragment by lazy { requireParentFragment() as SwipeBackFragment }
 
-    private val currentNoteViewModel: CurrentNoteViewModel by sharedViewModel()
+    private val currentNoteViewModel: CurrentNoteViewModel by activityViewModel()
     private val colorsViewModel: ColorViewModel by viewModel()
 
     private val colorsAdapter by lazy {

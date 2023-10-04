@@ -34,7 +34,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
@@ -43,7 +43,7 @@ class MainScreen : Fragment() {
     private val binding get() = _binding!!
 
     private val notesViewModel: NotesViewModel by viewModel()
-    private val currentNoteViewModel: CurrentNoteViewModel by sharedViewModel()
+    private val currentNoteViewModel: CurrentNoteViewModel by activityViewModel()
 
     private val navController by lazy { findNavController() }
 
