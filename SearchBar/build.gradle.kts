@@ -6,11 +6,9 @@ plugins {
 android {
     namespace = "com.pandacorp.searchbar"
     compileSdk = 33
-
     defaultConfig {
         minSdk = 21
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false

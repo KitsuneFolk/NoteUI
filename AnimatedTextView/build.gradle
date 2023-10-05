@@ -6,11 +6,9 @@ plugins {
 android {
     namespace 'com.pandacorp.animatedtextview'
     compileSdk 33
-
     defaultConfig {
         minSdk 21
     }
-
     buildTypes {
         release {
             minifyEnabled false
