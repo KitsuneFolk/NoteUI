@@ -127,7 +127,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/semi_rounded_background"
                 android:gravity="center"
-                android:minHeight="@dimen/actionMenu"
+                android:minHeight="@dimen/actionMenu_minHeight"
                 android:orientation="horizontal"
                 android:paddingTop="@dimen/smallMargin"
                 app:layout_constraintBottom_toBottomOf="parent"

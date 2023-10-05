@@ -4,31 +4,20 @@
     <dimen name="dialog_minWidth">300dp</dimen>
     <dimen name="actionMenuButtonsSize">35dp</dimen>
 
-    <dimen name="minItemHeight">45dp</dimen>
-
     <dimen name="smallMargin">5dp</dimen>
     <dimen name="mediumMargin">10dp</dimen>
     <dimen name="bigMargin">24dp</dimen>
-    <dimen name="hugeMargin">80dp</dimen>
 
-    <dimen name="navigationViewTopPadding">100dp</dimen>
     <dimen name="corners_radius">40dp</dimen>
-    <dimen name="smallCorners">5dp</dimen>
     <dimen name="bigCorners">15dp</dimen>
 
-    <dimen name="smallText">12sp</dimen>
     <dimen name="normalText">14sp</dimen>
     <dimen name="mediumText">16sp</dimen>
-    <dimen name="bigText">22sp</dimen>
     <dimen name="hugeText">24sp</dimen>
-
-    <dimen name="hugeBtnHeight">150dp</dimen>
-    <dimen name="hugeBtnWidth">300dp</dimen>
-    <dimen name="hugeBtnText">40sp</dimen>
 
     <dimen name="stroke">1dp</dimen>
 
-    <dimen name="actionMenu">65dp</dimen>
+    <dimen name="actionMenu_minHeight">65dp</dimen>
 
     <dimen name="bigImage">200dp</dimen>
 
