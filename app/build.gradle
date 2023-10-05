@@ -7,10 +7,10 @@ plugins {
 
 android {
     namespace 'com.pandacorp.noteui.app'
+    compileSdk 34
     defaultConfig {
         buildToolsVersion = "33.0.2"
         minSdkVersion 21
-        compileSdk 34
         targetSdkVersion 34
         versionCode 1
         versionName "1.3"
