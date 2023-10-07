@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.util.isEmpty
@@ -236,6 +238,35 @@ class MainScreen : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
         binding.notesRecyclerView.adapter = notesAdapter
         binding.searchRecyclerView.adapter = searchAdapter
+        binding.filterSpinner.apply {
+            val adapter =
+                ArrayAdapter.createFromResource(
+                    requireContext(),
+                    R.array.Filter,
+                    android.R.layout.simple_spinner_item,
+                )
+
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+            this.adapter = adapter
+
+            onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        notesViewModel.filter.value = position
+                        val filteredNotes = getFilteredNotes(notesViewModel.notesList.value ?: emptyList())
+                        notesAdapter.submitList(filteredNotes)
+                        searchAdapter.submitList(filteredNotes)
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                }
+        }
         binding.addFAB.setOnClickListener {
             val tv = TypedValue()
             requireContext().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
@@ -259,12 +290,13 @@ class MainScreen : Fragment() {
             binding.addFAB.extend()
         }
 
-        notesViewModel.notesList.observe(viewLifecycleOwner) {
-            notesAdapter.submitList(it)
-            searchAdapter.submitList(it)
+        notesViewModel.notesList.observe(viewLifecycleOwner) { list ->
+            val filteredList = getFilteredNotes(list)
+            notesAdapter.submitList(filteredList)
+            searchAdapter.submitList(filteredList)
 
             binding.hintInclude.textView.setText(R.string.emptyRecyclerView)
-            if (it.isEmpty()) {
+            if (filteredList.isEmpty()) {
                 showEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)
             } else {
                 hideEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)
@@ -346,14 +378,36 @@ class MainScreen : Fragment() {
                 searchJob?.cancel()
                 searchJob =
                     CoroutineScope(Dispatchers.Main).launch {
-                        val filteredNotes = getFilteredNotes(it, notesViewModel.notesList.value)
+                        val filteredNotes = getSearchedNotes(it, notesViewModel.notesList.value)
                         notesViewModel.filteredNotes.postValue(filteredNotes)
                     }
             }
         }
     }
 
-    private fun getFilteredNotes(
+    private fun getFilteredNotes(notesList: List<NoteItem>?): List<NoteItem> {
+        val filteredList =
+            when (notesViewModel.filter.value!!) {
+                Constants.Filter.OLDEST -> {
+                    notesList?.sortedBy { it.id }
+                }
+                Constants.Filter.NEWEST -> {
+                    notesList?.sortedByDescending { it.id }
+                }
+                Constants.Filter.MOST_TEXT -> {
+                    notesList?.sortedByDescending { it.content.length + it.title.length }
+                }
+                Constants.Filter.LEAST_TEXT -> {
+                    notesList?.sortedBy { it.content.length + it.title.length }
+                }
+                else -> {
+                    notesList?.sortedBy { it.id }
+                }
+            }
+        return filteredList ?: emptyList()
+    }
+
+    private fun getSearchedNotes(
         text: String?,
         notesList: List<NoteItem>?
     ): MutableList<NoteItem>? {

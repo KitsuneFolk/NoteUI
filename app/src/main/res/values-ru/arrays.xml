@@ -8,4 +8,11 @@
         <item>Фиолетовая</item>
         <item>Красная</item>
     </string-array>
+
+    <string-array name="Filter" translatable="false">
+        <item>Самые старые</item>
+        <item>Самые новые</item>
+        <item>Наибольше текста</item>
+        <item>Наименьше текста</item>
+    </string-array>
 </resources>

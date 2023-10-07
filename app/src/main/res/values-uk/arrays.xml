@@ -8,4 +8,11 @@
         <item>Фiолетова</item>
         <item>Червона</item>
     </string-array>
+
+    <string-array name="Filter" translatable="false">
+        <item>Найстаріші</item>
+        <item>Найновіші</item>
+        <item>Найбільше тексту</item>
+        <item>Найменше тексту</item>
+    </string-array>
 </resources>

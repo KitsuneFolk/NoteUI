@@ -9,6 +9,13 @@ class Constants {
         const val GRAVITY = 3
     }
 
+    object Filter {
+        const val OLDEST = 0
+        const val NEWEST = 1
+        const val MOST_TEXT = 2
+        const val LEAST_TEXT = 3
+    }
+
     object Preferences {
         object Key {
             const val LANGUAGE = "Languages"
@@ -26,6 +33,7 @@ class Constants {
             const val DRAWER_ANIMATION = 10000
             const val CONTENT_TEXT_SIZE = 18
             const val TITLE_TEXT_SIZE = 20
+            const val FILTER = Filter.OLDEST
         }
     }
 

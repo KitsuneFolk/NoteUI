@@ -51,6 +51,7 @@
     <!-- MainActivity strings  -->
     <string name="addNote">Створити нотаток</string>
     <string name="snackbar_undo_title">Було видалено нотаткiв: </string>
+    <string name="filter">Фільтр</string>
 
     <!-- ImagePicker strings  -->
     <string name="title_choose_image_provider">Обрати</string>

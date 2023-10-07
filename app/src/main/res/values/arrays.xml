@@ -66,4 +66,10 @@
         <item>1000000</item>
     </integer-array>
 
+    <string-array name="Filter" translatable="false">
+        <item>Oldest</item>
+        <item>Newest</item>
+        <item>Most text</item>
+        <item>Least text</item>
+    </string-array>
 </resources>

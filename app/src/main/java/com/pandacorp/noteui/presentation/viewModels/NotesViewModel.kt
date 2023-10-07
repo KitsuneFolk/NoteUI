@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pandacorp.noteui.domain.model.NoteItem
 import com.pandacorp.noteui.domain.repository.NoteRepository
+import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -22,6 +23,8 @@ class NotesViewModel(private val noteRepository: NoteRepository) : ViewModel() {
 
     var filteredNotes = MutableLiveData<MutableList<NoteItem>>(null)
     var searchViewText = MutableLiveData("")
+
+    val filter = MutableLiveData(Constants.Preferences.DefaultValue.FILTER)
 
     suspend fun addNote(noteItem: NoteItem): Long {
         return withContext(Dispatchers.IO) {

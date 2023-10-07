@@ -55,6 +55,7 @@
     <!-- MainActivity strings  -->
     <string name="addNote">Add note</string>
     <string name="snackbar_undo_title">Notes have been removed: </string>
+    <string name="filter">Filter</string>
 
     <!-- ImagePicker strings  -->
     <string name="title_choose_image_provider">Choose</string>
