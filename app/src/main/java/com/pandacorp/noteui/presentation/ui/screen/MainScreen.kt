@@ -225,7 +225,6 @@ class MainScreen : Fragment() {
                     binding.searchView.hide()
                 }
             }
-        com.google.android.material.R.styleable.SearchBar
         binding.searchView.apply {
             editText.addTextChangedListener {
                 notesViewModel.searchViewText.postValue(binding.searchView.text.toString())
