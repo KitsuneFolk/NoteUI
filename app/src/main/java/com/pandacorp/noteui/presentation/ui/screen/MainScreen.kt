@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.util.isEmpty
+import androidx.core.widget.NestedScrollView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -235,15 +236,16 @@ class MainScreen : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
-        binding.notesRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 10) {
-                    binding.addFAB.hide()
-                }
-                if(dy < -5) {
-                    binding.addFAB.show()
-                }
+        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            val dy = scrollY - oldScrollY
+            if (binding.searchBar.isCountModeEnabled) {
+                return@OnScrollChangeListener
+            }
+            if (dy > 10) {
+                binding.addFAB.hide()
+            }
+            if(dy < -5) {
+                binding.addFAB.show()
             }
         })
         binding.notesRecyclerView.adapter = notesAdapter
