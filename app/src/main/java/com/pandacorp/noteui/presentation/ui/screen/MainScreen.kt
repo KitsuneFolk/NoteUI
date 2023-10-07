@@ -227,6 +227,7 @@ class MainScreen : Fragment() {
                 }
             }
         binding.searchView.apply {
+            setupWithSearchBar(binding.searchBar) // Setup programmatically, because we don't use CoordinatorLayout in xml
             editText.addTextChangedListener {
                 notesViewModel.searchViewText.postValue(binding.searchView.text.toString())
             }
