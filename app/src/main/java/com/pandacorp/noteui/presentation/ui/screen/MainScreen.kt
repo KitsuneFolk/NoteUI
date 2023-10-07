@@ -355,6 +355,7 @@ class MainScreen : Fragment() {
                             notesViewModel.selectedNotes.postValue(SparseBooleanArray())
                         }
                     }
+                    binding.filterSpinner.isEnabled = isEmpty
                     startWithAnimation = true // Always animate after the first time observer is called
                 }
             }
