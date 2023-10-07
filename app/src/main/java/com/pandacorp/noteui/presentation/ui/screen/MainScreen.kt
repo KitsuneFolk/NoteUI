@@ -235,6 +235,17 @@ class MainScreen : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
+        binding.notesRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 10) {
+                    binding.addFAB.hide()
+                }
+                if(dy < -5) {
+                    binding.addFAB.show()
+                }
+            }
+        })
         binding.notesRecyclerView.adapter = notesAdapter
         binding.searchRecyclerView.adapter = searchAdapter
         binding.filterSpinner.apply {

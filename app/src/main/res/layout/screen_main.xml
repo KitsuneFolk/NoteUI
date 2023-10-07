@@ -56,7 +56,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="gone" />
 
-    <!--  TODO: Implement the hiding programmatically  -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/addFAB"
         android:layout_width="wrap_content"
