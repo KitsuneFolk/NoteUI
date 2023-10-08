@@ -4,9 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 
-/**
- * Created by qandeel.rasheed on 8/12/2020 at 10:28 PM.
- */
 class CustomTextView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,

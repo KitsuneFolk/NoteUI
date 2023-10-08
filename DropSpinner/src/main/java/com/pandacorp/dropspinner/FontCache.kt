@@ -10,9 +10,6 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import java.util.*
 
-/**
- * Created by qandeel.rasheed on 8/12/2020 at 10:43 PM.
- */
 object FontCache {
     private val fontCache = HashMap<String, Typeface?>()
 

@@ -18,9 +18,6 @@ import com.skydoves.powermenu.MenuAnimation
 import com.skydoves.powermenu.OnDismissedListener
 import com.skydoves.powermenu.OnMenuItemClickListener
 
-/**
- * Created by qandeel.rasheed on 1/19/2021 at 9:11 PM.
- */
 class DropDownView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0,
 ) : MaterialCardView(context, attrs, defStyleAttr),

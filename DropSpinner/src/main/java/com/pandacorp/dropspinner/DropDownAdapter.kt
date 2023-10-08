@@ -6,9 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.skydoves.powermenu.MenuBaseAdapter
 
-/**
- * Created by qandeel.rasheed on 1/19/2021 at 11:55 PM.
- */
 class DropDownAdapter internal constructor() :
     MenuBaseAdapter<DropDownItem?>() {
     private var selectedIndex = -1
