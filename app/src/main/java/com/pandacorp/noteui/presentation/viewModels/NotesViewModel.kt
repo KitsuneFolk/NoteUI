@@ -21,7 +21,7 @@ class NotesViewModel(private val noteRepository: NoteRepository) : ViewModel() {
         }
     var selectedNotes = MutableLiveData(SparseBooleanArray())
 
-    var filteredNotes = MutableLiveData<MutableList<NoteItem>>(null)
+    var searchedNotes = MutableLiveData<MutableList<NoteItem>>(null)
     var searchViewText = MutableLiveData("")
 
     val filter = MutableLiveData(Constants.Preferences.DefaultValue.FILTER)

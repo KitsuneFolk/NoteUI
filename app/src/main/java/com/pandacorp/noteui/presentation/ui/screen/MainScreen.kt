@@ -362,7 +362,7 @@ class MainScreen : Fragment() {
             }
         }
 
-        notesViewModel.filteredNotes.observe(viewLifecycleOwner) {
+        notesViewModel.searchedNotes.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 if (notesViewModel.notesList.value.isNullOrEmpty()) { // No notes to search
                     binding.searchHintInclude.textView.setText(R.string.emptyRecyclerView)
@@ -393,7 +393,7 @@ class MainScreen : Fragment() {
                 searchJob =
                     CoroutineScope(Dispatchers.Main).launch {
                         val filteredNotes = getSearchedNotes(it, notesViewModel.notesList.value)
-                        notesViewModel.filteredNotes.postValue(filteredNotes)
+                        notesViewModel.searchedNotes.postValue(filteredNotes)
                     }
             }
         }
@@ -428,8 +428,8 @@ class MainScreen : Fragment() {
         return if (text.isNullOrEmpty()) {
             null // Clear and show all notes
         } else {
-            val filteredList = mutableListOf<NoteItem>()
-            if (notesList == null) return filteredList
+            val searchedList = mutableListOf<NoteItem>()
+            if (notesList == null) return searchedList
             for (noteItem in notesList) {
                 val title = noteItem.title
                 val parsedTitle =
@@ -439,10 +439,10 @@ class MainScreen : Fragment() {
                         JSONObject(title).getString(com.pandacorp.noteui.domain.utils.Constants.TEXT)
                     }
                 if (parsedTitle.lowercase().contains(text.lowercase(Locale.getDefault()))) {
-                    filteredList.add(noteItem)
+                    searchedList.add(noteItem)
                 }
             }
-            filteredList
+            searchedList
         }
     }
 
