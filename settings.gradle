@@ -2,3 +2,4 @@ rootProject.name = "NoteUI"
 include ':app'
 include ':AnimatedTextView'
 include ':SearchBar'
+include ':DropSpinner'
