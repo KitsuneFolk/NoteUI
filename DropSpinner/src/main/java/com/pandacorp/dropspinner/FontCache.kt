@@ -15,6 +15,7 @@ import java.util.*
  */
 object FontCache {
     private val fontCache = HashMap<String, Typeface?>()
+
     fun getTypeface(fontname: String, context: Context): Typeface? {
         var typeface = fontCache[fontname]
         if (typeface == null) {

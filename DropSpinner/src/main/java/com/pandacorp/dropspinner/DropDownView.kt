@@ -81,6 +81,43 @@ class DropDownView @JvmOverloads constructor(
         setOnClickListener(this)
     }
 
+    fun setItemClickListener(listener: ItemClickListener) {
+        this.listener = listener
+    }
+
+    override fun onClick(v: View?) {
+        if (isSelected)
+            hideDropdown()
+        else
+            showDropdown()
+    }
+
+    override fun onItemClick(position: Int, item: DropDownItem) {
+        value.text = item.text
+        dropDownAdapter.setSelection(position, item)
+        listener?.onItemClick(position, item)
+        hideDropdown()
+    }
+
+    override fun onDismissed() {
+        isSelected = false
+        animateCollapse()
+    }
+
+    private fun showDropdown() {
+        post {
+            isSelected = true
+            dropDownPopup.showAsDropDown(this)
+            animateExpand()
+        }
+    }
+
+    private fun hideDropdown() {
+        postDelayed({
+            dropDownPopup.dismiss()
+        }, 150)
+    }
+
     private fun setStyles(dropsyAttrs: TypedArray) {
         val resources = context.resources
         val dropsyLabelColor =
@@ -142,43 +179,6 @@ class DropDownView @JvmOverloads constructor(
             label.visibility = View.GONE
         if (dropDownItems.isNotEmpty())
             value.text = dropDownItems[0].text
-    }
-
-    override fun onClick(v: View?) {
-        if (isSelected)
-            hideDropdown()
-        else
-            showDropdown()
-    }
-
-    override fun onItemClick(position: Int, item: DropDownItem) {
-        value.text = item.text
-        dropDownAdapter.setSelection(position, item)
-        listener?.onItemClick(position, item)
-        hideDropdown()
-    }
-
-    override fun onDismissed() {
-        isSelected = false
-        animateCollapse()
-    }
-
-    private fun showDropdown() {
-        post {
-            isSelected = true
-            dropDownPopup.showAsDropDown(this)
-            animateExpand()
-        }
-    }
-
-    private fun hideDropdown() {
-        postDelayed({
-            dropDownPopup.dismiss()
-        }, 150)
-    }
-
-    fun setItemClickListener(listener: ItemClickListener) {
-        this.listener = listener
     }
 
     private fun animateExpand() {

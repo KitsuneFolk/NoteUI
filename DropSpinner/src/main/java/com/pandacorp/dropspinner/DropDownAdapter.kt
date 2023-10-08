@@ -14,6 +14,14 @@ class DropDownAdapter internal constructor() :
     private var selectedIndex = -1
     private var textColor: Int? = null
 
+    fun setSelection(index: Int, item: DropDownItem?) {
+        if (selectedIndex != -1 && selectedIndex < itemList.size)
+            (getItem(selectedIndex) as DropDownItem).toggleState()
+        item?.toggleState()
+        notifyDataSetChanged()
+        selectedIndex = index
+    }
+
     internal fun setTextColor(color: Int) {
         this.textColor = color
     }
@@ -42,11 +50,4 @@ class DropDownAdapter internal constructor() :
         return super.getView(index, view, viewGroup)
     }
 
-    fun setSelection(index: Int, item: DropDownItem?) {
-        if (selectedIndex != -1 && selectedIndex < itemList.size)
-            (getItem(selectedIndex) as DropDownItem).toggleState()
-        item?.toggleState()
-        notifyDataSetChanged()
-        selectedIndex = index
-    }
 }
