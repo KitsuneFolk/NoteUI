@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.util.isEmpty
@@ -251,34 +249,11 @@ class MainScreen : Fragment() {
         })
         binding.notesRecyclerView.adapter = notesAdapter
         binding.searchRecyclerView.adapter = searchAdapter
-        binding.filterSpinner.apply {
-            val adapter =
-                ArrayAdapter.createFromResource(
-                    requireContext(),
-                    R.array.Filter,
-                    android.R.layout.simple_spinner_item,
-                )
-
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-            this.adapter = adapter
-
-            onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        notesViewModel.filter.value = position
-                        val filteredNotes = getFilteredNotes(notesViewModel.notesList.value ?: emptyList())
-                        notesAdapter.submitList(filteredNotes)
-                        searchAdapter.submitList(filteredNotes)
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {}
-                }
+        binding.filterSpinner.setItemClickListener { position, _ ->
+            notesViewModel.filter.value = position
+            val filteredNotes = getFilteredNotes(notesViewModel.notesList.value ?: emptyList())
+            notesAdapter.submitList(filteredNotes)
+            searchAdapter.submitList(filteredNotes)
         }
         binding.addFAB.setOnClickListener {
             val tv = TypedValue()

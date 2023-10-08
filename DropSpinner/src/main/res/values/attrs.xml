@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <declare-styleable name="DropDownView" tools:ignore="ResourceName">
-        <attr name="dropsyItems" format="integer" />
+        <attr name="dropsyItems" format="reference" />
         <attr name="dropsyElevation" format="dimension" />
         <attr name="dropsyLabel" format="string" />
         <attr name="dropsyLabelColor" format="color" />

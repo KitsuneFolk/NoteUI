@@ -20,14 +20,19 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Spinner
+            <com.pandacorp.dropspinner.DropDownView
                 android:id="@+id/filterSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/mediumMargin"
-                android:layout_marginEnd="@dimen/mediumMargin"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:backgroundTint="?colorPrimaryDark"
                 android:minHeight="48dp"
-                android:textAlignment="center" />
+                app:dropsyItems="@array/Filter"
+                app:dropsyLabel="@string/filter"
+                app:dropsyLabelColor="#B4B4B4"
+                app:dropsySelector="#E6E1E5"
+                app:dropsyValueColor="#B4B4B4" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/notesRecyclerView"
