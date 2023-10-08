@@ -52,9 +52,9 @@ class DropDownView @JvmOverloads constructor(
             dropDownAdapter.setSelection(0, dropDownItems[0])
         popup
     }
-    private val img_arrow: AppCompatImageView
-    private val txt_drop_drown_label: CustomTextView
-    private val txt_drop_drown_value: CustomTextView
+    private val imageArrow: AppCompatImageView
+    private val label: CustomTextView
+    private val value: CustomTextView
 
     init {
         // Add body layout
@@ -64,9 +64,9 @@ class DropDownView @JvmOverloads constructor(
             false
         ) as LinearLayout
         addView(dropDownBody)
-        img_arrow = findViewById(R.id.img_arrow)
-        txt_drop_drown_label = findViewById(R.id.txt_drop_drown_label)
-        txt_drop_drown_value = findViewById(R.id.txt_drop_drown_value)
+        imageArrow = findViewById(R.id.img_arrow)
+        label = findViewById(R.id.txt_drop_drown_label)
+        value = findViewById(R.id.txt_drop_drown_value)
 
         // get attrs
         val dropsyAttrs = context.theme.obtainStyledAttributes(
@@ -102,15 +102,15 @@ class DropDownView @JvmOverloads constructor(
 
         // arrow styling
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            img_arrow.imageTintList =
+            imageArrow.imageTintList =
                 dropsyAttrs.getColorStateList(R.styleable.DropDownView_dropsySelector)
         } else {
-            img_arrow.setColorFilter(dropsySelector, android.graphics.PorterDuff.Mode.SRC_IN)
+            imageArrow.setColorFilter(dropsySelector, android.graphics.PorterDuff.Mode.SRC_IN)
         }
 
         // text styling
-        txt_drop_drown_label.setTextColor(dropsyLabelColor)
-        txt_drop_drown_value.setTextColor(dropsyValueColor)
+        label.setTextColor(dropsyLabelColor)
+        value.setTextColor(dropsyValueColor)
         dropDownAdapter.setTextColor(dropsyValueColor)
 
         // card styling
@@ -137,11 +137,11 @@ class DropDownView @JvmOverloads constructor(
             DropDownItem(it.toString())
         } ?: listOf()
 
-        txt_drop_drown_label.text = dropsyLabel
+        label.text = dropsyLabel
         if (dropsyLabel.isNullOrBlank())
-            txt_drop_drown_label.visibility = View.GONE
+            label.visibility = View.GONE
         if (dropDownItems.isNotEmpty())
-            txt_drop_drown_value.text = dropDownItems[0].text
+            value.text = dropDownItems[0].text
     }
 
     override fun onClick(v: View?) {
@@ -152,7 +152,7 @@ class DropDownView @JvmOverloads constructor(
     }
 
     override fun onItemClick(position: Int, item: DropDownItem) {
-        txt_drop_drown_value.text = item.text
+        value.text = item.text
         dropDownAdapter.setSelection(position, item)
         listener?.onItemClick(position, item)
         hideDropdown()
@@ -163,7 +163,7 @@ class DropDownView @JvmOverloads constructor(
         animateCollapse()
     }
 
-    fun showDropdown() {
+    private fun showDropdown() {
         post {
             isSelected = true
             dropDownPopup.showAsDropDown(this)
@@ -171,7 +171,7 @@ class DropDownView @JvmOverloads constructor(
         }
     }
 
-    fun hideDropdown() {
+    private fun hideDropdown() {
         postDelayed({
             dropDownPopup.dismiss()
         }, 150)
@@ -192,7 +192,7 @@ class DropDownView @JvmOverloads constructor(
         )
         rotate.duration = 300
         rotate.fillAfter = true
-        img_arrow.startAnimation(rotate)
+        imageArrow.startAnimation(rotate)
     }
 
     private fun animateCollapse() {
@@ -206,6 +206,6 @@ class DropDownView @JvmOverloads constructor(
         )
         rotate.duration = 300
         rotate.fillAfter = true
-        img_arrow.startAnimation(rotate)
+        imageArrow.startAnimation(rotate)
     }
 }

@@ -12,7 +12,7 @@ class CustomTextView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : AppCompatTextView(context, attrs, defStyle) {
-    var fonts = arrayOf(
+    private var fonts = arrayOf(
         "roboto_regular", "roboto_thin", "roboto_light", "roboto_medium",
         "roboto_bold", "roboto_black"
     )
