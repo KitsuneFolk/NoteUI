@@ -8,7 +8,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/dropsy_white_space_margin">
 
-    <com.qandeelabbassi.dropsy.CustomTextView
+    <com.pandacorp.dropspinner.CustomTextView
         android:id="@+id/txt_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

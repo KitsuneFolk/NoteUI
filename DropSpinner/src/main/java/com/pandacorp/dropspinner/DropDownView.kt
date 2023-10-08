@@ -1,4 +1,4 @@
-package com.qandeelabbassi.dropsy
+package com.pandacorp.dropspinner
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -9,6 +9,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.card.MaterialCardView
@@ -16,8 +17,6 @@ import com.skydoves.powermenu.CustomPowerMenu
 import com.skydoves.powermenu.MenuAnimation
 import com.skydoves.powermenu.OnDismissedListener
 import com.skydoves.powermenu.OnMenuItemClickListener
-import kotlinx.android.synthetic.main.dropsy_layout_drop_down.view.*
-
 
 /**
  * Created by qandeel.rasheed on 1/19/2021 at 9:11 PM.
@@ -53,6 +52,9 @@ class DropDownView @JvmOverloads constructor(
             dropDownAdapter.setSelection(0, dropDownItems[0])
         popup
     }
+    private val img_arrow: AppCompatImageView
+    private val txt_drop_drown_label: CustomTextView
+    private val txt_drop_drown_value: CustomTextView
 
     init {
         // Add body layout
@@ -62,6 +64,9 @@ class DropDownView @JvmOverloads constructor(
             false
         ) as LinearLayout
         addView(dropDownBody)
+        img_arrow = findViewById(R.id.img_arrow)
+        txt_drop_drown_label = findViewById(R.id.txt_drop_drown_label)
+        txt_drop_drown_value = findViewById(R.id.txt_drop_drown_value)
 
         // get attrs
         val dropsyAttrs = context.theme.obtainStyledAttributes(

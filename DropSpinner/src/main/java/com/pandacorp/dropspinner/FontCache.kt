@@ -1,4 +1,4 @@
-package com.qandeelabbassi.dropsy
+package com.pandacorp.dropspinner
 
 import android.content.Context
 import android.content.res.Resources.NotFoundException

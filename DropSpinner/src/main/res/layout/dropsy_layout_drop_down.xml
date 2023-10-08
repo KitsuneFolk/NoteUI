@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <com.qandeelabbassi.dropsy.CustomTextView
+    <com.pandacorp.dropspinner.CustomTextView
         android:id="@+id/txt_drop_drown_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:textSize="16sp"
         custom:dropsyFontType="roboto_regular" />
 
-    <com.qandeelabbassi.dropsy.CustomTextView
+    <com.pandacorp.dropspinner.CustomTextView
         android:id="@+id/txt_drop_drown_value"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
