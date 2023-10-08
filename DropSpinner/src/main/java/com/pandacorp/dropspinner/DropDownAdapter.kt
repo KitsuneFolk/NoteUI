@@ -33,7 +33,6 @@ class DropDownAdapter internal constructor() :
         }
         val item = getItem(index) as DropDownItem
         val txtLabel: CustomTextView? = view?.findViewById(R.id.txt_label)
-        //val imgCheck = view?.findViewById<ImageView>(R.id.img_check)
 
         txtLabel?.text = item.text
         textColor?.let { txtLabel?.setTextColor(it) }
@@ -43,7 +42,6 @@ class DropDownAdapter internal constructor() :
         else
             txtLabel?.applyCustomFont(context, "roboto_regular")
 
-        //imgCheck?.visibility = if (item.checked) View.VISIBLE else View.INVISIBLE
         return super.getView(index, view, viewGroup)
     }
 

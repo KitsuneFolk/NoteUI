@@ -3,7 +3,6 @@ package com.pandacorp.dropspinner
 import android.content.Context
 import android.content.res.Resources.NotFoundException
 import android.graphics.Typeface
-import android.util.Log
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -35,7 +34,6 @@ object FontCache {
         try {
             inputStream = context.resources.openRawResource(resource)
         } catch (e: NotFoundException) {
-            Log.e("test", "Could not find font in resources!")
         }
         val outPath = context.cacheDir.toString() + "/tmp" + System.currentTimeMillis() + ".raw"
         try {
@@ -46,13 +44,11 @@ object FontCache {
             bos.close()
             tf = Typeface.createFromFile(outPath)
 
-            // clean up
+            // Clean up
             File(outPath).delete()
         } catch (e: Exception) {
-            Log.e("Test", "Error reading in font!")
             return null
         }
-        Log.d("test", "Successfully loaded font.")
         return tf
     }
 }

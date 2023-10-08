@@ -65,7 +65,7 @@ class DropDownView @JvmOverloads constructor(
         label = findViewById(R.id.txt_drop_drown_label)
         value = findViewById(R.id.txt_drop_drown_value)
 
-        // get attrs
+        // Get attrs
         val dropsyAttrs = context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.DropDownView,
@@ -134,7 +134,7 @@ class DropDownView @JvmOverloads constructor(
         val dropsyBorderSelector =
             dropsyAttrs.getColorStateList(R.styleable.DropDownView_dropsyBorderSelector)
 
-        // arrow styling
+        // Arrow styling
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             imageArrow.imageTintList =
                 dropsyAttrs.getColorStateList(R.styleable.DropDownView_dropsySelector)
@@ -142,12 +142,12 @@ class DropDownView @JvmOverloads constructor(
             imageArrow.setColorFilter(dropsySelector, android.graphics.PorterDuff.Mode.SRC_IN)
         }
 
-        // text styling
+        // Text styling
         label.setTextColor(dropsyLabelColor)
         value.setTextColor(dropsyValueColor)
         dropDownAdapter.setTextColor(dropsyValueColor)
 
-        // card styling
+        // Card styling
         val padding = resources.getDimension(R.dimen.dropsy_dropdown_padding).toInt()
         setContentPadding(padding, padding, padding, padding)
         radius = resources.getDimension(R.dimen.dropsy_dropdown_corner_radius)
