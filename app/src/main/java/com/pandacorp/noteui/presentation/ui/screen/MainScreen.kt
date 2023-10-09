@@ -103,7 +103,8 @@ class MainScreen : Fragment() {
                     override fun onLongClick(
                         noteItem: NoteItem,
                         position: Int
-                    ) {}
+                    ) {
+                    }
                 },
             )
         }
@@ -382,15 +383,19 @@ class MainScreen : Fragment() {
                 Constants.Filter.OLDEST -> {
                     notesList?.sortedBy { it.id }
                 }
+
                 Constants.Filter.NEWEST -> {
                     notesList?.sortedByDescending { it.id }
                 }
+
                 Constants.Filter.MOST_TEXT -> {
                     notesList?.sortedByDescending { it.content.length + it.title.length }
                 }
+
                 Constants.Filter.LEAST_TEXT -> {
                     notesList?.sortedBy { it.content.length + it.title.length }
                 }
+
                 else -> {
                     notesList?.sortedBy { it.id }
                 }

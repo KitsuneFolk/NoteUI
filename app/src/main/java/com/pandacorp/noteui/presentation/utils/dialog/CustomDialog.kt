@@ -24,7 +24,8 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
         PreferenceManager.getDefaultSharedPreferences(context)
     }
 
-    @JvmField protected var onValueAppliedListener: (value: String) -> Unit = {}
+    @JvmField
+    protected var onValueAppliedListener: (value: String) -> Unit = {}
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {

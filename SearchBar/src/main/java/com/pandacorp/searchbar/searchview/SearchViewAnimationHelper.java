@@ -24,9 +24,6 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
-import androidx.appcompat.widget.ActionMenuView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
@@ -34,9 +31,14 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
+import androidx.appcompat.widget.ActionMenuView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.MarginLayoutParamsCompat;
 import androidx.core.view.ViewCompat;
+
 import com.google.android.material.animation.AnimationUtils;
 import com.google.android.material.internal.ClippableRoundedCornerLayout;
 import com.google.android.material.internal.FadeThroughDrawable;
@@ -49,7 +51,9 @@ import com.google.android.material.internal.TouchObserverFrameLayout;
 import com.google.android.material.internal.ViewUtils;
 import com.pandacorp.searchbar.SearchBar;
 
-/** Helper class for {@link SearchView} animations. */
+/**
+ * Helper class for {@link SearchView} animations.
+ */
 @SuppressWarnings("RestrictTo")
 @SuppressLint("RestrictedApi")
 class SearchViewAnimationHelper {

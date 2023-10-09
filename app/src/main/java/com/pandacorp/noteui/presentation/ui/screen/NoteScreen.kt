@@ -493,7 +493,8 @@ class NoteScreen : Fragment() {
                     override fun onDrawerSlide(
                         drawerView: View,
                         slideOffset: Float
-                    ) {}
+                    ) {
+                    }
 
                     override fun onDrawerStateChanged(newState: Int) {
                         if (newState == DrawerLayout.STATE_DRAGGING) {
@@ -578,7 +579,8 @@ class NoteScreen : Fragment() {
                     override fun onTouchEvent(
                         view: RecyclerView,
                         event: MotionEvent
-                    ) {}
+                    ) {
+                    }
 
                     override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
                 },

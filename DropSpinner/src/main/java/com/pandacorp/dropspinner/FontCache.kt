@@ -7,7 +7,6 @@ import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import java.util.*
 
 object FontCache {
     private val fontCache = HashMap<String, Typeface?>()

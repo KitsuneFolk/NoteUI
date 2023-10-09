@@ -141,15 +141,16 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
     private final SearchViewAnimationHelper searchViewAnimationHelper;
     private final ElevationOverlayProvider elevationOverlayProvider;
     private final Set<TransitionListener> transitionListeners = new LinkedHashSet<>();
-
-    @Nullable private SearchBar searchBar;
-    private int softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
     private final boolean animatedNavigationIcon;
     private final boolean animatedMenuItems;
     private final boolean autoShowKeyboard;
+    @Nullable
+    private SearchBar searchBar;
+    private int softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
     private boolean useWindowInsetsController;
     private boolean statusBarSpacerEnabledOverride;
-    @NonNull private TransitionState currentTransitionState = TransitionState.HIDDEN;
+    @NonNull
+    private TransitionState currentTransitionState = TransitionState.HIDDEN;
     private Map<View, Integer> childImportantForAccessibilityMap;
 
     public SearchView(@NonNull Context context) {
@@ -323,7 +324,8 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         editText.addTextChangedListener(
                 new TextWatcher() {
                     @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -331,7 +333,8 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
                     }
 
                     @Override
-                    public void afterTextChanged(Editable s) {}
+                    public void afterTextChanged(Editable s) {
+                    }
                 });
     }
 
@@ -461,7 +464,9 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
                 });
     }
 
-    /** Returns whether or not this {@link SearchView} is set up with an {@link SearchBar}. */
+    /**
+     * Returns whether or not this {@link SearchView} is set up with an {@link SearchBar}.
+     */
     public boolean isSetupWithSearchBar() {
         return this.searchBar != null;
     }
@@ -516,49 +521,62 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
 
     /**
      * Sets whether the soft keyboard should be shown with {@code WindowInsetsController}.
-     *
      */
     @RestrictTo(LIBRARY_GROUP)
     public void setUseWindowInsetsController(boolean useWindowInsetsController) {
         this.useWindowInsetsController = useWindowInsetsController;
     }
 
-    /** Adds a listener to handle {@link SearchView} transitions such as showing and closing. */
+    /**
+     * Adds a listener to handle {@link SearchView} transitions such as showing and closing.
+     */
     public void addTransitionListener(@NonNull TransitionListener transitionListener) {
         transitionListeners.add(transitionListener);
     }
 
-    /** Sets the search prefix text. */
+    /**
+     * Sets the search prefix text.
+     */
     public void setSearchPrefixText(@Nullable CharSequence searchPrefixText) {
         searchPrefix.setText(searchPrefixText);
         searchPrefix.setVisibility(TextUtils.isEmpty(searchPrefixText) ? GONE : VISIBLE);
     }
 
-    /** Returns the main {@link EditText} which can be used for hint and search text. */
+    /**
+     * Returns the main {@link EditText} which can be used for hint and search text.
+     */
     @NonNull
     public EditText getEditText() {
         return editText;
     }
 
-    /** Returns the text of main {@link EditText}, which usually represents the search text. */
+    /**
+     * Returns the text of main {@link EditText}, which usually represents the search text.
+     */
     @SuppressLint("KotlinPropertyAccess") // Editable extends CharSequence.
     @Nullable
     public Editable getText() {
         return editText.getText();
     }
 
-    /** Sets the text of main {@link EditText}. */
+    /**
+     * Sets the text of main {@link EditText}.
+     */
     @SuppressLint("KotlinPropertyAccess") // Editable extends CharSequence.
     public void setText(@Nullable CharSequence text) {
         editText.setText(text);
     }
 
-    /** Sets the text of main {@link EditText}. */
+    /**
+     * Sets the text of main {@link EditText}.
+     */
     public void setText(@StringRes int textResId) {
         editText.setText(textResId);
     }
 
-    /** Clears the text of main {@link EditText}. */
+    /**
+     * Clears the text of main {@link EditText}.
+     */
     public void clearText() {
         editText.setText("");
     }
@@ -583,7 +601,6 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
      * translucent and the {@link SearchView} should not overlap the status bar area. This will be set
      * automatically by the {@link SearchView} during initial render, but make sure to invoke this if
      * you would like to override the default behavior.
-     *
      */
     @RestrictTo(LIBRARY_GROUP)
     public void setStatusBarSpacerEnabled(boolean enabled) {
@@ -638,7 +655,9 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         setModalForAccessibility(false);
     }
 
-    /** Updates the visibility of the {@link SearchView} without an animation. */
+    /**
+     * Updates the visibility of the {@link SearchView} without an animation.
+     */
     public void setVisible(boolean visible) {
         boolean wasVisible = rootView.getVisibility() == VISIBLE;
         rootView.setVisibility(visible ? VISIBLE : GONE);
@@ -675,7 +694,9 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         }
     }
 
-    /** Requests focus on the main {@link EditText} and shows the soft keyboard. */
+    /**
+     * Requests focus on the main {@link EditText} and shows the soft keyboard.
+     */
     public void requestFocusAndShowKeyboard() {
         // Without a delay requesting focus on edit text fails when talkback is active.
         editText.postDelayed(
@@ -689,7 +710,9 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
                 TALKBACK_FOCUS_CHANGE_DELAY_MS);
     }
 
-    /** Clears focus on the main {@link EditText} and hides the soft keyboard. */
+    /**
+     * Clears focus on the main {@link EditText} and hides the soft keyboard.
+     */
     public void clearFocusAndHideKeyboard() {
         editText.post(
                 () -> {
@@ -754,39 +777,6 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         }
     }
 
-    /** Behavior that sets up an {@link SearchView} with an {@link SearchBar}. */
-    public static class Behavior extends CoordinatorLayout.Behavior<SearchView> {
-
-        public Behavior() {}
-
-        @Override
-        public boolean onDependentViewChanged(
-                @NonNull CoordinatorLayout parent, @NonNull SearchView child, @NonNull View dependency) {
-            if (!child.isSetupWithSearchBar() && dependency instanceof SearchBar) {
-                child.setupWithSearchBar((SearchBar) dependency);
-            }
-            return false;
-        }
-    }
-
-    /** Callback interface that provides important transition events for a {@link SearchView}. */
-    public interface TransitionListener {
-
-        /** Called when the given {@link SearchView SearchView's} transition state has changed. */
-        void onStateChanged(
-                @NonNull SearchView searchView,
-                @NonNull TransitionState previousState,
-                @NonNull TransitionState newState);
-    }
-
-    /** Enum that defines the possible transition states of an {@link SearchView}. */
-    public enum TransitionState {
-        HIDING,
-        HIDDEN,
-        SHOWING,
-        SHOWN,
-    }
-
     @Override
     @NonNull
     protected Parcelable onSaveInstanceState() {
@@ -809,24 +799,49 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         setVisible(savedState.visibility == VISIBLE);
     }
 
+    /**
+     * Enum that defines the possible transition states of an {@link SearchView}.
+     */
+    public enum TransitionState {
+        HIDING,
+        HIDDEN,
+        SHOWING,
+        SHOWN,
+    }
+
+    /**
+     * Callback interface that provides important transition events for a {@link SearchView}.
+     */
+    public interface TransitionListener {
+
+        /**
+         * Called when the given {@link SearchView SearchView's} transition state has changed.
+         */
+        void onStateChanged(
+                @NonNull SearchView searchView,
+                @NonNull TransitionState previousState,
+                @NonNull TransitionState newState);
+    }
+
+    /**
+     * Behavior that sets up an {@link SearchView} with an {@link SearchBar}.
+     */
+    public static class Behavior extends CoordinatorLayout.Behavior<SearchView> {
+
+        public Behavior() {
+        }
+
+        @Override
+        public boolean onDependentViewChanged(
+                @NonNull CoordinatorLayout parent, @NonNull SearchView child, @NonNull View dependency) {
+            if (!child.isSetupWithSearchBar() && dependency instanceof SearchBar) {
+                child.setupWithSearchBar((SearchBar) dependency);
+            }
+            return false;
+        }
+    }
+
     static class SavedState extends AbsSavedState {
-
-        String text;
-        int visibility;
-
-        public SavedState(Parcel source) {
-            this(source, null);
-        }
-
-        public SavedState(Parcel source, @Nullable ClassLoader classLoader) {
-            super(source, classLoader);
-            text = source.readString();
-            visibility = source.readInt();
-        }
-
-        public SavedState(Parcelable superState) {
-            super(superState);
-        }
 
         public static final Parcelable.Creator<SavedState> CREATOR =
                 new ClassLoaderCreator<>() {
@@ -846,6 +861,22 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
                         return new SavedState[size];
                     }
                 };
+        String text;
+        int visibility;
+
+        public SavedState(Parcel source) {
+            this(source, null);
+        }
+
+        public SavedState(Parcel source, @Nullable ClassLoader classLoader) {
+            super(source, classLoader);
+            text = source.readString();
+            visibility = source.readInt();
+        }
+
+        public SavedState(Parcelable superState) {
+            super(superState);
+        }
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
