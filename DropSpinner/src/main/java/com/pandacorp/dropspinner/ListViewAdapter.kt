@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.appcompat.widget.AppCompatImageView
 
 class ListViewAdapter constructor(context: Context, items: List<DropDownItem>) :
     ArrayAdapter<DropDownItem>(context, 0, items) {
@@ -39,14 +40,17 @@ class ListViewAdapter constructor(context: Context, items: List<DropDownItem>) :
             }
             val item = getItem(index)!!
             val txtLabel: CustomTextView? = view?.findViewById(R.id.txt_label)
+            val imgCheck: AppCompatImageView? = view?.findViewById(R.id.img_check)
 
             txtLabel?.text = item.text
             textColor?.let { txtLabel?.setTextColor(it) }
 
             if (item.checked) {
                 txtLabel?.applyCustomFont(context, "roboto_bold")
+                imgCheck?.visibility = View.VISIBLE
             } else {
                 txtLabel?.applyCustomFont(context, "roboto_regular")
+                imgCheck?.visibility = View.GONE
             }
 
             return view!!

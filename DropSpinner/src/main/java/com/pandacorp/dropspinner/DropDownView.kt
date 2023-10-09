@@ -188,6 +188,7 @@ class DropDownView
             }
 
             listViewAdapter = ListViewAdapter(context, items)
+            listViewAdapter.setSelection(0, items[0])
             listView.adapter = listViewAdapter
             listView.setHeightBasedOnChildren() // Set height programmatically because it's not correctly measured in ExpandableLayout
             listView.setOnItemClickListener { _, _, position, _ ->
