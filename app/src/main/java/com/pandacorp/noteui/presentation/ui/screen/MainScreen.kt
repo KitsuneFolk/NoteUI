@@ -235,18 +235,20 @@ class MainScreen : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
-        binding.scrollView.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-            val dy = scrollY - oldScrollY
-            if (binding.searchBar.isCountModeEnabled) {
-                return@OnScrollChangeListener
-            }
-            if (dy > 10) {
-                binding.addFAB.hide()
-            }
-            if(dy < -5) {
-                binding.addFAB.show()
-            }
-        })
+        binding.scrollView.setOnScrollChangeListener(
+            NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+                val dy = scrollY - oldScrollY
+                if (binding.searchBar.isCountModeEnabled) {
+                    return@OnScrollChangeListener
+                }
+                if (dy > 10) {
+                    binding.addFAB.hide()
+                }
+                if (dy < -5) {
+                    binding.addFAB.show()
+                }
+            },
+        )
         binding.notesRecyclerView.adapter = notesAdapter
         binding.searchRecyclerView.adapter = searchAdapter
         binding.filterSpinner.setItemClickListener { position, _ ->

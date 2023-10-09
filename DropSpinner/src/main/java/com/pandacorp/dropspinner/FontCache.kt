@@ -12,23 +12,30 @@ import java.util.*
 object FontCache {
     private val fontCache = HashMap<String, Typeface?>()
 
-    fun getTypeface(fontname: String, context: Context): Typeface? {
+    fun getTypeface(
+        fontname: String,
+        context: Context
+    ): Typeface? {
         var typeface = fontCache[fontname]
         if (typeface == null) {
-            typeface = try {
-                getFontFromRes(
-                    context,
-                    context.resources.getIdentifier(fontname, "raw", context.packageName)
-                )
-            } catch (e: Exception) {
-                return null
-            }
+            typeface =
+                try {
+                    getFontFromRes(
+                        context,
+                        context.resources.getIdentifier(fontname, "raw", context.packageName),
+                    )
+                } catch (e: Exception) {
+                    return null
+                }
             fontCache[fontname] = typeface
         }
         return typeface
     }
 
-    private fun getFontFromRes(context: Context, resource: Int): Typeface? {
+    private fun getFontFromRes(
+        context: Context,
+        resource: Int
+    ): Typeface? {
         val tf: Typeface?
         var inputStream: InputStream? = null
         try {
