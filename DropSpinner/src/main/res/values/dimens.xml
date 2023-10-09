@@ -5,5 +5,5 @@
     <dimen name="dropsy_white_space_margin_2x">20dp</dimen>
     <dimen name="dropsy_dropdown_corner_radius">8dp</dimen>
     <dimen name="dropsy_dropdown_padding">12dp</dimen>
-    <dimen name="dropsy_dropdown_stroke_width">2dp</dimen>
+    <dimen name="dropsy_dropdown_stroke_width">1dp</dimen>
 </resources>
