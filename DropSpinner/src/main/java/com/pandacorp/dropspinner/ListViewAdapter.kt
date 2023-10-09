@@ -4,16 +4,16 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.skydoves.powermenu.MenuBaseAdapter
+import android.widget.ArrayAdapter
 
-class DropDownAdapter internal constructor() :
-    MenuBaseAdapter<DropDownItem?>() {
-    private var selectedIndex = -1
+class ListViewAdapter constructor(context: Context, items: List<DropDownItem>) :
+    ArrayAdapter<DropDownItem>(context, 0, items) {
+    var selectedIndex = -1
     private var textColor: Int? = null
 
     fun setSelection(index: Int, item: DropDownItem?) {
-        if (selectedIndex != -1 && selectedIndex < itemList.size)
-            (getItem(selectedIndex) as DropDownItem).toggleState()
+        if (selectedIndex != -1 && selectedIndex < count)
+            getItem(selectedIndex)?.toggleState()
         item?.toggleState()
         notifyDataSetChanged()
         selectedIndex = index
@@ -23,15 +23,13 @@ class DropDownAdapter internal constructor() :
         this.textColor = color
     }
 
-    override fun getView(index: Int, v: View?, viewGroup: ViewGroup): View {
-        var view: View? = v
+    override fun getView(index: Int, convertView: View?, viewGroup: ViewGroup): View {
+        var view: View? = convertView
         val context: Context = viewGroup.context
         if (view == null) {
-            val inflater: LayoutInflater =
-                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            view = inflater.inflate(R.layout.dropsy_item_drop_down, viewGroup, false)
+            view = LayoutInflater.from(context).inflate(R.layout.dropsy_item_drop_down, viewGroup, false)
         }
-        val item = getItem(index) as DropDownItem
+        val item = getItem(index)!!
         val txtLabel: CustomTextView? = view?.findViewById(R.id.txt_label)
 
         txtLabel?.text = item.text
@@ -42,7 +40,7 @@ class DropDownAdapter internal constructor() :
         else
             txtLabel?.applyCustomFont(context, "roboto_regular")
 
-        return super.getView(index, view, viewGroup)
+        return view!!
     }
 
 }

@@ -28,6 +28,7 @@
                 android:layout_marginEnd="15dp"
                 android:backgroundTint="?colorPrimaryDark"
                 android:minHeight="48dp"
+                app:dropsyBorderSelector="@android:color/white"
                 app:dropsyItems="@array/Filter"
                 app:dropsyLabel="@string/filter"
                 app:dropsyLabelColor="#B4B4B4"

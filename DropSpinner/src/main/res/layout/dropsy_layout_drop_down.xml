@@ -1,33 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-    <com.pandacorp.dropspinner.CustomTextView
-        android:id="@+id/txt_drop_drown_label"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dropsy_white_space_margin"
-        android:textColor="@color/dropsy_text_color_secondary"
-        android:textSize="16sp"
-        custom:dropsyFontType="roboto_regular" />
+        android:orientation="horizontal">
 
-    <com.pandacorp.dropspinner.CustomTextView
-        android:id="@+id/txt_drop_drown_value"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dropsy_white_space_margin_2x"
-        android:layout_weight="1"
-        android:textColor="@color/dropsy_text_color"
-        android:textSize="16sp"
-        custom:dropsyFontType="roboto_bold" />
+        <com.pandacorp.dropspinner.CustomTextView
+            android:id="@+id/txt_drop_drown_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dropsy_white_space_margin"
+            android:textColor="@color/dropsy_text_color_secondary"
+            android:textSize="16sp"
+            app:dropsyFontType="roboto_regular"
+            tools:text="Label" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/img_arrow"
-        android:layout_width="wrap_content"
+        <com.pandacorp.dropspinner.CustomTextView
+            android:id="@+id/txt_drop_drown_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dropsy_white_space_margin_2x"
+            android:layout_weight="1"
+            android:textColor="@color/dropsy_text_color"
+            android:textSize="16sp"
+            app:dropsyFontType="roboto_bold"
+            tools:text="Value" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dropsy_ic_expand"
+            app:tint="@color/dropsy_black" />
+    </LinearLayout>
+
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/expandableLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/dropsy_ic_expand"
-        custom:tint="@color/dropsy_black" />
+        app:el_duration="400"
+        app:el_expanded="false"
+        app:el_parallax="0.5"
+        tools:el_expanded="true">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/dropsy_item_drop_down" />
+        </FrameLayout>
+    </net.cachapa.expandablelayout.ExpandableLayout>
 </LinearLayout>
