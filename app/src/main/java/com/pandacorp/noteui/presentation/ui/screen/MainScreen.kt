@@ -283,8 +283,6 @@ class MainScreen : Fragment() {
         notesViewModel.notesList.observe(viewLifecycleOwner) { list ->
             val filteredList = getFilteredNotes(list)
             notesAdapter.submitList(filteredList)
-            searchAdapter.submitList(filteredList)
-
             binding.hintInclude.textView.setText(R.string.emptyRecyclerView)
             if (filteredList.isEmpty()) {
                 showEmptyImage(binding.notesRecyclerView, binding.hintInclude.root)
@@ -341,20 +339,22 @@ class MainScreen : Fragment() {
 
         notesViewModel.searchedNotes.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
+                val filteredSearchedList = if (it == null) null else getFilteredNotes(it)
                 if (notesViewModel.notesList.value.isNullOrEmpty()) { // No notes to search
                     binding.searchHintInclude.textView.setText(R.string.emptyRecyclerView)
                     showEmptyImage(binding.searchRecyclerView, binding.searchHintInclude.root)
                     return@launch
                 }
                 binding.searchHintInclude.textView.setText(R.string.notesNotFound)
-                if (it == null) { // User cleared the SearchView, show all notes
-                    searchAdapter.submitList(notesViewModel.notesList.value)
+                if (filteredSearchedList == null) { // User cleared the SearchView, show all notes
+                    val filteredNotesList = getFilteredNotes(notesViewModel.notesList.value)
+                    searchAdapter.submitList(filteredNotesList)
                     hideEmptyImage(binding.searchRecyclerView, binding.searchHintInclude.root)
-                } else if (it.isEmpty()) { // Couldn't find the searched notes
-                    searchAdapter.submitList(it)
+                } else if (filteredSearchedList.isEmpty()) { // Couldn't find the searched notes
+                    searchAdapter.submitList(filteredSearchedList)
                     showEmptyImage(binding.searchRecyclerView, binding.searchHintInclude.root)
                 } else { // Notes were found
-                    searchAdapter.submitList(it)
+                    searchAdapter.submitList(filteredSearchedList)
                     if (binding.searchHintInclude.root.visibility != View.VISIBLE) return@launch
                     hideEmptyImage(binding.searchRecyclerView, binding.searchHintInclude.root)
                 }
