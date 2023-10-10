@@ -283,6 +283,11 @@ class MainScreen : Fragment() {
 
         notesViewModel.notesList.observe(viewLifecycleOwner) { list ->
             val filteredList = getFilteredNotes(list)
+            if (filteredList.isEmpty()) {
+                binding.filterSpinner.visibility = View.GONE
+            } else {
+                binding.filterSpinner.visibility = View.VISIBLE
+            }
             notesAdapter.submitList(filteredList)
             binding.hintInclude.textView.setText(R.string.emptyRecyclerView)
             if (filteredList.isEmpty()) {
