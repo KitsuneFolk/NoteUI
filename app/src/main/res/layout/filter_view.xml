@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.pandacorp.dropspinner.DropDownView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/filterSpinner"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="15dp"
+    android:layout_marginEnd="15dp"
+    android:backgroundTint="?colorPrimaryDark"
+    android:visibility="gone"
+    app:dropsyBorderSelector="@android:color/white"
+    app:dropsyItems="@array/Filter"
+    app:dropsyLabel="@string/filter"
+    app:dropsyLabelColor="#B4B4B4"
+    app:dropsySelector="#E6E1E5"
+    app:dropsyValueColor="#B4B4B4"
+    tools:visibility="visible" />

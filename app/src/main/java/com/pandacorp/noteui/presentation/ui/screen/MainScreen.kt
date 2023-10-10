@@ -10,19 +10,21 @@ import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.util.isEmpty
-import androidx.core.widget.NestedScrollView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import com.google.android.material.snackbar.Snackbar
+import com.pandacorp.dropspinner.DropDownView
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.ScreenMainBinding
 import com.pandacorp.noteui.domain.model.NoteItem
 import com.pandacorp.noteui.presentation.ui.adapter.notes.NotesAdapter
+import com.pandacorp.noteui.presentation.utils.ViewAdapter
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import com.pandacorp.noteui.presentation.utils.helpers.app
 import com.pandacorp.noteui.presentation.utils.helpers.sp
@@ -108,6 +110,10 @@ class MainScreen : Fragment() {
                 },
             )
         }
+    }
+
+    private val filterSpinner by lazy {
+        LayoutInflater.from(requireContext()).inflate(R.layout.filter_view, binding.root, false) as DropDownView
     }
 
     private var searchJob: Job? = null
@@ -236,23 +242,30 @@ class MainScreen : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
-        binding.scrollView.setOnScrollChangeListener(
-            NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-                val dy = scrollY - oldScrollY
-                if (binding.searchBar.isCountModeEnabled) {
-                    return@OnScrollChangeListener
-                }
-                if (dy > 10) {
-                    binding.addFAB.hide()
-                }
-                if (dy < -5) {
-                    binding.addFAB.show()
+        binding.notesRecyclerView.addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(
+                    recyclerView: RecyclerView,
+                    dx: Int,
+                    dy: Int
+                ) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (binding.searchBar.isCountModeEnabled) {
+                        return
+                    }
+                    if (dy > 10) {
+                        binding.addFAB.hide()
+                    }
+                    if (dy < -5) {
+                        binding.addFAB.show()
+                    }
                 }
             },
         )
-        binding.notesRecyclerView.adapter = notesAdapter
+        val viewAdapter = ViewAdapter(filterSpinner)
+        binding.notesRecyclerView.adapter = ConcatAdapter(viewAdapter, notesAdapter)
         binding.searchRecyclerView.adapter = searchAdapter
-        binding.filterSpinner.setItemClickListener { position, _ ->
+        filterSpinner.setItemClickListener { position, _ ->
             notesViewModel.filter.value = position
             val filteredNotes = getFilteredNotes(notesViewModel.notesList.value ?: emptyList())
             notesAdapter.submitList(filteredNotes)
@@ -284,9 +297,9 @@ class MainScreen : Fragment() {
         notesViewModel.notesList.observe(viewLifecycleOwner) { list ->
             val filteredList = getFilteredNotes(list)
             if (filteredList.isEmpty()) {
-                binding.filterSpinner.visibility = View.GONE
+                filterSpinner.visibility = View.GONE
             } else {
-                binding.filterSpinner.visibility = View.VISIBLE
+                filterSpinner.visibility = View.VISIBLE
             }
             notesAdapter.submitList(filteredList)
             binding.hintInclude.textView.setText(R.string.emptyRecyclerView)
@@ -337,7 +350,7 @@ class MainScreen : Fragment() {
                             notesViewModel.selectedNotes.postValue(SparseBooleanArray())
                         }
                     }
-                    binding.filterSpinner.isEnabled = isEmpty
+                    filterSpinner.isEnabled = isEmpty
                     startWithAnimation = true // Always animate after the first time observer is called
                 }
             }
