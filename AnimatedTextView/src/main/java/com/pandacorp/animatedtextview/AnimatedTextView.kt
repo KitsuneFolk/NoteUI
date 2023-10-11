@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -18,6 +19,7 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
+import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
@@ -29,12 +31,52 @@ import kotlin.math.min
 @SuppressLint("RtlHardcoded")
 class AnimatedTextView
     @JvmOverloads
-    constructor(
-        context: Context?,
-        splitByWords: Boolean = false,
-        preserveIndex: Boolean = false,
-        startFromEnd: Boolean = false,
-    ) : View(context) {
+    constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
+    View(context, attrs, defStyleAttr) {
+        private val splitByWords: Boolean = false
+        private val preserveIndex: Boolean = false
+        private val startFromEnd: Boolean = false
+
+        val drawable: AnimatedTextDrawable = AnimatedTextDrawable(splitByWords, preserveIndex, startFromEnd)
+        private var lastMaxWidth = 0
+        private var text: CharSequence? = null
+        private var hint: CharSequence? = null
+        private var toSetText: CharSequence? = null
+        private var toSetMoveDown = false
+
+        init {
+            AndroidUtilities.checkDisplaySize(context as Activity, null)
+            drawable.callback = this
+            drawable.setOnAnimationFinishListener {
+                if (toSetText != null) {
+                    // wrapped toSetText here to do requestLayout()
+                    this@AnimatedTextView.setText(toSetText, toSetMoveDown, true)
+                    toSetText = null
+                    toSetMoveDown = false
+                }
+            }
+
+            val mainAttrs =
+                context.theme.obtainStyledAttributes(
+                    attrs,
+                    R.styleable.AnimatedTextView,
+                    0,
+                    0,
+                )
+            val textColor = mainAttrs.getColor(R.styleable.AnimatedTextView_textColor, Color.BLACK)
+            setTextColor(textColor)
+
+            val textSize = mainAttrs.getDimension(R.styleable.AnimatedTextView_textSize, 16f)
+            if (textSize == 16f) {
+                setTextSize(textSize)
+            } else {
+                setTextSizePx(textSize)
+            }
+
+            val text = mainAttrs.getString(R.styleable.AnimatedTextView_text)
+            drawable.setText(text, false)
+        }
+
         class AnimatedTextDrawable(
             private val splitByWords: Boolean,
             private val preserveIndex: Boolean,
@@ -70,7 +112,7 @@ class AnimatedTextView
             private var alpha = 255
             private val bounds = Rect()
             private var onAnimationFinishListener: Runnable? = null
-            var allowCancel = false
+            var allowCancel = true
             private var ignoreRTL = false
             private var updateAll = false
 
@@ -660,13 +702,6 @@ class AnimatedTextView
             }
         }
 
-        val drawable: AnimatedTextDrawable
-        private var lastMaxWidth = 0
-        private var text: CharSequence? = null
-        private var hint: CharSequence? = null
-        private var toSetText: CharSequence? = null
-        private var toSetMoveDown = false
-
         override fun onMeasure(
             widthMeasureSpec: Int,
             heightMeasureSpec: Int
@@ -698,6 +733,13 @@ class AnimatedTextView
 
         fun setText(
             text: CharSequence?,
+            withAnimation: Boolean = false
+        ) {
+            setText(text, withAnimation = withAnimation, moveDown = false)
+        }
+
+        fun setText(
+            text: CharSequence?,
             withAnimation: Boolean,
             moveDown: Boolean
         ) {
@@ -710,19 +752,6 @@ class AnimatedTextView
         }
 
         private var first = true
-
-        init {
-            drawable = AnimatedTextDrawable(splitByWords, preserveIndex, startFromEnd)
-            drawable.callback = this
-            drawable.setOnAnimationFinishListener {
-                if (toSetText != null) {
-                    // wrapped toSetText here to do requestLayout()
-                    this@AnimatedTextView.setText(toSetText, toSetMoveDown, true)
-                    toSetText = null
-                    toSetMoveDown = false
-                }
-            }
-        }
 
         private fun setTextInternal(
             text: CharSequence?,
@@ -783,6 +812,10 @@ class AnimatedTextView
         fun setTextSize(textSizeSp: Float) {
             val screenDensity = context.resources.displayMetrics.density
             drawable.textSize = textSizeSp * screenDensity
+        }
+
+        private fun setTextSizePx(textSizeSp: Float) {
+            drawable.textSize = textSizeSp
         }
 
         fun setAnimationProperties(
