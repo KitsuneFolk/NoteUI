@@ -231,7 +231,7 @@ class SearchBar
             textView.setPadding(AndroidUtilities.dp(5f), 0, AndroidUtilities.dp(5f), 0)
             textView.setAnimationProperties(1f, 0, 800, CubicBezierInterpolator.EASE_OUT_QUINT)
             textView.setTextSize(16f)
-            textView.drawable.allowCancel = true
+            textView.setHint(hint, withAnimation = false, moveDown = false)
             textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
             textView.setTextColor(MaterialColors.getColor(this, R.attr.colorOnSurface))
 

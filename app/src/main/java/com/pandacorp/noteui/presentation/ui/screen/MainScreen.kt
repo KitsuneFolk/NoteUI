@@ -156,13 +156,6 @@ class MainScreen : Fragment() {
     }
 
     private fun initViews() {
-        binding.searchBar.post {
-            binding.searchBar.setHint(
-                hint = resources.getString(R.string.search_hint),
-                withAnimation = false,
-                moveDown = false,
-            )
-        }
         binding.searchBar.menu.clear()
         binding.searchBar.inflateMenu(R.menu.menu_main)
         binding.searchBar.setOnMenuItemClickListener { menuItem ->
