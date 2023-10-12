@@ -1,10 +1,12 @@
 package com.pandacorp.dropspinner
 
 import android.content.Context
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 
 class ListViewAdapter constructor(context: Context, items: List<DropDownItem>) :
@@ -39,17 +41,17 @@ class ListViewAdapter constructor(context: Context, items: List<DropDownItem>) :
                 view = LayoutInflater.from(context).inflate(R.layout.dropsy_item_drop_down, viewGroup, false)
             }
             val item = getItem(index)!!
-            val txtLabel: CustomTextView? = view?.findViewById(R.id.txt_label)
+            val txtLabel: TextView? = view?.findViewById(R.id.txt_label)
             val imgCheck: AppCompatImageView? = view?.findViewById(R.id.img_check)
 
             txtLabel?.text = item.text
             textColor?.let { txtLabel?.setTextColor(it) }
 
             if (item.checked) {
-                txtLabel?.applyCustomFont(context, "roboto_bold")
+                txtLabel?.typeface = Typeface.DEFAULT_BOLD
                 imgCheck?.visibility = View.VISIBLE
             } else {
-                txtLabel?.applyCustomFont(context, "roboto_regular")
+                txtLabel?.typeface = Typeface.DEFAULT
                 imgCheck?.visibility = View.GONE
             }
 

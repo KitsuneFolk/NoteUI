@@ -11,25 +11,22 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.pandacorp.dropspinner.CustomTextView
+        <TextView
             android:id="@+id/txt_drop_drown_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dropsy_white_space_margin"
             android:textColor="@color/dropsy_text_color_secondary"
             android:textSize="16sp"
-            app:dropsyFontType="roboto_regular"
             tools:text="Label" />
 
-        <com.pandacorp.dropspinner.CustomTextView
+        <com.pandacorp.animatedtextview.AnimatedTextView
             android:id="@+id/txt_drop_drown_value"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/dropsy_white_space_margin_2x"
             android:layout_weight="1"
-            android:textColor="@color/dropsy_text_color"
-            android:textSize="16sp"
-            app:dropsyFontType="roboto_bold"
+            app:textSize="16sp"
             tools:text="Value" />
 
         <androidx.appcompat.widget.AppCompatImageView

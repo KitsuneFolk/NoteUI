@@ -12,9 +12,11 @@ import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import com.google.android.material.card.MaterialCardView
+import com.pandacorp.animatedtextview.AnimatedTextView
 import net.cachapa.expandablelayout.ExpandableLayout
 
 class DropDownView
@@ -37,8 +39,8 @@ class DropDownView
         private val expandableLayout: ExpandableLayout
         private val listView: ListView
         private val imageArrow: AppCompatImageView
-        private val label: CustomTextView
-        private val value: CustomTextView
+        private val label: TextView
+        private val value: AnimatedTextView
 
         init {
             // Add body layout
@@ -104,7 +106,7 @@ class DropDownView
             }
             val position = viewState.getInt("selectedPosition")
             val item = items[position]
-            value.text = item.text
+            value.setText(item.text, withAnimation = false, moveDown = false)
             listViewAdapter.setSelection(position, item)
             super.onRestoreInstanceState(state.getParcelableExtraSupport("superState", Parcelable::class.java))
         }
@@ -184,7 +186,7 @@ class DropDownView
                 label.visibility = View.GONE
             }
             if (items.isNotEmpty()) {
-                value.text = items[0].text
+                value.setText(items[0].text, withAnimation = false, moveDown = false)
             }
 
             listViewAdapter = ListViewAdapter(context, items)
@@ -193,7 +195,7 @@ class DropDownView
             listView.setHeightBasedOnChildren() // Set height programmatically because it's not correctly measured in ExpandableLayout
             listView.setOnItemClickListener { _, _, position, _ ->
                 val item = items[position]
-                value.text = item.text
+                value.setText(item.text)
                 listViewAdapter.setSelection(position, item)
                 listener?.onItemClick(position, item)
                 hideListView()

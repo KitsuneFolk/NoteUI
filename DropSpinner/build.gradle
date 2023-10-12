@@ -40,4 +40,6 @@ dependencies {
     /* Custom */
     implementation 'com.google.android.material:material:1.9.0'
     implementation "com.github.cachapa:expandablelayout:2.9.2"
+
+    implementation project(path: ':AnimatedTextView')
 }
