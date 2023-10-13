@@ -376,7 +376,7 @@
                         android:layout_marginStart="@dimen/mediumMargin"
                         android:layout_marginEnd="@dimen/mediumMargin"
                         android:contentDescription="@string/close_description"
-                        android:src="@drawable/ic_show_more_animated"
+                        android:src="@drawable/ic_show"
                         app:layout_constraintBottom_toBottomOf="@id/changeBackgroundButtonTextView"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/changeBackgroundButtonTextView" />
