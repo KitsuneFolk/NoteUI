@@ -14,13 +14,6 @@
     <color name="DarkTheme_colorBackground">#141414</color>
     <color name="DarkTheme_textColorSecondary">#DAB1B1</color>
 
-    <!-- RedTheme -->
-    <color name="RedTheme_colorPrimary">#C11010</color>
-    <color name="RedTheme_colorPrimaryDark">#AA0909</color>
-    <color name="RedTheme_colorAccent">#FCA727</color>
-    <color name="RedTheme_colorBackground">#DC3232</color>
-    <color name="RedTheme_textColorSecondary">#CCA9A5</color>
-
     <!-- PurpleTheme -->
     <color name="PurpleTheme_colorPrimary">#8A2BE2</color>
     <color name="PurpleTheme_colorPrimaryDark">#6614B5</color>

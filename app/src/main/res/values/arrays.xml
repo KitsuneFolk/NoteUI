@@ -6,7 +6,6 @@
         <item>Blue</item>
         <item>Dark</item>
         <item>Purple</item>
-        <item>Red</item>
     </string-array>
     <string name="settings_theme_default_value" translatable="false">follow_system</string>
     <string-array name="Themes_values" translatable="false">
@@ -14,14 +13,12 @@
         <item>blue</item>
         <item>dark</item>
         <item>purple</item>
-        <item>red</item>
     </string-array>
     <string-array name="Themes_drawables" translatable="false">
         <item>@drawable/ic_follow_system</item>
         <item>@color/BlueTheme_colorBackground</item>
         <item>@color/DarkTheme_colorBackground</item>
         <item>@color/PurpleTheme_colorBackground</item>
-        <item>@color/RedTheme_colorBackground</item>
     </string-array>
     <!-- Languages -->
     <string-array name="Languages" translatable="false">

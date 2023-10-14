@@ -53,14 +53,6 @@
         <item name="android:textColorSecondary">@color/DarkTheme_textColorSecondary</item>
     </style>
 
-    <style name="RedTheme" parent="BaseTheme">
-        <item name="android:colorBackground">@color/RedTheme_colorBackground</item>
-        <item name="colorPrimary">@color/RedTheme_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/RedTheme_colorPrimaryDark</item>
-        <item name="colorAccent">@color/RedTheme_colorAccent</item>
-        <item name="android:textColorSecondary">@color/RedTheme_textColorSecondary</item>
-    </style>
-
     <style name="PurpleTheme" parent="BaseTheme">
         <item name="android:colorBackground">@color/PurpleTheme_colorBackground</item>
         <item name="colorPrimary">@color/PurpleTheme_colorPrimary</item>

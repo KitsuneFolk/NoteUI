@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
@@ -16,7 +17,6 @@ object PreferenceHandler {
         const val FOLLOW_SYSTEM = "follow_system"
         const val BLUE = "blue"
         const val DARK = "dark"
-        const val RED = "red"
         const val PURPLE = "purple"
         const val DEFAULT = FOLLOW_SYSTEM
     }
@@ -39,8 +39,18 @@ object PreferenceHandler {
 
             Theme.BLUE -> context.setTheme(R.style.BlueTheme)
             Theme.DARK -> context.setTheme(R.style.DarkTheme)
-            Theme.RED -> context.setTheme(R.style.RedTheme)
             Theme.PURPLE -> context.setTheme(R.style.PurpleTheme)
+            else -> {
+                if (isDeviceDarkMode(context)) {
+                    context.setTheme(R.style.DarkTheme)
+                } else {
+                    context.setTheme(R.style.BlueTheme)
+                }
+                // Write default theme in case the theme is a removed one, like RedTheme
+                val edit = PreferenceManager.getDefaultSharedPreferences(context).edit()
+                edit.putString(Constants.Preferences.Key.THEME, Theme.DEFAULT)
+                edit.apply()
+            }
         }
     }
 
@@ -69,9 +79,12 @@ object PreferenceHandler {
 
             Theme.BLUE -> ContextCompat.getDrawable(context, R.drawable.blue_theme_background)
             Theme.DARK -> ContextCompat.getDrawable(context, R.drawable.dark_theme_background)
-            Theme.RED -> ColorDrawable(ContextCompat.getColor(context, R.color.RedTheme_colorBackground))
             Theme.PURPLE -> ContextCompat.getDrawable(context, R.drawable.purple_theme_background)
-            else -> throw IllegalArgumentException("Theme = ${getTheme(context)}")
+            else -> {
+                val tv = TypedValue()
+                context.theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+                ColorDrawable(tv.data)
+            }
         }
         return drawable
     }
