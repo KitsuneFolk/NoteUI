@@ -26,6 +26,7 @@ import com.pandacorp.noteui.domain.model.NoteItem
 import com.pandacorp.noteui.presentation.ui.adapter.notes.NotesAdapter
 import com.pandacorp.noteui.presentation.utils.ViewAdapter
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
+import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
 import com.pandacorp.noteui.presentation.utils.helpers.app
 import com.pandacorp.noteui.presentation.utils.helpers.sp
 import com.pandacorp.noteui.presentation.viewModels.CurrentNoteViewModel
@@ -156,6 +157,8 @@ class MainScreen : Fragment() {
     }
 
     private fun initViews() {
+        val backgroundImage = PreferenceHandler.getThemeBackground(requireContext())
+        binding.root.background = backgroundImage
         binding.searchBar.menu.clear()
         binding.searchBar.inflateMenu(R.menu.menu_main)
         binding.searchBar.setOnMenuItemClickListener { menuItem ->

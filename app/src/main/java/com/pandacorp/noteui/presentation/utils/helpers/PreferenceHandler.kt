@@ -2,7 +2,10 @@ package com.pandacorp.noteui.presentation.utils.helpers
 
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import androidx.preference.PreferenceManager
 import com.pandacorp.noteui.app.R
@@ -23,9 +26,7 @@ object PreferenceHandler {
 
     fun setTheme(
         context: Context,
-        theme: String =
-            PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(Constants.Preferences.Key.THEME, Theme.DEFAULT)!!,
+        theme: String = getTheme(context),
     ) {
         when (theme) {
             Theme.FOLLOW_SYSTEM -> {
@@ -54,5 +55,29 @@ object PreferenceHandler {
     ) {
         Locale.setDefault(Locale(language))
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language))
+    }
+
+    fun getThemeBackground(context: Context): Drawable? {
+        val drawable = when (getTheme(context)) {
+            Theme.FOLLOW_SYSTEM -> {
+                if (isDeviceDarkMode(context)) {
+                    ContextCompat.getDrawable(context, R.drawable.dark_theme_background)
+                } else {
+                    ContextCompat.getDrawable(context, R.drawable.blue_theme_background)
+                }
+            }
+
+            Theme.BLUE -> ContextCompat.getDrawable(context, R.drawable.blue_theme_background)
+            Theme.DARK -> ContextCompat.getDrawable(context, R.drawable.dark_theme_background)
+            Theme.RED -> ColorDrawable(ContextCompat.getColor(context, R.color.RedTheme_colorBackground))
+            Theme.PURPLE -> ContextCompat.getDrawable(context, R.drawable.purple_theme_background)
+            else -> throw IllegalArgumentException("Theme = ${getTheme(context)}")
+        }
+        return drawable
+    }
+
+    private fun getTheme(context: Context): String {
+        return PreferenceManager.getDefaultSharedPreferences(context)
+            .getString(Constants.Preferences.Key.THEME, Theme.DEFAULT)!!
     }
 }
