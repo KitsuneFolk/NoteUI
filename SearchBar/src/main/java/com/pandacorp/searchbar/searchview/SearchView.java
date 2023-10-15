@@ -187,19 +187,19 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         LayoutInflater.from(context).inflate(R.layout.mtrl_search_view, this);
         layoutInflated = true;
 
-        scrim = findViewById(R.id.search_view_scrim);
-        rootView = findViewById(R.id.search_view_root);
-        backgroundView = findViewById(R.id.search_view_background);
-        statusBarSpacer = findViewById(R.id.search_view_status_bar_spacer);
-        headerContainer = findViewById(R.id.search_view_header_container);
-        toolbarContainer = findViewById(R.id.search_view_toolbar_container);
-        toolbar = findViewById(R.id.search_view_toolbar);
-        dummyToolbar = findViewById(R.id.search_view_dummy_toolbar);
-        searchPrefix = findViewById(R.id.search_view_search_prefix);
-        editText = findViewById(R.id.search_view_edit_text);
-        clearButton = findViewById(R.id.search_view_clear_button);
-        divider = findViewById(R.id.search_view_divider);
-        contentContainer = findViewById(R.id.search_view_content_container);
+        scrim = findViewById(R.id.open_search_view_scrim);
+        rootView = findViewById(R.id.open_search_view_root);
+        backgroundView = findViewById(R.id.open_search_view_background);
+        statusBarSpacer = findViewById(R.id.open_search_view_status_bar_spacer);
+        headerContainer = findViewById(R.id.open_search_view_header_container);
+        toolbarContainer = findViewById(R.id.open_search_view_toolbar_container);
+        toolbar = findViewById(R.id.open_search_view_toolbar);
+        dummyToolbar = findViewById(R.id.open_search_view_dummy_toolbar);
+        searchPrefix = findViewById(R.id.open_search_view_search_prefix);
+        editText = findViewById(R.id.open_search_view_edit_text);
+        clearButton = findViewById(R.id.open_search_view_clear_button);
+        divider = findViewById(R.id.open_search_view_divider);
+        contentContainer = findViewById(R.id.open_search_view_content_container);
 
         searchViewAnimationHelper = new SearchViewAnimationHelper(this);
         elevationOverlayProvider = new ElevationOverlayProvider(context);
