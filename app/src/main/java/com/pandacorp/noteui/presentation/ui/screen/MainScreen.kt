@@ -27,6 +27,7 @@ import com.pandacorp.noteui.presentation.ui.adapter.notes.NotesAdapter
 import com.pandacorp.noteui.presentation.utils.ViewAdapter
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
+import com.pandacorp.noteui.presentation.utils.helpers.Utils.Companion.cropImage
 import com.pandacorp.noteui.presentation.utils.helpers.app
 import com.pandacorp.noteui.presentation.utils.helpers.sp
 import com.pandacorp.noteui.presentation.viewModels.CurrentNoteViewModel
@@ -41,6 +42,7 @@ import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
+
 
 class MainScreen : Fragment() {
     private var _binding: ScreenMainBinding? = null
@@ -158,7 +160,8 @@ class MainScreen : Fragment() {
 
     private fun initViews() {
         val backgroundImage = PreferenceHandler.getThemeBackground(requireContext())
-        binding.root.background = backgroundImage
+        binding.root.background = cropImage(backgroundImage, resources)
+
         binding.searchBar.menu.clear()
         binding.searchBar.inflateMenu(R.menu.menu_main)
         binding.searchBar.setOnMenuItemClickListener { menuItem ->

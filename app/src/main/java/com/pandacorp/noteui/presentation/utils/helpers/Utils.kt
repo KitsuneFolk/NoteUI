@@ -1,7 +1,13 @@
 package com.pandacorp.noteui.presentation.utils.helpers
 
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.util.TypedValue
@@ -181,6 +187,38 @@ class Utils {
                 }
                 root.layoutParams = lp
             }
+        }
+
+        /**
+         * Crops the provided Drawable to show only its bottom part, excluding the top part if the
+         * orientation is horizontal (landscape mode).
+         *
+         * @param drawable The input Drawable to be cropped. It should not be null, and it should not be
+         *                 an instance of ColorDrawable.
+         * @param resources The Resources object used to create a new BitmapDrawable from the cropped image.
+         * @return A new Drawable that represents the cropped image. If the orientation is horizontal, the
+         *         returned Drawable will only contain the bottom part of the input Drawable. If the
+         *         orientation is portrait, the input Drawable is returned unmodified.
+         */
+        fun cropImage(drawable: Drawable?, resources: Resources): Drawable? {
+            if (drawable == null || drawable is ColorDrawable) return drawable
+            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                return drawable
+            }
+            val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            drawable.setBounds(0, 0, canvas.width, canvas.height)
+            drawable.draw(canvas)
+
+            val width = bitmap.width
+            val height = bitmap.height
+
+            val squareSize = width.coerceAtMost(height)
+            val x = (width - squareSize)
+            val y = (height - squareSize)
+
+            val croppedBitmap = Bitmap.createBitmap(bitmap, x, y, squareSize, squareSize)
+            return BitmapDrawable(resources, croppedBitmap)
         }
     }
 }
