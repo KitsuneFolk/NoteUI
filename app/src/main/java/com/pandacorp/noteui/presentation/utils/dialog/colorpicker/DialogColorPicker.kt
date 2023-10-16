@@ -17,10 +17,6 @@ class DialogColorPicker(private val context: Context) : CustomDialog(context) {
     private fun initViews() {
         binding.title.setText(R.string.addColor)
 
-        binding.cancel.setOnClickListener {
-            cancel()
-        }
-
         binding.ok.setOnClickListener {
             cancel()
             colorEnvelopeListener?.onColorSelected(binding.colorPicker.colorEnvelope, true)

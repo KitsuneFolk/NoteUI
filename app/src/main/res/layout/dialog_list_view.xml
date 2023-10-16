@@ -1,88 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialogListView_cardView"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/mediumMargin"
-    android:layout_marginBottom="@dimen/mediumMargin"
+    android:layout_gravity="center"
     android:layout_marginStart="@dimen/mediumMargin"
+    android:layout_marginTop="@dimen/mediumMargin"
     android:layout_marginEnd="@dimen/mediumMargin"
-    android:layout_gravity="center">
+    android:layout_marginBottom="@dimen/mediumMargin"
+    app:cardBackgroundColor="?colorPrimary"
+    app:cardCornerRadius="@dimen/bigCorners"
+    app:strokeColor="@android:color/white"
+    app:strokeWidth="@dimen/stroke">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/dialogListView_cardView"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="?colorPrimary"
-        app:strokeWidth="@dimen/stroke"
-        app:strokeColor="@android:color/white"
-        app:cardCornerRadius="@dimen/bigCorners">
+        android:minWidth="@dimen/dialog_minWidth"
+        android:minHeight="@dimen/dialog_minHeight"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/dialogListView_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="@dimen/dialog_minWidth"
-            android:minHeight="@dimen/dialog_minHeight"
-            android:orientation="vertical">
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            tools:text="@string/language" />
 
-            <TextView
-                android:id="@+id/dialogListView_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                tools:text="@string/language" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/dialogListViewLayout"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ListView
-                    android:id="@+id/dialogListView_listView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:divider="@android:color/transparent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:listitem="@layout/item_settings"
-                    tools:visibility="visible" />
-
-                <NumberPicker
-                    android:id="@+id/dialogListView_numberPicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/dialogListView_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="@dimen/bigMargin"
-                android:layout_marginBottom="15dp"
-                android:text="@string/action_cancel"
-                android:textSize="17sp" />
-
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-</FrameLayout>
+        <ListView
+            android:id="@+id/dialogListView_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:divider="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_settings"
+            tools:visibility="visible" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

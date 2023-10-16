@@ -34,9 +34,6 @@ class DialogNumberPickerEditText(private val context: Context, private val prefe
                 else -> throw IllegalArgumentException()
             },
         )
-        binding.cancel.setOnClickListener {
-            cancel()
-        }
 
         binding.ok.setOnClickListener {
             cancel()

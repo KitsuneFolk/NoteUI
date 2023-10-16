@@ -46,10 +46,6 @@ open class DialogNumberPicker(private val context: Context, private val preferen
         )
         binding.sample.textSize = preferenceValue.toFloat()
 
-        binding.cancel.setOnClickListener {
-            cancel()
-        }
-
         binding.ok.setOnClickListener {
             cancel()
             val value = textSizesList[binding.numberPicker.value]

@@ -31,10 +31,6 @@ class DialogListView(private val context: Context, private val preferenceKey: St
             },
         )
 
-        binding.dialogListViewCancel.setOnClickListener {
-            cancel()
-        }
-
         val itemsList: MutableList<SettingsItem> =
             when (preferenceKey) {
                 Constants.Preferences.Key.THEME -> fillThemesList()

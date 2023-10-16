@@ -53,42 +53,16 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ok"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:orientation="horizontal">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_marginEnd="@dimen/bigMargin"
-                android:gravity="center"
-                android:text="@string/action_cancel"
-                android:textSize="17sp"
-                app:layout_constraintBottom_toBottomOf="@id/ok"
-                app:layout_constraintEnd_toStartOf="@id/ok"
-                app:layout_constraintHorizontal_bias="0.75"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/ok" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/ok"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="@dimen/bigMargin"
-                android:layout_marginBottom="15dp"
-                android:gravity="center"
-                android:text="@string/ok"
-                android:textSize="17sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:minWidth="125dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:text="@string/ok"
+            android:textSize="17sp" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
