@@ -9,16 +9,12 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.Build
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
 import androidx.transition.Slide
 import androidx.transition.Transition
 import androidx.transition.TransitionManager
@@ -170,7 +166,10 @@ class Utils {
          *         returned Drawable will only contain the bottom part of the input Drawable. If the
          *         orientation is portrait, the input Drawable is returned unmodified.
          */
-        fun cropImage(drawable: Drawable?, resources: Resources): Drawable? {
+        fun cropImage(
+            drawable: Drawable?,
+            resources: Resources
+        ): Drawable? {
             if (drawable == null || drawable is ColorDrawable) return drawable
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 return drawable

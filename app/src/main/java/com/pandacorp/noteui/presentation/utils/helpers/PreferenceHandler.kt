@@ -68,24 +68,25 @@ object PreferenceHandler {
     }
 
     fun getThemeBackground(context: Context): Drawable? {
-        val drawable = when (getTheme(context)) {
-            Theme.FOLLOW_SYSTEM -> {
-                if (isDeviceDarkMode(context)) {
-                    ContextCompat.getDrawable(context, R.drawable.dark_theme_background)
-                } else {
-                    ContextCompat.getDrawable(context, R.drawable.blue_theme_background)
+        val drawable =
+            when (getTheme(context)) {
+                Theme.FOLLOW_SYSTEM -> {
+                    if (isDeviceDarkMode(context)) {
+                        ContextCompat.getDrawable(context, R.drawable.dark_theme_background)
+                    } else {
+                        ContextCompat.getDrawable(context, R.drawable.blue_theme_background)
+                    }
+                }
+
+                Theme.BLUE -> ContextCompat.getDrawable(context, R.drawable.blue_theme_background)
+                Theme.DARK -> ContextCompat.getDrawable(context, R.drawable.dark_theme_background)
+                Theme.PURPLE -> ContextCompat.getDrawable(context, R.drawable.purple_theme_background)
+                else -> {
+                    val tv = TypedValue()
+                    context.theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+                    ColorDrawable(tv.data)
                 }
             }
-
-            Theme.BLUE -> ContextCompat.getDrawable(context, R.drawable.blue_theme_background)
-            Theme.DARK -> ContextCompat.getDrawable(context, R.drawable.dark_theme_background)
-            Theme.PURPLE -> ContextCompat.getDrawable(context, R.drawable.purple_theme_background)
-            else -> {
-                val tv = TypedValue()
-                context.theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
-                ColorDrawable(tv.data)
-            }
-        }
         return drawable
     }
 

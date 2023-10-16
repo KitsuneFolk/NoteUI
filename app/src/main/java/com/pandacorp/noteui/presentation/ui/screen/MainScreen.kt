@@ -43,7 +43,6 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
-
 class MainScreen : Fragment() {
     private var _binding: ScreenMainBinding? = null
     private val binding get() = _binding!!
