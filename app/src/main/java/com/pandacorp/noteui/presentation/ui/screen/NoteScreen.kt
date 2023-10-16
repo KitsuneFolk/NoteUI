@@ -47,7 +47,6 @@ import com.pandacorp.noteui.presentation.utils.dialog.CustomBottomSheetDialog
 import com.pandacorp.noteui.presentation.utils.dialog.colorpicker.DialogColorPicker
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import com.pandacorp.noteui.presentation.utils.helpers.Utils
-import com.pandacorp.noteui.presentation.utils.helpers.Utils.Companion.setDecorFitsSystemWindows
 import com.pandacorp.noteui.presentation.utils.helpers.changeTextBackgroundColor
 import com.pandacorp.noteui.presentation.utils.helpers.changeTextForegroundColor
 import com.pandacorp.noteui.presentation.utils.helpers.changeTextGravity
@@ -57,6 +56,7 @@ import com.pandacorp.noteui.presentation.utils.helpers.insertImage
 import com.pandacorp.noteui.presentation.utils.helpers.makeTextBold
 import com.pandacorp.noteui.presentation.utils.helpers.makeTextItalic
 import com.pandacorp.noteui.presentation.utils.helpers.makeTextUnderline
+import com.pandacorp.noteui.presentation.utils.helpers.setDecorFitsSystemWindows
 import com.pandacorp.noteui.presentation.utils.helpers.setSpannableFromJson
 import com.pandacorp.noteui.presentation.utils.helpers.sp
 import com.pandacorp.noteui.presentation.utils.views.UndoRedoHelper

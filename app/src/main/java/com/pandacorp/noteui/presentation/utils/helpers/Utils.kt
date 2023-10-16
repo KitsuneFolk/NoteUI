@@ -160,36 +160,6 @@ class Utils {
         }
 
         /**
-         * Sets the system window insets behavior for the fragment's window.
-         *
-         * @param root The Root view of the layout
-         * @param fitsSystemWindows True to fit system windows, false otherwise.
-         */
-        fun Fragment.setDecorFitsSystemWindows(
-            root: View,
-            fitsSystemWindows: Boolean
-        ) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                requireActivity().window.setDecorFitsSystemWindows(fitsSystemWindows)
-
-                val lp = root.layoutParams as MarginLayoutParams
-                if (fitsSystemWindows) {
-                    lp.topMargin = 0
-                    lp.bottomMargin = 0
-                } else {
-                    // Set margins manually
-                    lp.topMargin =
-                        requireActivity().window.decorView.rootWindowInsets
-                            .getInsets(WindowInsetsCompat.Type.statusBars()).top
-                    lp.bottomMargin =
-                        requireActivity().window.decorView.rootWindowInsets
-                            .getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
-                }
-                root.layoutParams = lp
-            }
-        }
-
-        /**
          * Crops the provided Drawable to show only its bottom part, excluding the top part if the
          * orientation is horizontal (landscape mode).
          *

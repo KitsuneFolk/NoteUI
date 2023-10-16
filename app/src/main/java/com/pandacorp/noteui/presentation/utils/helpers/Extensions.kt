@@ -6,7 +6,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import com.google.android.material.appbar.AppBarLayout
@@ -16,6 +19,36 @@ val Fragment.sp: SharedPreferences
     get() = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
 val Fragment.app get() = (requireActivity().application as App)
+
+/**
+ * Sets the system window insets behavior for the fragment's window.
+ *
+ * @param root The Root view of the layout
+ * @param fitsSystemWindows True to fit system windows, false otherwise.
+ */
+fun Fragment.setDecorFitsSystemWindows(
+    root: View,
+    fitsSystemWindows: Boolean
+) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        requireActivity().window.setDecorFitsSystemWindows(fitsSystemWindows)
+
+        val lp = root.layoutParams as ViewGroup.MarginLayoutParams
+        if (fitsSystemWindows) {
+            lp.topMargin = 0
+            lp.bottomMargin = 0
+        } else {
+            // Set margins manually
+            lp.topMargin =
+                requireActivity().window.decorView.rootWindowInsets
+                    .getInsets(WindowInsetsCompat.Type.statusBars()).top
+            lp.bottomMargin =
+                requireActivity().window.decorView.rootWindowInsets
+                    .getInsets(WindowInsetsCompat.Type.navigationBars()).bottom
+        }
+        root.layoutParams = lp
+    }
+}
 
 fun Toolbar.hideToolbarWhileScrolling(isHide: Boolean) {
     val layoutParams = layoutParams as AppBarLayout.LayoutParams
