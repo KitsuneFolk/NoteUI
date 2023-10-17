@@ -16,7 +16,8 @@
         android:layout_width="@dimen/bigImage"
         android:layout_height="@dimen/bigImage"
         android:layout_gravity="center"
-        android:src="@drawable/empty_box" />
+        android:src="@drawable/empty_box"
+        android:importantForAccessibility="no" />
 
     <TextView
         android:id="@+id/textView"
