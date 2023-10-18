@@ -2,7 +2,7 @@
     android:name="vector"
     android:width="24dp"
     android:height="24dp"
-    android:tint="#FFFFFF"
+    android:tint="?android:textColor"
     android:viewportWidth="24"
     android:viewportHeight="24">
     <group
