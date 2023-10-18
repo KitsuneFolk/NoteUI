@@ -5,6 +5,7 @@
         <item>Синя</item>
         <item>Темна</item>
         <item>Фiолетова</item>
+        <item>Свiтла</item>
     </string-array>
 
     <string-array name="Filter" translatable="false">

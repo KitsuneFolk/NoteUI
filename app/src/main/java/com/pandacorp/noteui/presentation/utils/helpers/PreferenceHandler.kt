@@ -18,6 +18,7 @@ object PreferenceHandler {
         const val BLUE = "blue"
         const val DARK = "dark"
         const val PURPLE = "purple"
+        const val LIGHT = "light"
         const val DEFAULT = FOLLOW_SYSTEM
     }
 
@@ -40,6 +41,7 @@ object PreferenceHandler {
             Theme.BLUE -> context.setTheme(R.style.BlueTheme)
             Theme.DARK -> context.setTheme(R.style.DarkTheme)
             Theme.PURPLE -> context.setTheme(R.style.PurpleTheme)
+            Theme.LIGHT -> context.setTheme(R.style.LightTheme)
             else -> {
                 if (isDeviceDarkMode(context)) {
                     context.setTheme(R.style.DarkTheme)
@@ -81,6 +83,7 @@ object PreferenceHandler {
                 Theme.BLUE -> ContextCompat.getDrawable(context, R.drawable.blue_theme_background)
                 Theme.DARK -> ContextCompat.getDrawable(context, R.drawable.dark_theme_background)
                 Theme.PURPLE -> ContextCompat.getDrawable(context, R.drawable.purple_theme_background)
+                Theme.LIGHT -> ContextCompat.getDrawable(context, R.drawable.light_theme_background)
                 else -> {
                     val tv = TypedValue()
                     context.theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
