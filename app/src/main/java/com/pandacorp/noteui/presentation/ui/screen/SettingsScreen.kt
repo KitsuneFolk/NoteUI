@@ -11,6 +11,7 @@ import com.pandacorp.noteui.presentation.utils.dialog.DialogListView
 import com.pandacorp.noteui.presentation.utils.dialog.DialogNumberPicker
 import com.pandacorp.noteui.presentation.utils.dialog.DialogNumberPickerEditText
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
+import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
 import com.pandacorp.noteui.presentation.utils.helpers.app
 import com.pandacorp.noteui.presentation.utils.helpers.getPackageInfoCompat
 import com.pandacorp.noteui.presentation.utils.helpers.sp
@@ -22,7 +23,7 @@ class SettingsScreen : Fragment() {
     private val languageDialog by lazy {
         DialogListView(requireActivity(), Constants.Preferences.Key.LANGUAGE).apply {
             setOnValueAppliedListener {
-                requireActivity().recreate()
+                PreferenceHandler.setLanguage(requireContext(), it)
             }
         }
     }
