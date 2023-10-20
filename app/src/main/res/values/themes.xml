@@ -16,6 +16,8 @@
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="android:navigationBarColor">?colorPrimary</item>
         <item name="colorControlNormal">@android:color/white</item>
+        <item name="strokeColor">@android:color/darker_gray</item>
+        <item name="toolbarColor">?colorPrimary</item>
 
         <!-- The amount of dimming when fragment is being dragged. -->
         <item name="fgl_scrim_amount">0.6</item>
@@ -45,6 +47,8 @@
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
         <item name="android:navigationBarColor">?colorPrimary</item>
         <item name="colorControlNormal">@android:color/black</item>
+        <item name="strokeColor">@android:color/black</item>
+        <item name="toolbarColor">?colorPrimary</item>
 
         <!-- The amount of dimming when fragment is being dragged. -->
         <item name="fgl_scrim_amount">0.6</item>
@@ -72,7 +76,6 @@
         <item name="colorPrimaryDark">@color/BlueTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/BlueTheme_colorAccent</item>
         <item name="android:textColorSecondary">@color/BlueTheme_textColorSecondary</item>
-        <item name="toolbarColor">@color/BlueTheme_colorPrimary</item>
     </style>
 
     <style name="DarkTheme" parent="BaseTheme">
@@ -81,7 +84,6 @@
         <item name="colorPrimaryDark">@color/DarkTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/DarkTheme_colorAccent</item>
         <item name="android:textColorSecondary">@color/DarkTheme_textColorSecondary</item>
-        <item name="toolbarColor">@color/DarkTheme_colorPrimary</item>
     </style>
 
     <style name="PurpleTheme" parent="BaseTheme">
@@ -90,7 +92,6 @@
         <item name="colorPrimaryDark">@color/PurpleTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/PurpleTheme_colorAccent</item>
         <item name="android:textColorSecondary">@color/PurpleTheme_textColorSecondary</item>
-        <item name="toolbarColor">@color/PurpleTheme_colorPrimary</item>
     </style>
 
     <style name="LightTheme" parent="LightBaseTheme">
@@ -100,7 +101,6 @@
         <item name="colorPrimaryDark">@color/LightTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/LightTheme_colorAccent</item>
         <item name="android:textColorSecondary">@color/LightTheme_textColorSecondary</item>
-        <item name="toolbarColor">@color/LightTheme_colorPrimary</item>
     </style>
 
 </resources>

@@ -8,7 +8,7 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:src="@drawable/colorpicker_buble"
-        android:tint="@android:color/darker_gray"/>
+        android:tint="?strokeColor"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/bubble"

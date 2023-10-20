@@ -4,7 +4,7 @@
     <style name="MaterialButtonStyle" parent="Widget.Material3.Button">
         <item name="backgroundTint">?colorPrimaryDark</item>
         <item name="android:textColor">?android:textColor</item>
-        <item name="strokeColor">@android:color/white</item>
+        <item name="strokeColor">?strokeColor</item>
         <item name="strokeWidth">@dimen/stroke</item>
         <item name="rippleColor">?colorControlHighlight</item>
     </style>
@@ -36,13 +36,13 @@
 
     <style name="SnackBarButtonStyle" parent="Widget.Material3.Button.TextButton.Snackbar">
         <item name="backgroundTint">@android:color/transparent</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="strokeColor">@android:color/white</item>
+        <item name="android:textColor">?android:textColor</item>
+        <item name="strokeColor">?android:textColor</item>
         <item name="strokeWidth">@dimen/stroke</item>
     </style>
 
     <style name="PositiveButtonStyle" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">?android:textColor</item>
     </style>
 
     <style name="SwitchStyle" parent="Widget.AppCompat.CompoundButton.Switch">
@@ -65,9 +65,9 @@
     
     <style name="ExtendedFABStyle" parent="Widget.Material3.ExtendedFloatingActionButton.Primary">
         <item name="android:backgroundTint">?colorPrimaryDark</item>
-        <item name="backgroundTint">@android:color/white</item>
+        <item name="backgroundTint">?android:textColor</item>
         <item name="strokeWidth">@dimen/stroke</item>
-        <item name="strokeColor">@android:color/white</item>
+        <item name="strokeColor">?strokeColor</item>
         <!--  Remove the shadow  -->
         <item name="elevation">0dp</item>
     </style>

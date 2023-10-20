@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         app:cardBackgroundColor="?colorPrimary"
         app:cardCornerRadius="@dimen/bigCorners"
-        app:strokeColor="@android:color/white"
+        app:strokeColor="?strokeColor"
         app:strokeWidth="@dimen/stroke">
 
         <ScrollView

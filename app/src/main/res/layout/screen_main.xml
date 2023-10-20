@@ -22,7 +22,7 @@
             android:backgroundTint="?colorPrimaryDark"
             android:hint="@string/search_hint"
             app:defaultScrollFlagsEnabled="false"
-            app:strokeColor="@android:color/white"
+            app:strokeColor="?strokeColor"
             app:strokeWidth="@dimen/stroke" />
     </com.google.android.material.appbar.AppBarLayout>
 

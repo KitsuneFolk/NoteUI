@@ -8,7 +8,7 @@
             <solid android:color="?colorPrimary" />
             <stroke
                 android:width="@dimen/stroke"
-                android:color="@android:color/white" />
+                android:color="?strokeColor" />
         </shape>
     </item>
 </ripple>

@@ -1,6 +1,5 @@
 package com.pandacorp.noteui.presentation.ui.adapter.notes
 
-import android.graphics.Color
 import android.util.SparseBooleanArray
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -102,8 +101,12 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
         isSelect: Boolean
     ) {
         val tv = TypedValue()
-        binding.root.context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
-        val selectionColor = tv.data
-        binding.cardView.strokeColor = if (isSelect) selectionColor else Color.WHITE
+        binding.cardView.strokeColor = if (isSelect) {
+            binding.root.context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
+            tv.data
+        } else {
+            binding.root.context.theme.resolveAttribute(android.R.attr.textColor, tv, true)
+            tv.data
+        }
     }
 }

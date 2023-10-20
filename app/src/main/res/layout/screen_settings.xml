@@ -47,7 +47,7 @@
                     android:layout_marginStart="@dimen/mediumMargin"
                     android:layout_marginEnd="@dimen/mediumMargin"
                     app:cardBackgroundColor="?colorPrimary"
-                    app:strokeColor="@android:color/white"
+                    app:strokeColor="?strokeColor"
                     app:strokeWidth="@dimen/stroke">
 
                     <LinearLayout
@@ -172,7 +172,7 @@
                     android:paddingTop="@dimen/mediumMargin"
                     android:paddingBottom="@dimen/mediumMargin"
                     app:cardBackgroundColor="?colorPrimary"
-                    app:strokeColor="@android:color/white"
+                    app:strokeColor="?strokeColor"
                     app:strokeWidth="@dimen/stroke">
 
                     <LinearLayout
@@ -415,7 +415,7 @@
                     android:paddingTop="@dimen/mediumMargin"
                     android:paddingBottom="@dimen/mediumMargin"
                     app:cardBackgroundColor="?colorPrimary"
-                    app:strokeColor="@android:color/white"
+                    app:strokeColor="?strokeColor"
                     app:strokeWidth="@dimen/stroke">
 
                     <LinearLayout
