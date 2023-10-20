@@ -20,7 +20,7 @@
 
     <style name="ToolbarStyle" parent="Widget.Material3.Toolbar">
         <item name="android:colorPrimary">?android:attr/textColor</item>
-        <item name="android:background">?colorPrimary</item>
+        <item name="android:background">?toolbarColor</item>
     </style>
 
     <style name="SnackBarStyle" parent="Widget.Material3.Snackbar">
