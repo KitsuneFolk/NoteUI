@@ -101,12 +101,13 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
         isSelect: Boolean
     ) {
         val tv = TypedValue()
-        binding.cardView.strokeColor = if (isSelect) {
-            binding.root.context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
-            tv.data
-        } else {
-            binding.root.context.theme.resolveAttribute(android.R.attr.textColor, tv, true)
-            tv.data
-        }
+        binding.cardView.strokeColor =
+            if (isSelect) {
+                binding.root.context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
+                tv.data
+            } else {
+                binding.root.context.theme.resolveAttribute(android.R.attr.textColor, tv, true)
+                tv.data
+            }
     }
 }
