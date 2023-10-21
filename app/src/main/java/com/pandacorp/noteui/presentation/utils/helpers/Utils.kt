@@ -24,6 +24,7 @@ import com.bumptech.glide.request.target.Target
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.domain.model.ColorItem
 
+
 class Utils {
     companion object {
         /**
@@ -174,7 +175,8 @@ class Utils {
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 return drawable
             }
-            val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+
+            val bitmap = (drawable as BitmapDrawable).bitmap.copy(Bitmap.Config.ARGB_8888, true)
             val canvas = Canvas(bitmap)
             drawable.setBounds(0, 0, canvas.width, canvas.height)
             drawable.draw(canvas)
@@ -183,8 +185,8 @@ class Utils {
             val height = bitmap.height
 
             val squareSize = width.coerceAtMost(height)
-            val x = (width - squareSize)
-            val y = (height - squareSize)
+            val x = width - squareSize
+            val y = height - squareSize
 
             val croppedBitmap = Bitmap.createBitmap(bitmap, x, y, squareSize, squareSize)
             return BitmapDrawable(resources, croppedBitmap)
