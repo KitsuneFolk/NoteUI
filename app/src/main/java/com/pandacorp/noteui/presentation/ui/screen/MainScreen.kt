@@ -159,7 +159,7 @@ class MainScreen : Fragment() {
 
     private fun initViews() {
         val backgroundImage = PreferenceHandler.getThemeBackground(requireContext())
-        binding.root.background = cropImage(backgroundImage, resources)
+        binding.root.background = cropImage(backgroundImage, requireActivity())
 
         binding.searchBar.menu.clear()
         binding.searchBar.inflateMenu(R.menu.menu_main)
