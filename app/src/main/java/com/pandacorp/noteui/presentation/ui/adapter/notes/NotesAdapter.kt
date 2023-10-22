@@ -59,7 +59,15 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
             }
             Utils.changeNoteBackground(noteItem.background, binding.backgroundImageView, isAdapter = true)
             if (isSelectionEnabled) {
-                selectNote(binding, selectedNotes.get(bindingAdapterPosition, false))
+                val tv = TypedValue()
+                binding.cardView.strokeColor =
+                    if (selectedNotes.get(bindingAdapterPosition, false)) {
+                        binding.root.context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
+                        tv.data
+                    } else {
+                        binding.root.context.theme.resolveAttribute(android.R.attr.textColor, tv, true)
+                        tv.data
+                    }
             }
         }
     }
@@ -94,20 +102,5 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
         position: Int
     ) {
         holder.bind(currentList[position])
-    }
-
-    private fun selectNote(
-        binding: ItemNoteBinding,
-        isSelect: Boolean
-    ) {
-        val tv = TypedValue()
-        binding.cardView.strokeColor =
-            if (isSelect) {
-                binding.root.context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
-                tv.data
-            } else {
-                binding.root.context.theme.resolveAttribute(android.R.attr.textColor, tv, true)
-                tv.data
-            }
     }
 }
