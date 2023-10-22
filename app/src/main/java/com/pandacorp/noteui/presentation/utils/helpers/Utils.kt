@@ -91,14 +91,14 @@ class Utils {
                 // note.background is a color.
                 val typedValue = TypedValue()
                 if (isAdapter) {
-                    imageView.context.theme.resolveAttribute(android.R.attr.colorPrimary, typedValue, true)
+                    imageView.context.theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
                 } else {
                     imageView.context.theme.resolveAttribute(android.R.attr.colorBackground, typedValue, true)
                 }
                 val color = typedValue.data
 
                 if (!isUseGlide) {
-                    imageView.setImageDrawable(ColorDrawable(color))
+                    imageView.setBackgroundColor(color)
                     return
                 }
 
