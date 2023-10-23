@@ -66,13 +66,14 @@ fun Toolbar.hideToolbarWhileScrolling(isHide: Boolean) {
 }
 
 fun Toolbar.setTransparent(transparent: Boolean) {
-    background = if (transparent) {
-        ColorDrawable(Color.TRANSPARENT)
-    } else {
-        val tv = TypedValue()
-        context.theme.resolveAttribute(R.attr.toolbarColor, tv, true)
-        ColorDrawable(tv.data)
-    }
+    background =
+        if (transparent) {
+            ColorDrawable(Color.TRANSPARENT)
+        } else {
+            val tv = TypedValue()
+            context.theme.resolveAttribute(R.attr.toolbarColor, tv, true)
+            ColorDrawable(tv.data)
+        }
 }
 
 /**

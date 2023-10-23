@@ -318,7 +318,7 @@ class MainScreen : Fragment() {
                 val isEmpty = count == 0
 
                 // Hide/show the FAB based on selection and disable animation to remove blinking in recyclerview
-                //FIXME: Find another approach, this disables animation of the border change
+                // FIXME: Find another approach, this disables animation of the border change
                 binding.addFAB.isEnabled = isEmpty
                 if (isEmpty) {
                     binding.addFAB.show()
