@@ -19,7 +19,7 @@
             android:id="@+id/searchBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="?colorPrimaryDark"
+            android:backgroundTint="?toolbarColor"
             android:hint="@string/search_hint"
             app:defaultScrollFlagsEnabled="false"
             app:strokeColor="?strokeColor"
