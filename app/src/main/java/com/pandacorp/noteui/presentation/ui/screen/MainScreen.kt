@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
 import com.google.android.material.snackbar.Snackbar
@@ -316,15 +317,18 @@ class MainScreen : Fragment() {
                 val count = selectedNotes.size()
                 val isEmpty = count == 0
 
-                // Hide/show the FAB based on selection
+                // Hide/show the FAB based on selection and disable animation to remove blinking in recyclerview
+                //FIXME: Find another approach, this disables animation of the border change
                 binding.addFAB.isEnabled = isEmpty
                 if (isEmpty) {
                     binding.addFAB.show()
+                    notesAdapter.selectList(selectedNotes.clone())
+                    (binding.notesRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = true
                 } else {
                     binding.addFAB.hide()
+                    (binding.notesRecyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+                    notesAdapter.selectList(selectedNotes.clone())
                 }
-
-                notesAdapter.selectList(selectedNotes.clone())
 
                 val moveDown = previousCount < count
                 previousCount = count
