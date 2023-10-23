@@ -2,7 +2,6 @@ package com.pandacorp.noteui.presentation.ui.screen
 
 import android.content.Context
 import android.content.res.Configuration
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -58,6 +57,7 @@ import com.pandacorp.noteui.presentation.utils.helpers.makeTextItalic
 import com.pandacorp.noteui.presentation.utils.helpers.makeTextUnderline
 import com.pandacorp.noteui.presentation.utils.helpers.setDecorFitsSystemWindows
 import com.pandacorp.noteui.presentation.utils.helpers.setSpannableFromJson
+import com.pandacorp.noteui.presentation.utils.helpers.setTransparent
 import com.pandacorp.noteui.presentation.utils.helpers.sp
 import com.pandacorp.noteui.presentation.utils.views.UndoRedoHelper
 import com.pandacorp.noteui.presentation.viewModels.ColorViewModel
@@ -336,15 +336,9 @@ class NoteScreen : Fragment() {
         addStopSwipeOnTouch(binding.gravityRoot)
         addStopSwipeOnTouch(binding.colorsRoot)
 
+        val showTransparent = currentNoteViewModel.note.value!!.isShowTransparentActionBar
+        binding.toolbar.setTransparent(showTransparent)
         binding.toolbar.title = null
-        binding.toolbar.background =
-            if (currentNoteViewModel.note.value!!.isShowTransparentActionBar) {
-                ColorDrawable(Color.TRANSPARENT)
-            } else {
-                val tv = TypedValue()
-                requireContext().theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
-                ColorDrawable(tv.data)
-            }
         binding.toolbar.setNavigationIcon(androidx.appcompat.R.drawable.abc_ic_ab_back_material)
         binding.toolbar.setNavigationOnClickListener {
             val editText = getFocusedEditText()
@@ -562,14 +556,8 @@ class NoteScreen : Fragment() {
         binding.transparentActionBarSwitch.apply {
             isChecked = currentNoteViewModel.note.value!!.isShowTransparentActionBar
             setOnCheckedChangeListener { _, isChecked ->
-                binding.toolbar.background =
-                    if (isChecked) {
-                        ColorDrawable(Color.TRANSPARENT)
-                    } else {
-                        val tv = TypedValue()
-                        requireContext().theme.resolveAttribute(android.R.attr.colorPrimary, tv, true)
-                        ColorDrawable(tv.data)
-                    }
+                binding.toolbar.setTransparent(isChecked)
+
                 currentNoteViewModel.note.value!!.isShowTransparentActionBar = isChecked
             }
         }
