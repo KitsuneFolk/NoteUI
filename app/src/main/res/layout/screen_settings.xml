@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/mediumMargin"
                     android:layout_marginEnd="@dimen/mediumMargin"
-                    app:cardBackgroundColor="?colorPrimary"
+                    app:cardBackgroundColor="?colorSurface"
                     app:strokeColor="?strokeColor"
                     app:strokeWidth="@dimen/stroke">
 
@@ -171,7 +171,7 @@
                     android:layout_marginEnd="@dimen/mediumMargin"
                     android:paddingTop="@dimen/mediumMargin"
                     android:paddingBottom="@dimen/mediumMargin"
-                    app:cardBackgroundColor="?colorPrimary"
+                    app:cardBackgroundColor="?colorSurface"
                     app:strokeColor="?strokeColor"
                     app:strokeWidth="@dimen/stroke">
 
@@ -414,7 +414,7 @@
                     android:layout_marginEnd="@dimen/mediumMargin"
                     android:paddingTop="@dimen/mediumMargin"
                     android:paddingBottom="@dimen/mediumMargin"
-                    app:cardBackgroundColor="?colorPrimary"
+                    app:cardBackgroundColor="?colorSurface"
                     app:strokeColor="?strokeColor"
                     app:strokeWidth="@dimen/stroke">
 
