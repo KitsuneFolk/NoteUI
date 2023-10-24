@@ -33,8 +33,7 @@
             android:id="@+id/img_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/dropsy_ic_expand"
-            app:tint="@color/dropsy_black" />
+            android:src="@drawable/dropsy_ic_expand" />
     </LinearLayout>
 
     <net.cachapa.expandablelayout.ExpandableLayout

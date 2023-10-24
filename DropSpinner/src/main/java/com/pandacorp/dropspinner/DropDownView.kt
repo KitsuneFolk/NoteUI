@@ -133,7 +133,7 @@ class DropDownView
             val dropsyValueColor =
                 dropsyAttrs.getColor(
                     R.styleable.DropDownView_dropsyValueColor,
-                    ContextCompat.getColor(context, R.color.dropsy_text_color),
+                    Color.BLACK,
                 )
             val dropsyElevation =
                 dropsyAttrs.getDimension(R.styleable.DropDownView_dropsyElevation, 0.0f)
@@ -143,12 +143,8 @@ class DropDownView
                 dropsyAttrs.getColorStateList(R.styleable.DropDownView_dropsyBorderSelector)
 
             // Arrow styling
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                imageArrow.imageTintList =
-                    dropsyAttrs.getColorStateList(R.styleable.DropDownView_dropsySelector)
-            } else {
-                imageArrow.setColorFilter(dropsySelector, android.graphics.PorterDuff.Mode.SRC_IN)
-            }
+            imageArrow.imageTintList =
+                dropsyAttrs.getColorStateList(R.styleable.DropDownView_dropsySelector)
 
             // Text styling
             label.setTextColor(dropsyLabelColor)
@@ -163,16 +159,12 @@ class DropDownView
             strokeColor = dropsySelector
 
             if (dropsyBorderSelector == null) {
-                setStrokeColor(
-                    ContextCompat.getColorStateList(context, R.color.dropsy_white),
-                )
+                strokeColor = Color.WHITE
             } else {
                 setStrokeColor(dropsyBorderSelector)
             }
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                elevation = dropsyElevation
-            }
+            elevation = dropsyElevation
         }
 
         private fun initData(dropsyAttrs: TypedArray) {
