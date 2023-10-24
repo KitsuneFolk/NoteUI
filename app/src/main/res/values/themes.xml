@@ -101,7 +101,7 @@
         <item name="colorPrimaryDark">@color/LightTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/LightTheme_colorAccent</item>
         <item name="android:textColorSecondary">@color/LightTheme_textColorSecondary</item>
-        <item name="colorSurface">@android:color/white</item>
+        <item name="colorSurface">@color/dark_white</item>
         <item name="toolbarColor">@android:color/white</item>
 
         <item name="android:statusBarColor">@android:color/white</item>
