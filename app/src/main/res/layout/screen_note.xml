@@ -90,7 +90,8 @@
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:ignore="VisualLintTextFieldSize" />
 
                         <com.pandacorp.noteui.presentation.utils.views.CustomEditText
                             android:id="@+id/contentEditText"
@@ -113,7 +114,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/titleEditText"
-                            tools:text="@string/lorem_ipsumX3" />
+                            tools:text="@string/lorem_ipsum"
+                            tools:ignore="VisualLintTextFieldSize" />
 
                     </LinearLayout>
 
