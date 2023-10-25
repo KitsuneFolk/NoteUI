@@ -19,7 +19,6 @@
     <string name="settings_language_default_value">en</string>
 
     <string name="lorem_ipsum" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu.</string>
-    <string name="lorem_ipsumX2" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in.</string>
     <string name="lorem_ipsumX3" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus in dolor non orci congue auctor. Duis a pretium arcu. Integer eu massa vehicula, aliquam turpis at, pretium risus. Sed et luctus risus, ac venenatis lectus. Quisque eget maximus ex. Nam dictum varius sem, non dictum augue fermentum in</string>
 
     <!--  Search strings -->
@@ -81,8 +80,6 @@
     <string name="ucrop_scale">Scale</string>
     <string name="ucrop_crop">Crop</string>
 
-    <string name="dismiss">Dismiss</string>
-    <string name="select">Select</string>
     <string name="ok" translatable="false">OK</string>
     <string name="successfully">Successfully</string>
     <string name="myNumber">My number</string>
