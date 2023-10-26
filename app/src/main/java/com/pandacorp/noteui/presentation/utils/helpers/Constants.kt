@@ -20,6 +20,7 @@ class Constants {
         object Key {
             const val LANGUAGE = "Languages"
             const val THEME = "Themes"
+            const val SHOW_THEME_BACKGROUND = "ShowThemeBackgroundKey"
             const val SHOW_FAB = "isShowFabTextKey"
             const val CONTENT_TEXT_SIZE = "ContentTextSize"
             const val TITLE_TEXT_SIZE = "TitleTextSizeKey"
@@ -28,6 +29,7 @@ class Constants {
         }
 
         object DefaultValue {
+            const val SHOW_THEME_BACKGROUND = true
             const val SHOW_FAB = true
             const val HIDE_ACTIONBAR_ON_SCROLL = true
             const val DRAWER_ANIMATION = 10000

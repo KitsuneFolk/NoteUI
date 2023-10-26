@@ -6,6 +6,7 @@
     <string name="appearance">Appearance</string>
     <string name="language">Language</string>
     <string name="theme">Theme</string>
+    <string name="showThemeBackground">Show theme background image</string>
     <string name="notes">Notes</string>
     <string name="preferencesIsShowAddNoteFABText">Show Add note button text</string>
     <string name="preferencesIsHideActionBarOnScroll">Hide actionbar while scrolling</string>

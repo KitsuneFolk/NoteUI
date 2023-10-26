@@ -143,6 +143,44 @@
                                     tools:text="English" />
                             </LinearLayout>
                         </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/themeBackgroundLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="?selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingStart="@dimen/smallMargin"
+                            android:paddingTop="@dimen/mediumMargin"
+                            android:paddingEnd="@dimen/smallMargin"
+                            android:paddingBottom="@dimen/mediumMargin">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/mediumMargin"
+                                android:src="@drawable/ic_image" />
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/themeBackgroundSwitch"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:clickable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:textSize="@dimen/mediumText"
+                                android:checked="true"
+                                android:gravity="start"
+                                android:paddingStart="@dimen/mediumMargin"
+                                android:paddingTop="@dimen/mediumMargin"
+                                android:paddingEnd="@dimen/smallMargin"
+                                android:paddingBottom="@dimen/mediumMargin"
+                                android:text="@string/showThemeBackground" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>

@@ -6,6 +6,7 @@
     <string name="appearance">Зовнiшний вигляд</string>
     <string name="language">Мова</string>
     <string name="theme">Тема</string>
+    <string name="showThemeBackground">Показувати зображення на задньому фоні</string>
     <string name="notes">Нотатки</string>
     <string name="preferencesIsShowAddNoteFABText">Показати текст кнопки Створити нотаток</string>
     <string name="preferencesIsHideActionBarOnScroll">Ховати actionbar при гортаннi</string>

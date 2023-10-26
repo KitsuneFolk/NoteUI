@@ -180,6 +180,19 @@ class SettingsScreen : Fragment() {
             }
         }
 
+        binding.themeBackgroundLayout.apply {
+            binding.themeBackgroundSwitch.isChecked = PreferenceHandler.isShowThemeBackground(requireContext())
+            setOnClickListener {
+                val newValue = !binding.themeBackgroundSwitch.isChecked
+                sp.edit()
+                    .putBoolean(Constants.Preferences.Key.SHOW_THEME_BACKGROUND, newValue)
+                    .apply()
+                binding.themeBackgroundSwitch.isChecked = newValue
+                PreferenceHandler.setShowThemeBackground(requireContext(), newValue)
+                app.isSettingsChanged = true
+            }
+        }
+
         binding.showFabTextLayout.apply {
             binding.showFabTextSwitch.isChecked =
                 sp.getBoolean(

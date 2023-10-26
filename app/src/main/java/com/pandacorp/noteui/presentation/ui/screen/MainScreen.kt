@@ -1,5 +1,7 @@
 package com.pandacorp.noteui.presentation.ui.screen
 
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.SparseBooleanArray
 import android.util.TypedValue
@@ -148,6 +150,13 @@ class MainScreen : Fragment() {
             } else {
                 binding.addFAB.extend()
             }
+            if (PreferenceHandler.isShowThemeBackground(requireContext())) {
+                binding.root.background = cropImage(requireActivity(), PreferenceHandler.getThemeBackground(requireContext()))
+            } else {
+                val tv = TypedValue()
+                requireActivity().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+                binding.root.setBackgroundColor(tv.data)
+            }
             app.isSettingsChanged = false
             return
         }
@@ -159,8 +168,15 @@ class MainScreen : Fragment() {
     }
 
     private fun initViews() {
-        val backgroundImage = PreferenceHandler.getThemeBackground(requireContext())
-        binding.root.background = cropImage(backgroundImage, requireActivity())
+        val background: Drawable =
+            if (PreferenceHandler.isShowThemeBackground(requireActivity())) {
+                cropImage(requireActivity(), PreferenceHandler.getThemeBackground(requireContext()))
+            } else {
+                val tv = TypedValue()
+                requireActivity().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+                ColorDrawable(tv.data)
+            }
+        binding.root.background = background
 
         binding.searchBar.menu.clear()
         binding.searchBar.inflateMenu(R.menu.menu_main)

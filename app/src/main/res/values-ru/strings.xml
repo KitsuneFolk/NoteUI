@@ -6,6 +6,7 @@
     <string name="appearance">Внешний вид</string>
     <string name="language">Язык</string>
     <string name="theme">Тема</string>
+    <string name="showThemeBackground">Показывать изображение на заднем фоне</string>
     <string name="notes">Заметки</string>
     <string name="preferencesIsShowAddNoteFABText">Показывать текст кнопки Создать заметку</string>
     <string name="preferencesIsHideActionBarOnScroll">Скрывать actionbar при листании</string>

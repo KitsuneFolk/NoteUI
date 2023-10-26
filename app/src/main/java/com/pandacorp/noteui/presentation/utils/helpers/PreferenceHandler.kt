@@ -69,7 +69,7 @@ object PreferenceHandler {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(language))
     }
 
-    fun getThemeBackground(context: Context): Drawable? {
+    fun getThemeBackground(context: Context): Drawable {
         val drawable =
             when (getTheme(context)) {
                 Theme.FOLLOW_SYSTEM -> {
@@ -90,11 +90,27 @@ object PreferenceHandler {
                     ColorDrawable(tv.data)
                 }
             }
-        return drawable
+        return drawable!!
     }
 
     private fun getTheme(context: Context): String {
         return PreferenceManager.getDefaultSharedPreferences(context)
             .getString(Constants.Preferences.Key.THEME, Theme.DEFAULT)!!
+    }
+
+    fun isShowThemeBackground(context: Context): Boolean {
+        return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
+            Constants.Preferences.Key.SHOW_THEME_BACKGROUND,
+            Constants.Preferences.DefaultValue.SHOW_THEME_BACKGROUND,
+        )
+    }
+
+    fun setShowThemeBackground(
+        context: Context,
+        value: Boolean
+    ) {
+        val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
+        editor.putBoolean(Constants.Preferences.Key.SHOW_THEME_BACKGROUND, value)
+        editor.apply()
     }
 }

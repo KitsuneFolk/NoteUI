@@ -172,10 +172,10 @@ class Utils {
          *         orientation is portrait, the input Drawable is returned unmodified.
          */
         fun cropImage(
-            drawable: Drawable?,
-            activity: Activity
-        ): Drawable? {
-            if (drawable == null || drawable is ColorDrawable) return drawable
+            activity: Activity,
+            drawable: Drawable
+        ): Drawable {
+            if (drawable is ColorDrawable) return drawable
             if (activity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 return drawable
             }
