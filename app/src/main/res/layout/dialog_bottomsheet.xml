@@ -4,25 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:layout_gravity="bottom|center_horizontal"
-    android:background="@drawable/semi_rounded_background"
-    android:maxWidth="@dimen/maxWidth"
-    android:paddingTop="@dimen/mediumMargin"
-    android:paddingStart="@dimen/mediumMargin"
-    android:paddingEnd="@dimen/mediumMargin"
-    android:paddingBottom="@dimen/smallMargin"
-    app:cardCornerRadius="0dp">
+    android:padding="@dimen/mediumMargin"
+    android:layout_gravity="bottom|center_horizontal">
 
     <LinearLayout
         android:id="@+id/addButtonLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/reset"
-            style="@style/BottomSheetMaterialButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
@@ -30,11 +23,13 @@
             android:text="@string/reset"
             android:textAllCaps="true"
             android:textColor="?android:textColor"
-            android:textSize="@dimen/mediumText" />
+            android:textSize="@dimen/mediumText"
+            app:cornerRadius="0dp"
+            app:rippleColor="?colorControlHighlight"
+            app:strokeWidth="0dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/removeAll"
-            style="@style/BottomSheetMaterialButton"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="center"
@@ -42,7 +37,10 @@
             android:text="@string/removeAll"
             android:textAllCaps="true"
             android:textColor="?android:textColor"
-            android:textSize="@dimen/mediumText" />
+            android:textSize="@dimen/mediumText"
+            app:cornerRadius="0dp"
+            app:rippleColor="?colorControlHighlight"
+            app:strokeWidth="0dp" />
     </LinearLayout>
 
     <FrameLayout
@@ -50,17 +48,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/remove"
-            style="@style/BottomSheetMaterialButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:text="@string/remove"
             android:textAllCaps="true"
             android:textColor="?android:textColor"
-            android:textSize="@dimen/mediumText" />
+            android:textSize="@dimen/mediumText"
+            app:cornerRadius="0dp"
+            app:rippleColor="?colorControlHighlight"
+            app:strokeWidth="0dp" />
     </FrameLayout>
 </FrameLayout>
