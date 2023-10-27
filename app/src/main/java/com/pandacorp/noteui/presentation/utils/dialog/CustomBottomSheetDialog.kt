@@ -5,12 +5,12 @@ import android.os.Bundle
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.pandacorp.noteui.app.databinding.DialogBotomsheetBinding
+import com.pandacorp.noteui.app.databinding.DialogBottomsheetBinding
 import com.pandacorp.noteui.domain.model.ColorItem
 
 class CustomBottomSheetDialog(context: Context, private val dialogKey: Int) :
     BottomSheetDialog(context) {
-    private var _binding: DialogBotomsheetBinding? = null
+    private var _binding: DialogBottomsheetBinding? = null
     private val binding get() = _binding!!
 
     private var onResetClickListener: View.OnClickListener? = null
@@ -19,7 +19,7 @@ class CustomBottomSheetDialog(context: Context, private val dialogKey: Int) :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = DialogBotomsheetBinding.inflate(layoutInflater)
+        _binding = DialogBottomsheetBinding.inflate(layoutInflater)
 
         when (dialogKey) {
             ColorItem.ADD -> {
