@@ -13,7 +13,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="?colorPrimary"
+        app:cardBackgroundColor="?colorSurface"
         app:cardCornerRadius="@dimen/bigCorners"
         app:strokeColor="?strokeColor"
         app:strokeWidth="@dimen/stroke">

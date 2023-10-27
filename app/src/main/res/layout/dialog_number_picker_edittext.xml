@@ -9,7 +9,7 @@
     android:layout_marginTop="@dimen/mediumMargin"
     android:layout_marginEnd="@dimen/mediumMargin"
     android:layout_marginBottom="@dimen/mediumMargin"
-    app:cardBackgroundColor="?colorPrimary"
+    app:cardBackgroundColor="?colorSurface"
     app:cardCornerRadius="@dimen/bigCorners"
     app:strokeColor="?strokeColor"
     app:strokeWidth="@dimen/stroke">
