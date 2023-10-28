@@ -33,6 +33,7 @@
     <color name="ucrop_color_statusbar">@color/DarkTheme_colorPrimary</color>
     <color name="ucrop_color_widget_active">@color/BlueTheme_colorAccent</color>
     <color name="ucrop_color_toolbar_widget">@android:color/white</color>
+
     <!-- ImagePicker dialog -->
     <color name="dialog_choose_icon_color">#FFFFFF</color>
     <color name="dialog_choose_text_color">#FFFFFF</color>
