@@ -23,9 +23,10 @@ class ColorsAdapter : ListAdapter<ColorItem, ColorsAdapter.ViewHolder>(DiffCallb
         ): Boolean = oldItem == newItem
     }
 
-    inner class ViewHolder(private val binding: ItemColorBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ItemColorBinding, private val viewType: Int) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(colorItem: ColorItem) {
-            when (colorItem.color) {
+            when (viewType) {
                 ColorItem.ADD -> binding.imageView.setImageResource(R.drawable.ic_add_baseline)
                 else -> binding.imageView.setImageDrawable(ColorDrawable(colorItem.color))
             }
@@ -66,12 +67,14 @@ class ColorsAdapter : ListAdapter<ColorItem, ColorsAdapter.ViewHolder>(DiffCallb
         super.submitList(newList)
     }
 
+    override fun getItemViewType(position: Int): Int = if (position == 0) ColorItem.ADD else ColorItem.COLOR
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return ViewHolder(ItemColorBinding.inflate(inflater, parent, false))
+        return ViewHolder(ItemColorBinding.inflate(inflater, parent, false), viewType)
     }
 
     override fun onBindViewHolder(
