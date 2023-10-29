@@ -24,8 +24,8 @@
             android:id="@+id/ListItemImageView"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            tools:ignore="ContentDescription"
-            tools:src="@drawable/flag_uk" />
+            tools:src="@drawable/flag_uk"
+            android:importantForAccessibility="no" />
 
     </androidx.cardview.widget.CardView>
 

@@ -75,6 +75,7 @@
                                 android:layout_height="match_parent"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
+                                android:contentDescription="@string/theme"
                                 android:src="@drawable/ic_theme" />
 
                             <LinearLayout
@@ -119,7 +120,8 @@
                                 android:layout_height="match_parent"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_language" />
+                                android:src="@drawable/ic_language"
+                                android:contentDescription="@string/language" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -163,7 +165,8 @@
                                 android:layout_height="match_parent"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_image" />
+                                android:src="@drawable/ic_image"
+                                android:contentDescription="@string/showThemeBackground" />
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
                                 android:id="@+id/themeBackgroundSwitch"
@@ -237,7 +240,8 @@
                                 android:layout_height="match_parent"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_short_text" />
+                                android:src="@drawable/ic_short_text"
+                                android:contentDescription="@string/preferencesIsShowAddNoteFABText" />
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
                                 android:id="@+id/showFabTextSwitch"
@@ -275,7 +279,8 @@
                                 android:layout_height="match_parent"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_actionbar" />
+                                android:src="@drawable/ic_actionbar"
+                                android:contentDescription="@string/preferencesIsHideActionBarOnScroll" />
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
                                 android:id="@+id/hideActionBarSwitch"
@@ -313,7 +318,8 @@
                                 android:layout_height="match_parent"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_menu_animation" />
+                                android:src="@drawable/ic_menu_animation"
+                                android:contentDescription="@string/preferencesDisableDrawerMenuAnimation" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -357,7 +363,8 @@
                                 android:layout_height="match_parent"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_title" />
+                                android:src="@drawable/ic_title"
+                                android:contentDescription="@string/titleTextSize" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -401,7 +408,8 @@
                                 android:layout_height="match_parent"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_content" />
+                                android:src="@drawable/ic_content"
+                                android:contentDescription="@string/contentTextSize" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -475,7 +483,8 @@
                             android:layout_height="match_parent"
                             android:paddingStart="@dimen/mediumMargin"
                             android:paddingEnd="@dimen/mediumMargin"
-                            android:src="@drawable/ic_version" />
+                            android:src="@drawable/ic_version"
+                            android:contentDescription="@string/version" />
 
                         <TextView
                             android:id="@+id/versionTextView"

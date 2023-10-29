@@ -26,7 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            tools:src="@drawable/image_moon" />
+            tools:src="@drawable/image_moon"
+            android:importantForAccessibility="no" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

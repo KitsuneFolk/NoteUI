@@ -22,5 +22,6 @@
         android:layout_height="35dp"
         android:background="?colorPrimary"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
-        tools:src="@color/BlueTheme_colorPrimaryDark" />
+        tools:src="@color/BlueTheme_colorPrimaryDark"
+        android:importantForAccessibility="no" />
 </androidx.cardview.widget.CardView>
