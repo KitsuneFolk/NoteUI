@@ -285,6 +285,7 @@
                                 android:clickable="false"
                                 android:focusable="false"
                                 android:focusableInTouchMode="false"
+                                android:gravity="start"
                                 android:textSize="@dimen/mediumText"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingTop="@dimen/mediumMargin"
