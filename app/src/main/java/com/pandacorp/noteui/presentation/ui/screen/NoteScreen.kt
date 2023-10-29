@@ -460,15 +460,18 @@ class NoteScreen : Fragment() {
     private fun initDrawerMenu() {
         binding.imageRecyclerView.adapter = imagesAdapter
 
-        binding.motionDrawerLayout.attachEditText(
-            binding.contentEditText,
-            sp.getInt(
-                Constants.Preferences.Key.DRAWER_ANIMATION,
-                Constants.Preferences.DefaultValue.DRAWER_ANIMATION,
-            ),
-        )
-
-        binding.motionDrawerLayout.loadLayoutDescription(R.xml.drawer_layout_motion_scene) // Set programmatically to remove lags
+        binding.motionDrawerLayout.let {
+            it.attachEditText(
+                binding.contentEditText,
+                sp.getInt(
+                    Constants.Preferences.Key.DRAWER_ANIMATION,
+                    Constants.Preferences.DefaultValue.DRAWER_ANIMATION,
+                ),
+            )
+            it.post { // The animation doesn't work outside of post
+                it.loadLayoutDescription(R.xml.drawer_layout_motion_scene) // Set programmatically to remove lags
+            }
+        }
 
         binding.drawerMenu.addDrawerListener(
             object : DrawerListener {
