@@ -12,6 +12,7 @@
     android:foreground="?selectableItemBackgroundBorderless"
     android:clickable="true"
     android:focusable="true"
+    app:cardBackgroundColor="@android:color/transparent"
     app:cardCornerRadius="25dp"
     app:cardElevation="0dp"
     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck">
@@ -20,7 +21,6 @@
         android:id="@+id/imageView"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:background="?colorPrimary"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
         tools:src="@color/BlueTheme_colorPrimaryDark"
         android:importantForAccessibility="no" />
