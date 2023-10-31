@@ -1,5 +1,6 @@
 package com.pandacorp.noteui.presentation.ui.adapter.notes
 
+import android.os.Bundle
 import android.util.SparseBooleanArray
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -41,12 +42,34 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
             oldItem: NoteItem,
             newItem: NoteItem
         ): Boolean = oldItem == newItem
+
+        override fun getChangePayload(
+            oldItem: NoteItem,
+            newItem: NoteItem
+        ): Bundle? {
+            val diff = Bundle()
+            if (newItem.title != oldItem.title) {
+                diff.putString("title", newItem.title)
+            }
+            if (newItem.content != oldItem.content) {
+                diff.putString("content", newItem.content)
+            }
+            if (newItem.background != oldItem.background) {
+                diff.putString("background", newItem.background)
+            }
+            return if (diff.size() == 0) {
+                null
+            } else {
+                diff
+            }
+        }
     }
 
     inner class ViewHolder(private val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(noteItem: NoteItem) {
-            binding.title.setSpannableFromJson(noteItem.title)
-            binding.content.setSpannableFromJson(noteItem.content)
+            bindTitle(noteItem.title)
+            bindContent(noteItem.content)
+            bindBackground(noteItem.background)
 
             binding.cardView.apply {
                 setOnClickListener {
@@ -57,7 +80,6 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
                     true
                 }
             }
-            Utils.changeNoteBackground(noteItem.background, binding.backgroundImageView, isAdapter = true)
             if (isSelectionEnabled) {
                 val tv = TypedValue()
                 binding.cardView.strokeColor =
@@ -69,6 +91,18 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
                         tv.data
                     }
             }
+        }
+
+        fun bindTitle(title: String) {
+            binding.title.setSpannableFromJson(title)
+        }
+
+        fun bindContent(content: String) {
+            binding.content.setSpannableFromJson(content)
+        }
+
+        fun bindBackground(background: String) {
+            Utils.changeNoteBackground(background, binding.backgroundImageView, isAdapter = true)
         }
     }
 
@@ -102,5 +136,29 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
         position: Int
     ) {
         holder.bind(currentList[position])
+    }
+
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+            return
+        } else {
+            val bundle = payloads[0] as Bundle
+            for (key in bundle.keySet()) {
+                if (key == "title") {
+                    holder.bindTitle(bundle.getString("title") ?: continue)
+                }
+                if (key == "content") {
+                    holder.bindContent(bundle.getString("content") ?: continue)
+                }
+                if (key == "background") {
+                    holder.bindBackground(bundle.getString("background") ?: continue)
+                }
+            }
+        }
     }
 }
