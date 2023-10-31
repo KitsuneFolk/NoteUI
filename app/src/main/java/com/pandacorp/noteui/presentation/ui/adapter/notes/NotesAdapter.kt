@@ -80,17 +80,7 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
                     true
                 }
             }
-            if (isSelectionEnabled) {
-                val tv = TypedValue()
-                binding.cardView.strokeColor =
-                    if (selectedNotes.get(bindingAdapterPosition, false)) {
-                        binding.root.context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
-                        tv.data
-                    } else {
-                        binding.root.context.theme.resolveAttribute(android.R.attr.textColor, tv, true)
-                        tv.data
-                    }
-            }
+            select(selectedNotes.get(bindingAdapterPosition, false))
         }
 
         fun bindTitle(title: String) {
@@ -104,6 +94,20 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
         fun bindBackground(background: String) {
             Utils.changeNoteBackground(background, binding.backgroundImageView, isAdapter = true)
         }
+
+        fun select(isSelect: Boolean) {
+            if (isSelectionEnabled) {
+                val tv = TypedValue()
+                binding.cardView.strokeColor =
+                    if (isSelect) {
+                        binding.root.context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
+                        tv.data
+                    } else {
+                        binding.root.context.theme.resolveAttribute(android.R.attr.textColor, tv, true)
+                        tv.data
+                    }
+            }
+        }
     }
 
     fun setOnClickListener(onNoteItemClickListener: OnNoteItemClickListener) {
@@ -113,7 +117,12 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
     fun selectList(newList: SparseBooleanArray) {
         repeat(currentList.size) { adapterPosition ->
             if (selectedNotes.get(adapterPosition, false) != newList.get(adapterPosition, false)) {
-                notifyItemChanged(adapterPosition)
+                notifyItemChanged(
+                    adapterPosition,
+                    Bundle().apply {
+                        putBoolean("selection", newList[adapterPosition])
+                    },
+                )
             }
         }
         selectedNotes = newList
@@ -157,6 +166,9 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
                 }
                 if (key == "background") {
                     holder.bindBackground(bundle.getString("background") ?: continue)
+                }
+                if (key == "selection") {
+                    holder.select(bundle.getBoolean("selection"))
                 }
             }
         }
