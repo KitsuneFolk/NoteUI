@@ -17,7 +17,7 @@ import androidx.preference.PreferenceManager
 
 abstract class CustomDialog(context: Context) : Dialog(context) {
     companion object {
-        private const val VIBRATION_DURATION = 100L
+        private const val VIBRATION_DURATION = 50L
     }
 
     protected val sp: SharedPreferences by lazy {
@@ -48,7 +48,7 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
             }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vib.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION, 15))
+            vib.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION, 20))
         } else {
             @Suppress("DEPRECATION")
             vib.vibrate(VIBRATION_DURATION)
