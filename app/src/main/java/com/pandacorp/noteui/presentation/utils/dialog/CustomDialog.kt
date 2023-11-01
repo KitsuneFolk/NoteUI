@@ -27,6 +27,10 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
     @JvmField
     protected var onValueAppliedListener: (value: String) -> Unit = {}
 
+    fun setOnValueAppliedListener(listener: (value: String) -> Unit) {
+        onValueAppliedListener = listener
+    }
+
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,9 +57,5 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
             @Suppress("DEPRECATION")
             vib.vibrate(VIBRATION_DURATION)
         }
-    }
-
-    fun setOnValueAppliedListener(listener: (value: String) -> Unit) {
-        onValueAppliedListener = listener
     }
 }
