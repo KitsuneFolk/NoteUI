@@ -26,6 +26,11 @@ object ViewHelper {
                 view.setBackgroundColor(newTheme.getColorBackground(context))
                 applyTheme(newTheme, view)
             }
+
+            if (view is androidx.appcompat.widget.Toolbar) {
+                view.setBackgroundColor(newTheme.getToolbarColor(context))
+                view.setTitleTextColor(newTheme.getTextColor())
+            }
         }
     }
 }
