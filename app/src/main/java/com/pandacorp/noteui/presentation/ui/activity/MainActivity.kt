@@ -1,16 +1,20 @@
 package com.pandacorp.noteui.presentation.ui.activity
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import com.dolatkia.animatedThemeManager.AppTheme
+import com.dolatkia.animatedThemeManager.ThemeActivity
 import com.fragula2.animation.SwipeController
 import com.fragula2.utils.findSwipeController
+import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.ActivityMainBinding
 import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
+import com.pandacorp.noteui.presentation.utils.themes.Theme
+import com.pandacorp.noteui.presentation.utils.themes.ViewHelper
 import com.pandacorp.splashscreen.SplashScreen.Companion.installSplashScreen
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ThemeActivity() {
     private var fragulaNavController: NavController? = null
     private var swipeController: SwipeController? = null
 
@@ -21,8 +25,8 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         Thread.setDefaultUncaughtExceptionHandler { _, throwable -> throw (throwable) } // Throw uncaught exceptions
         PreferenceHandler.setLanguage(this)
+        setTheme(R.style.DarkTheme)
         super.onCreate(savedInstanceState)
-        PreferenceHandler.setTheme(this)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -34,6 +38,16 @@ class MainActivity : AppCompatActivity() {
         fragulaNavController = null
         swipeController = null
         super.onDestroy()
+    }
+
+    override fun syncTheme(appTheme: AppTheme) {
+        appTheme as Theme
+        appTheme.changeStatusbarColor(this)
+        appTheme.changeNavigationBarColor(this)
+    }
+
+    override fun getStartTheme(): AppTheme {
+        return ViewHelper.currentTheme
     }
 
     private fun initViews() {

@@ -10,7 +10,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
 import androidx.preference.PreferenceManager
 import com.pandacorp.noteui.app.R
+import com.pandacorp.noteui.presentation.utils.themes.BlueTheme
+import com.pandacorp.noteui.presentation.utils.themes.DarkTheme
+import com.pandacorp.noteui.presentation.utils.themes.LightTheme
+import com.pandacorp.noteui.presentation.utils.themes.PurpleTheme
 import java.util.Locale
+import com.pandacorp.noteui.presentation.utils.themes.Theme as CurrentTheme
 
 object PreferenceHandler {
     private object Theme {
@@ -25,34 +30,31 @@ object PreferenceHandler {
     private fun isDeviceDarkMode(context: Context): Boolean =
         (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-    fun setTheme(
+    fun getTheme(context: Context): CurrentTheme {
+        val theme =
+            PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(Constants.Preferences.Key.THEME, Theme.DEFAULT)!!
+        return getThemeByKey(context, theme)
+    }
+
+    fun getThemeByKey(
         context: Context,
-        theme: String = getTheme(context),
-    ) {
-        when (theme) {
+        key: String
+    ): CurrentTheme {
+        return when (key) {
             Theme.FOLLOW_SYSTEM -> {
                 if (isDeviceDarkMode(context)) {
-                    context.setTheme(R.style.DarkTheme)
+                    DarkTheme()
                 } else {
-                    context.setTheme(R.style.BlueTheme)
+                    BlueTheme()
                 }
             }
 
-            Theme.BLUE -> context.setTheme(R.style.BlueTheme)
-            Theme.DARK -> context.setTheme(R.style.DarkTheme)
-            Theme.PURPLE -> context.setTheme(R.style.PurpleTheme)
-            Theme.LIGHT -> context.setTheme(R.style.LightTheme)
-            else -> {
-                if (isDeviceDarkMode(context)) {
-                    context.setTheme(R.style.DarkTheme)
-                } else {
-                    context.setTheme(R.style.BlueTheme)
-                }
-                // Write default theme in case the theme is a removed one, like RedTheme
-                val edit = PreferenceManager.getDefaultSharedPreferences(context).edit()
-                edit.putString(Constants.Preferences.Key.THEME, Theme.DEFAULT)
-                edit.apply()
-            }
+            Theme.BLUE -> BlueTheme()
+            Theme.DARK -> DarkTheme()
+            Theme.PURPLE -> PurpleTheme()
+            Theme.LIGHT -> LightTheme()
+            else -> throw IllegalArgumentException("Theme not found: $key")
         }
     }
 
@@ -71,7 +73,7 @@ object PreferenceHandler {
 
     fun getThemeBackground(context: Context): Drawable {
         val drawable =
-            when (getTheme(context)) {
+            when (getThemeKey(context)) {
                 Theme.FOLLOW_SYSTEM -> {
                     if (isDeviceDarkMode(context)) {
                         ContextCompat.getDrawable(context, R.drawable.dark_theme_background)
@@ -93,7 +95,7 @@ object PreferenceHandler {
         return drawable!!
     }
 
-    private fun getTheme(context: Context): String {
+    private fun getThemeKey(context: Context): String {
         return PreferenceManager.getDefaultSharedPreferences(context)
             .getString(Constants.Preferences.Key.THEME, Theme.DEFAULT)!!
     }

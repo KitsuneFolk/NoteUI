@@ -4,6 +4,8 @@ import android.app.Application
 import com.pandacorp.noteui.presentation.di.dataModule
 import com.pandacorp.noteui.presentation.di.domainModule
 import com.pandacorp.noteui.presentation.di.viewModelModule
+import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
+import com.pandacorp.noteui.presentation.utils.themes.ViewHelper
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -14,6 +16,8 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        ViewHelper.currentTheme = PreferenceHandler.getTheme(applicationContext)
 
         startKoin {
             androidLogger(Level.DEBUG)

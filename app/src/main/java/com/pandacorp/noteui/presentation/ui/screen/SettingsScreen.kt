@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import com.dolatkia.animatedThemeManager.AppTheme
+import com.dolatkia.animatedThemeManager.ThemeFragment
+import com.dolatkia.animatedThemeManager.ThemeManager
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.ScreenSettingsBinding
 import com.pandacorp.noteui.presentation.utils.dialog.DialogListView
@@ -15,8 +17,9 @@ import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
 import com.pandacorp.noteui.presentation.utils.helpers.app
 import com.pandacorp.noteui.presentation.utils.helpers.getPackageInfoCompat
 import com.pandacorp.noteui.presentation.utils.helpers.sp
+import com.pandacorp.noteui.presentation.utils.themes.ViewHelper
 
-class SettingsScreen : Fragment() {
+class SettingsScreen : ThemeFragment() {
     private var _binding: ScreenSettingsBinding? = null
     private val binding get() = _binding!!
 
@@ -30,7 +33,7 @@ class SettingsScreen : Fragment() {
     private val themeDialog by lazy {
         DialogListView(requireActivity(), Constants.Preferences.Key.THEME).apply {
             setOnValueAppliedListener {
-                requireActivity().recreate()
+                ThemeManager.instance.changeTheme(PreferenceHandler.getThemeByKey(requireContext(), it), binding.root)
             }
         }
     }
@@ -62,6 +65,8 @@ class SettingsScreen : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = ScreenSettingsBinding.inflate(layoutInflater)
+
+        syncTheme(ViewHelper.currentTheme)
 
         initViews()
 
@@ -124,6 +129,11 @@ class SettingsScreen : Fragment() {
                     restoreValue(savedValue ?: return@apply)
                 }
         }
+    }
+
+    override fun syncTheme(appTheme: AppTheme) {
+        ViewHelper.applyTheme(newTheme = appTheme, viewGroup = binding.root)
+        ViewHelper.currentTheme = appTheme
     }
 
     override fun onDestroy() {

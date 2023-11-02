@@ -1,5 +1,6 @@
 package com.pandacorp.noteui.presentation.utils.helpers
 
+import android.app.Activity
 import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -22,6 +23,7 @@ import com.pandacorp.noteui.presentation.di.app.App
 val Fragment.sp: SharedPreferences
     get() = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
+val Activity.app get() = this.application as App
 val Fragment.app get() = (requireActivity().application as App)
 
 /**
