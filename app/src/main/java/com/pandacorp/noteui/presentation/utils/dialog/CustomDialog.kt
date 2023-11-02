@@ -11,9 +11,11 @@ import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
+import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.CallSuper
 import androidx.preference.PreferenceManager
+import com.pandacorp.noteui.presentation.utils.themes.ViewHelper
 
 abstract class CustomDialog(context: Context) : Dialog(context) {
     companion object {
@@ -38,6 +40,16 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // remove the default background so that dialog can be rounded
             clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND) // remove the shadow
         }
+    }
+
+    protected fun syncTheme() {
+        val appTheme = ViewHelper.currentTheme
+        ViewHelper.applyTheme(newTheme = appTheme, viewGroup = window!!.decorView as ViewGroup)
+    }
+
+    override fun show() {
+        super.show()
+        syncTheme()
     }
 
     protected fun vibrate() {
