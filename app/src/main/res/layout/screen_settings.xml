@@ -179,11 +179,13 @@
                                 android:textSize="@dimen/mediumText"
                                 android:checked="true"
                                 android:gravity="start"
+                                android:textColor="?android:textColor"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingTop="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/smallMargin"
                                 android:paddingBottom="@dimen/mediumMargin"
-                                android:text="@string/showThemeBackground" />
+                                android:text="@string/showThemeBackground"
+                                tools:checked="false"/>
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -250,6 +252,7 @@
                                 android:layout_height="wrap_content"
                                 android:clickable="false"
                                 android:focusable="false"
+                                android:textColor="?android:textColor"
                                 android:focusableInTouchMode="false"
                                 android:textSize="@dimen/mediumText"
                                 android:checked="true"
@@ -288,6 +291,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:checked="true"
+                                android:textColor="?android:textColor"
                                 android:clickable="false"
                                 android:focusable="false"
                                 android:focusableInTouchMode="false"
