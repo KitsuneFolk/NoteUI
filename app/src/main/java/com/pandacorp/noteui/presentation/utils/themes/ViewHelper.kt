@@ -1,8 +1,12 @@
 package com.pandacorp.noteui.presentation.utils.themes
 
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.VectorDrawable
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.children
 import com.dolatkia.animatedThemeManager.AppTheme
 import com.google.android.material.card.MaterialCardView
@@ -70,6 +74,14 @@ object ViewHelper {
                     }
                 }
                 view.strokeColor = newTheme.getStrokeColor(context)
+            }
+
+            if (view is ImageView) {
+                if (view.drawable is VectorDrawable) {
+                    val newDrawable = DrawableCompat.wrap(view.drawable)
+                    DrawableCompat.setTint(newDrawable, if (newTheme.usesLightColors) Color.BLACK else Color.WHITE)
+                    view.setImageDrawable(newDrawable)
+                }
             }
         }
     }
