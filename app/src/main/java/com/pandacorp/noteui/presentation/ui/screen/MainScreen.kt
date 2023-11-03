@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
+import com.dolatkia.animatedThemeManager.AppTheme
 import com.google.android.material.snackbar.Snackbar
 import com.pandacorp.dropspinner.DropDownView
 import com.pandacorp.noteui.app.R
@@ -32,6 +33,8 @@ import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
 import com.pandacorp.noteui.presentation.utils.helpers.Utils.Companion.cropImage
 import com.pandacorp.noteui.presentation.utils.helpers.app
 import com.pandacorp.noteui.presentation.utils.helpers.sp
+import com.pandacorp.noteui.presentation.utils.themes.Theme
+import com.pandacorp.noteui.presentation.utils.themes.ViewHelper
 import com.pandacorp.noteui.presentation.viewModels.CurrentNoteViewModel
 import com.pandacorp.noteui.presentation.viewModels.NotesViewModel
 import com.pandacorp.searchbar.searchview.SearchView
@@ -131,6 +134,8 @@ class MainScreen : Fragment() {
 
         initViews()
 
+        syncTheme(ViewHelper.currentTheme)
+
         return binding.root
     }
 
@@ -152,9 +157,7 @@ class MainScreen : Fragment() {
             if (PreferenceHandler.isShowThemeBackground(requireContext())) {
                 binding.root.background = cropImage(requireActivity(), PreferenceHandler.getThemeBackground(requireContext()))
             } else {
-                val tv = TypedValue()
-                requireActivity().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
-                binding.root.setBackgroundColor(tv.data)
+                binding.root.setBackgroundColor((ViewHelper.currentTheme as Theme).getColorBackground(requireContext()))
             }
             app.isSettingsChanged = false
             return
@@ -164,6 +167,11 @@ class MainScreen : Fragment() {
     override fun onDestroy() {
         _binding = null
         super.onDestroy()
+    }
+
+    fun syncTheme(appTheme: AppTheme) {
+        appTheme as Theme
+        ViewHelper.applyTheme(appTheme, binding.root)
     }
 
     private fun initViews() {

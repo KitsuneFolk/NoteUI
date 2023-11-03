@@ -9,6 +9,7 @@ import com.dolatkia.animatedThemeManager.ThemeFragment
 import com.dolatkia.animatedThemeManager.ThemeManager
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.ScreenSettingsBinding
+import com.pandacorp.noteui.presentation.ui.activity.MainActivity
 import com.pandacorp.noteui.presentation.utils.dialog.DialogListView
 import com.pandacorp.noteui.presentation.utils.dialog.DialogNumberPicker
 import com.pandacorp.noteui.presentation.utils.dialog.DialogNumberPickerEditText
@@ -134,6 +135,7 @@ class SettingsScreen : ThemeFragment() {
     override fun syncTheme(appTheme: AppTheme) {
         ViewHelper.applyTheme(newTheme = appTheme, viewGroup = binding.root)
         ViewHelper.currentTheme = appTheme
+        (requireActivity() as MainActivity).mainScreen?.syncTheme(appTheme)
     }
 
     override fun onDestroy() {
