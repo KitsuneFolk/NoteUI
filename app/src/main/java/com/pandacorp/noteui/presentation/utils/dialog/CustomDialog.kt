@@ -14,6 +14,7 @@ import android.os.VibratorManager
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.CallSuper
+import androidx.core.view.children
 import androidx.preference.PreferenceManager
 import com.pandacorp.noteui.presentation.utils.themes.ViewHelper
 
@@ -42,9 +43,10 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
         }
     }
 
-    protected fun syncTheme() {
+    private fun syncTheme() {
         val appTheme = ViewHelper.currentTheme
-        ViewHelper.applyTheme(newTheme = appTheme, viewGroup = window!!.decorView as ViewGroup)
+        val decorView = window!!.decorView as ViewGroup
+        ViewHelper.applyTheme(newTheme = appTheme, viewGroup = decorView.children.first() as ViewGroup)
     }
 
     override fun show() {
