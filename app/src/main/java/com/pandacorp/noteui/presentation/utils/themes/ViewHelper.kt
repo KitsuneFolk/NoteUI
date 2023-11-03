@@ -44,6 +44,10 @@ object ViewHelper {
         val themesTextColor = themes.map { it.getTextColor() }
         val themesTextColorSecondary = themes.map { it.getTextColorSecondary(context) }
 
+        if (viewGroup.background is ColorDrawable) {
+            viewGroup.setBackgroundColor(newTheme.getColorBackground(context))
+        }
+
         for (view in views) {
             if (view is ViewGroup) {
                 applyTheme(newTheme, view)
