@@ -1,5 +1,6 @@
 package com.pandacorp.noteui.presentation.ui.screen
 
+import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import androidx.core.util.isEmpty
 import androidx.core.widget.addTextChangedListener
@@ -20,7 +22,6 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Fade
 import androidx.transition.TransitionManager
-import com.dolatkia.animatedThemeManager.AppTheme
 import com.google.android.material.snackbar.Snackbar
 import com.pandacorp.dropspinner.DropDownView
 import com.pandacorp.noteui.app.R
@@ -130,11 +131,10 @@ class MainScreen : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = ScreenMainBinding.inflate(inflater, container, false)
+        val lf = layoutInflater.cloneInContext(requireContext())
+        _binding = ScreenMainBinding.inflate(lf)
 
         initViews()
-
-        syncTheme(ViewHelper.currentTheme)
 
         return binding.root
     }
@@ -169,9 +169,9 @@ class MainScreen : Fragment() {
         super.onDestroy()
     }
 
-    fun syncTheme(appTheme: AppTheme) {
-        appTheme as Theme
-        ViewHelper.applyTheme(appTheme, binding.root)
+    override fun getContext(): Context {
+        val oldContext = super.getContext()
+        return ContextThemeWrapper(oldContext, PreferenceHandler.getThemeRes(oldContext!!))
     }
 
     private fun initViews() {
@@ -180,7 +180,7 @@ class MainScreen : Fragment() {
                 cropImage(requireActivity(), PreferenceHandler.getThemeBackground(requireContext()))
             } else {
                 val tv = TypedValue()
-                requireActivity().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
+                requireContext().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
                 ColorDrawable(tv.data)
             }
         binding.root.background = background

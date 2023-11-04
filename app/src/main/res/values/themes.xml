@@ -40,12 +40,71 @@
         <item name="snackbarTextViewStyle">@style/SnackBarStyle</item>
     </style>
 
+    <style name="LightBaseTheme" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textColorHint">@android:color/black</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        <item name="android:navigationBarColor">?colorPrimary</item>
+        <item name="rippleColor">@android:color/black</item>
+        <item name="colorControlNormal">@android:color/black</item>
+        <item name="strokeColor">@android:color/black</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+
+        <!-- The amount of dimming when fragment is being dragged. -->
+        <item name="fgl_scrim_amount">0.6</item>
+        <!-- How much the underneath fragment will be shifted. -->
+        <item name="fgl_parallax_factor">1.15</item>
+        <!-- The swipe animation duration using `navController.navigate(...)` and `navController
+        .popBackStack()` methods.-->
+        <item name="fgl_anim_duration">600</item>
+        <!-- This overrides the elevation applied to the fragment view.-->
+        <item name="fgl_elevation">0dp</item>
+
+        <item name="switchStyle">@style/Widget.AppCompat.CompoundButton.Switch</item>
+        <item name="materialButtonStyle">@style/MaterialButtonStyle</item>
+        <item name="toolbarStyle">@style/ToolbarStyle</item>
+        <item name="extendedFloatingActionButtonPrimaryStyle">@style/ExtendedFABStyle</item>
+        <item name="snackbarStyle">@style/SnackBarStyle</item>
+        <item name="alertDialogTheme">@style/MaterialAlertDialog</item>
+        <item name="snackbarButtonStyle">@style/SnackBarButtonStyle</item>
+        <item name="snackbarTextViewStyle">@style/SnackBarStyle</item>
+    </style>
+
+    <style name="BlueTheme" parent="BaseTheme">
+        <item name="android:colorBackground">@color/BlueTheme_colorBackground</item>
+        <item name="colorPrimary">@color/BlueTheme_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/BlueTheme_colorPrimaryDark</item>
+        <item name="colorAccent">@color/BlueTheme_colorAccent</item>
+        <item name="android:textColorSecondary">@color/BlueTheme_textColorSecondary</item>
+    </style>
+
     <style name="DarkTheme" parent="BaseTheme">
         <item name="android:colorBackground">@color/DarkTheme_colorBackground</item>
         <item name="colorPrimary">@color/DarkTheme_colorPrimary</item>
         <item name="colorPrimaryDark">@color/DarkTheme_colorPrimaryDark</item>
         <item name="colorAccent">@color/DarkTheme_colorAccent</item>
         <item name="android:textColorSecondary">@color/DarkTheme_textColorSecondary</item>
+    </style>
+
+    <style name="PurpleTheme" parent="BaseTheme">
+        <item name="android:colorBackground">@color/PurpleTheme_colorBackground</item>
+        <item name="colorPrimary">@color/PurpleTheme_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/PurpleTheme_colorPrimaryDark</item>
+        <item name="colorAccent">@color/PurpleTheme_colorAccent</item>
+        <item name="android:textColorSecondary">@color/PurpleTheme_textColorSecondary</item>
+    </style>
+
+    <style name="LightTheme" parent="LightBaseTheme">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:colorBackground">@color/LightTheme_colorBackground</item>
+        <item name="colorPrimary">@color/LightTheme_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/LightTheme_colorPrimaryDark</item>
+        <item name="colorAccent">@color/LightTheme_colorAccent</item>
+        <item name="android:textColorSecondary">@color/LightTheme_textColorSecondary</item>
+        <item name="colorSurface">@color/dark_white</item>
+        <item name="toolbarColor">@color/dark_white</item>
+
+        <item name="android:statusBarColor">@color/dark_white</item>
     </style>
 
 </resources>

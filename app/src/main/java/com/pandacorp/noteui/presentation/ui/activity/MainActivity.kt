@@ -1,22 +1,24 @@
 package com.pandacorp.noteui.presentation.ui.activity
 
 import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dolatkia.animatedThemeManager.AppTheme
 import com.dolatkia.animatedThemeManager.ThemeActivity
+import com.fragula2.adapter.NavBackStackAdapter
 import com.fragula2.animation.SwipeController
+import com.fragula2.navigation.SwipeBackFragment
 import com.fragula2.utils.findSwipeController
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.ActivityMainBinding
-import com.pandacorp.noteui.presentation.ui.screen.MainScreen
 import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
 import com.pandacorp.noteui.presentation.utils.themes.Theme
 import com.pandacorp.noteui.presentation.utils.themes.ViewHelper
 import com.pandacorp.splashscreen.SplashScreen.Companion.installSplashScreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.lang.Thread.sleep
 
 class MainActivity : ThemeActivity() {
     private var fragulaNavController: NavController? = null
@@ -24,7 +26,7 @@ class MainActivity : ThemeActivity() {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
-    var mainScreen: MainScreen? = null
+    var navBackStackAdapter: NavBackStackAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -59,23 +61,13 @@ class MainActivity : ThemeActivity() {
         binding.fragulaNavHostFragment.getFragment<NavHostFragment>().apply {
             swipeController = findSwipeController()
             fragulaNavController = navController
-            val swipeBackFragment = childFragmentManager.fragments.first()
-            swipeBackFragment.childFragmentManager.registerFragmentLifecycleCallbacks(
-                object : FragmentManager.FragmentLifecycleCallbacks() {
-                    override fun onFragmentViewCreated(
-                        fm: FragmentManager,
-                        f: Fragment,
-                        v: View,
-                        savedInstanceState: Bundle?
-                    ) {
-                        super.onFragmentViewCreated(fm, f, v, savedInstanceState)
-                        if (f is MainScreen) {
-                            mainScreen = f
-                        }
-                    }
-                },
-                false,
-            )
+            val swipeBackFragment = childFragmentManager.fragments.first() as SwipeBackFragment
+            val field = swipeBackFragment.javaClass.getDeclaredField("navBackStackAdapter")
+            field.isAccessible = true
+            CoroutineScope(Dispatchers.IO).launch {
+                sleep(1000)
+                navBackStackAdapter = field.get(swipeBackFragment) as NavBackStackAdapter
+            }
         }
     }
 }

@@ -115,4 +115,15 @@ object PreferenceHandler {
         editor.putBoolean(Constants.Preferences.Key.SHOW_THEME_BACKGROUND, value)
         editor.apply()
     }
+
+    fun getThemeRes(context: Context): Int {
+        return when (getThemeKey(context)) {
+            Theme.FOLLOW_SYSTEM -> if (isDeviceDarkMode(context)) R.style.DarkTheme else R.style.BlueTheme
+            Theme.BLUE -> R.style.BlueTheme
+            Theme.DARK -> R.style.DarkTheme
+            Theme.PURPLE -> R.style.PurpleTheme
+            Theme.LIGHT -> R.style.LightTheme
+            else -> if (isDeviceDarkMode(context)) R.style.DarkTheme else R.style.BlueTheme
+        }
+    }
 }

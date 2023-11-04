@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavBackStackEntry
 import com.dolatkia.animatedThemeManager.AppTheme
 import com.dolatkia.animatedThemeManager.ThemeFragment
 import com.dolatkia.animatedThemeManager.ThemeManager
@@ -35,6 +36,15 @@ class SettingsScreen : ThemeFragment() {
         DialogListView(requireActivity(), Constants.Preferences.Key.THEME).apply {
             setOnValueAppliedListener {
                 ThemeManager.instance.changeTheme(PreferenceHandler.getThemeByKey(requireContext(), it), binding.root)
+                val adapter = (requireActivity() as MainActivity).navBackStackAdapter!!
+                val field = adapter.javaClass.getDeclaredField("currentList")
+                field.isAccessible = true
+                @Suppress("UNCHECKED_CAST")
+                val currentList = field.get(adapter) as MutableList<NavBackStackEntry>
+                val mainScreen = currentList[0]
+                currentList.removeAt(0)
+                currentList.add(0, mainScreen)
+                adapter.notifyItemChanged(0)
             }
         }
     }
@@ -135,7 +145,6 @@ class SettingsScreen : ThemeFragment() {
     override fun syncTheme(appTheme: AppTheme) {
         ViewHelper.applyTheme(newTheme = appTheme, viewGroup = binding.root)
         ViewHelper.currentTheme = appTheme
-        (requireActivity() as MainActivity).mainScreen?.syncTheme(appTheme)
     }
 
     override fun onDestroy() {
