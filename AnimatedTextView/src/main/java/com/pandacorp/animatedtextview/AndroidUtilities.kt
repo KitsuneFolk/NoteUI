@@ -1,6 +1,5 @@
 package com.pandacorp.animatedtextview
 
-import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Point
@@ -43,17 +42,17 @@ object AndroidUtilities {
     }
 
     fun checkDisplaySize(
-        activity: Activity,
+        context: Context,
         newConfiguration: Configuration?
     ) {
         try {
-            density = activity.resources.displayMetrics.density
+            density = context.resources.displayMetrics.density
             var configuration: Configuration? = newConfiguration
             if (configuration == null) {
-                configuration = activity.resources.configuration
+                configuration = context.resources.configuration
             }
 
-            val manager = activity.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
+            val manager = context.getSystemService(Context.WINDOW_SERVICE) as? WindowManager
             manager?.defaultDisplay?.getSize(displaySize)
             if (configuration == null) {
                 return

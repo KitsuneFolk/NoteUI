@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.TimeInterpolator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -45,7 +44,7 @@ class AnimatedTextView
         private var toSetMoveDown = false
 
         init {
-            AndroidUtilities.checkDisplaySize(context as Activity, null)
+            AndroidUtilities.checkDisplaySize(context, null)
             drawable.callback = this
             drawable.setOnAnimationFinishListener {
                 if (toSetText != null) {
