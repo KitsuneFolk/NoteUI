@@ -24,6 +24,7 @@ import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuProvider
@@ -45,6 +46,7 @@ import com.pandacorp.noteui.presentation.ui.adapter.notes.ImagesAdapter
 import com.pandacorp.noteui.presentation.utils.dialog.CustomBottomSheetDialog
 import com.pandacorp.noteui.presentation.utils.dialog.colorpicker.DialogColorPicker
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
+import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
 import com.pandacorp.noteui.presentation.utils.helpers.Utils
 import com.pandacorp.noteui.presentation.utils.helpers.changeTextBackgroundColor
 import com.pandacorp.noteui.presentation.utils.helpers.changeTextForegroundColor
@@ -222,7 +224,7 @@ class NoteScreen : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = ScreenNoteBinding.inflate(inflater, container, false)
+        _binding = ScreenNoteBinding.inflate(layoutInflater.cloneInContext(requireContext()))
 
         initViews()
 
@@ -281,6 +283,11 @@ class NoteScreen : Fragment() {
     override fun onDestroy() {
         _binding = null
         super.onDestroy()
+    }
+
+    override fun getContext(): Context {
+        val oldContext = super.getContext()
+        return ContextThemeWrapper(oldContext, PreferenceHandler.getThemeRes(oldContext!!))
     }
 
     private fun initViews() {
