@@ -14,6 +14,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import com.dolatkia.animatedThemeManager.AppTheme
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.elevation.ElevationOverlayProvider
@@ -66,6 +67,22 @@ object ViewHelper {
                         view.setTextColor(newTheme.getTextColorSecondary(context))
                     }
                 }
+            }
+
+            if (view is MaterialButton) {
+                view.setTextColor(newTheme.getTextColor())
+                when (view.backgroundTintList?.defaultColor) {
+                    in themesColorSurface -> {
+                        view.setBackgroundColor(newTheme.getColorSurface(context))
+                    }
+                    in themesColorPrimary -> {
+                        view.setBackgroundColor(newTheme.getColorPrimary(context))
+                    }
+                    in themesColorPrimaryDark -> {
+                        view.setBackgroundColor(newTheme.getColorPrimaryDark(context))
+                    }
+                }
+                view.strokeColor = ColorStateList.valueOf(newTheme.getStrokeColor(context))
             }
 
             if (view is androidx.appcompat.widget.Toolbar) {
