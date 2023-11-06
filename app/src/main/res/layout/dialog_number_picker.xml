@@ -48,7 +48,7 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
-                    <NumberPicker
+                    <com.shawnlin.numberpicker.NumberPicker
                         android:id="@+id/numberPicker"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -57,7 +57,12 @@
                         android:scrollbarSize="0dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:np_dividerColor="?android:textColor"
+                        app:np_selectedTextColor="?android:textColor"
+                        app:np_selectedTextSize="20sp"
+                        app:np_textColor="?android:textColor"
+                        app:np_textSize="18sp" />
 
                     <TextView
                         android:id="@+id/sample"
