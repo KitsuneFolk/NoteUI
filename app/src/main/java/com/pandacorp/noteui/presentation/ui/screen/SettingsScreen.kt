@@ -1,9 +1,11 @@
 package com.pandacorp.noteui.presentation.ui.screen
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.navigation.NavBackStackEntry
 import com.dolatkia.animatedThemeManager.AppTheme
 import com.dolatkia.animatedThemeManager.ThemeFragment
@@ -26,14 +28,14 @@ class SettingsScreen : ThemeFragment() {
     private val binding get() = _binding!!
 
     private val languageDialog by lazy {
-        DialogListView(requireActivity(), Constants.Preferences.Key.LANGUAGE).apply {
+        DialogListView(requireContext(), Constants.Preferences.Key.LANGUAGE).apply {
             setOnValueAppliedListener {
                 PreferenceHandler.setLanguage(requireContext(), it)
             }
         }
     }
     private val themeDialog by lazy {
-        DialogListView(requireActivity(), Constants.Preferences.Key.THEME).apply {
+        DialogListView(requireContext(), Constants.Preferences.Key.THEME).apply {
             setOnValueAppliedListener {
                 ThemeManager.instance.changeTheme(PreferenceHandler.getThemeByKey(requireContext(), it), binding.root)
                 val adapter = (requireActivity() as MainActivity).navBackStackAdapter!!
@@ -49,21 +51,21 @@ class SettingsScreen : ThemeFragment() {
         }
     }
     private val titleDialog by lazy {
-        DialogNumberPicker(requireActivity(), Constants.Preferences.Key.TITLE_TEXT_SIZE).apply {
+        DialogNumberPicker(requireContext(), Constants.Preferences.Key.TITLE_TEXT_SIZE).apply {
             setOnValueAppliedListener {
                 binding.titleSizeTextView.text = it
             }
         }
     }
     private val contentDialog by lazy {
-        DialogNumberPicker(requireActivity(), Constants.Preferences.Key.CONTENT_TEXT_SIZE).apply {
+        DialogNumberPicker(requireContext(), Constants.Preferences.Key.CONTENT_TEXT_SIZE).apply {
             setOnValueAppliedListener {
                 binding.contentSizeTextView.text = it
             }
         }
     }
     private val drawerAnimationDialog by lazy {
-        DialogNumberPickerEditText(requireActivity(), Constants.Preferences.Key.DRAWER_ANIMATION).apply {
+        DialogNumberPickerEditText(requireContext(), Constants.Preferences.Key.DRAWER_ANIMATION).apply {
             setOnValueAppliedListener {
                 binding.drawerAnimationtTextView.text = it
             }
@@ -75,9 +77,7 @@ class SettingsScreen : ThemeFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = ScreenSettingsBinding.inflate(layoutInflater)
-
-        syncTheme(ViewHelper.currentTheme)
+        _binding = ScreenSettingsBinding.inflate(layoutInflater.cloneInContext(requireContext()))
 
         initViews()
 
@@ -155,6 +155,11 @@ class SettingsScreen : ThemeFragment() {
         languageDialog.dismiss()
         drawerAnimationDialog.dismiss()
         super.onDestroy()
+    }
+
+    override fun getContext(): Context {
+        val oldContext = super.getContext()
+        return ContextThemeWrapper(oldContext, PreferenceHandler.getThemeRes(oldContext!!))
     }
 
     private fun initViews() {
