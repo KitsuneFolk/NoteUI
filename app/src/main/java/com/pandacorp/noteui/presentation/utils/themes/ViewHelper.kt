@@ -18,6 +18,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.elevation.ElevationOverlayProvider
+import com.shawnlin.numberpicker.NumberPicker
 import com.google.android.material.R as materialR
 
 object ViewHelper {
@@ -123,6 +124,12 @@ object ViewHelper {
                     DrawableCompat.setTint(newDrawable, if (newTheme.usesLightColors) Color.BLACK else Color.WHITE)
                     view.setImageDrawable(newDrawable)
                 }
+            }
+
+            if (view is NumberPicker) {
+                view.textColor = newTheme.getTextColor()
+                view.selectedTextColor = newTheme.getTextColor()
+                view.dividerColor = newTheme.getTextColor()
             }
         }
     }
