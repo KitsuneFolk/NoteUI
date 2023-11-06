@@ -37,6 +37,7 @@ class SettingsScreen : ThemeFragment() {
     private val themeDialog by lazy {
         DialogListView(requireContext(), Constants.Preferences.Key.THEME).apply {
             setOnValueAppliedListener {
+                binding.themeTextView.text = getThemeFromKey(it)
                 ThemeManager.instance.changeTheme(PreferenceHandler.getThemeByKey(requireContext(), it), binding.root)
                 val adapter = (requireActivity() as MainActivity).navBackStackAdapter!!
                 val field = adapter.javaClass.getDeclaredField("currentList")
