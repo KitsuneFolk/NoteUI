@@ -111,7 +111,16 @@ class DialogNumberPicker(context: Context, private val preferenceKey: String) :
             binding.editText.visibility = View.VISIBLE
             binding.sample.visibility = View.GONE
         } else {
+            val sampleText =
+                context.getString(
+                    if (preferenceKey == Constants.Preferences.Key.TITLE_TEXT_SIZE) {
+                        R.string.content
+                    } else {
+                        R.string.title
+                    },
+                )
             binding.sample.textSize = preferenceValue.toFloat()
+            binding.sample.text = sampleText
             binding.editText.visibility = View.GONE
             binding.sample.visibility = View.VISIBLE
         }
