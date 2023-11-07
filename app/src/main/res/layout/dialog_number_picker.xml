@@ -34,6 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:gravity="center"
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="5dp"
@@ -64,19 +65,40 @@
                         app:np_textColor="?android:textColor"
                         app:np_textSize="18sp" />
 
-                    <TextView
-                        android:id="@+id/sample"
+                    <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/smallMargin"
-                        android:layout_marginStart="@dimen/smallMargin"
-                        android:layout_marginEnd="@dimen/smallMargin"
-                        android:gravity="center"
-                        android:lines="2"
-                        android:text="@string/lorem_ipsum"
                         app:layout_constraintEnd_toEndOf="@id/numberPicker"
                         app:layout_constraintStart_toStartOf="@id/numberPicker"
-                        app:layout_constraintTop_toBottomOf="@id/numberPicker" />
+                        app:layout_constraintTop_toBottomOf="@id/numberPicker">
+
+                        <TextView
+                            android:id="@+id/sample"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/smallMargin"
+                            android:layout_marginTop="@dimen/smallMargin"
+                            android:layout_marginEnd="@dimen/smallMargin"
+                            android:gravity="center"
+                            android:lines="2"
+                            android:text="@string/lorem_ipsum" />
+
+                        <EditText
+                            android:id="@+id/editText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:digits="0123456789"
+                            android:gravity="center"
+                            android:hint="@string/myNumber"
+                            android:imeOptions="actionDone|flagNoExtractUi"
+                            android:importantForAutofill="no"
+                            android:inputType="number"
+                            android:lines="1"
+                            android:maxLength="13"
+                            android:visibility="gone" />
+
+                    </FrameLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -86,9 +108,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
-                    android:minWidth="125dp"
                     android:layout_marginBottom="15dp"
                     android:gravity="center"
+                    android:minWidth="125dp"
                     android:text="@string/ok"
                     android:textSize="17sp" />
             </LinearLayout>

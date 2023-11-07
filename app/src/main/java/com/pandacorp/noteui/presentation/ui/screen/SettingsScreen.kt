@@ -15,7 +15,6 @@ import com.pandacorp.noteui.app.databinding.ScreenSettingsBinding
 import com.pandacorp.noteui.presentation.ui.activity.MainActivity
 import com.pandacorp.noteui.presentation.utils.dialog.DialogListView
 import com.pandacorp.noteui.presentation.utils.dialog.DialogNumberPicker
-import com.pandacorp.noteui.presentation.utils.dialog.DialogNumberPickerEditText
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
 import com.pandacorp.noteui.presentation.utils.helpers.app
@@ -66,7 +65,7 @@ class SettingsScreen : ThemeFragment() {
         }
     }
     private val drawerAnimationDialog by lazy {
-        DialogNumberPickerEditText(requireContext(), Constants.Preferences.Key.DRAWER_ANIMATION).apply {
+        DialogNumberPicker(requireContext(), Constants.Preferences.Key.DRAWER_ANIMATION).apply {
             setOnValueAppliedListener {
                 binding.drawerAnimationtTextView.text = it
             }
@@ -94,17 +93,17 @@ class SettingsScreen : ThemeFragment() {
                 languageDialog.isShowing -> Constants.Preferences.Key.LANGUAGE
 
                 titleDialog.isShowing -> {
-                    savedValue = titleDialog.getSavedValues()
+                    savedValue = titleDialog.selectedValue
                     Constants.Preferences.Key.TITLE_TEXT_SIZE
                 }
 
                 contentDialog.isShowing -> {
-                    savedValue = contentDialog.getSavedValues()
+                    savedValue = contentDialog.selectedValue
                     Constants.Preferences.Key.CONTENT_TEXT_SIZE
                 }
 
                 drawerAnimationDialog.isShowing -> {
-                    savedValue = drawerAnimationDialog.getValue()
+                    savedValue = drawerAnimationDialog.selectedValue
                     Constants.Preferences.Key.DRAWER_ANIMATION
                 }
 
@@ -126,13 +125,13 @@ class SettingsScreen : ThemeFragment() {
             Constants.Preferences.Key.TITLE_TEXT_SIZE ->
                 titleDialog.apply {
                     show()
-                    restoreSavedValues(savedValue ?: return@apply)
+                    restoreValue(savedValue ?: return@apply)
                 }
 
             Constants.Preferences.Key.CONTENT_TEXT_SIZE ->
                 contentDialog.apply {
                     show()
-                    restoreSavedValues(savedValue ?: return@apply)
+                    restoreValue(savedValue ?: return@apply)
                 }
 
             Constants.Preferences.Key.DRAWER_ANIMATION ->
