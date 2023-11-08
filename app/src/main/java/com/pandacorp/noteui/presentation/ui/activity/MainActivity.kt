@@ -1,5 +1,6 @@
 package com.pandacorp.noteui.presentation.ui.activity
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -51,6 +52,7 @@ class MainActivity : ThemeActivity() {
         appTheme as Theme
         appTheme.changeStatusbarColor(this)
         appTheme.changeNavigationBarColor(this)
+        window.decorView.background = ColorDrawable(appTheme.getColorBackground(this))
     }
 
     override fun getStartTheme(): AppTheme {
