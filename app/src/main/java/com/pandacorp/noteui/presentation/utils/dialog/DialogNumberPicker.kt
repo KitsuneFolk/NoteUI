@@ -94,7 +94,6 @@ class DialogNumberPicker(context: Context, private val preferenceKey: String) :
             minValue = 0
             maxValue = values.size - 1
             value = values.indexOf(preferenceValue)
-            wrapSelectorWheel = false
 
             setOnValueChangedListener { _, _, newVal ->
                 vibrate()
