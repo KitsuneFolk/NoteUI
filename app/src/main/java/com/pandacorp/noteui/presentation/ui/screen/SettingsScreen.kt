@@ -10,6 +10,8 @@ import androidx.navigation.NavBackStackEntry
 import com.dolatkia.animatedThemeManager.AppTheme
 import com.dolatkia.animatedThemeManager.ThemeFragment
 import com.dolatkia.animatedThemeManager.ThemeManager
+import com.fragula2.adapter.NavBackStackAdapter
+import com.fragula2.navigation.SwipeBackFragment
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.ScreenSettingsBinding
 import com.pandacorp.noteui.presentation.ui.activity.MainActivity
@@ -35,15 +37,20 @@ class SettingsScreen : ThemeFragment() {
     }
     private val themeDialog by lazy {
         DialogListView(requireContext(), Constants.Preferences.Key.THEME).apply {
+            // Using Java reflection remove MainScreen from backstack to recreate it
+            val swipeBackFragment =
+                (requireActivity() as MainActivity).navHostFragment!!.childFragmentManager.fragments.first() as SwipeBackFragment
+            val adapterField = swipeBackFragment.javaClass.getDeclaredField("navBackStackAdapter")
+            adapterField.isAccessible = true
+            val adapter = adapterField.get(swipeBackFragment) as NavBackStackAdapter
+            val listField = adapter.javaClass.getDeclaredField("currentList")
+            listField.isAccessible = true
+            @Suppress("UNCHECKED_CAST")
+            val currentList = listField.get(adapter) as MutableList<NavBackStackEntry>
+            val mainScreen = currentList[0]
             setOnValueAppliedListener {
                 binding.themeTextView.text = getThemeFromKey(it)
                 ThemeManager.instance.changeTheme(PreferenceHandler.getThemeByKey(requireContext(), it), binding.root)
-                val adapter = (requireActivity() as MainActivity).navBackStackAdapter!!
-                val field = adapter.javaClass.getDeclaredField("currentList")
-                field.isAccessible = true
-                @Suppress("UNCHECKED_CAST")
-                val currentList = field.get(adapter) as MutableList<NavBackStackEntry>
-                val mainScreen = currentList[0]
                 currentList.removeAt(0)
                 currentList.add(0, mainScreen)
                 adapter.notifyItemChanged(0)

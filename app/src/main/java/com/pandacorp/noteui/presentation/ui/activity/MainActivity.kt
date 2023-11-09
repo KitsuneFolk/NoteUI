@@ -6,9 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.dolatkia.animatedThemeManager.AppTheme
 import com.dolatkia.animatedThemeManager.ThemeActivity
-import com.fragula2.adapter.NavBackStackAdapter
 import com.fragula2.animation.SwipeController
-import com.fragula2.navigation.SwipeBackFragment
 import com.fragula2.utils.findSwipeController
 import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.ActivityMainBinding
@@ -16,18 +14,14 @@ import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
 import com.pandacorp.noteui.presentation.utils.themes.Theme
 import com.pandacorp.noteui.presentation.utils.themes.ViewHelper
 import com.pandacorp.splashscreen.SplashScreen.Companion.installSplashScreen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.lang.Thread.sleep
 
 class MainActivity : ThemeActivity() {
     private var fragulaNavController: NavController? = null
     private var swipeController: SwipeController? = null
+    var navHostFragment: NavHostFragment? = null
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
-    var navBackStackAdapter: NavBackStackAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -63,13 +57,7 @@ class MainActivity : ThemeActivity() {
         binding.fragulaNavHostFragment.getFragment<NavHostFragment>().apply {
             swipeController = findSwipeController()
             fragulaNavController = navController
-            val swipeBackFragment = childFragmentManager.fragments.first() as SwipeBackFragment
-            val field = swipeBackFragment.javaClass.getDeclaredField("navBackStackAdapter")
-            field.isAccessible = true
-            CoroutineScope(Dispatchers.IO).launch {
-                sleep(1000)
-                navBackStackAdapter = field.get(swipeBackFragment) as NavBackStackAdapter
-            }
+            navHostFragment = this
         }
     }
 }
