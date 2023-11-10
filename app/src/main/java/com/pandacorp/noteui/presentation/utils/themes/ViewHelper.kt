@@ -18,7 +18,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.elevation.ElevationOverlayProvider
-import com.shawnlin.numberpicker.NumberPicker
+import com.pandacorp.numberpicker.NumberPicker
 import com.google.android.material.R as materialR
 
 object ViewHelper {

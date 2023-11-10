@@ -50,7 +50,7 @@
                     android:orientation="vertical"
                     android:gravity="center_horizontal">
 
-                    <com.shawnlin.numberpicker.NumberPicker
+                    <com.pandacorp.numberpicker.NumberPicker
                         android:id="@+id/numberPicker"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
