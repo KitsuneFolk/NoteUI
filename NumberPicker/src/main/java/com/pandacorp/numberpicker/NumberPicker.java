@@ -1258,97 +1258,39 @@ public class NumberPicker extends LinearLayout {
 
     @Override
     public void scrollBy(int x, int y) {
-        if (!isScrollerEnabled()) {
+        int SELECTOR_MIDDLE_ITEM_INDEX = 3/2;
+        int mSelectorElementHeight = mSelectorElementSize;
+        int[] selectorIndices = mSelectorIndices;
+        int startScrollOffset = mCurrentScrollOffset;
+        if (!mWrapSelectorWheel && y > 0
+                && selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX] <= mMinValue) {
+            mCurrentScrollOffset = mInitialScrollOffset;
             return;
         }
-        int[] selectorIndices = getSelectorIndices();
-        int startScrollOffset = mCurrentScrollOffset;
-        int gap = (int) getMaxTextSize();
-        if (isHorizontalMode()) {
-            if (isAscendingOrder()) {
-                if (!mWrapSelectorWheel && x > 0
-                        && selectorIndices[mWheelMiddleItemIndex] <= mMinValue) {
-                    mCurrentScrollOffset = mInitialScrollOffset;
-                    return;
-                }
-                if (!mWrapSelectorWheel && x < 0
-                        && selectorIndices[mWheelMiddleItemIndex] >= mMaxValue) {
-                    mCurrentScrollOffset = mInitialScrollOffset;
-                    return;
-                }
-            } else {
-                if (!mWrapSelectorWheel && x > 0
-                        && selectorIndices[mWheelMiddleItemIndex] >= mMaxValue) {
-                    mCurrentScrollOffset = mInitialScrollOffset;
-                    return;
-                }
-                if (!mWrapSelectorWheel && x < 0
-                        && selectorIndices[mWheelMiddleItemIndex] <= mMinValue) {
-                    mCurrentScrollOffset = mInitialScrollOffset;
-                    return;
-                }
-            }
-
-            mCurrentScrollOffset += x;
-        } else {
-            if (isAscendingOrder()) {
-                if (!mWrapSelectorWheel && y > 0
-                        && selectorIndices[mWheelMiddleItemIndex] <= mMinValue) {
-                    mCurrentScrollOffset = mInitialScrollOffset;
-                    return;
-                }
-                if (!mWrapSelectorWheel && y < 0
-                        && selectorIndices[mWheelMiddleItemIndex] >= mMaxValue) {
-                    mCurrentScrollOffset = mInitialScrollOffset;
-                    return;
-                }
-            } else {
-                if (!mWrapSelectorWheel && y > 0
-                        && selectorIndices[mWheelMiddleItemIndex] >= mMaxValue) {
-                    mCurrentScrollOffset = mInitialScrollOffset;
-                    return;
-                }
-                if (!mWrapSelectorWheel && y < 0
-                        && selectorIndices[mWheelMiddleItemIndex] <= mMinValue) {
-                    mCurrentScrollOffset = mInitialScrollOffset;
-                    return;
-                }
-            }
-
-            mCurrentScrollOffset += y;
+        if (!mWrapSelectorWheel && y < 0
+                && selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX] >= mMaxValue) {
+            mCurrentScrollOffset = mInitialScrollOffset;
+            return;
         }
-
-        while (mCurrentScrollOffset - mInitialScrollOffset > gap) {
-            mCurrentScrollOffset -= mSelectorElementSize;
-            if (isAscendingOrder()) {
-                decrementSelectorIndices(selectorIndices);
-            } else {
-                incrementSelectorIndices(selectorIndices);
-            }
-            setValueInternal(selectorIndices[mWheelMiddleItemIndex], true);
-            if (!mWrapSelectorWheel && selectorIndices[mWheelMiddleItemIndex] < mMinValue) {
+        mCurrentScrollOffset += y;
+        while (mCurrentScrollOffset - mInitialScrollOffset > mSelectorTextGapHeight) {
+            mCurrentScrollOffset -= mSelectorElementHeight;
+            decrementSelectorIndices(selectorIndices);
+            setValueInternal(selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX], true);
+            if (!mWrapSelectorWheel && selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX] <= mMinValue) {
                 mCurrentScrollOffset = mInitialScrollOffset;
             }
         }
-        while (mCurrentScrollOffset - mInitialScrollOffset < -gap) {
-            mCurrentScrollOffset += mSelectorElementSize;
-            if (isAscendingOrder()) {
-                incrementSelectorIndices(selectorIndices);
-            } else {
-                decrementSelectorIndices(selectorIndices);
-            }
-            setValueInternal(selectorIndices[mWheelMiddleItemIndex], true);
-            if (!mWrapSelectorWheel && selectorIndices[mWheelMiddleItemIndex] > mMaxValue) {
+        while (mCurrentScrollOffset - mInitialScrollOffset < -mSelectorTextGapHeight) {
+            mCurrentScrollOffset += mSelectorElementHeight;
+            incrementSelectorIndices(selectorIndices);
+            setValueInternal(selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX], true);
+            if (!mWrapSelectorWheel && selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX] >= mMaxValue) {
                 mCurrentScrollOffset = mInitialScrollOffset;
             }
         }
-
         if (startScrollOffset != mCurrentScrollOffset) {
-            if (isHorizontalMode()) {
-                onScrollChanged(mCurrentScrollOffset, 0, startScrollOffset, 0);
-            } else {
-                onScrollChanged(0, mCurrentScrollOffset, 0, startScrollOffset);
-            }
+            onScrollChanged(0, mCurrentScrollOffset, 0, startScrollOffset);
         }
     }
 
