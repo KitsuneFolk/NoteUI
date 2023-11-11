@@ -128,8 +128,8 @@ object ViewHelper {
 
             if (view is NumberPicker) {
                 view.textColor = newTheme.getTextColor()
-                view.selectedTextColor = newTheme.getTextColor()
-                view.dividerColor = newTheme.getTextColor()
+                view.setSelectedTextColor(newTheme.getTextColor())
+                view.setDividerColor(newTheme.getTextColor())
             }
         }
     }

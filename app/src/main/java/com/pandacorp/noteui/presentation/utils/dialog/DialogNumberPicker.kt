@@ -90,7 +90,7 @@ class DialogNumberPicker(context: Context, private val preferenceKey: String) :
         }
 
         binding.numberPicker.apply {
-            displayedValues = values.map { it.toString() }.toTypedArray()
+            setDisplayedValues(values.map { it.toString() }.toTypedArray())
             minValue = 0
             maxValue = values.size - 1
             value = values.indexOf(preferenceValue)
