@@ -39,8 +39,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    implementation 'androidx.navigation:navigation-runtime-ktx:2.7.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.4'
+    implementation 'androidx.navigation:navigation-runtime-ktx:2.7.5'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.5'
 
     // Custom libraries
     implementation "com.github.skydoves:colorpickerview:2.2.4"
@@ -60,9 +60,9 @@ dependencies {
     implementation 'io.insert-koin:koin-android:3.5.0'
 
     // Room Database
-    implementation 'androidx.room:room-runtime:2.5.2'
-    implementation 'androidx.room:room-ktx:2.5.2'
-    ksp 'androidx.room:room-compiler:2.5.2'
+    implementation 'androidx.room:room-runtime:2.6.0'
+    implementation 'androidx.room:room-ktx:2.6.0'
+    ksp 'androidx.room:room-compiler:2.6.0'
 
     // Modules
     implementation project(path: ':AnimatedTextView')
