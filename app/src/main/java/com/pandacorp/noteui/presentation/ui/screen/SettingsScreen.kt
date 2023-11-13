@@ -85,6 +85,7 @@ class SettingsScreen : ThemeFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = ScreenSettingsBinding.inflate(layoutInflater.cloneInContext(requireContext()))
+        ViewHelper.applyTheme(ViewHelper.currentTheme, binding.root)
 
         initViews()
 
