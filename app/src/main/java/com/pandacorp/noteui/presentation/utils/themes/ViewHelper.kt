@@ -4,11 +4,14 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.RippleDrawable
 import android.graphics.drawable.VectorDrawable
+import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
@@ -18,6 +21,7 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.elevation.ElevationOverlayProvider
+import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
 import com.pandacorp.numberpicker.NumberPicker
 import com.google.android.material.R as materialR
 
@@ -51,6 +55,13 @@ object ViewHelper {
         }
 
         for (view in views) {
+            if (view.background is RippleDrawable) {
+                val typedValue = TypedValue()
+                val themedContext = ContextThemeWrapper(context, PreferenceHandler.getThemeRes(context))
+                themedContext.theme.resolveAttribute(android.R.attr.colorControlHighlight, typedValue, true)
+                (view.background as RippleDrawable).setColor(ColorStateList.valueOf(typedValue.data))
+            }
+
             if (view is ViewGroup) {
                 applyTheme(newTheme, view)
                 if (view.background is ColorDrawable) {
