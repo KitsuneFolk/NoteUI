@@ -104,7 +104,6 @@
         android:text="@string/addNote"
         android:textSize="12sp"
         app:icon="@drawable/ic_add"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
