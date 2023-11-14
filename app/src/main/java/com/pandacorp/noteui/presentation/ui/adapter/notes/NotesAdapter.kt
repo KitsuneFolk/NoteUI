@@ -103,7 +103,11 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
                         binding.root.context.theme.resolveAttribute(android.R.attr.colorAccent, tv, true)
                         tv.data
                     } else {
-                        binding.root.context.theme.resolveAttribute(android.R.attr.textColor, tv, true)
+                        binding.root.context.theme.resolveAttribute(
+                            com.google.android.material.R.attr.strokeColor,
+                            tv,
+                            true,
+                        )
                         tv.data
                     }
             }
