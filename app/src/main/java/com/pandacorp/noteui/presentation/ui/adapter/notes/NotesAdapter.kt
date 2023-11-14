@@ -158,17 +158,22 @@ class NotesAdapter : ListAdapter<NoteItem, NotesAdapter.ViewHolder>(DiffCallback
         } else {
             val bundle = payloads[0] as Bundle
             for (key in bundle.keySet()) {
-                if (key == "title") {
-                    holder.bindTitle(bundle.getString("title") ?: continue)
-                }
-                if (key == "content") {
-                    holder.bindContent(bundle.getString("content") ?: continue)
-                }
-                if (key == "background") {
-                    holder.bindBackground(bundle.getString("background") ?: continue)
-                }
-                if (key == "selection") {
-                    holder.select(bundle.getBoolean("selection"))
+                when (key) {
+                    "title" -> {
+                        holder.bindTitle(bundle.getString("title") ?: continue)
+                    }
+
+                    "content" -> {
+                        holder.bindContent(bundle.getString("content") ?: continue)
+                    }
+
+                    "background" -> {
+                        holder.bindBackground(bundle.getString("background") ?: continue)
+                    }
+
+                    "selection" -> {
+                        holder.select(bundle.getBoolean("selection"))
+                    }
                 }
             }
         }
