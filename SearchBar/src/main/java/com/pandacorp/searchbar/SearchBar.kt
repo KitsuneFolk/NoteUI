@@ -19,6 +19,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.os.Build.VERSION
@@ -53,6 +54,7 @@ import com.google.android.material.internal.ThemeEnforcement
 import com.google.android.material.internal.ToolbarUtils
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.MaterialShapeUtils
+import com.google.android.material.shape.RelativeCornerSize
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
 import com.pandacorp.animatedtextview.AndroidUtilities
@@ -116,8 +118,13 @@ class SearchBar
                 }
             }
         val cornerSize: Float
-            get() = // Assume all corner sizes are the same.
-                backgroundShape!!.topLeftCornerResolvedSize
+            get() {
+                // Create bounds based on doubled width and height for right and bottom, because the
+                // corner size is relative to the width and height, which are calculated based on subtraction of
+                // right from left and bottom from top
+                val bounds = RectF(width.toFloat(), height.toFloat(), width.toFloat() * 2, height.toFloat() * 2)
+                return (backgroundShape!!.shapeAppearanceModel.bottomLeftCornerSize as RelativeCornerSize).getCornerSize(bounds)
+            }
 
         init {
             // Ensure we are using the correctly themed context rather than the context that was passed in.
