@@ -59,20 +59,21 @@ import com.pandacorp.searchbar.SearchBar;
 class SearchViewAnimationHelper {
 
     // Constants for show expand animation
-    private static final long SHOW_DURATION_MS = 300;
     private static final long SHOW_CLEAR_BUTTON_ALPHA_DURATION_MS = 50;
     private static final long SHOW_CLEAR_BUTTON_ALPHA_START_DELAY_MS = 250;
     private static final long SHOW_CONTENT_ALPHA_DURATION_MS = 150;
     private static final long SHOW_CONTENT_ALPHA_START_DELAY_MS = 75;
-    private static final long SHOW_CONTENT_SCALE_DURATION_MS = SHOW_DURATION_MS;
 
     // Constants for hide collapse animation
-    private static final long HIDE_DURATION_MS = 250;
     private static final long HIDE_CLEAR_BUTTON_ALPHA_DURATION_MS = 42;
     private static final long HIDE_CLEAR_BUTTON_ALPHA_START_DELAY_MS = 0;
     private static final long HIDE_CONTENT_ALPHA_DURATION_MS = 83;
     private static final long HIDE_CONTENT_ALPHA_START_DELAY_MS = 0;
-    private static final long HIDE_CONTENT_SCALE_DURATION_MS = HIDE_DURATION_MS;
+
+    private long show_duration_ms = 300;
+    private long show_content_scale_duration_ms = show_duration_ms;
+    private long hide_duration_ms = 250;
+    private long hide_content_scale_duration_ms = hide_duration_ms;
 
     private static final float CONTENT_FROM_SCALE = 0.95f;
 
@@ -111,6 +112,14 @@ class SearchViewAnimationHelper {
         this.clearButton = searchView.clearButton;
         this.divider = searchView.divider;
         this.contentContainer = searchView.contentContainer;
+    }
+
+    void setAnimationDuration(long show_duration_ms, long hide_duration_ms) {
+        this.show_duration_ms = show_duration_ms;
+        this.show_content_scale_duration_ms = show_duration_ms;
+        this.hide_duration_ms = hide_duration_ms;
+        this.hide_content_scale_duration_ms = hide_duration_ms;
+
     }
 
     void setSearchBar(SearchBar searchBar) {
@@ -314,7 +323,7 @@ class SearchViewAnimationHelper {
                 show ? AnimationUtils.LINEAR_INTERPOLATOR : AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR;
 
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-        animator.setDuration(show ? SHOW_DURATION_MS : HIDE_DURATION_MS);
+        animator.setDuration(show ? show_duration_ms : hide_duration_ms);
         animator.setInterpolator(ReversableAnimatedValueInterpolator.of(show, interpolator));
         animator.addUpdateListener(MultiViewUpdateListener.alphaListener(scrim));
         return animator;
@@ -334,7 +343,7 @@ class SearchViewAnimationHelper {
                     float cornerRadius = initialCornerRadius * (1 - valueAnimator.getAnimatedFraction());
                     rootView.updateClipBoundsAndCornerRadius(clipBounds, cornerRadius);
                 });
-        animator.setDuration(show ? SHOW_DURATION_MS : HIDE_DURATION_MS);
+        animator.setDuration(show ? show_duration_ms : hide_duration_ms);
         animator.setInterpolator(
                 ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
         return animator;
@@ -377,7 +386,7 @@ class SearchViewAnimationHelper {
         addBackButtonTranslationAnimatorIfNeeded(animatorSet);
         addBackButtonProgressAnimatorIfNeeded(animatorSet);
         addActionMenuViewAnimatorIfNeeded(animatorSet);
-        animatorSet.setDuration(show ? SHOW_DURATION_MS : HIDE_DURATION_MS);
+        animatorSet.setDuration(show ? show_duration_ms : hide_duration_ms);
         animatorSet.setInterpolator(
                 ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
         return animatorSet;
@@ -469,7 +478,7 @@ class SearchViewAnimationHelper {
 
     private Animator getActionMenuViewsAlphaAnimator(boolean show) {
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-        animator.setDuration(show ? SHOW_DURATION_MS : HIDE_DURATION_MS);
+        animator.setDuration(show ? show_duration_ms : hide_duration_ms);
         animator.setInterpolator(
                 ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
 
@@ -517,7 +526,7 @@ class SearchViewAnimationHelper {
 
         ValueAnimator animatorDivider = ValueAnimator.ofFloat(dividerTranslationY, 0);
         animatorDivider.setDuration(
-                show ? SHOW_CONTENT_SCALE_DURATION_MS : HIDE_CONTENT_SCALE_DURATION_MS);
+                show ? show_content_scale_duration_ms : hide_content_scale_duration_ms);
         animatorDivider.setInterpolator(
                 ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
         animatorDivider.addUpdateListener(MultiViewUpdateListener.translationYListener(divider));
@@ -527,7 +536,7 @@ class SearchViewAnimationHelper {
     private Animator getContentScaleAnimator(boolean show) {
         ValueAnimator animatorScale = ValueAnimator.ofFloat(CONTENT_FROM_SCALE, 1);
         animatorScale.setDuration(
-                show ? SHOW_CONTENT_SCALE_DURATION_MS : HIDE_CONTENT_SCALE_DURATION_MS);
+                show ? show_content_scale_duration_ms : hide_content_scale_duration_ms);
         animatorScale.setInterpolator(
                 ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
         animatorScale.addUpdateListener(MultiViewUpdateListener.scaleListener(contentContainer));
@@ -544,12 +553,12 @@ class SearchViewAnimationHelper {
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(animatorX, animatorY);
-        animatorSet.setDuration(show ? SHOW_DURATION_MS : HIDE_DURATION_MS);
+        animatorSet.setDuration(show ? show_duration_ms : hide_duration_ms);
         animatorSet.setInterpolator(
                 ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
         return animatorSet;
     }
-
+    
     private int getFromTranslationXStart(View view) {
         int marginStart =
                 MarginLayoutParamsCompat.getMarginStart((MarginLayoutParams) view.getLayoutParams());

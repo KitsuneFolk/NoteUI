@@ -491,6 +491,10 @@ public class SearchView extends FrameLayout implements CoordinatorLayout.Attache
         setUpBackgroundViewElevationOverlay();
     }
 
+    public void setAnimationDuration(long show_duration_ms, long hide_duration_ms) {
+        searchViewAnimationHelper.setAnimationDuration(show_duration_ms, hide_duration_ms);
+    }
+
     /**
      * Add a header view to this {@link SearchView}, which will be placed above the search text area.
      *
