@@ -187,7 +187,6 @@ class SettingsScreen : ThemeFragment() {
         }
         binding.themeLayout.apply {
             setOnClickListener {
-                if (isDialogShown()) return@setOnClickListener
                 themeDialog.show()
             }
             binding.themeTextView.apply {
@@ -209,7 +208,6 @@ class SettingsScreen : ThemeFragment() {
                 text = getLanguageFromKey(languageKey)
             }
             setOnClickListener {
-                if (isDialogShown()) return@setOnClickListener
                 languageDialog.show()
             }
         }
@@ -234,7 +232,6 @@ class SettingsScreen : ThemeFragment() {
                     Constants.Preferences.DefaultValue.SHOW_FAB,
                 )
             setOnClickListener {
-                if (isDialogShown()) return@setOnClickListener
                 val newValue = !binding.showFabTextSwitch.isChecked
                 sp.edit()
                     .putBoolean(Constants.Preferences.Key.SHOW_FAB, newValue)
@@ -250,7 +247,6 @@ class SettingsScreen : ThemeFragment() {
                     Constants.Preferences.DefaultValue.HIDE_ACTIONBAR_ON_SCROLL,
                 )
             setOnClickListener {
-                if (isDialogShown()) return@setOnClickListener
                 val newValue = !binding.hideActionBarSwitch.isChecked
                 sp.edit()
                     .putBoolean(
@@ -270,7 +266,6 @@ class SettingsScreen : ThemeFragment() {
                     Constants.Preferences.DefaultValue.DRAWER_ANIMATION,
                 ).toString()
             setOnClickListener {
-                if (isDialogShown()) return@setOnClickListener
                 drawerAnimationDialog.show()
             }
         }
@@ -281,7 +276,6 @@ class SettingsScreen : ThemeFragment() {
                     Constants.Preferences.DefaultValue.TITLE_TEXT_SIZE,
                 ).toString()
             setOnClickListener {
-                if (isDialogShown()) return@setOnClickListener
                 titleDialog.show()
             }
         }
@@ -292,7 +286,6 @@ class SettingsScreen : ThemeFragment() {
                     Constants.Preferences.DefaultValue.CONTENT_TEXT_SIZE,
                 ).toString()
             setOnClickListener {
-                if (isDialogShown()) return@setOnClickListener
                 contentDialog.show()
             }
         }
@@ -313,7 +306,4 @@ class SettingsScreen : ThemeFragment() {
         val index = keys.indexOf(key)
         return languages[index]
     }
-
-    private fun isDialogShown(): Boolean =
-        (contentDialog.isShowing || languageDialog.isShowing || themeDialog.isShowing || titleDialog.isShowing)
 }
