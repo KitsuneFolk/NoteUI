@@ -1,6 +1,7 @@
 package com.pandacorp.dropspinner
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ class ListViewAdapter constructor(context: Context, items: List<DropDownItem>) :
     ArrayAdapter<DropDownItem>(context, 0, items) {
         var selectedIndex = -1
         private var textColor: Int? = null
+        private var arrowColor: Int? = null
 
         fun setSelection(
             index: Int,
@@ -28,6 +30,10 @@ class ListViewAdapter constructor(context: Context, items: List<DropDownItem>) :
 
         internal fun setTextColor(color: Int) {
             this.textColor = color
+        }
+
+        internal fun setArrowColor(arrowColor: Int) {
+            this.arrowColor = arrowColor
         }
 
         override fun getView(
@@ -46,6 +52,7 @@ class ListViewAdapter constructor(context: Context, items: List<DropDownItem>) :
 
             txtLabel?.text = item.text
             textColor?.let { txtLabel?.setTextColor(it) }
+            arrowColor?.let { imgCheck?.imageTintList = ColorStateList.valueOf(it) }
 
             if (item.checked) {
                 txtLabel?.typeface = Typeface.DEFAULT_BOLD

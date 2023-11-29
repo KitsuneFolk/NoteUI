@@ -150,6 +150,7 @@ class DropDownView
             label.setTextColor(dropsyLabelColor)
             value.setTextColor(dropsyValueColor)
             listViewAdapter.setTextColor(dropsyValueColor)
+            listViewAdapter.setArrowColor(dropsySelector)
 
             // Card styling
             val padding = resources.getDimension(R.dimen.dropsy_dropdown_padding).toInt()
