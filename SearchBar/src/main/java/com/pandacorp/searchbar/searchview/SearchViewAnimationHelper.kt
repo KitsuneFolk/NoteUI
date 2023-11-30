@@ -1,4 +1,33 @@
-package com.pandacorp.searchbar.searchview;
+package com.pandacorp.searchbar.searchview
+
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ValueAnimator
+import android.annotation.SuppressLint
+import android.graphics.Rect
+import android.graphics.drawable.Drawable
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
+import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.MarginLayoutParamsCompat
+import androidx.core.view.ViewCompat
+import com.google.android.material.animation.AnimationUtils
+import com.google.android.material.internal.ClippableRoundedCornerLayout
+import com.google.android.material.internal.FadeThroughDrawable
+import com.google.android.material.internal.FadeThroughUpdateListener
+import com.google.android.material.internal.MultiViewUpdateListener
+import com.google.android.material.internal.RectEvaluator
+import com.google.android.material.internal.ReversableAnimatedValueInterpolator
+import com.google.android.material.internal.ToolbarUtils
+import com.google.android.material.internal.TouchObserverFrameLayout
+import com.google.android.material.internal.ViewUtils
+import com.pandacorp.searchbar.SearchBar
 
 /*
  * Copyright 2022 The Android Open Source Project
@@ -16,595 +45,559 @@ package com.pandacorp.searchbar.searchview;
  * limitations under the License.
  */
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.TimeInterpolator;
-import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup.MarginLayoutParams;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.TextView;
-
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
-import androidx.appcompat.widget.ActionMenuView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.core.view.MarginLayoutParamsCompat;
-import androidx.core.view.ViewCompat;
-
-import com.google.android.material.animation.AnimationUtils;
-import com.google.android.material.internal.ClippableRoundedCornerLayout;
-import com.google.android.material.internal.FadeThroughDrawable;
-import com.google.android.material.internal.FadeThroughUpdateListener;
-import com.google.android.material.internal.MultiViewUpdateListener;
-import com.google.android.material.internal.RectEvaluator;
-import com.google.android.material.internal.ReversableAnimatedValueInterpolator;
-import com.google.android.material.internal.ToolbarUtils;
-import com.google.android.material.internal.TouchObserverFrameLayout;
-import com.google.android.material.internal.ViewUtils;
-import com.pandacorp.searchbar.SearchBar;
-
 /**
- * Helper class for {@link SearchView} animations.
+ * Helper class for [SearchView] animations.
  */
-@SuppressWarnings("RestrictTo")
 @SuppressLint("RestrictedApi")
-class SearchViewAnimationHelper {
+internal class SearchViewAnimationHelper(private val searchView: SearchView) {
+    private var showDurationMs: Long = 300
+    private var showContentScaleDurationMs = showDurationMs
+    private var hideDurationMs: Long = 250
+    private var hideContentScaleDurationMs = hideDurationMs
+    private val scrim: View = searchView.scrim
+    private val rootView: ClippableRoundedCornerLayout = searchView.rootView
+    private val headerContainer = searchView.headerContainer
+    private val toolbarContainer = searchView.toolbarContainer
+    private val toolbar: Toolbar
+    private val dummyToolbar: Toolbar
+    private val searchPrefix: TextView
+    private val editText: EditText
+    private val clearButton: ImageButton
+    private val divider: View
+    private val contentContainer: TouchObserverFrameLayout
+    private var searchBar: SearchBar? = null
 
-    // Constants for show expand animation
-    private static final long SHOW_CLEAR_BUTTON_ALPHA_DURATION_MS = 50;
-    private static final long SHOW_CLEAR_BUTTON_ALPHA_START_DELAY_MS = 250;
-    private static final long SHOW_CONTENT_ALPHA_DURATION_MS = 150;
-    private static final long SHOW_CONTENT_ALPHA_START_DELAY_MS = 75;
-
-    // Constants for hide collapse animation
-    private static final long HIDE_CLEAR_BUTTON_ALPHA_DURATION_MS = 42;
-    private static final long HIDE_CLEAR_BUTTON_ALPHA_START_DELAY_MS = 0;
-    private static final long HIDE_CONTENT_ALPHA_DURATION_MS = 83;
-    private static final long HIDE_CONTENT_ALPHA_START_DELAY_MS = 0;
-
-    private long show_duration_ms = 300;
-    private long show_content_scale_duration_ms = show_duration_ms;
-    private long hide_duration_ms = 250;
-    private long hide_content_scale_duration_ms = hide_duration_ms;
-
-    private static final float CONTENT_FROM_SCALE = 0.95f;
-
-    // Constants for show translate animation
-    private static final long SHOW_TRANSLATE_DURATION_MS = 350;
-    private static final long SHOW_TRANSLATE_KEYBOARD_START_DELAY_MS = 150;
-
-    // Constants for hide translate animation
-    private static final long HIDE_TRANSLATE_DURATION_MS = 300;
-
-    private final SearchView searchView;
-    private final View scrim;
-    private final ClippableRoundedCornerLayout rootView;
-    private final FrameLayout headerContainer;
-    private final FrameLayout toolbarContainer;
-    private final Toolbar toolbar;
-    private final Toolbar dummyToolbar;
-    private final TextView searchPrefix;
-    private final EditText editText;
-    private final ImageButton clearButton;
-    private final View divider;
-    private final TouchObserverFrameLayout contentContainer;
-
-    private SearchBar searchBar;
-
-    SearchViewAnimationHelper(SearchView searchView) {
-        this.searchView = searchView;
-        this.scrim = searchView.scrim;
-        this.rootView = searchView.rootView;
-        this.headerContainer = searchView.headerContainer;
-        this.toolbarContainer = searchView.toolbarContainer;
-        this.toolbar = searchView.toolbar;
-        this.dummyToolbar = searchView.dummyToolbar;
-        this.searchPrefix = searchView.searchPrefix;
-        this.editText = searchView.editText;
-        this.clearButton = searchView.clearButton;
-        this.divider = searchView.divider;
-        this.contentContainer = searchView.contentContainer;
+    init {
+        toolbar = searchView.toolbar
+        dummyToolbar = searchView.dummyToolbar
+        searchPrefix = searchView.searchPrefix
+        editText = searchView.editText
+        clearButton = searchView.clearButton
+        divider = searchView.divider
+        contentContainer = searchView.contentContainer
     }
 
-    void setAnimationDuration(long show_duration_ms, long hide_duration_ms) {
-        this.show_duration_ms = show_duration_ms;
-        this.show_content_scale_duration_ms = show_duration_ms;
-        this.hide_duration_ms = hide_duration_ms;
-        this.hide_content_scale_duration_ms = hide_duration_ms;
-
+    fun setAnimationDuration(
+        showDurationMs: Long,
+        hideDurationMs: Long
+    ) {
+        this.showDurationMs = showDurationMs
+        showContentScaleDurationMs = showDurationMs
+        this.hideDurationMs = hideDurationMs
+        hideContentScaleDurationMs = hideDurationMs
     }
 
-    void setSearchBar(SearchBar searchBar) {
-        this.searchBar = searchBar;
+    fun setSearchBar(searchBar: SearchBar?) {
+        this.searchBar = searchBar
     }
 
-    void show() {
+    fun show() {
         if (searchBar != null) {
-            startShowAnimationExpand();
+            startShowAnimationExpand()
         } else {
-            startShowAnimationTranslate();
+            startShowAnimationTranslate()
         }
     }
 
-    void hide() {
+    fun hide() {
         if (searchBar != null) {
-            startHideAnimationCollapse();
+            startHideAnimationCollapse()
         } else {
-            startHideAnimationTranslate();
+            startHideAnimationTranslate()
         }
     }
 
-    private void startShowAnimationExpand() {
-        if (searchView.isAdjustNothingSoftInputMode()) {
-            searchView.requestFocusAndShowKeyboardIfNeeded();
+    private fun startShowAnimationExpand() {
+        if (searchView.isAdjustNothingSoftInputMode) {
+            searchView.requestFocusAndShowKeyboardIfNeeded()
         }
-        searchView.setTransitionState(SearchView.TransitionState.SHOWING);
-        setUpDummyToolbarIfNeeded();
-        editText.setText(searchBar.getText());
-        editText.setSelection(editText.getText().length());
-        rootView.setVisibility(View.INVISIBLE);
-        rootView.post(
-                () -> {
-                    AnimatorSet animatorSet = getExpandCollapseAnimatorSet(true);
-                    animatorSet.addListener(
-                            new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationStart(Animator animation) {
-                                    rootView.setVisibility(View.VISIBLE);
-                                    searchBar.stopOnLoadAnimation();
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    if (!searchView.isAdjustNothingSoftInputMode()) {
-                                        searchView.requestFocusAndShowKeyboardIfNeeded();
-                                    }
-                                    searchView.setTransitionState(SearchView.TransitionState.SHOWN);
-                                }
-                            });
-                    animatorSet.start();
-                });
-    }
-
-    private void startHideAnimationCollapse() {
-        if (searchView.isAdjustNothingSoftInputMode()) {
-            searchView.clearFocusAndHideKeyboard();
-        }
-        AnimatorSet animatorSet = getExpandCollapseAnimatorSet(false);
-        animatorSet.addListener(
-                new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        searchView.setTransitionState(SearchView.TransitionState.HIDING);
+        searchView.setTransitionState(SearchView.TransitionState.SHOWING)
+        setUpDummyToolbarIfNeeded()
+        editText.setText(searchBar!!.text)
+        editText.setSelection(editText.text.length)
+        rootView.visibility = View.INVISIBLE
+        rootView.post {
+            val animatorSet = getExpandCollapseAnimatorSet(true)
+            animatorSet.addListener(
+                object : AnimatorListenerAdapter() {
+                    override fun onAnimationStart(animation: Animator) {
+                        rootView.visibility = View.VISIBLE
+                        searchBar!!.stopOnLoadAnimation()
                     }
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        rootView.setVisibility(View.GONE);
-                        if (!searchView.isAdjustNothingSoftInputMode()) {
-                            searchView.clearFocusAndHideKeyboard();
+                    override fun onAnimationEnd(animation: Animator) {
+                        if (!searchView.isAdjustNothingSoftInputMode) {
+                            searchView.requestFocusAndShowKeyboardIfNeeded()
                         }
-                        searchView.setTransitionState(SearchView.TransitionState.HIDDEN);
+                        searchView.setTransitionState(SearchView.TransitionState.SHOWN)
                     }
-                });
-        animatorSet.start();
+                },
+            )
+            animatorSet.start()
+        }
     }
 
-    private void startShowAnimationTranslate() {
-        if (searchView.isAdjustNothingSoftInputMode()) {
+    private fun startHideAnimationCollapse() {
+        if (searchView.isAdjustNothingSoftInputMode) {
+            searchView.clearFocusAndHideKeyboard()
+        }
+        val animatorSet = getExpandCollapseAnimatorSet(false)
+        animatorSet.addListener(
+            object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    searchView.setTransitionState(SearchView.TransitionState.HIDING)
+                }
+
+                override fun onAnimationEnd(animation: Animator) {
+                    rootView.visibility = View.GONE
+                    if (!searchView.isAdjustNothingSoftInputMode) {
+                        searchView.clearFocusAndHideKeyboard()
+                    }
+                    searchView.setTransitionState(SearchView.TransitionState.HIDDEN)
+                }
+            },
+        )
+        animatorSet.start()
+    }
+
+    private fun startShowAnimationTranslate() {
+        if (searchView.isAdjustNothingSoftInputMode) {
             searchView.postDelayed(
-                    searchView::requestFocusAndShowKeyboardIfNeeded,
-                    SHOW_TRANSLATE_KEYBOARD_START_DELAY_MS);
+                { searchView.requestFocusAndShowKeyboardIfNeeded() },
+                SHOW_TRANSLATE_KEYBOARD_START_DELAY_MS,
+            )
         }
-        rootView.setVisibility(View.INVISIBLE);
-        rootView.post(
-                () -> {
-                    rootView.setTranslationY(rootView.getHeight());
-                    AnimatorSet animatorSet = getTranslateAnimatorSet(true);
-                    animatorSet.addListener(
-                            new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationStart(Animator animation) {
-                                    rootView.setVisibility(View.VISIBLE);
-                                    searchView.setTransitionState(SearchView.TransitionState.SHOWING);
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    if (!searchView.isAdjustNothingSoftInputMode()) {
-                                        searchView.requestFocusAndShowKeyboardIfNeeded();
-                                    }
-                                    searchView.setTransitionState(SearchView.TransitionState.SHOWN);
-                                }
-                            });
-                    animatorSet.start();
-                });
-    }
-
-    private void startHideAnimationTranslate() {
-        if (searchView.isAdjustNothingSoftInputMode()) {
-            searchView.clearFocusAndHideKeyboard();
-        }
-        AnimatorSet animatorSet = getTranslateAnimatorSet(false);
-        animatorSet.addListener(
-                new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        searchView.setTransitionState(SearchView.TransitionState.HIDING);
+        rootView.visibility = View.INVISIBLE
+        rootView.post {
+            rootView.translationY = rootView.height.toFloat()
+            val animatorSet = getTranslateAnimatorSet(true)
+            animatorSet.addListener(
+                object : AnimatorListenerAdapter() {
+                    override fun onAnimationStart(animation: Animator) {
+                        rootView.visibility = View.VISIBLE
+                        searchView.setTransitionState(SearchView.TransitionState.SHOWING)
                     }
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        rootView.setVisibility(View.GONE);
-                        if (!searchView.isAdjustNothingSoftInputMode()) {
-                            searchView.clearFocusAndHideKeyboard();
+                    override fun onAnimationEnd(animation: Animator) {
+                        if (!searchView.isAdjustNothingSoftInputMode) {
+                            searchView.requestFocusAndShowKeyboardIfNeeded()
                         }
-                        searchView.setTransitionState(SearchView.TransitionState.HIDDEN);
+                        searchView.setTransitionState(SearchView.TransitionState.SHOWN)
                     }
-                });
-        animatorSet.start();
+                },
+            )
+            animatorSet.start()
+        }
     }
 
-    private AnimatorSet getTranslateAnimatorSet(boolean show) {
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(getTranslationYAnimator());
-        addBackButtonProgressAnimatorIfNeeded(animatorSet);
-        animatorSet.setInterpolator(
-                ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
-        animatorSet.setDuration(show ? SHOW_TRANSLATE_DURATION_MS : HIDE_TRANSLATE_DURATION_MS);
-        return animatorSet;
+    private fun startHideAnimationTranslate() {
+        if (searchView.isAdjustNothingSoftInputMode) {
+            searchView.clearFocusAndHideKeyboard()
+        }
+        val animatorSet = getTranslateAnimatorSet(false)
+        animatorSet.addListener(
+            object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    searchView.setTransitionState(SearchView.TransitionState.HIDING)
+                }
+
+                override fun onAnimationEnd(animation: Animator) {
+                    rootView.visibility = View.GONE
+                    if (!searchView.isAdjustNothingSoftInputMode) {
+                        searchView.clearFocusAndHideKeyboard()
+                    }
+                    searchView.setTransitionState(SearchView.TransitionState.HIDDEN)
+                }
+            },
+        )
+        animatorSet.start()
     }
 
-    private Animator getTranslationYAnimator() {
-        ValueAnimator animator = ValueAnimator.ofFloat(rootView.getHeight(), 0);
-        animator.addUpdateListener(MultiViewUpdateListener.translationYListener(rootView));
-        return animator;
+    private fun getTranslateAnimatorSet(show: Boolean): AnimatorSet {
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(translationYAnimator)
+        addBackButtonProgressAnimatorIfNeeded(animatorSet)
+        animatorSet.interpolator =
+            ReversableAnimatedValueInterpolator.of(
+                show,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+            )
+        animatorSet.duration =
+            if (show) SHOW_TRANSLATE_DURATION_MS else HIDE_TRANSLATE_DURATION_MS
+        return animatorSet
     }
 
-    private AnimatorSet getExpandCollapseAnimatorSet(boolean show) {
-        AnimatorSet animatorSet = new AnimatorSet();
+    private val translationYAnimator: Animator
+        get() {
+            val animator = ValueAnimator.ofFloat(rootView.height.toFloat(), 0f)
+            animator.addUpdateListener(MultiViewUpdateListener.translationYListener(rootView))
+            return animator
+        }
+
+    private fun getExpandCollapseAnimatorSet(show: Boolean): AnimatorSet {
+        val animatorSet = AnimatorSet()
         animatorSet.playTogether(
-                getScrimAlphaAnimator(show),
-                getRootViewAnimator(show),
-                getClearButtonAnimator(show),
-                getContentAnimator(show),
-                getButtonsAnimator(show),
-                getHeaderContainerAnimator(show),
-                getDummyToolbarAnimator(show),
-                getActionMenuViewsAlphaAnimator(show),
-                getEditTextAnimator(show),
-                getSearchPrefixAnimator(show));
+            getScrimAlphaAnimator(show),
+            getRootViewAnimator(show),
+            getClearButtonAnimator(show),
+            getContentAnimator(show),
+            getButtonsAnimator(show),
+            getHeaderContainerAnimator(show),
+            getDummyToolbarAnimator(show),
+            getActionMenuViewsAlphaAnimator(show),
+            getEditTextAnimator(show),
+            getSearchPrefixAnimator(show),
+        )
         animatorSet.addListener(
-                new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                        setContentViewsAlpha(show ? 0 : 1);
-                    }
+            object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    setContentViewsAlpha((if (show) 0 else 1).toFloat())
+                }
 
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        setContentViewsAlpha(show ? 1 : 0);
-                        if (show) {
-                            // After expanding, we should reset the clip bounds so it can react to screen or
-                            // layout changes. Otherwise it will result in wrong clipping on the layout.
-                            rootView.resetClipBoundsAndCornerRadius();
-                        }
+                override fun onAnimationEnd(animation: Animator) {
+                    setContentViewsAlpha((if (show) 1 else 0).toFloat())
+                    if (show) {
+                        // After expanding, we should reset the clip bounds so it can react to screen or
+                        // layout changes. Otherwise it will result in wrong clipping on the layout.
+                        rootView.resetClipBoundsAndCornerRadius()
                     }
-                });
-        return animatorSet;
+                }
+            },
+        )
+        return animatorSet
     }
 
-    private void setContentViewsAlpha(float alpha) {
-        clearButton.setAlpha(alpha);
-        divider.setAlpha(alpha);
-        contentContainer.setAlpha(alpha);
-        setActionMenuViewAlphaIfNeeded(alpha);
+    private fun setContentViewsAlpha(alpha: Float) {
+        clearButton.alpha = alpha
+        divider.alpha = alpha
+        contentContainer.alpha = alpha
+        setActionMenuViewAlphaIfNeeded(alpha)
     }
 
-    private void setActionMenuViewAlphaIfNeeded(float alpha) {
-        if (searchView.isMenuItemsAnimated()) {
-            ActionMenuView actionMenuView = ToolbarUtils.getActionMenuView(toolbar);
+    private fun setActionMenuViewAlphaIfNeeded(alpha: Float) {
+        if (searchView.isMenuItemsAnimated) {
+            val actionMenuView = ToolbarUtils.getActionMenuView(toolbar)
             if (actionMenuView != null) {
-                actionMenuView.setAlpha(alpha);
+                actionMenuView.alpha = alpha
             }
         }
     }
 
-    private Animator getScrimAlphaAnimator(boolean show) {
-        TimeInterpolator interpolator =
-                show ? AnimationUtils.LINEAR_INTERPOLATOR : AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR;
-
-        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-        animator.setDuration(show ? show_duration_ms : hide_duration_ms);
-        animator.setInterpolator(ReversableAnimatedValueInterpolator.of(show, interpolator));
-        animator.addUpdateListener(MultiViewUpdateListener.alphaListener(scrim));
-        return animator;
+    private fun getScrimAlphaAnimator(show: Boolean): Animator {
+        val interpolator =
+            if (show) AnimationUtils.LINEAR_INTERPOLATOR else AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
+        val animator = ValueAnimator.ofFloat(0f, 1f)
+        animator.duration = if (show) showDurationMs else hideDurationMs
+        animator.interpolator = ReversableAnimatedValueInterpolator.of(show, interpolator)
+        animator.addUpdateListener(MultiViewUpdateListener.alphaListener(scrim))
+        return animator
     }
 
-    private Animator getRootViewAnimator(boolean show) {
-        Rect toClipBounds = ViewUtils.calculateRectFromBounds(searchView);
-        Rect fromClipBounds = calculateFromClipBounds();
-        Rect clipBounds = new Rect(fromClipBounds);
-
-        float initialCornerRadius = searchBar.getCornerSize();
-
-        ValueAnimator animator =
-                ValueAnimator.ofObject(new RectEvaluator(clipBounds), fromClipBounds, toClipBounds);
-        animator.addUpdateListener(
-                valueAnimator -> {
-                    float cornerRadius = initialCornerRadius * (1 - valueAnimator.getAnimatedFraction());
-                    rootView.updateClipBoundsAndCornerRadius(clipBounds, cornerRadius);
-                });
-        animator.setDuration(show ? show_duration_ms : hide_duration_ms);
-        animator.setInterpolator(
-                ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
-        return animator;
+    private fun getRootViewAnimator(show: Boolean): Animator {
+        val toClipBounds =
+            ViewUtils.calculateRectFromBounds(
+                searchView,
+            )
+        val fromClipBounds = calculateFromClipBounds()
+        val clipBounds = Rect(fromClipBounds)
+        val initialCornerRadius = searchBar!!.cornerSize
+        val animator = ValueAnimator.ofObject(RectEvaluator(clipBounds), fromClipBounds, toClipBounds)
+        animator.addUpdateListener { valueAnimator: ValueAnimator ->
+            val cornerRadius = initialCornerRadius * (1 - valueAnimator.animatedFraction)
+            rootView.updateClipBoundsAndCornerRadius(clipBounds, cornerRadius)
+        }
+        animator.duration = if (show) showDurationMs else hideDurationMs
+        animator.interpolator =
+            ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR)
+        return animator
     }
 
-    private Rect calculateFromClipBounds() {
-        int[] searchBarAbsolutePosition = new int[2];
-        searchBar.getLocationOnScreen(searchBarAbsolutePosition);
-        int searchBarAbsoluteLeft = searchBarAbsolutePosition[0];
-        int searchBarAbsoluteTop = searchBarAbsolutePosition[1];
+    private fun calculateFromClipBounds(): Rect {
+        val searchBarAbsolutePosition = IntArray(2)
+        searchBar!!.getLocationOnScreen(searchBarAbsolutePosition)
+        val searchBarAbsoluteLeft = searchBarAbsolutePosition[0]
+        val searchBarAbsoluteTop = searchBarAbsolutePosition[1]
 
         // Use rootView to handle potential fitsSystemWindows padding applied to parent searchView.
-        int[] searchViewAbsolutePosition = new int[2];
-        rootView.getLocationOnScreen(searchViewAbsolutePosition);
-        int searchViewAbsoluteLeft = searchViewAbsolutePosition[0];
-        int searchViewAbsoluteTop = searchViewAbsolutePosition[1];
-
-        int fromLeft = searchBarAbsoluteLeft - searchViewAbsoluteLeft;
-        int fromTop = searchBarAbsoluteTop - searchViewAbsoluteTop;
-        int fromRight = fromLeft + searchBar.getWidth();
-        int fromBottom = fromTop + searchBar.getHeight();
-
-        return new Rect(fromLeft, fromTop, fromRight, fromBottom);
+        val searchViewAbsolutePosition = IntArray(2)
+        rootView.getLocationOnScreen(searchViewAbsolutePosition)
+        val searchViewAbsoluteLeft = searchViewAbsolutePosition[0]
+        val searchViewAbsoluteTop = searchViewAbsolutePosition[1]
+        val fromLeft = searchBarAbsoluteLeft - searchViewAbsoluteLeft
+        val fromTop = searchBarAbsoluteTop - searchViewAbsoluteTop
+        val fromRight = fromLeft + searchBar!!.width
+        val fromBottom = fromTop + searchBar!!.height
+        return Rect(fromLeft, fromTop, fromRight, fromBottom)
     }
 
-    private Animator getClearButtonAnimator(boolean show) {
-        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-        animator.setDuration(
-                show ? SHOW_CLEAR_BUTTON_ALPHA_DURATION_MS : HIDE_CLEAR_BUTTON_ALPHA_DURATION_MS);
-        animator.setStartDelay(
-                show ? SHOW_CLEAR_BUTTON_ALPHA_START_DELAY_MS : HIDE_CLEAR_BUTTON_ALPHA_START_DELAY_MS);
-        animator.setInterpolator(
-                ReversableAnimatedValueInterpolator.of(show, AnimationUtils.LINEAR_INTERPOLATOR));
-        animator.addUpdateListener(MultiViewUpdateListener.alphaListener(clearButton));
-        return animator;
+    private fun getClearButtonAnimator(show: Boolean): Animator {
+        val animator = ValueAnimator.ofFloat(0f, 1f)
+        animator.duration =
+            if (show) SHOW_CLEAR_BUTTON_ALPHA_DURATION_MS else HIDE_CLEAR_BUTTON_ALPHA_DURATION_MS
+        animator.startDelay =
+            if (show) SHOW_CLEAR_BUTTON_ALPHA_START_DELAY_MS else HIDE_CLEAR_BUTTON_ALPHA_START_DELAY_MS
+        animator.interpolator =
+            ReversableAnimatedValueInterpolator.of(
+                show,
+                AnimationUtils.LINEAR_INTERPOLATOR,
+            )
+        animator.addUpdateListener(MultiViewUpdateListener.alphaListener(clearButton))
+        return animator
     }
 
-    private Animator getButtonsAnimator(boolean show) {
-        AnimatorSet animatorSet = new AnimatorSet();
-        addBackButtonTranslationAnimatorIfNeeded(animatorSet);
-        addBackButtonProgressAnimatorIfNeeded(animatorSet);
-        addActionMenuViewAnimatorIfNeeded(animatorSet);
-        animatorSet.setDuration(show ? show_duration_ms : hide_duration_ms);
-        animatorSet.setInterpolator(
-                ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
-        return animatorSet;
+    private fun getButtonsAnimator(show: Boolean): Animator {
+        val animatorSet = AnimatorSet()
+        addBackButtonTranslationAnimatorIfNeeded(animatorSet)
+        addBackButtonProgressAnimatorIfNeeded(animatorSet)
+        addActionMenuViewAnimatorIfNeeded(animatorSet)
+        animatorSet.duration = if (show) showDurationMs else hideDurationMs
+        animatorSet.interpolator =
+            ReversableAnimatedValueInterpolator.of(
+                show,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+            )
+        return animatorSet
     }
 
-    private void addBackButtonTranslationAnimatorIfNeeded(AnimatorSet animatorSet) {
-        ImageButton backButton = ToolbarUtils.getNavigationIconButton(toolbar);
-        if (backButton == null) {
-            return;
-        }
-
-        ValueAnimator backButtonAnimatorX =
-                ValueAnimator.ofFloat(getFromTranslationXStart(backButton), 0);
-        backButtonAnimatorX.addUpdateListener(MultiViewUpdateListener.translationXListener(backButton));
-
-        ValueAnimator backButtonAnimatorY = ValueAnimator.ofFloat(getFromTranslationY(), 0);
-        backButtonAnimatorY.addUpdateListener(MultiViewUpdateListener.translationYListener(backButton));
-
-        animatorSet.playTogether(backButtonAnimatorX, backButtonAnimatorY);
+    private fun addBackButtonTranslationAnimatorIfNeeded(animatorSet: AnimatorSet) {
+        val backButton = ToolbarUtils.getNavigationIconButton(toolbar) ?: return
+        val backButtonAnimatorX = ValueAnimator.ofFloat(getFromTranslationXStart(backButton).toFloat(), 0f)
+        backButtonAnimatorX.addUpdateListener(MultiViewUpdateListener.translationXListener(backButton))
+        val backButtonAnimatorY = ValueAnimator.ofFloat(fromTranslationY.toFloat(), 0f)
+        backButtonAnimatorY.addUpdateListener(MultiViewUpdateListener.translationYListener(backButton))
+        animatorSet.playTogether(backButtonAnimatorX, backButtonAnimatorY)
     }
 
-    private void addBackButtonProgressAnimatorIfNeeded(AnimatorSet animatorSet) {
-        ImageButton backButton = ToolbarUtils.getNavigationIconButton(toolbar);
-        if (backButton == null) {
-            return;
-        }
-
-        Drawable drawable = DrawableCompat.unwrap(backButton.getDrawable());
-        if (searchView.isAnimatedNavigationIcon()) {
-            addDrawerArrowDrawableAnimatorIfNeeded(animatorSet, drawable);
-            addFadeThroughDrawableAnimatorIfNeeded(animatorSet, drawable);
+    private fun addBackButtonProgressAnimatorIfNeeded(animatorSet: AnimatorSet) {
+        val backButton = ToolbarUtils.getNavigationIconButton(toolbar) ?: return
+        val drawable = DrawableCompat.unwrap<Drawable>(backButton.drawable)
+        if (searchView.isAnimatedNavigationIcon) {
+            addDrawerArrowDrawableAnimatorIfNeeded(animatorSet, drawable)
+            addFadeThroughDrawableAnimatorIfNeeded(animatorSet, drawable)
         } else {
-            setFullDrawableProgressIfNeeded(drawable);
+            setFullDrawableProgressIfNeeded(drawable)
         }
     }
 
-    private void addDrawerArrowDrawableAnimatorIfNeeded(AnimatorSet animatorSet, Drawable drawable) {
-        if (drawable instanceof DrawerArrowDrawable drawerArrowDrawable) {
-            ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-            animator.addUpdateListener(
-                    animation -> drawerArrowDrawable.setProgress(animation.getAnimatedFraction()));
-            animatorSet.playTogether(animator);
+    private fun addDrawerArrowDrawableAnimatorIfNeeded(
+        animatorSet: AnimatorSet,
+        drawable: Drawable
+    ) {
+        if (drawable is DrawerArrowDrawable) {
+            val animator = ValueAnimator.ofFloat(0f, 1f)
+            animator.addUpdateListener { animation: ValueAnimator -> drawable.progress = animation.animatedFraction }
+            animatorSet.playTogether(animator)
         }
     }
 
-    private void addFadeThroughDrawableAnimatorIfNeeded(AnimatorSet animatorSet, Drawable drawable) {
-        if (drawable instanceof FadeThroughDrawable fadeThroughDrawable) {
-            ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-            animator.addUpdateListener(
-                    animation -> fadeThroughDrawable.setProgress(animation.getAnimatedFraction()));
-            animatorSet.playTogether(animator);
+    private fun addFadeThroughDrawableAnimatorIfNeeded(
+        animatorSet: AnimatorSet,
+        drawable: Drawable
+    ) {
+        if (drawable is FadeThroughDrawable) {
+            val animator = ValueAnimator.ofFloat(0f, 1f)
+            animator.addUpdateListener { animation: ValueAnimator -> drawable.setProgress(animation.animatedFraction) }
+            animatorSet.playTogether(animator)
         }
     }
 
-    private void setFullDrawableProgressIfNeeded(Drawable drawable) {
-        if (drawable instanceof DrawerArrowDrawable) {
-            ((DrawerArrowDrawable) drawable).setProgress(1);
+    private fun setFullDrawableProgressIfNeeded(drawable: Drawable) {
+        if (drawable is DrawerArrowDrawable) {
+            drawable.progress = 1f
         }
-        if (drawable instanceof FadeThroughDrawable) {
-            ((FadeThroughDrawable) drawable).setProgress(1);
+        if (drawable is FadeThroughDrawable) {
+            drawable.setProgress(1f)
         }
     }
 
-    private void addActionMenuViewAnimatorIfNeeded(AnimatorSet animatorSet) {
-        ActionMenuView actionMenuView = ToolbarUtils.getActionMenuView(toolbar);
-        if (actionMenuView == null) {
-            return;
-        }
-
-        ValueAnimator actionMenuViewAnimatorX =
-                ValueAnimator.ofFloat(getFromTranslationXEnd(actionMenuView), 0);
+    private fun addActionMenuViewAnimatorIfNeeded(animatorSet: AnimatorSet) {
+        val actionMenuView = ToolbarUtils.getActionMenuView(toolbar) ?: return
+        val actionMenuViewAnimatorX = ValueAnimator.ofFloat(getFromTranslationXEnd(actionMenuView).toFloat(), 0f)
         actionMenuViewAnimatorX.addUpdateListener(
-                MultiViewUpdateListener.translationXListener(actionMenuView));
-
-        ValueAnimator actionMenuViewAnimatorY = ValueAnimator.ofFloat(getFromTranslationY(), 0);
+            MultiViewUpdateListener.translationXListener(actionMenuView),
+        )
+        val actionMenuViewAnimatorY = ValueAnimator.ofFloat(fromTranslationY.toFloat(), 0f)
         actionMenuViewAnimatorY.addUpdateListener(
-                MultiViewUpdateListener.translationYListener(actionMenuView));
-
-        animatorSet.playTogether(actionMenuViewAnimatorX, actionMenuViewAnimatorY);
+            MultiViewUpdateListener.translationYListener(actionMenuView),
+        )
+        animatorSet.playTogether(actionMenuViewAnimatorX, actionMenuViewAnimatorY)
     }
 
-    private Animator getDummyToolbarAnimator(boolean show) {
-        return getTranslationAnimator(show, false, dummyToolbar);
+    private fun getDummyToolbarAnimator(show: Boolean): Animator {
+        return getTranslationAnimator(show, false, dummyToolbar)
     }
 
-    private Animator getHeaderContainerAnimator(boolean show) {
-        return getTranslationAnimator(show, false, headerContainer);
+    private fun getHeaderContainerAnimator(show: Boolean): Animator {
+        return getTranslationAnimator(show, false, headerContainer)
     }
 
-    private Animator getActionMenuViewsAlphaAnimator(boolean show) {
-        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-        animator.setDuration(show ? show_duration_ms : hide_duration_ms);
-        animator.setInterpolator(
-                ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
-
-        if (searchView.isMenuItemsAnimated()) {
-            ActionMenuView dummyActionMenuView = ToolbarUtils.getActionMenuView(dummyToolbar);
-            ActionMenuView actionMenuView = ToolbarUtils.getActionMenuView(toolbar);
+    private fun getActionMenuViewsAlphaAnimator(show: Boolean): Animator {
+        val animator = ValueAnimator.ofFloat(0f, 1f)
+        animator.duration = if (show) showDurationMs else hideDurationMs
+        animator.interpolator =
+            ReversableAnimatedValueInterpolator.of(
+                show,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+            )
+        if (searchView.isMenuItemsAnimated) {
+            val dummyActionMenuView = ToolbarUtils.getActionMenuView(dummyToolbar)
+            val actionMenuView = ToolbarUtils.getActionMenuView(toolbar)
             animator.addUpdateListener(
-                    new FadeThroughUpdateListener(dummyActionMenuView, actionMenuView));
+                FadeThroughUpdateListener(dummyActionMenuView, actionMenuView),
+            )
         }
-
-        return animator;
+        return animator
     }
 
-    private Animator getSearchPrefixAnimator(boolean show) {
-        return getTranslationAnimator(show, true, searchPrefix);
+    private fun getSearchPrefixAnimator(show: Boolean): Animator {
+        return getTranslationAnimator(show, true, searchPrefix)
     }
 
-    private Animator getEditTextAnimator(boolean show) {
-        return getTranslationAnimator(show, true, editText);
+    private fun getEditTextAnimator(show: Boolean): Animator {
+        return getTranslationAnimator(show, true, editText)
     }
 
-    private Animator getContentAnimator(boolean show) {
-        AnimatorSet animatorSet = new AnimatorSet();
+    private fun getContentAnimator(show: Boolean): Animator {
+        val animatorSet = AnimatorSet()
         animatorSet.playTogether(
-                getContentAlphaAnimator(show), getDividerAnimator(show), getContentScaleAnimator(show));
-        return animatorSet;
+            getContentAlphaAnimator(show),
+            getDividerAnimator(show),
+            getContentScaleAnimator(show),
+        )
+        return animatorSet
     }
 
-    private Animator getContentAlphaAnimator(boolean show) {
-        ValueAnimator animatorAlpha = ValueAnimator.ofFloat(0, 1);
-        animatorAlpha.setDuration(
-                show ? SHOW_CONTENT_ALPHA_DURATION_MS : HIDE_CONTENT_ALPHA_DURATION_MS);
-        animatorAlpha.setStartDelay(
-                show ? SHOW_CONTENT_ALPHA_START_DELAY_MS : HIDE_CONTENT_ALPHA_START_DELAY_MS);
-        animatorAlpha.setInterpolator(
-                ReversableAnimatedValueInterpolator.of(show, AnimationUtils.LINEAR_INTERPOLATOR));
+    private fun getContentAlphaAnimator(show: Boolean): Animator {
+        val animatorAlpha = ValueAnimator.ofFloat(0f, 1f)
+        animatorAlpha.duration =
+            if (show) SHOW_CONTENT_ALPHA_DURATION_MS else HIDE_CONTENT_ALPHA_DURATION_MS
+        animatorAlpha.startDelay =
+            if (show) SHOW_CONTENT_ALPHA_START_DELAY_MS else HIDE_CONTENT_ALPHA_START_DELAY_MS
+        animatorAlpha.interpolator =
+            ReversableAnimatedValueInterpolator.of(
+                show,
+                AnimationUtils.LINEAR_INTERPOLATOR,
+            )
         animatorAlpha.addUpdateListener(
-                MultiViewUpdateListener.alphaListener(divider, contentContainer));
-        return animatorAlpha;
+            MultiViewUpdateListener.alphaListener(divider, contentContainer),
+        )
+        return animatorAlpha
     }
 
-    private Animator getDividerAnimator(boolean show) {
-        float dividerTranslationY =
-                (float) contentContainer.getHeight() * (1f - CONTENT_FROM_SCALE) / 2f;
-
-        ValueAnimator animatorDivider = ValueAnimator.ofFloat(dividerTranslationY, 0);
-        animatorDivider.setDuration(
-                show ? show_content_scale_duration_ms : hide_content_scale_duration_ms);
-        animatorDivider.setInterpolator(
-                ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
-        animatorDivider.addUpdateListener(MultiViewUpdateListener.translationYListener(divider));
-        return animatorDivider;
+    private fun getDividerAnimator(show: Boolean): Animator {
+        val dividerTranslationY = contentContainer.height.toFloat() * (1f - CONTENT_FROM_SCALE) / 2f
+        val animatorDivider = ValueAnimator.ofFloat(dividerTranslationY, 0f)
+        animatorDivider.duration = if (show) showContentScaleDurationMs else hideContentScaleDurationMs
+        animatorDivider.interpolator =
+            ReversableAnimatedValueInterpolator.of(
+                show,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+            )
+        animatorDivider.addUpdateListener(MultiViewUpdateListener.translationYListener(divider))
+        return animatorDivider
     }
 
-    private Animator getContentScaleAnimator(boolean show) {
-        ValueAnimator animatorScale = ValueAnimator.ofFloat(CONTENT_FROM_SCALE, 1);
-        animatorScale.setDuration(
-                show ? show_content_scale_duration_ms : hide_content_scale_duration_ms);
-        animatorScale.setInterpolator(
-                ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
-        animatorScale.addUpdateListener(MultiViewUpdateListener.scaleListener(contentContainer));
-        return animatorScale;
+    private fun getContentScaleAnimator(show: Boolean): Animator {
+        val animatorScale = ValueAnimator.ofFloat(CONTENT_FROM_SCALE, 1f)
+        animatorScale.duration = if (show) showContentScaleDurationMs else hideContentScaleDurationMs
+        animatorScale.interpolator =
+            ReversableAnimatedValueInterpolator.of(
+                show,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+            )
+        animatorScale.addUpdateListener(MultiViewUpdateListener.scaleListener(contentContainer))
+        return animatorScale
     }
 
-    private Animator getTranslationAnimator(boolean show, boolean anchoredToStart, View view) {
-        int startX = anchoredToStart ? getFromTranslationXStart(view) : getFromTranslationXEnd(view);
-        ValueAnimator animatorX = ValueAnimator.ofFloat(startX, 0);
-        animatorX.addUpdateListener(MultiViewUpdateListener.translationXListener(view));
-
-        ValueAnimator animatorY = ValueAnimator.ofFloat(getFromTranslationY(), 0);
-        animatorY.addUpdateListener(MultiViewUpdateListener.translationYListener(view));
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(animatorX, animatorY);
-        animatorSet.setDuration(show ? show_duration_ms : hide_duration_ms);
-        animatorSet.setInterpolator(
-                ReversableAnimatedValueInterpolator.of(show, AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
-        return animatorSet;
-    }
-    
-    private int getFromTranslationXStart(View view) {
-        int marginStart =
-                MarginLayoutParamsCompat.getMarginStart((MarginLayoutParams) view.getLayoutParams());
-        int paddingStart = ViewCompat.getPaddingStart(searchBar);
-        return ViewUtils.isLayoutRtl(searchBar)
-                ? searchBar.getWidth() - searchBar.getRight() + marginStart - paddingStart
-                : searchBar.getLeft() - marginStart + paddingStart;
+    private fun getTranslationAnimator(
+        show: Boolean,
+        anchoredToStart: Boolean,
+        view: View
+    ): Animator {
+        val startX = if (anchoredToStart) getFromTranslationXStart(view) else getFromTranslationXEnd(view)
+        val animatorX = ValueAnimator.ofFloat(startX.toFloat(), 0f)
+        animatorX.addUpdateListener(MultiViewUpdateListener.translationXListener(view))
+        val animatorY = ValueAnimator.ofFloat(fromTranslationY.toFloat(), 0f)
+        animatorY.addUpdateListener(MultiViewUpdateListener.translationYListener(view))
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(animatorX, animatorY)
+        animatorSet.duration = if (show) showDurationMs else hideDurationMs
+        animatorSet.interpolator =
+            ReversableAnimatedValueInterpolator.of(
+                show,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+            )
+        return animatorSet
     }
 
-    private int getFromTranslationXEnd(View view) {
-        int marginEnd =
-                MarginLayoutParamsCompat.getMarginEnd((MarginLayoutParams) view.getLayoutParams());
-        return ViewUtils.isLayoutRtl(searchBar)
-                ? searchBar.getLeft() - marginEnd
-                : searchBar.getRight() - searchView.getWidth() + marginEnd;
-    }
-
-    private int getFromTranslationY() {
-        int toolbarMiddleY = (toolbarContainer.getTop() + toolbarContainer.getBottom()) / 2;
-        int searchBarMiddleY = (searchBar.getTop() + searchBar.getBottom()) / 2;
-        return searchBarMiddleY - toolbarMiddleY;
-    }
-
-    private void setUpDummyToolbarIfNeeded() {
-        Menu menu = dummyToolbar.getMenu();
-        if (menu != null) {
-            menu.clear();
-        }
-        if (searchBar.getMenuResId() != -1 && searchView.isMenuItemsAnimated()) {
-            dummyToolbar.inflateMenu(searchBar.getMenuResId());
-            setMenuItemsNotClickable(dummyToolbar);
-            dummyToolbar.setVisibility(View.VISIBLE);
+    private fun getFromTranslationXStart(view: View): Int {
+        val marginStart = MarginLayoutParamsCompat.getMarginStart((view.layoutParams as ViewGroup.MarginLayoutParams))
+        val paddingStart = ViewCompat.getPaddingStart(searchBar!!)
+        return if (ViewUtils.isLayoutRtl(
+                searchBar,
+            )
+        ) {
+            searchBar!!.width - searchBar!!.right + marginStart - paddingStart
         } else {
-            dummyToolbar.setVisibility(View.GONE);
+            searchBar!!.left - marginStart + paddingStart
         }
     }
 
-    private void setMenuItemsNotClickable(Toolbar toolbar) {
-        ActionMenuView actionMenuView = ToolbarUtils.getActionMenuView(toolbar);
+    private fun getFromTranslationXEnd(view: View): Int {
+        val marginEnd = MarginLayoutParamsCompat.getMarginEnd((view.layoutParams as ViewGroup.MarginLayoutParams))
+        return if (ViewUtils.isLayoutRtl(searchBar)) searchBar!!.left - marginEnd else searchBar!!.right - searchView.width + marginEnd
+    }
+
+    private val fromTranslationY: Int
+        get() {
+            val toolbarMiddleY = (toolbarContainer.top + toolbarContainer.bottom) / 2
+            val searchBarMiddleY = (searchBar!!.top + searchBar!!.bottom) / 2
+            return searchBarMiddleY - toolbarMiddleY
+        }
+
+    private fun setUpDummyToolbarIfNeeded() {
+        val menu = dummyToolbar.menu
+        menu?.clear()
+        if (searchBar!!.menuResId != -1 && searchView.isMenuItemsAnimated) {
+            dummyToolbar.inflateMenu(searchBar!!.menuResId)
+            setMenuItemsNotClickable(dummyToolbar)
+            dummyToolbar.visibility = View.VISIBLE
+        } else {
+            dummyToolbar.visibility = View.GONE
+        }
+    }
+
+    private fun setMenuItemsNotClickable(toolbar: Toolbar) {
+        val actionMenuView = ToolbarUtils.getActionMenuView(toolbar)
         if (actionMenuView != null) {
-            for (int i = 0; i < actionMenuView.getChildCount(); i++) {
-                View menuItem = actionMenuView.getChildAt(i);
-                menuItem.setClickable(false);
-                menuItem.setFocusable(false);
-                menuItem.setFocusableInTouchMode(false);
+            for (i in 0 until actionMenuView.childCount) {
+                val menuItem = actionMenuView.getChildAt(i)
+                menuItem.isClickable = false
+                menuItem.isFocusable = false
+                menuItem.isFocusableInTouchMode = false
             }
         }
+    }
+
+    companion object {
+        // Constants for show expand animation
+        private const val SHOW_CLEAR_BUTTON_ALPHA_DURATION_MS: Long = 50
+        private const val SHOW_CLEAR_BUTTON_ALPHA_START_DELAY_MS: Long = 250
+        private const val SHOW_CONTENT_ALPHA_DURATION_MS: Long = 150
+        private const val SHOW_CONTENT_ALPHA_START_DELAY_MS: Long = 75
+
+        // Constants for hide collapse animation
+        private const val HIDE_CLEAR_BUTTON_ALPHA_DURATION_MS: Long = 42
+        private const val HIDE_CLEAR_BUTTON_ALPHA_START_DELAY_MS: Long = 0
+        private const val HIDE_CONTENT_ALPHA_DURATION_MS: Long = 83
+        private const val HIDE_CONTENT_ALPHA_START_DELAY_MS: Long = 0
+        private const val CONTENT_FROM_SCALE = 0.95f
+
+        // Constants for show translate animation
+        private const val SHOW_TRANSLATE_DURATION_MS: Long = 350
+        private const val SHOW_TRANSLATE_KEYBOARD_START_DELAY_MS: Long = 150
+
+        // Constants for hide translate animation
+        private const val HIDE_TRANSLATE_DURATION_MS: Long = 300
     }
 }
