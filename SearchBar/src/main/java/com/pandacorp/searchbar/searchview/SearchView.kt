@@ -22,8 +22,6 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.Px
-import androidx.annotation.RestrictTo
-import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.graphics.drawable.DrawerArrowDrawable
@@ -50,6 +48,9 @@ import com.google.android.material.internal.ViewUtils.RelativePadding
 import com.google.android.material.shape.MaterialShapeUtils
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
 import com.pandacorp.searchbar.SearchBar
+import com.pandacorp.searchbar.left
+import com.pandacorp.searchbar.right
+import com.pandacorp.searchbar.top
 
 /*
  * Copyright 2022 The Android Open Source Project
@@ -117,8 +118,8 @@ class SearchView
         AttachedBehavior {
         val scrim: View
         val rootView: ClippableRoundedCornerLayout
-        val backgroundView: View?
-        val statusBarSpacer: View
+        private val backgroundView: View?
+        private val statusBarSpacer: View
         val headerContainer: FrameLayout
         val toolbarContainer: FrameLayout
         val toolbar: MaterialToolbar
@@ -148,6 +149,8 @@ class SearchView
         val isMenuItemsAnimated: Boolean
         private val autoShowKeyboard: Boolean
         private var searchBar: SearchBar? = null
+
+        @Suppress("DEPRECATION")
         private var softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         private var useWindowInsetsController = false
         private var statusBarSpacerEnabledOverride = false
@@ -155,12 +158,11 @@ class SearchView
         private var childImportantForAccessibilityMap: MutableMap<View, Int>? = null
 
         init {
-            var context = context
             // Ensure we are using the correctly themed context rather than the context that was passed in.
-            context = getContext()
+            val themedContext = getContext()
             val a =
                 ThemeEnforcement.obtainStyledAttributes(
-                    context,
+                    themedContext,
                     attrs,
                     R.styleable.SearchView,
                     defStyleAttr,
@@ -177,7 +179,7 @@ class SearchView
             val hideNavigationIcon = a.getBoolean(R.styleable.SearchView_hideNavigationIcon, false)
             autoShowKeyboard = a.getBoolean(R.styleable.SearchView_autoShowKeyboard, true)
             a.recycle()
-            LayoutInflater.from(context).inflate(R.layout.mtrl_search_view, this)
+            LayoutInflater.from(themedContext).inflate(R.layout.mtrl_search_view, this)
             layoutInflated = true
             scrim = findViewById(R.id.open_search_view_scrim)
             rootView = findViewById(R.id.open_search_view_root)
@@ -193,7 +195,7 @@ class SearchView
             divider = findViewById(R.id.open_search_view_divider)
             contentContainer = findViewById(R.id.open_search_view_content_container)
             searchViewAnimationHelper = SearchViewAnimationHelper(this)
-            elevationOverlayProvider = ElevationOverlayProvider(context)
+            elevationOverlayProvider = ElevationOverlayProvider(themedContext)
             setUpRootView()
             setUpBackgroundViewElevationOverlay()
             setUpHeaderLayout(headerLayoutResId)
@@ -237,14 +239,14 @@ class SearchView
         }
 
         private val activityWindow: Window?
-            private get() {
+            get() {
                 val activity = ContextUtils.getActivity(context)
                 return activity?.window
             }
 
         @SuppressLint("ClickableViewAccessibility") // Will be handled by accessibility delegate.
         private fun setUpRootView() {
-            rootView.setOnTouchListener { v: View?, event: MotionEvent? -> true }
+            rootView.setOnTouchListener { _: View?, _: MotionEvent? -> true }
         }
 
         private fun setUpBackgroundViewElevationOverlay() {
@@ -262,7 +264,7 @@ class SearchView
         }
 
         private val overlayElevation: Float
-            private get() =
+            get() =
                 if (searchBar != null) {
                     searchBar!!.compatElevation
                 } else {
@@ -296,7 +298,7 @@ class SearchView
                 toolbar.navigationIcon = null
                 return
             }
-            toolbar.setNavigationOnClickListener { v: View? -> hide() }
+            toolbar.setNavigationOnClickListener { hide() }
             if (useDrawerArrowDrawable) {
                 val drawerArrowDrawable = DrawerArrowDrawable(context)
                 drawerArrowDrawable.color = MaterialColors.getColor(this, R.attr.colorOnSurface)
@@ -305,8 +307,8 @@ class SearchView
         }
 
         private fun setUpClearButton() {
-            clearButton.setOnClickListener { v: View? ->
-                clearText()
+            clearButton.setOnClickListener {
+                editText.setText("")
                 requestFocusAndShowKeyboardIfNeeded()
             }
             editText.addTextChangedListener(
@@ -324,7 +326,7 @@ class SearchView
                         before: Int,
                         count: Int
                     ) {
-                        clearButton.visibility = if (s.length > 0) VISIBLE else GONE
+                        clearButton.visibility = if (s.isNotEmpty()) VISIBLE else GONE
                     }
 
                     override fun afterTextChanged(s: Editable) {}
@@ -334,7 +336,7 @@ class SearchView
 
         @SuppressLint("ClickableViewAccessibility") // Will be handled by accessibility delegate.
         private fun setUpContentOnTouchListener() {
-            contentContainer.setOnTouchListener { v: View?, event: MotionEvent? ->
+            contentContainer.setOnTouchListener { _: View?, _: MotionEvent? ->
                 if (isAdjustNothingSoftInputMode) {
                     clearFocusAndHideKeyboard()
                 }
@@ -353,7 +355,7 @@ class SearchView
 
         @get:Px
         private val statusBarHeight: Int
-            private get() {
+            get() {
                 @SuppressLint(
                     "DiscouragedApi",
                     "InternalInsetResource",
@@ -372,9 +374,6 @@ class SearchView
          * RTL if it is a DrawerArrowDrawable.
          */
         private fun updateNavigationIconIfNeeded() {
-            if (toolbar == null) {
-                return
-            }
             if (isNavigationIconDrawerArrowDrawable(toolbar)) {
                 return
             }
@@ -422,14 +421,14 @@ class SearchView
         private fun setUpToolbarInsetListener() {
             ViewUtils.doOnApplyWindowInsets(
                 toolbar,
-            ) { view: View?, insets: WindowInsetsCompat, initialPadding: RelativePadding ->
+            ) { _: View?, insets: WindowInsetsCompat, initialPadding: RelativePadding ->
                 val isRtl = ViewUtils.isLayoutRtl(toolbar)
                 val paddingLeft = if (isRtl) initialPadding.end else initialPadding.start
                 val paddingRight = if (isRtl) initialPadding.start else initialPadding.end
                 toolbar.setPadding(
-                    paddingLeft + insets.systemWindowInsetLeft,
+                    paddingLeft + insets.left(),
                     initialPadding.top,
-                    paddingRight + insets.systemWindowInsetRight,
+                    paddingRight + insets.right(),
                     initialPadding.bottom,
                 )
                 insets
@@ -443,8 +442,8 @@ class SearchView
             // Listen to system window insets on L+ and adjusts status bar height based on the top inset.
             ViewCompat.setOnApplyWindowInsetsListener(
                 statusBarSpacer,
-            ) { v: View?, insets: WindowInsetsCompat ->
-                val systemWindowInsetTop = insets.systemWindowInsetTop
+            ) { _: View?, insets: WindowInsetsCompat ->
+                val systemWindowInsetTop = insets.top()
                 setUpStatusBarSpacer(systemWindowInsetTop)
                 if (!statusBarSpacerEnabledOverride) {
                     setStatusBarSpacerEnabledInternal(systemWindowInsetTop > 0)
@@ -459,9 +458,9 @@ class SearchView
             val rightMargin = layoutParams.rightMargin
             ViewCompat.setOnApplyWindowInsetsListener(
                 divider,
-            ) { v: View?, insets: WindowInsetsCompat ->
-                layoutParams.leftMargin = leftMargin + insets.systemWindowInsetLeft
-                layoutParams.rightMargin = rightMargin + insets.systemWindowInsetRight
+            ) { _: View?, insets: WindowInsetsCompat ->
+                layoutParams.leftMargin = leftMargin + insets.left()
+                layoutParams.rightMargin = rightMargin + insets.right()
                 insets
             }
         }
@@ -479,7 +478,7 @@ class SearchView
         fun setupWithSearchBar(searchBar: SearchBar?) {
             this.searchBar = searchBar
             searchViewAnimationHelper.setSearchBar(searchBar)
-            searchBar?.setOnClickListener { v: View? ->
+            searchBar?.setOnClickListener {
                 if (!searchBar.isCountModeEnabled) {
                     show()
                 }
@@ -489,10 +488,10 @@ class SearchView
         }
 
         fun setAnimationDuration(
-            show_duration_ms: Long,
-            hide_duration_ms: Long
+            showDurationMs: Long,
+            hideDurationMs: Long
         ) {
-            searchViewAnimationHelper.setAnimationDuration(show_duration_ms, hide_duration_ms)
+            searchViewAnimationHelper.setAnimationDuration(showDurationMs, hideDurationMs)
         }
 
         /**
@@ -503,17 +502,9 @@ class SearchView
          * be used with a standalone [SearchView] which slides up/down instead of morphing from an
          * [SearchBar].
          */
-        fun addHeaderView(headerView: View) {
+        private fun addHeaderView(headerView: View) {
             headerContainer.addView(headerView)
             headerContainer.visibility = VISIBLE
-        }
-
-        /**
-         * Sets whether the soft keyboard should be shown with `WindowInsetsController`.
-         */
-        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-        fun setUseWindowInsetsController(useWindowInsetsController: Boolean) {
-            this.useWindowInsetsController = useWindowInsetsController
         }
 
         /**
@@ -526,7 +517,7 @@ class SearchView
         /**
          * Sets the search prefix text.
          */
-        fun setSearchPrefixText(searchPrefixText: CharSequence?) {
+        private fun setSearchPrefixText(searchPrefixText: CharSequence?) {
             searchPrefix.text = searchPrefixText
             searchPrefix.visibility =
                 if (TextUtils.isEmpty(searchPrefixText)) GONE else VISIBLE
@@ -550,24 +541,8 @@ class SearchView
         /**
          * Sets the text of main [EditText].
          */
-        fun setText(
-            @StringRes textResId: Int
-        ) {
-            editText.setText(textResId)
-        }
-
-        /**
-         * Sets the text of main [EditText].
-         */
-        fun setText(text: CharSequence?) {
+        private fun setText(text: CharSequence?) {
             editText.setText(text)
-        }
-
-        /**
-         * Clears the text of main [EditText].
-         */
-        fun clearText() {
-            editText.setText("")
         }
 
         /**
@@ -577,23 +552,11 @@ class SearchView
          * the [SearchView] during initial render but make sure to invoke this if you are changing
          * the soft input mode at runtime.
          */
-        fun updateSoftInputMode() {
+        private fun updateSoftInputMode() {
             val window = activityWindow
             if (window != null) {
                 softInputMode = window.attributes.softInputMode
             }
-        }
-
-        /**
-         * Enables/disables the status bar spacer, which can be used in cases where the status bar is
-         * translucent and the [SearchView] should not overlap the status bar area. This will be set
-         * automatically by the [SearchView] during initial render, but make sure to invoke this if
-         * you would like to override the default behavior.
-         */
-        @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-        fun setStatusBarSpacerEnabled(enabled: Boolean) {
-            statusBarSpacerEnabledOverride = true
-            setStatusBarSpacerEnabledInternal(enabled)
         }
 
         private fun setStatusBarSpacerEnabledInternal(enabled: Boolean) {
@@ -645,7 +608,7 @@ class SearchView
         /**
          * Updates the visibility of the [SearchView] without an animation.
          */
-        fun setVisible(visible: Boolean) {
+        private fun setVisible(visible: Boolean) {
             val wasVisible = rootView.visibility == VISIBLE
             rootView.visibility = if (visible) VISIBLE else GONE
             updateNavigationIconProgressIfNeeded()
@@ -680,7 +643,7 @@ class SearchView
         /**
          * Requests focus on the main [EditText] and shows the soft keyboard.
          */
-        fun requestFocusAndShowKeyboard() {
+        private fun requestFocusAndShowKeyboard() {
             // Without a delay requesting focus on edit text fails when talkback is active.
             editText.postDelayed(
                 {
@@ -714,7 +677,7 @@ class SearchView
          * Sets whether the [SearchView] is modal for accessibility, i.e., whether views that are
          * not nested within the [SearchView] are important for accessibility.
          */
-        fun setModalForAccessibility(isSearchViewModal: Boolean) {
+        private fun setModalForAccessibility(isSearchViewModal: Boolean) {
             val rootView = getRootView() as ViewGroup
             if (isSearchViewModal) {
                 childImportantForAccessibilityMap = HashMap(rootView.childCount)
@@ -817,17 +780,9 @@ class SearchView
             }
         }
 
-        internal class SavedState : AbsSavedState {
+        internal class SavedState(superState: Parcelable?) : AbsSavedState(superState!!) {
             var text: String? = null
             var visibility = 0
-
-            @JvmOverloads
-            constructor(source: Parcel, classLoader: ClassLoader? = null) : super(source, classLoader) {
-                text = source.readString()
-                visibility = source.readInt()
-            }
-
-            constructor(superState: Parcelable?) : super(superState!!)
 
             override fun writeToParcel(
                 dest: Parcel,

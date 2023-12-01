@@ -3,7 +3,9 @@ package com.pandacorp.searchbar
 import android.animation.Animator
 import android.animation.ValueAnimator
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.view.View
+import androidx.core.view.WindowInsetsCompat
 
 /**
  * Animates the alpha (transparency) property of a Drawable from one value to another over a specified duration.
@@ -93,3 +95,36 @@ fun View.animateAlpha(
         onAnimationEnd?.invoke()
     }
 }
+
+/**
+ * Returns the top system window inset in pixels.
+ */
+fun WindowInsetsCompat.top(): Int =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        this.getInsets(WindowInsetsCompat.Type.systemBars()).top
+    } else {
+        @Suppress("DEPRECATION")
+        this.systemWindowInsetTop
+    }
+
+/**
+ * Returns the right system window inset in pixels.
+ */
+fun WindowInsetsCompat.right(): Int =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        this.getInsets(WindowInsetsCompat.Type.systemBars()).right
+    } else {
+        @Suppress("DEPRECATION")
+        this.systemWindowInsetRight
+    }
+
+/**
+ * Returns the left system window inset in pixels.
+ */
+fun WindowInsetsCompat.left(): Int =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        this.getInsets(WindowInsetsCompat.Type.systemBars()).left
+    } else {
+        @Suppress("DEPRECATION")
+        this.systemWindowInsetLeft
+    }
