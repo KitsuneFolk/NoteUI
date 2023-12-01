@@ -68,45 +68,6 @@ import com.pandacorp.searchbar.top
  * limitations under the License.
  */
 
-/**
- * Layout that provides a full screen search view and can be used with [SearchBar].
- *
- *
- * The example below shows how to use the [SearchBar] and [SearchView] together:
- *
- * <pre>
- * &lt;androidx.coordinatorlayout.widget.CoordinatorLayout
- * android:layout_width=&quot;match_parent&quot;
- * android:layout_height=&quot;match_parent&quot;&gt;
- *
- * &lt;!-- NestedScrollingChild goes here (NestedScrollView, RecyclerView, etc.). --&gt;
- * &lt;androidx.core.widget.NestedScrollView
- * android:layout_width=&quot;match_parent&quot;
- * android:layout_height=&quot;match_parent&quot;
- * app:layout_behavior=&quot;@string/searchbar_scrolling_view_behavior&quot;&gt;
- * &lt;!-- Screen content goes here. --&gt;
- * &lt;/androidx.core.widget.NestedScrollView&gt;
- *
- * &lt;com.google.android.material.appbar.AppBarLayout
- * android:layout_width=&quot;match_parent&quot;
- * android:layout_height=&quot;wrap_content&quot;&gt;
- * &lt;SearchBar
- * android:id=&quot;@+id/search_bar&quot;
- * android:layout_width=&quot;match_parent&quot;
- * android:layout_height=&quot;wrap_content&quot;
- * android:hint=&quot;@string/searchbar_hint&quot; /&gt;
- * &lt;/com.google.android.material.appbar.AppBarLayout&gt;
- *
- * &lt;SearchView
- * android:layout_width=&quot;match_parent&quot;
- * android:layout_height=&quot;match_parent&quot;
- * android:hint=&quot;@string/searchbar_hint&quot;
- * app:layout_anchor=&quot;@id/search_bar&quot;&gt;
- * &lt;!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). --&gt;
- * &lt;/SearchView&gt;
- * &lt;/androidx.coordinatorlayout.widget.CoordinatorLayout&gt;
-</pre> *
- */
 @SuppressLint("RestrictedApi", "PrivateResource")
 class SearchView
     @JvmOverloads
