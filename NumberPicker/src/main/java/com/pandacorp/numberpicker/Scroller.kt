@@ -21,9 +21,14 @@ import android.os.Build
 import android.view.ViewConfiguration
 import android.view.animation.AnimationUtils
 import android.view.animation.Interpolator
+import kotlin.math.abs
+import kotlin.math.exp
+import kotlin.math.hypot
+import kotlin.math.ln
+import kotlin.math.roundToInt
+import kotlin.math.sign
 
 /**
- *
  * This class encapsulates scrolling. You can use scrollers ([Scroller]
  * to collect the data you need to produce a scrolling animationfor
  * example, in response to a fling gesture. Scrollers track scroll offsets
@@ -111,8 +116,7 @@ class Scroller @JvmOverloads constructor(
      *
      * @return The duration of the scroll in milliseconds.
      */
-    var duration = 0
-        private set
+    private var duration = 0
     private var mDurationReciprocal = 0f
     private var mDeltaX = 0f
     private var mDeltaY = 0f
@@ -156,18 +160,6 @@ class Scroller @JvmOverloads constructor(
         mPhysicalCoeff = computeDeceleration(0.84f) // look and feel tuning
     }
 
-    /**
-     * The amount of friction applied to flings. The default value
-     * is [ViewConfiguration.getScrollFriction].
-     *
-     * @param friction A scalar dimension-less value representing the coefficient of
-     * friction.
-     */
-    fun setFriction(friction: Float) {
-        mDeceleration = computeDeceleration(friction)
-        mFlingFriction = friction
-    }
-
     private fun computeDeceleration(friction: Float): Float {
         return (SensorManager.GRAVITY_EARTH // g (m/s^2)
                 * 39.37f // inch/meter
@@ -184,7 +176,7 @@ class Scroller @JvmOverloads constructor(
         isFinished = finished
     }
 
-    val currVelocity: Float
+    private val currVelocity: Float
         /**
          * Returns the current velocity.
          *
@@ -244,8 +236,8 @@ class Scroller @JvmOverloads constructor(
             when (mMode) {
                 SCROLL_MODE -> {
                     val x = mInterpolator!!.getInterpolation(timePassed * mDurationReciprocal)
-                    currX = startX + Math.round(x * mDeltaX)
-                    currY = startY + Math.round(x * mDeltaY)
+                    currX = startX + (x * mDeltaX).roundToInt()
+                    currY = startY + (x * mDeltaY).roundToInt()
                 }
 
                 FLING_MODE -> {
@@ -254,22 +246,22 @@ class Scroller @JvmOverloads constructor(
                     var distanceCoef = 1f
                     var velocityCoef = 0f
                     if (index < NB_SAMPLES) {
-                        val t_inf = index.toFloat() / NB_SAMPLES
-                        val t_sup = (index + 1).toFloat() / NB_SAMPLES
-                        val d_inf = SPLINE_POSITION[index]
-                        val d_sup = SPLINE_POSITION[index + 1]
-                        velocityCoef = (d_sup - d_inf) / (t_sup - t_inf)
-                        distanceCoef = d_inf + (t - t_inf) * velocityCoef
+                        val tInf = index.toFloat() / NB_SAMPLES
+                        val tSup = (index + 1).toFloat() / NB_SAMPLES
+                        val dInf = SPLINE_POSITION[index]
+                        val dSup = SPLINE_POSITION[index + 1]
+                        velocityCoef = (dSup - dInf) / (tSup - tInf)
+                        distanceCoef = dInf + (t - tInf) * velocityCoef
                     }
                     mCurrVelocity = velocityCoef * mDistance / duration * 1000.0f
-                    currX = startX + Math.round(distanceCoef * (mFinalX - startX))
+                    currX = startX + (distanceCoef * (mFinalX - startX)).roundToInt()
                     // Pin to mMinX <= mCurrX <= mMaxX
-                    currX = Math.min(currX, mMaxX)
-                    currX = Math.max(currX, mMinX)
-                    currY = startY + Math.round(distanceCoef * (mFinalY - startY))
+                    currX = currX.coerceAtMost(mMaxX)
+                    currX = currX.coerceAtLeast(mMinX)
+                    currY = startY + (distanceCoef * (mFinalY - startY)).roundToInt()
                     // Pin to mMinY <= mCurrY <= mMaxY
-                    currY = Math.min(currY, mMaxY)
-                    currY = Math.max(currY, mMinY)
+                    currY = currY.coerceAtMost(mMaxY)
+                    currY = currY.coerceAtLeast(mMinY)
                     if (currX == mFinalX && currY == mFinalY) {
                         isFinished = true
                     }
@@ -282,20 +274,7 @@ class Scroller @JvmOverloads constructor(
         }
         return true
     }
-    /**
-     * Start scrolling by providing a starting point, the distance to travel,
-     * and the duration of the scroll.
-     *
-     * @param startX Starting horizontal scroll offset in pixels. Positive
-     * numbers will scroll the content to the left.
-     * @param startY Starting vertical scroll offset in pixels. Positive numbers
-     * will scroll the content up.
-     * @param dx Horizontal distance to travel. Positive numbers will scroll the
-     * content to the left.
-     * @param dy Vertical distance to travel. Positive numbers will scroll the
-     * content up.
-     * @param duration Duration of the scroll in milliseconds.
-     */
+
     /**
      * Start scrolling by providing a starting point and the distance to travel.
      * The scroll will use the default value of 250 milliseconds for the
@@ -349,92 +328,64 @@ class Scroller @JvmOverloads constructor(
         minX: Int, maxX: Int, minY: Int, maxY: Int
     ) {
         // Continue a scroll or fling in progress
-        var velocityX = velocityX
-        var velocityY = velocityY
+        var mVelocityX = velocityX
+        var mVelocityY = velocityY
         if (mFlywheel && !isFinished) {
             val oldVel = currVelocity
             val dx = (mFinalX - this.startX).toFloat()
             val dy = (mFinalY - this.startY).toFloat()
-            val hyp = Math.hypot(dx.toDouble(), dy.toDouble()).toFloat()
+            val hyp = hypot(dx.toDouble(), dy.toDouble()).toFloat()
             val ndx = dx / hyp
             val ndy = dy / hyp
             val oldVelocityX = ndx * oldVel
             val oldVelocityY = ndy * oldVel
-            if (Math.signum(velocityX.toFloat()) == Math.signum(oldVelocityX) &&
-                Math.signum(velocityY.toFloat()) == Math.signum(oldVelocityY)
+            if (sign(mVelocityX.toFloat()) == sign(oldVelocityX) &&
+                sign(mVelocityY.toFloat()) == sign(oldVelocityY)
             ) {
-                velocityX += oldVelocityX.toInt()
-                velocityY += oldVelocityY.toInt()
+                mVelocityX += oldVelocityX.toInt()
+                mVelocityY += oldVelocityY.toInt()
             }
         }
         mMode = FLING_MODE
         isFinished = false
-        val velocity = Math.hypot(velocityX.toDouble(), velocityY.toDouble()).toFloat()
+        val velocity = hypot(mVelocityX.toDouble(), mVelocityY.toDouble()).toFloat()
         mVelocity = velocity
         duration = getSplineFlingDuration(velocity)
         mStartTime = AnimationUtils.currentAnimationTimeMillis()
         this.startX = startX
         this.startY = startY
-        val coeffX = if (velocity == 0f) 1.0f else velocityX / velocity
-        val coeffY = if (velocity == 0f) 1.0f else velocityY / velocity
+        val coeffX = if (velocity == 0f) 1.0f else mVelocityX / velocity
+        val coeffY = if (velocity == 0f) 1.0f else mVelocityY / velocity
         val totalDistance = getSplineFlingDistance(velocity)
-        mDistance = (totalDistance * Math.signum(velocity)).toInt()
+        mDistance = (totalDistance * sign(velocity)).toInt()
         mMinX = minX
         mMaxX = maxX
         mMinY = minY
         mMaxY = maxY
-        mFinalX = startX + Math.round(totalDistance * coeffX).toInt()
+        mFinalX = startX + (totalDistance * coeffX).roundToInt()
         // Pin to mMinX <= mFinalX <= mMaxX
-        mFinalX = Math.min(mFinalX, mMaxX)
-        mFinalX = Math.max(mFinalX, mMinX)
-        mFinalY = startY + Math.round(totalDistance * coeffY).toInt()
+        mFinalX = mFinalX.coerceAtMost(mMaxX)
+        mFinalX = mFinalX.coerceAtLeast(mMinX)
+        mFinalY = startY + (totalDistance * coeffY).roundToInt()
         // Pin to mMinY <= mFinalY <= mMaxY
-        mFinalY = Math.min(mFinalY, mMaxY)
-        mFinalY = Math.max(mFinalY, mMinY)
+        mFinalY = mFinalY.coerceAtMost(mMaxY)
+        mFinalY = mFinalY.coerceAtLeast(mMinY)
     }
 
     private fun getSplineDeceleration(velocity: Float): Double {
-        return Math.log((INFLEXION * Math.abs(velocity) / (mFlingFriction * mPhysicalCoeff)).toDouble())
+        return ln((INFLEXION * abs(velocity) / (mFlingFriction * mPhysicalCoeff)).toDouble())
     }
 
     private fun getSplineFlingDuration(velocity: Float): Int {
         val l = getSplineDeceleration(velocity)
         val decelMinusOne = DECELERATION_RATE - 1.0
-        return (1000.0 * Math.exp(l / decelMinusOne)).toInt()
+        return (1000.0 * exp(l / decelMinusOne)).toInt()
     }
 
     private fun getSplineFlingDistance(velocity: Float): Double {
         val l = getSplineDeceleration(velocity)
         val decelMinusOne = DECELERATION_RATE - 1.0
-        return mFlingFriction * mPhysicalCoeff * Math.exp(DECELERATION_RATE / decelMinusOne * l)
-    }
-
-    /**
-     * Stops the animation. Contrary to [.forceFinished],
-     * aborting the animating cause the scroller to move to the final x and y
-     * position
-     *
-     * @see .forceFinished
-     */
-    fun abortAnimation() {
-        currX = mFinalX
-        currY = mFinalY
-        isFinished = true
-    }
-
-    /**
-     * Extend the scroll animation. This allows a running animation to scroll
-     * further and longer, when used with [.setFinalX] or [.setFinalY].
-     *
-     * @param extend Additional time to scroll in milliseconds.
-     * @see .setFinalX
-     * @see .setFinalY
-     */
-    fun extendDuration(extend: Int) {
-        val passed = timePassed()
-        duration = passed + extend
-        mDurationReciprocal = 1.0f / duration
-        isFinished = false
+        return mFlingFriction * mPhysicalCoeff * exp(DECELERATION_RATE / decelMinusOne * l)
     }
 
     /**
@@ -442,17 +393,8 @@ class Scroller @JvmOverloads constructor(
      *
      * @return The elapsed time in milliseconds.
      */
-    fun timePassed(): Int {
+    private fun timePassed(): Int {
         return (AnimationUtils.currentAnimationTimeMillis() - mStartTime).toInt()
-    }
-
-    /**
-     * @hide
-     */
-    fun isScrollingInDirection(xvel: Float, yvel: Float): Boolean {
-        return !isFinished && Math.signum(xvel) == Math.signum((mFinalX - startX).toFloat()) && Math.signum(yvel) == Math.signum(
-            (mFinalY - startY).toFloat()
-        )
     }
 
     internal class ViscousFluidInterpolator : Interpolator {
@@ -470,16 +412,16 @@ class Scroller @JvmOverloads constructor(
             private val VISCOUS_FLUID_OFFSET = 1.0f - VISCOUS_FLUID_NORMALIZE * viscousFluid(1.0f)
 
             private fun viscousFluid(x: Float): Float {
-                var x = x
-                x *= VISCOUS_FLUID_SCALE
-                if (x < 1.0f) {
-                    x -= 1.0f - Math.exp(-x.toDouble()).toFloat()
+                var mX = x
+                mX *= VISCOUS_FLUID_SCALE
+                if (mX < 1.0f) {
+                    mX -= 1.0f - exp(-mX.toDouble()).toFloat()
                 } else {
-                    val start = 0.36787944117f // 1/e == exp(-1)
-                    x = 1.0f - Math.exp((1.0f - x).toDouble()).toFloat()
-                    x = start + x * (1.0f - start)
+                    val start = 0.36787945f // 1/e == exp(-1)
+                    mX = 1.0f - exp((1.0f - mX).toDouble()).toFloat()
+                    mX = start + mX * (1.0f - start)
                 }
-                return x
+                return mX
             }
         }
     }
@@ -488,7 +430,7 @@ class Scroller @JvmOverloads constructor(
         private const val DEFAULT_DURATION = 250
         private const val SCROLL_MODE = 0
         private const val FLING_MODE = 1
-        private val DECELERATION_RATE = (Math.log(0.78) / Math.log(0.9)).toFloat()
+        private val DECELERATION_RATE = (ln(0.78) / ln(0.9)).toFloat()
         private const val INFLEXION = 0.35f // Tension lines cross at (INFLEXION, 1)
         private const val START_TENSION = 0.5f
         private const val END_TENSION = 1.0f
@@ -499,31 +441,31 @@ class Scroller @JvmOverloads constructor(
         private val SPLINE_TIME = FloatArray(NB_SAMPLES + 1)
 
         init {
-            var x_min = 0.0f
-            var y_min = 0.0f
+            var xMin = 0.0f
+            var yMin = 0.0f
             for (i in 0 until NB_SAMPLES) {
                 val alpha = i.toFloat() / NB_SAMPLES
-                var x_max = 1.0f
+                var xMax = 1.0f
                 var x: Float
                 var tx: Float
                 var coef: Float
                 while (true) {
-                    x = x_min + (x_max - x_min) / 2.0f
+                    x = xMin + (xMax - xMin) / 2.0f
                     coef = 3.0f * x * (1.0f - x)
                     tx = coef * ((1.0f - x) * P1 + x * P2) + x * x * x
-                    if (Math.abs(tx - alpha) < 1E-5) break
-                    if (tx > alpha) x_max = x else x_min = x
+                    if (abs(tx - alpha) < 1E-5) break
+                    if (tx > alpha) xMax = x else xMin = x
                 }
                 SPLINE_POSITION[i] = coef * ((1.0f - x) * START_TENSION + x) + x * x * x
-                var y_max = 1.0f
+                var yMax = 1.0f
                 var y: Float
                 var dy: Float
                 while (true) {
-                    y = y_min + (y_max - y_min) / 2.0f
+                    y = yMin + (yMax - yMin) / 2.0f
                     coef = 3.0f * y * (1.0f - y)
                     dy = coef * ((1.0f - y) * START_TENSION + y) + y * y * y
-                    if (Math.abs(dy - alpha) < 1E-5) break
-                    if (dy > alpha) y_max = y else y_min = y
+                    if (abs(dy - alpha) < 1E-5) break
+                    if (dy > alpha) yMax = y else yMin = y
                 }
                 SPLINE_TIME[i] = coef * ((1.0f - y) * P1 + y * P2) + y * y * y
             }
