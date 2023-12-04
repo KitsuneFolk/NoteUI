@@ -36,34 +36,32 @@ import kotlin.math.sign
  * to your view. It's your responsibility to get and apply new coordinates
  * at a rate that will make the scrolling animation look smooth.
  *
- *
  * Here is a simple example:
- *
- * <pre> private Scroller mScroller = new Scroller(context);
- * ...
+ * ```
+ * private Scroller mScroller = new Scroller(context);
  * public void zoomIn() {
- * // Revert any animation currently in progress
- * mScroller.forceFinished(true);
- * // Start scrolling by providing a starting point and
- * // the distance to travel
- * mScroller.startScroll(0, 0, 100, 0);
- * // Invalidate to request a redraw
- * invalidate();
- * }</pre>
- *
- *
+ *  // Revert any animation currently in progress
+ *  mScroller.forceFinished(true);
+ *  // Start scrolling by providing a starting point and
+ *  // the distance to travel
+ *  mScroller.startScroll(0, 0, 100, 0);
+ *  // Invalidate to request a redraw
+ *  invalidate();
+ * }
+ * ```
  * To track the changing positions of the x/y coordinates, use
  * [.computeScrollOffset]. The method returns a boolean to indicate
  * whether the scroller is finished. If it isn't, it means that a fling or
  * programmatic pan operation is still in progress. You can use this method to
  * find the current offsets of the x and y coordinates, for example:
  *
- * <pre>if (mScroller.computeScrollOffset()) {
- * // Get current x and y positions
- * int currX = mScroller.getCurrX();
- * int currY = mScroller.getCurrY();
- * ...
- * }</pre>
+ * ```
+ * if (mScroller.computeScrollOffset()) {
+ *  // Get current x and y positions
+ *  int currX = mScroller.getCurrX();
+ *  int currY = mScroller.getCurrY();
+ * }
+ * ```
  */
 class Scroller @JvmOverloads constructor(
     context: Context, interpolator: Interpolator? = null, flywheel: Boolean =
