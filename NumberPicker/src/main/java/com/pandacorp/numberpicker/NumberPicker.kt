@@ -1,524 +1,414 @@
-package com.pandacorp.numberpicker;
+package com.pandacorp.numberpicker
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.res.Configuration;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.text.InputType;
-import android.text.TextUtils;
-import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.SparseArray;
-import android.util.TypedValue;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
-import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.accessibility.AccessibilityEvent;
-import android.view.animation.DecelerateInterpolator;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-
-import androidx.annotation.CallSuper;
-import androidx.annotation.ColorInt;
-import androidx.annotation.DimenRes;
-import androidx.annotation.IntDef;
-
-import java.lang.annotation.Retention;
-import java.text.NumberFormat;
-import java.util.Locale;
-
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.Configuration
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.os.Build
+import android.text.InputType
+import android.text.TextUtils
+import android.util.AttributeSet
+import android.util.SparseArray
+import android.util.TypedValue
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.VelocityTracker
+import android.view.ViewConfiguration
+import android.view.accessibility.AccessibilityEvent
+import android.view.animation.DecelerateInterpolator
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.LinearLayout
+import androidx.annotation.CallSuper
+import androidx.annotation.ColorInt
+import androidx.annotation.DimenRes
+import androidx.annotation.IntDef
+import java.text.NumberFormat
+import java.util.Locale
 
 /**
  * A widget that enables the user to select a number from a predefined range.
  */
-public class NumberPicker extends LinearLayout {
-
-    @Retention(SOURCE)
-    @IntDef({VERTICAL, HORIZONTAL})
-    public @interface Orientation {
-    }
-
-    public static final int VERTICAL = LinearLayout.VERTICAL;
-    public static final int HORIZONTAL = LinearLayout.HORIZONTAL;
-
-    public static final int ASCENDING = 0;
-
-    public static final int CENTER = 1;
-
-    public static final int SIDE_LINES = 0;
-    public static final int UNDERLINE = 1;
-
-    /**
-     * The default update interval during long press.
-     */
-    private static final long DEFAULT_LONG_PRESS_UPDATE_INTERVAL = 300;
-
-    /**
-     * The default coefficient to adjust (divide) the max fling velocity.
-     */
-    private static final int DEFAULT_MAX_FLING_VELOCITY_COEFFICIENT = 8;
-
-    /**
-     * The the duration for adjusting the selector wheel.
-     */
-    private static final int SELECTOR_ADJUSTMENT_DURATION_MILLIS = 800;
-
-    /**
-     * The duration of scrolling while snapping to a given position.
-     */
-    private static final int SNAP_SCROLL_DURATION = 300;
-
-    /**
-     * The default strength of fading edge while drawing the selector.
-     */
-    private static final float DEFAULT_FADING_EDGE_STRENGTH = 0.9f;
-
-    /**
-     * The default unscaled height of the divider.
-     */
-    private static final int UNSCALED_DEFAULT_DIVIDER_THICKNESS = 2;
-
-    /**
-     * The default unscaled distance between the dividers.
-     */
-    private static final int UNSCALED_DEFAULT_DIVIDER_DISTANCE = 48;
-
-    /**
-     * Constant for unspecified size.
-     */
-    private static final int SIZE_UNSPECIFIED = -1;
-
-    /**
-     * The default color of divider.
-     */
-    private static final int DEFAULT_DIVIDER_COLOR = 0xFF000000;
-
-    /**
-     * The default max value of this widget.
-     */
-    private static final int DEFAULT_MAX_VALUE = 100;
-
-    /**
-     * The default min value of this widget.
-     */
-    private static final int DEFAULT_MIN_VALUE = 1;
-
-    /**
-     * The default wheel item count of this widget.
-     */
-    private static final int DEFAULT_WHEEL_ITEM_COUNT = 3;
-
-    /**
-     * The default max height of this widget.
-     */
-    private static final int DEFAULT_MAX_HEIGHT = 180;
-
-    /**
-     * The default min width of this widget.
-     */
-    private static final int DEFAULT_MIN_WIDTH = 64;
-
-    /**
-     * The default align of text.
-     */
-    private static final int DEFAULT_TEXT_ALIGN = CENTER;
-
-    /**
-     * The default color of text.
-     */
-    private static final int DEFAULT_TEXT_COLOR = 0xFF000000;
-
-    /**
-     * The default size of text.
-     */
-    private static final float DEFAULT_TEXT_SIZE = 25f;
-
-    /**
-     * The default line spacing multiplier of text.
-     */
-    private static final float DEFAULT_LINE_SPACING_MULTIPLIER = 1f;
+class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) :
+    LinearLayout(context, attrs) {
+    @Retention(AnnotationRetention.SOURCE)
+    @IntDef(VERTICAL, HORIZONTAL)
+    annotation class Orientation
 
     /**
      * The text for showing the current value.
      */
-    private final EditText mSelectedText;
+    private val mSelectedText: EditText
 
     /**
      * The center X position of the selected text.
      */
-    private float mSelectedTextCenterX;
+    private var mSelectedTextCenterX = 0f
 
     /**
      * The center Y position of the selected text.
      */
-    private float mSelectedTextCenterY;
+    private var mSelectedTextCenterY = 0f
 
     /**
      * The min height of this widget.
      */
-    private int mMinHeight;
+    private var mMinHeight = 0
 
     /**
      * The max height of this widget.
      */
-    private int mMaxHeight;
+    private var mMaxHeight = 0
 
     /**
      * The max width of this widget.
      */
-    private int mMinWidth;
+    private var mMinWidth = 0
 
     /**
      * The max width of this widget.
      */
-    private int mMaxWidth;
+    private var mMaxWidth = 0
 
     /**
      * Flag whether to compute the max width.
      */
-    private final boolean mComputeMaxWidth;
+    private val mComputeMaxWidth: Boolean
 
     /**
      * The align of the selected text.
      */
-    private int mSelectedTextAlign = DEFAULT_TEXT_ALIGN;
+    private var mSelectedTextAlign = DEFAULT_TEXT_ALIGN
 
     /**
      * The color of the selected text.
      */
-    private int mSelectedTextColor = DEFAULT_TEXT_COLOR;
+    private var mSelectedTextColor = DEFAULT_TEXT_COLOR
 
     /**
      * The size of the selected text.
      */
-    private float mSelectedTextSize = DEFAULT_TEXT_SIZE;
+    private var mSelectedTextSize = DEFAULT_TEXT_SIZE
 
     /**
      * Flag whether the selected text should strikethroughed.
      */
-    private boolean mSelectedTextStrikeThru;
+    private val mSelectedTextStrikeThru: Boolean
 
     /**
      * Flag whether the selected text should underlined.
      */
-    private boolean mSelectedTextUnderline;
+    private val mSelectedTextUnderline: Boolean
 
     /**
      * The typeface of the selected text.
      */
-    private Typeface mSelectedTypeface;
+    private var mSelectedTypeface: Typeface?
 
     /**
      * The align of the text.
      */
-    private int mTextAlign = DEFAULT_TEXT_ALIGN;
+    private var mTextAlign = DEFAULT_TEXT_ALIGN
 
     /**
      * The color of the text.
      */
-    private int mTextColor = DEFAULT_TEXT_COLOR;
+    private var mTextColor = DEFAULT_TEXT_COLOR
 
     /**
      * The size of the text.
      */
-    private float mTextSize = DEFAULT_TEXT_SIZE;
+    private var mTextSize = DEFAULT_TEXT_SIZE
 
     /**
      * Flag whether the text should strikethroughed.
      */
-    private boolean mTextStrikeThru;
+    private val mTextStrikeThru: Boolean
 
     /**
      * Flag whether the text should underlined.
      */
-    private boolean mTextUnderline;
+    private val mTextUnderline: Boolean
 
     /**
      * The typeface of the text.
      */
-    private Typeface mTypeface;
+    private var mTypeface: Typeface?
 
     /**
      * The height of the gap between text elements if the selector wheel.
      */
-    private int mSelectorTextGapHeight;
+    private var mSelectorTextGapHeight = 0
 
     /**
      * The values to be displayed instead the indices.
      */
-    private String[] mDisplayedValues;
+    private var mDisplayedValues: Array<String>?
 
     /**
      * Lower value of the range of numbers allowed for the NumberPicker
      */
-    private int mMinValue = DEFAULT_MIN_VALUE;
+    private var mMinValue = DEFAULT_MIN_VALUE
 
     /**
      * Upper value of the range of numbers allowed for the NumberPicker
      */
-    private int mMaxValue = DEFAULT_MAX_VALUE;
+    private var mMaxValue = DEFAULT_MAX_VALUE
 
     /**
      * Current value of this NumberPicker
      */
-    private int mValue;
+    private var mValue: Int
 
     /**
      * Listener to be notified upon current value click.
      */
-    private OnClickListener mOnClickListener;
+    private var mOnClickListener: OnClickListener? = null
 
     /**
      * Listener to be notified upon current value change.
      */
-    private OnValueChangeListener mOnValueChangeListener;
+    private var mOnValueChangeListener: OnValueChangeListener? = null
 
     /**
      * Formatter for for displaying the current value.
      */
-    private Formatter mFormatter;
+    private var mFormatter: Formatter?
 
     /**
      * Cache for the string representation of selector indices.
      */
-    private final SparseArray<String> mSelectorIndexToStringCache = new SparseArray<>();
+    private val mSelectorIndexToStringCache = SparseArray<String?>()
 
     /**
      * The number of items show in the selector wheel.
      */
-    private int mWheelItemCount = DEFAULT_WHEEL_ITEM_COUNT;
+    private var mWheelItemCount = DEFAULT_WHEEL_ITEM_COUNT
 
     /**
      * The real number of items show in the selector wheel.
      */
-    private int mRealWheelItemCount = DEFAULT_WHEEL_ITEM_COUNT;
+    private var mRealWheelItemCount = DEFAULT_WHEEL_ITEM_COUNT
 
     /**
      * The index of the middle selector item.
      */
-    private int mWheelMiddleItemIndex = mWheelItemCount / 2;
+    private var mWheelMiddleItemIndex = mWheelItemCount / 2
 
     /**
      * The selector indices whose value are show by the selector.
      */
-    private int[] mSelectorIndices = new int[mWheelItemCount];
+    private var selectorIndices = IntArray(mWheelItemCount)
 
     /**
-     * The {@link Paint} for drawing the selector.
+     * The [Paint] for drawing the selector.
      */
-    private final Paint mSelectorWheelPaint;
+    private val mSelectorWheelPaint: Paint
 
     /**
      * The size of a selector element (text + gap).
      */
-    private int mSelectorElementSize;
+    private var mSelectorElementSize = 0
 
     /**
      * The initial offset of the scroll selector.
      */
-    private int mInitialScrollOffset = Integer.MIN_VALUE;
+    private var mInitialScrollOffset = Int.MIN_VALUE
 
     /**
      * The current offset of the scroll selector.
      */
-    private int mCurrentScrollOffset;
+    private var mCurrentScrollOffset = 0
 
     /**
-     * The {@link Scroller} responsible for flinging the selector.
+     * The [Scroller] responsible for flinging the selector.
      */
-    private final Scroller mFlingScroller;
+    private val mFlingScroller: Scroller
 
     /**
-     * The {@link Scroller} responsible for adjusting the selector.
+     * The [Scroller] responsible for adjusting the selector.
      */
-    private final Scroller mAdjustScroller;
+    private val mAdjustScroller: Scroller
 
     /**
      * The previous X coordinate while scrolling the selector.
      */
-    private int mPreviousScrollerX;
+    private var mPreviousScrollerX = 0
 
     /**
      * The previous Y coordinate while scrolling the selector.
      */
-    private int mPreviousScrollerY;
+    private var mPreviousScrollerY = 0
 
     /**
      * Handle to the reusable command for changing the current value from long press by one.
      */
-    private ChangeCurrentByOneFromLongPressCommand mChangeCurrentByOneFromLongPressCommand;
+    private var mChangeCurrentByOneFromLongPressCommand: ChangeCurrentByOneFromLongPressCommand? = null
 
     /**
      * The X position of the last down event.
      */
-    private float mLastDownEventX;
+    private var mLastDownEventX = 0f
 
     /**
      * The Y position of the last down event.
      */
-    private float mLastDownEventY;
+    private var mLastDownEventY = 0f
 
     /**
      * The X position of the last down or move event.
      */
-    private float mLastDownOrMoveEventX;
+    private var mLastDownOrMoveEventX = 0f
 
     /**
      * The Y position of the last down or move event.
      */
-    private float mLastDownOrMoveEventY;
+    private var mLastDownOrMoveEventY = 0f
 
     /**
      * Determines speed during touch scrolling.
      */
-    private VelocityTracker mVelocityTracker;
+    private var mVelocityTracker: VelocityTracker? = null
 
     /**
-     * @see ViewConfiguration#getScaledTouchSlop()
+     * @see ViewConfiguration.getScaledTouchSlop
      */
-    private final int mTouchSlop;
+    private val mTouchSlop: Int
 
     /**
-     * @see ViewConfiguration#getScaledMinimumFlingVelocity()
+     * @see ViewConfiguration.getScaledMinimumFlingVelocity
      */
-    private final int mMinimumFlingVelocity;
+    private val mMinimumFlingVelocity: Int
 
     /**
-     * @see ViewConfiguration#getScaledMaximumFlingVelocity()
+     * @see ViewConfiguration.getScaledMaximumFlingVelocity
      */
-    private final int mMaximumFlingVelocity;
+    private val mMaximumFlingVelocity: Int
 
     /**
      * Flag whether the selector should wrap around.
      */
-    private boolean mWrapSelectorWheel;
+    private var mWrapSelectorWheel: Boolean
 
     /**
      * User choice on whether the selector wheel should be wrapped.
      */
-    private boolean mWrapSelectorWheelPreferred = true;
+    private var mWrapSelectorWheelPreferred = true
 
     /**
      * Divider for showing item to be selected while scrolling
      */
-    private Drawable mDividerDrawable;
+    private var mDividerDrawable: Drawable? = null
 
     /**
      * The color of the divider.
      */
-    private int mDividerColor = DEFAULT_DIVIDER_COLOR;
+    private var mDividerColor = DEFAULT_DIVIDER_COLOR
 
     /**
      * The distance between the two dividers.
      */
-    private final int mDividerDistance;
+    private val mDividerDistance: Int
 
     /**
      * The thickness of the divider.
      */
-    private final int mDividerLength;
+    private val mDividerLength: Int
 
     /**
      * The thickness of the divider.
      */
-    private final int mDividerThickness;
+    private val mDividerThickness: Int
 
     /**
      * The top of the top divider.
      */
-    private int mTopDividerTop;
+    private var mTopDividerTop = 0
 
     /**
      * The bottom of the bottom divider.
      */
-    private int mBottomDividerBottom;
+    private var mBottomDividerBottom = 0
 
     /**
      * The left of the top divider.
      */
-    private int mLeftDividerLeft;
+    private var mLeftDividerLeft = 0
 
     /**
      * The right of the right divider.
      */
-    private int mRightDividerRight;
+    private var mRightDividerRight = 0
 
     /**
      * The type of the divider.
      */
-    private final int mDividerType;
+    private val mDividerType: Int
 
     /**
      * The current scroll state of the number picker.
      */
-    private int mScrollState = OnScrollListener.SCROLL_STATE_IDLE;
+    private var mScrollState = OnScrollListener.SCROLL_STATE_IDLE
 
     /**
      * The keycode of the last handled DPAD down event.
      */
-    private int mLastHandledDownDpadKeyCode = -1;
+    private var mLastHandledDownDpadKeyCode = -1
 
     /**
      * Flag whether the selector wheel should hidden until the picker has focus.
      */
-    private final boolean mHideWheelUntilFocused;
+    private val mHideWheelUntilFocused: Boolean
 
     /**
      * The orientation of this widget.
      */
-    private int mOrientation;
+    private var mOrientation: Int
 
     /**
      * The order of this widget.
      */
-    private final int mOrder;
+    val order: Int
 
     /**
      * Flag whether the fading edge should enabled.
      */
-    private boolean mFadingEdgeEnabled = true;
+    private var mFadingEdgeEnabled = true
 
     /**
      * The strength of fading edge while drawing the selector.
      */
-    private float mFadingEdgeStrength = DEFAULT_FADING_EDGE_STRENGTH;
+    private var mFadingEdgeStrength = DEFAULT_FADING_EDGE_STRENGTH
 
     /**
      * Flag whether the scroller should enabled.
      */
-    private boolean mScrollerEnabled = true;
+    var isScrollerEnabled = true
 
     /**
      * The line spacing multiplier of the text.
      */
-    private float mLineSpacingMultiplier = DEFAULT_LINE_SPACING_MULTIPLIER;
+    private var mLineSpacingMultiplier = DEFAULT_LINE_SPACING_MULTIPLIER
 
     /**
      * Flag whether the accessibility description enabled.
      */
-    private final boolean mAccessibilityDescriptionEnabled;
+    private val mAccessibilityDescriptionEnabled: Boolean
 
     /**
      * The number formatter for current locale.
      */
-    private NumberFormat mNumberFormatter;
+    private var mNumberFormatter: NumberFormat
 
     /**
      * Interface to listen for changes of the current value.
      */
-    public interface OnValueChangeListener {
-
+    interface OnValueChangeListener {
         /**
          * Called upon a change of the current value.
          *
@@ -526,69 +416,48 @@ public class NumberPicker extends LinearLayout {
          * @param oldVal The previous value.
          * @param newVal The new value.
          */
-        void onValueChange(NumberPicker picker, int oldVal, int newVal);
+        fun onValueChange(picker: NumberPicker?, oldVal: Int, newVal: Int)
     }
 
     /**
      * The amount of space between items.
      */
-    private final int mItemSpacing;
+    private val mItemSpacing: Int
 
     /**
      * Interface to listen for the picker scroll state.
      */
-    public interface OnScrollListener {
+    interface OnScrollListener {
+        companion object {
+            /**
+             * The view is not scrolling.
+             */
+            const val SCROLL_STATE_IDLE = 0
 
-        /**
-         * The view is not scrolling.
-         */
-        int SCROLL_STATE_IDLE = 0;
+            /**
+             * The user is scrolling using touch, and his finger is still on the screen.
+             */
+            const val SCROLL_STATE_TOUCH_SCROLL = 1
 
-        /**
-         * The user is scrolling using touch, and his finger is still on the screen.
-         */
-        int SCROLL_STATE_TOUCH_SCROLL = 1;
-
-        /**
-         * The user had previously been scrolling using touch and performed a fling.
-         */
-        int SCROLL_STATE_FLING = 2;
-
+            /**
+             * The user had previously been scrolling using touch and performed a fling.
+             */
+            const val SCROLL_STATE_FLING = 2
+        }
     }
 
     /**
      * Interface used to format current value into a string for presentation.
      */
-    public interface Formatter {
-
+    interface Formatter {
         /**
          * Formats a string representation of the current value.
          *
          * @param value The currently selected value.
          * @return A formatted string representation.
          */
-        String format(int value);
+        fun format(value: Int): String
     }
-
-    /**
-     * Create a new number picker.
-     *
-     * @param context The application environment.
-     */
-    public NumberPicker(Context context) {
-        this(context, null);
-    }
-
-    /**
-     * Create a new number picker.
-     *
-     * @param context The application environment.
-     * @param attrs   A collection of attributes.
-     */
-    public NumberPicker(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
     /**
      * Create a new number picker
      *
@@ -596,225 +465,267 @@ public class NumberPicker extends LinearLayout {
      * @param attrs    a collection of attributes.
      * @param defStyle The default style to apply to this view.
      */
-    public NumberPicker(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs);
-        mNumberFormatter = NumberFormat.getInstance();
-
-        final TypedArray attributes = context.obtainStyledAttributes(attrs,
-                R.styleable.NumberPicker, defStyle, 0);
-
-        final Drawable selectionDivider = attributes.getDrawable(
-                R.styleable.NumberPicker_np_divider);
+    /**
+     * Create a new number picker.
+     *
+     * @param context The application environment.
+     * @param attrs   A collection of attributes.
+     */
+    /**
+     * Create a new number picker.
+     *
+     * @param context The application environment.
+     */
+    init {
+        mNumberFormatter = NumberFormat.getInstance()
+        val attributes = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.NumberPicker, defStyle, 0
+        )
+        val selectionDivider = attributes.getDrawable(
+            R.styleable.NumberPicker_np_divider
+        )
         if (selectionDivider != null) {
-            selectionDivider.setCallback(this);
-            if (selectionDivider.isStateful()) {
-                selectionDivider.setState(getDrawableState());
+            selectionDivider.callback = this
+            if (selectionDivider.isStateful) {
+                selectionDivider.state = drawableState
             }
-            mDividerDrawable = selectionDivider;
+            mDividerDrawable = selectionDivider
         } else {
-            mDividerColor = attributes.getColor(R.styleable.NumberPicker_np_dividerColor,
-                    mDividerColor);
-            setDividerColor(mDividerColor);
+            mDividerColor = attributes.getColor(
+                R.styleable.NumberPicker_np_dividerColor,
+                mDividerColor
+            )
+            setDividerColor(mDividerColor)
         }
-
-        final DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        final int defDividerDistance = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                UNSCALED_DEFAULT_DIVIDER_DISTANCE, displayMetrics);
-        final int defDividerThickness = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                UNSCALED_DEFAULT_DIVIDER_THICKNESS, displayMetrics);
+        val displayMetrics = resources.displayMetrics
+        val defDividerDistance = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            UNSCALED_DEFAULT_DIVIDER_DISTANCE.toFloat(), displayMetrics
+        ).toInt()
+        val defDividerThickness = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            UNSCALED_DEFAULT_DIVIDER_THICKNESS.toFloat(), displayMetrics
+        ).toInt()
         mDividerDistance = attributes.getDimensionPixelSize(
-                R.styleable.NumberPicker_np_dividerDistance, defDividerDistance);
+            R.styleable.NumberPicker_np_dividerDistance, defDividerDistance
+        )
         mDividerLength = attributes.getDimensionPixelSize(
-                R.styleable.NumberPicker_np_dividerLength, 0);
+            R.styleable.NumberPicker_np_dividerLength, 0
+        )
         mDividerThickness = attributes.getDimensionPixelSize(
-                R.styleable.NumberPicker_np_dividerThickness, defDividerThickness);
-        mDividerType = attributes.getInt(R.styleable.NumberPicker_np_dividerType, SIDE_LINES);
-
-        mOrder = attributes.getInt(R.styleable.NumberPicker_np_order, ASCENDING);
-        mOrientation = attributes.getInt(R.styleable.NumberPicker_np_orientation, VERTICAL);
-
-        final float width = attributes.getDimensionPixelSize(R.styleable.NumberPicker_np_width,
-                SIZE_UNSPECIFIED);
-        final float height = attributes.getDimensionPixelSize(R.styleable.NumberPicker_np_height,
-                SIZE_UNSPECIFIED);
-
-        setWidthAndHeight();
-
-        mComputeMaxWidth = true;
-
-        mValue = attributes.getInt(R.styleable.NumberPicker_np_value, mValue);
-        mMaxValue = attributes.getInt(R.styleable.NumberPicker_np_max, mMaxValue);
-        mMinValue = attributes.getInt(R.styleable.NumberPicker_np_min, mMinValue);
-
-        mSelectedTextAlign = attributes.getInt(R.styleable.NumberPicker_np_selectedTextAlign,
-                mSelectedTextAlign);
-        mSelectedTextColor = attributes.getColor(R.styleable.NumberPicker_np_selectedTextColor,
-                mSelectedTextColor);
-        mSelectedTextSize = attributes.getDimension(R.styleable.NumberPicker_np_selectedTextSize,
-                spToPx(mSelectedTextSize));
+            R.styleable.NumberPicker_np_dividerThickness, defDividerThickness
+        )
+        mDividerType = attributes.getInt(R.styleable.NumberPicker_np_dividerType, SIDE_LINES)
+        order = attributes.getInt(R.styleable.NumberPicker_np_order, ASCENDING)
+        mOrientation = attributes.getInt(R.styleable.NumberPicker_np_orientation, VERTICAL)
+        val width = attributes.getDimensionPixelSize(
+            R.styleable.NumberPicker_np_width,
+            SIZE_UNSPECIFIED
+        ).toFloat()
+        val height = attributes.getDimensionPixelSize(
+            R.styleable.NumberPicker_np_height,
+            SIZE_UNSPECIFIED
+        ).toFloat()
+        setWidthAndHeight()
+        mComputeMaxWidth = true
+        mValue = attributes.getInt(R.styleable.NumberPicker_np_value, mValue)
+        mMaxValue = attributes.getInt(R.styleable.NumberPicker_np_max, mMaxValue)
+        mMinValue = attributes.getInt(R.styleable.NumberPicker_np_min, mMinValue)
+        mSelectedTextAlign = attributes.getInt(
+            R.styleable.NumberPicker_np_selectedTextAlign,
+            mSelectedTextAlign
+        )
+        mSelectedTextColor = attributes.getColor(
+            R.styleable.NumberPicker_np_selectedTextColor,
+            mSelectedTextColor
+        )
+        mSelectedTextSize = attributes.getDimension(
+            R.styleable.NumberPicker_np_selectedTextSize,
+            spToPx(mSelectedTextSize)
+        )
         mSelectedTextStrikeThru = attributes.getBoolean(
-                R.styleable.NumberPicker_np_selectedTextStrikeThru, mSelectedTextStrikeThru);
+            R.styleable.NumberPicker_np_selectedTextStrikeThru, mSelectedTextStrikeThru
+        )
         mSelectedTextUnderline = attributes.getBoolean(
-                R.styleable.NumberPicker_np_selectedTextUnderline, mSelectedTextUnderline);
-        mSelectedTypeface = Typeface.create(attributes.getString(
-                R.styleable.NumberPicker_np_selectedTypeface), Typeface.NORMAL);
-        mTextAlign = attributes.getInt(R.styleable.NumberPicker_np_textAlign, mTextAlign);
-        mTextColor = attributes.getColor(R.styleable.NumberPicker_np_textColor, mTextColor);
-        mTextSize = attributes.getDimension(R.styleable.NumberPicker_np_textSize,
-                spToPx(mTextSize));
+            R.styleable.NumberPicker_np_selectedTextUnderline, mSelectedTextUnderline
+        )
+        mSelectedTypeface = Typeface.create(
+            attributes.getString(
+                R.styleable.NumberPicker_np_selectedTypeface
+            ), Typeface.NORMAL
+        )
+        mTextAlign = attributes.getInt(R.styleable.NumberPicker_np_textAlign, mTextAlign)
+        mTextColor = attributes.getColor(R.styleable.NumberPicker_np_textColor, mTextColor)
+        mTextSize = attributes.getDimension(
+            R.styleable.NumberPicker_np_textSize,
+            spToPx(mTextSize)
+        )
         mTextStrikeThru = attributes.getBoolean(
-                R.styleable.NumberPicker_np_textStrikeThru, mTextStrikeThru);
+            R.styleable.NumberPicker_np_textStrikeThru, mTextStrikeThru
+        )
         mTextUnderline = attributes.getBoolean(
-                R.styleable.NumberPicker_np_textUnderline, mTextUnderline);
-        mTypeface = Typeface.create(attributes.getString(R.styleable.NumberPicker_np_typeface),
-                Typeface.NORMAL);
-        mFormatter = stringToFormatter(attributes.getString(R.styleable.NumberPicker_np_formatter));
-        mFadingEdgeEnabled = attributes.getBoolean(R.styleable.NumberPicker_np_fadingEdgeEnabled,
-                mFadingEdgeEnabled);
-        mFadingEdgeStrength = attributes.getFloat(R.styleable.NumberPicker_np_fadingEdgeStrength,
-                mFadingEdgeStrength);
-        mScrollerEnabled = attributes.getBoolean(R.styleable.NumberPicker_np_scrollerEnabled,
-                mScrollerEnabled);
-        mWheelItemCount = attributes.getInt(R.styleable.NumberPicker_np_wheelItemCount,
-                mWheelItemCount);
+            R.styleable.NumberPicker_np_textUnderline, mTextUnderline
+        )
+        mTypeface = Typeface.create(
+            attributes.getString(R.styleable.NumberPicker_np_typeface),
+            Typeface.NORMAL
+        )
+        mFormatter = stringToFormatter(attributes.getString(R.styleable.NumberPicker_np_formatter))
+        mFadingEdgeEnabled = attributes.getBoolean(
+            R.styleable.NumberPicker_np_fadingEdgeEnabled,
+            mFadingEdgeEnabled
+        )
+        mFadingEdgeStrength = attributes.getFloat(
+            R.styleable.NumberPicker_np_fadingEdgeStrength,
+            mFadingEdgeStrength
+        )
+        isScrollerEnabled = attributes.getBoolean(
+            R.styleable.NumberPicker_np_scrollerEnabled,
+            isScrollerEnabled
+        )
+        mWheelItemCount = attributes.getInt(
+            R.styleable.NumberPicker_np_wheelItemCount,
+            mWheelItemCount
+        )
         mLineSpacingMultiplier = attributes.getFloat(
-                R.styleable.NumberPicker_np_lineSpacingMultiplier, mLineSpacingMultiplier);
-        int mMaxFlingVelocityCoefficient = attributes.getInt(
-                R.styleable.NumberPicker_np_maxFlingVelocityCoefficient,
-                DEFAULT_MAX_FLING_VELOCITY_COEFFICIENT);
+            R.styleable.NumberPicker_np_lineSpacingMultiplier, mLineSpacingMultiplier
+        )
+        val mMaxFlingVelocityCoefficient = attributes.getInt(
+            R.styleable.NumberPicker_np_maxFlingVelocityCoefficient,
+            DEFAULT_MAX_FLING_VELOCITY_COEFFICIENT
+        )
         mHideWheelUntilFocused = attributes.getBoolean(
-                R.styleable.NumberPicker_np_hideWheelUntilFocused, false);
+            R.styleable.NumberPicker_np_hideWheelUntilFocused, false
+        )
         mAccessibilityDescriptionEnabled = attributes.getBoolean(
-                R.styleable.NumberPicker_np_accessibilityDescriptionEnabled, true);
+            R.styleable.NumberPicker_np_accessibilityDescriptionEnabled, true
+        )
         mItemSpacing = attributes.getDimensionPixelSize(
-                R.styleable.NumberPicker_np_itemSpacing, 0);
+            R.styleable.NumberPicker_np_itemSpacing, 0
+        )
         // By default LinearLayout that we extend is not drawn. This is
         // its draw() method is not called but dispatchDraw() is called
         // directly (see ViewGroup.drawChild()). However, this class uses
         // the fading edge effect implemented by View and we need our
         // draw() method to be called. Therefore, we declare we will draw.
-        setWillNotDraw(false);
-
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(
-                Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.number_picker_material, this, true);
+        setWillNotDraw(false)
+        val inflater = context.getSystemService(
+            Context.LAYOUT_INFLATER_SERVICE
+        ) as LayoutInflater
+        inflater.inflate(R.layout.number_picker_material, this, true)
 
         // input text
-        mSelectedText = findViewById(R.id.np__numberpicker_input);
-        mSelectedText.setEnabled(false);
-        mSelectedText.setFocusable(false);
-        mSelectedText.setImeOptions(EditorInfo.IME_ACTION_NONE);
+        mSelectedText = findViewById(R.id.np__numberpicker_input)
+        mSelectedText.isEnabled = false
+        mSelectedText.isFocusable = false
+        mSelectedText.imeOptions = EditorInfo.IME_ACTION_NONE
 
         // create the selector wheel paint
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setTextAlign(Paint.Align.CENTER);
-        mSelectorWheelPaint = paint;
-
-        setSelectedTextColor(mSelectedTextColor);
-        setTextColor(mTextColor);
-        setTextSize(mTextSize);
-        setSelectedTextSize(mSelectedTextSize);
-        setTypeface(mTypeface);
-        setSelectedTypeface(mSelectedTypeface);
-        setFormatter(mFormatter);
-        updateInputTextView();
-
-        setValue(mValue);
-        setMaxValue(mMaxValue);
-        setMinValue(mMinValue);
-
-        setWheelItemCount(mWheelItemCount);
-
-        mWrapSelectorWheel = attributes.getBoolean(R.styleable.NumberPicker_np_wrapSelectorWheel,
-                mWrapSelectorWheel);
-        setWrapSelectorWheel(mWrapSelectorWheel);
-
-        if (width != SIZE_UNSPECIFIED && height != SIZE_UNSPECIFIED) {
-            setScaleX(width / mMinWidth);
-            setScaleY(height / mMaxHeight);
-        } else if (width != SIZE_UNSPECIFIED) {
-            final float scale = width / mMinWidth;
-            setScaleX(scale);
-            setScaleY(scale);
-        } else if (height != SIZE_UNSPECIFIED) {
-            final float scale = height / mMaxHeight;
-            setScaleX(scale);
-            setScaleY(scale);
+        val paint = Paint()
+        paint.isAntiAlias = true
+        paint.textAlign = Paint.Align.CENTER
+        mSelectorWheelPaint = paint
+        setSelectedTextColor(mSelectedTextColor)
+        textColor = mTextColor
+        textSize = mTextSize
+        setSelectedTextSize(mSelectedTextSize)
+        setTypeface(mTypeface)
+        setSelectedTypeface(mSelectedTypeface)
+        setFormatter(mFormatter)
+        updateInputTextView()
+        value = mValue
+        maxValue = mMaxValue
+        minValue = mMinValue
+        setWheelItemCount(mWheelItemCount)
+        mWrapSelectorWheel = attributes.getBoolean(
+            R.styleable.NumberPicker_np_wrapSelectorWheel,
+            mWrapSelectorWheel
+        )
+        setWrapSelectorWheel(mWrapSelectorWheel)
+        if (width != SIZE_UNSPECIFIED.toFloat() && height != SIZE_UNSPECIFIED.toFloat()) {
+            scaleX = width / mMinWidth
+            scaleY = height / mMaxHeight
+        } else if (width != SIZE_UNSPECIFIED.toFloat()) {
+            val scale = width / mMinWidth
+            scaleX = scale
+            scaleY = scale
+        } else if (height != SIZE_UNSPECIFIED.toFloat()) {
+            val scale = height / mMaxHeight
+            scaleX = scale
+            scaleY = scale
         }
 
         // initialize constants
-        ViewConfiguration mViewConfiguration = ViewConfiguration.get(context);
-        mTouchSlop = mViewConfiguration.getScaledTouchSlop();
-        mMinimumFlingVelocity = mViewConfiguration.getScaledMinimumFlingVelocity();
-        mMaximumFlingVelocity = mViewConfiguration.getScaledMaximumFlingVelocity()
-                / mMaxFlingVelocityCoefficient;
+        val mViewConfiguration = ViewConfiguration.get(context)
+        mTouchSlop = mViewConfiguration.scaledTouchSlop
+        mMinimumFlingVelocity = mViewConfiguration.scaledMinimumFlingVelocity
+        mMaximumFlingVelocity = (mViewConfiguration.scaledMaximumFlingVelocity
+                / mMaxFlingVelocityCoefficient)
 
         // create the fling and adjust scrollers
-        mFlingScroller = new Scroller(context, null, true);
-        mAdjustScroller = new Scroller(context, new DecelerateInterpolator(2.5f));
+        mFlingScroller = Scroller(context, null, true)
+        mAdjustScroller = Scroller(context, DecelerateInterpolator(2.5f))
 
         // If not explicitly specified this view is important for accessibility.
-        if (getImportantForAccessibility() == IMPORTANT_FOR_ACCESSIBILITY_AUTO) {
-            setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
+        if (importantForAccessibility == IMPORTANT_FOR_ACCESSIBILITY_AUTO) {
+            importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_YES
         }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Should be focusable by default, as the text view whose visibility changes is focusable
-            if (getFocusable() == View.FOCUSABLE_AUTO) {
-                setFocusable(View.FOCUSABLE);
-                setFocusableInTouchMode(true);
+            if (focusable == FOCUSABLE_AUTO) {
+                focusable = FOCUSABLE
+                isFocusableInTouchMode = true
             }
         }
-
-        attributes.recycle();
+        attributes.recycle()
     }
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        final int msrdWdth = getMeasuredWidth();
-        final int msrdHght = getMeasuredHeight();
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        val msrdWdth = measuredWidth
+        val msrdHght = measuredHeight
 
         // Input text centered horizontally.
-        final int inptTxtMsrdWdth = mSelectedText.getMeasuredWidth();
-        final int inptTxtMsrdHght = mSelectedText.getMeasuredHeight();
-        final int inptTxtLeft = (msrdWdth - inptTxtMsrdWdth) / 2;
-        final int inptTxtTop = (msrdHght - inptTxtMsrdHght) / 2;
-        final int inptTxtRight = inptTxtLeft + inptTxtMsrdWdth;
-        final int inptTxtBottom = inptTxtTop + inptTxtMsrdHght;
-        mSelectedText.layout(inptTxtLeft, inptTxtTop, inptTxtRight, inptTxtBottom);
-        mSelectedTextCenterX = mSelectedText.getX() + mSelectedText.getMeasuredWidth() / 2f - 2f;
-        mSelectedTextCenterY = mSelectedText.getY() + mSelectedText.getMeasuredHeight() / 2f - 5f;
-
+        val inptTxtMsrdWdth = mSelectedText.measuredWidth
+        val inptTxtMsrdHght = mSelectedText.measuredHeight
+        val inptTxtLeft = (msrdWdth - inptTxtMsrdWdth) / 2
+        val inptTxtTop = (msrdHght - inptTxtMsrdHght) / 2
+        val inptTxtRight = inptTxtLeft + inptTxtMsrdWdth
+        val inptTxtBottom = inptTxtTop + inptTxtMsrdHght
+        mSelectedText.layout(inptTxtLeft, inptTxtTop, inptTxtRight, inptTxtBottom)
+        mSelectedTextCenterX = mSelectedText.x + mSelectedText.measuredWidth / 2f - 2f
+        mSelectedTextCenterY = mSelectedText.y + mSelectedText.measuredHeight / 2f - 5f
         if (changed) {
             // need to do all this when we know our size
-            initializeSelectorWheel();
-            initializeFadingEdges();
-
-            final int dividerDistance = 2 * mDividerThickness + mDividerDistance;
-            if (isHorizontalMode()) {
-                mLeftDividerLeft = (getWidth() - mDividerDistance) / 2 - mDividerThickness;
-                mRightDividerRight = mLeftDividerLeft + dividerDistance;
-                mBottomDividerBottom = getHeight();
+            initializeSelectorWheel()
+            initializeFadingEdges()
+            val dividerDistance = 2 * mDividerThickness + mDividerDistance
+            if (isHorizontalMode) {
+                mLeftDividerLeft = (width - mDividerDistance) / 2 - mDividerThickness
+                mRightDividerRight = mLeftDividerLeft + dividerDistance
+                mBottomDividerBottom = height
             } else {
-                mTopDividerTop = (getHeight() - mDividerDistance) / 2 - mDividerThickness;
-                mBottomDividerBottom = mTopDividerTop + dividerDistance;
+                mTopDividerTop = (height - mDividerDistance) / 2 - mDividerThickness
+                mBottomDividerBottom = mTopDividerTop + dividerDistance
             }
         }
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         // Try greedily to fit the max width and height.
-        final int newWidthMeasureSpec = makeMeasureSpec(widthMeasureSpec, mMaxWidth);
-        final int newHeightMeasureSpec = makeMeasureSpec(heightMeasureSpec, mMaxHeight);
-        super.onMeasure(newWidthMeasureSpec, newHeightMeasureSpec);
+        val newWidthMeasureSpec = makeMeasureSpec(widthMeasureSpec, mMaxWidth)
+        val newHeightMeasureSpec = makeMeasureSpec(heightMeasureSpec, mMaxHeight)
+        super.onMeasure(newWidthMeasureSpec, newHeightMeasureSpec)
         // Flag if we are measured with width or height less than the respective min.
-        final int widthSize = resolveSizeAndStateRespectingMinSize(mMinWidth, getMeasuredWidth(),
-                widthMeasureSpec);
-        final int heightSize = resolveSizeAndStateRespectingMinSize(mMinHeight, getMeasuredHeight(),
-                heightMeasureSpec);
-        setMeasuredDimension(widthSize, heightSize);
+        val widthSize = resolveSizeAndStateRespectingMinSize(
+            mMinWidth, measuredWidth,
+            widthMeasureSpec
+        )
+        val heightSize = resolveSizeAndStateRespectingMinSize(
+            mMinHeight, measuredHeight,
+            heightMeasureSpec
+        )
+        setMeasuredDimension(widthSize, heightSize)
     }
 
     /**
@@ -825,393 +736,360 @@ public class NumberPicker extends LinearLayout {
      * @param scroller The scroller to whose final position to get.
      * @return True of the a move was performed, i.e. the scroller was not in final position.
      */
-    private boolean moveToFinalScrollerPosition(Scroller scroller) {
-        scroller.forceFinished(true);
-        if (isHorizontalMode()) {
-            int amountToScroll = scroller.getFinalX() - scroller.getCurrX();
-            int futureScrollOffset = (mCurrentScrollOffset + amountToScroll) % mSelectorElementSize;
-            int overshootAdjustment = mInitialScrollOffset - futureScrollOffset;
+    private fun moveToFinalScrollerPosition(scroller: Scroller): Boolean {
+        scroller.forceFinished(true)
+        if (isHorizontalMode) {
+            var amountToScroll = scroller.finalX - scroller.currX
+            val futureScrollOffset = (mCurrentScrollOffset + amountToScroll) % mSelectorElementSize
+            var overshootAdjustment = mInitialScrollOffset - futureScrollOffset
             if (overshootAdjustment != 0) {
                 if (Math.abs(overshootAdjustment) > mSelectorElementSize / 2) {
                     if (overshootAdjustment > 0) {
-                        overshootAdjustment -= mSelectorElementSize;
+                        overshootAdjustment -= mSelectorElementSize
                     } else {
-                        overshootAdjustment += mSelectorElementSize;
+                        overshootAdjustment += mSelectorElementSize
                     }
                 }
-                amountToScroll += overshootAdjustment;
-                scrollBy(amountToScroll, 0);
-                return true;
+                amountToScroll += overshootAdjustment
+                scrollBy(amountToScroll, 0)
+                return true
             }
         } else {
-            int amountToScroll = scroller.getFinalY() - scroller.getCurrY();
-            int futureScrollOffset = (mCurrentScrollOffset + amountToScroll) % mSelectorElementSize;
-            int overshootAdjustment = mInitialScrollOffset - futureScrollOffset;
+            var amountToScroll = scroller.finalY - scroller.currY
+            val futureScrollOffset = (mCurrentScrollOffset + amountToScroll) % mSelectorElementSize
+            var overshootAdjustment = mInitialScrollOffset - futureScrollOffset
             if (overshootAdjustment != 0) {
                 if (Math.abs(overshootAdjustment) > mSelectorElementSize / 2) {
                     if (overshootAdjustment > 0) {
-                        overshootAdjustment -= mSelectorElementSize;
+                        overshootAdjustment -= mSelectorElementSize
                     } else {
-                        overshootAdjustment += mSelectorElementSize;
+                        overshootAdjustment += mSelectorElementSize
                     }
                 }
-                amountToScroll += overshootAdjustment;
-                scrollBy(0, amountToScroll);
-                return true;
+                amountToScroll += overshootAdjustment
+                scrollBy(0, amountToScroll)
+                return true
             }
         }
-        return false;
+        return false
     }
 
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent event) {
-        if (!isEnabled()) {
-            return false;
+    override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
+        if (!isEnabled) {
+            return false
         }
-
-        final int action = event.getAction() & MotionEvent.ACTION_MASK;
+        val action = event.action and MotionEvent.ACTION_MASK
         if (action != MotionEvent.ACTION_DOWN) {
-            return false;
+            return false
         }
-
-        removeAllCallbacks();
+        removeAllCallbacks()
         // Make sure we support flinging inside scrollables.
-        getParent().requestDisallowInterceptTouchEvent(true);
-
-        if (isHorizontalMode()) {
-            mLastDownOrMoveEventX = mLastDownEventX = event.getX();
-            if (!mFlingScroller.isFinished()) {
-                mFlingScroller.forceFinished(true);
-                mAdjustScroller.forceFinished(true);
-                onScrollerFinished(mFlingScroller);
-                onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-            } else if (!mAdjustScroller.isFinished()) {
-                mFlingScroller.forceFinished(true);
-                mAdjustScroller.forceFinished(true);
-                onScrollerFinished(mAdjustScroller);
+        parent.requestDisallowInterceptTouchEvent(true)
+        if (isHorizontalMode) {
+            mLastDownEventX = event.x
+            mLastDownOrMoveEventX = mLastDownEventX
+            if (!mFlingScroller.isFinished) {
+                mFlingScroller.forceFinished(true)
+                mAdjustScroller.forceFinished(true)
+                onScrollerFinished(mFlingScroller)
+                onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE)
+            } else if (!mAdjustScroller.isFinished) {
+                mFlingScroller.forceFinished(true)
+                mAdjustScroller.forceFinished(true)
+                onScrollerFinished(mAdjustScroller)
             } else if (mLastDownEventX >= mLeftDividerLeft
-                    && mLastDownEventX <= mRightDividerRight) {
+                && mLastDownEventX <= mRightDividerRight
+            ) {
                 if (mOnClickListener != null) {
-                    mOnClickListener.onClick(this);
+                    mOnClickListener!!.onClick(this)
                 }
             } else if (mLastDownEventX < mLeftDividerLeft) {
-                postChangeCurrentByOneFromLongPress(false);
+                postChangeCurrentByOneFromLongPress(false)
             } else if (mLastDownEventX > mRightDividerRight) {
-                postChangeCurrentByOneFromLongPress(true);
+                postChangeCurrentByOneFromLongPress(true)
             }
         } else {
-            mLastDownOrMoveEventY = mLastDownEventY = event.getY();
-            if (!mFlingScroller.isFinished()) {
-                mFlingScroller.forceFinished(true);
-                mAdjustScroller.forceFinished(true);
-                onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
-            } else if (!mAdjustScroller.isFinished()) {
-                mFlingScroller.forceFinished(true);
-                mAdjustScroller.forceFinished(true);
+            mLastDownEventY = event.y
+            mLastDownOrMoveEventY = mLastDownEventY
+            if (!mFlingScroller.isFinished) {
+                mFlingScroller.forceFinished(true)
+                mAdjustScroller.forceFinished(true)
+                onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE)
+            } else if (!mAdjustScroller.isFinished) {
+                mFlingScroller.forceFinished(true)
+                mAdjustScroller.forceFinished(true)
             } else if (mLastDownEventY >= mTopDividerTop
-                    && mLastDownEventY <= mBottomDividerBottom) {
+                && mLastDownEventY <= mBottomDividerBottom
+            ) {
                 if (mOnClickListener != null) {
-                    mOnClickListener.onClick(this);
+                    mOnClickListener!!.onClick(this)
                 }
             } else if (mLastDownEventY < mTopDividerTop) {
-                postChangeCurrentByOneFromLongPress(false);
+                postChangeCurrentByOneFromLongPress(false)
             } else if (mLastDownEventY > mBottomDividerBottom) {
-                postChangeCurrentByOneFromLongPress(true);
+                postChangeCurrentByOneFromLongPress(true)
             }
         }
-        return true;
+        return true
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (!isEnabled()) {
-            return false;
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (!isEnabled) {
+            return false
         }
-        if (!isScrollerEnabled()) {
-            return false;
+        if (!isScrollerEnabled) {
+            return false
         }
         if (mVelocityTracker == null) {
-            mVelocityTracker = VelocityTracker.obtain();
+            mVelocityTracker = VelocityTracker.obtain()
         }
-        mVelocityTracker.addMovement(event);
-        int action = event.getAction() & MotionEvent.ACTION_MASK;
-        switch (action) {
-            case MotionEvent.ACTION_MOVE: {
-                if (isHorizontalMode()) {
-                    float currentMoveX = event.getX();
+        mVelocityTracker!!.addMovement(event)
+        val action = event.action and MotionEvent.ACTION_MASK
+        when (action) {
+            MotionEvent.ACTION_MOVE -> {
+                if (isHorizontalMode) {
+                    val currentMoveX = event.x
                     if (mScrollState != OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                        int deltaDownX = (int) Math.abs(currentMoveX - mLastDownEventX);
+                        val deltaDownX = Math.abs(currentMoveX - mLastDownEventX).toInt()
                         if (deltaDownX > mTouchSlop) {
-                            removeAllCallbacks();
-                            onScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
+                            removeAllCallbacks()
+                            onScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
                         }
                     } else {
-                        int deltaMoveX = (int) ((currentMoveX - mLastDownOrMoveEventX));
-                        scrollBy(deltaMoveX, 0);
-                        invalidate();
+                        val deltaMoveX = (currentMoveX - mLastDownOrMoveEventX).toInt()
+                        scrollBy(deltaMoveX, 0)
+                        invalidate()
                     }
-                    mLastDownOrMoveEventX = currentMoveX;
+                    mLastDownOrMoveEventX = currentMoveX
                 } else {
-                    float currentMoveY = event.getY();
+                    val currentMoveY = event.y
                     if (mScrollState != OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                        int deltaDownY = (int) Math.abs(currentMoveY - mLastDownEventY);
+                        val deltaDownY = Math.abs(currentMoveY - mLastDownEventY).toInt()
                         if (deltaDownY > mTouchSlop) {
-                            removeAllCallbacks();
-                            onScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL);
+                            removeAllCallbacks()
+                            onScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
                         }
                     } else {
-                        int deltaMoveY = (int) ((currentMoveY - mLastDownOrMoveEventY));
-                        scrollBy(0, deltaMoveY);
-                        invalidate();
+                        val deltaMoveY = (currentMoveY - mLastDownOrMoveEventY).toInt()
+                        scrollBy(0, deltaMoveY)
+                        invalidate()
                     }
-                    mLastDownOrMoveEventY = currentMoveY;
+                    mLastDownOrMoveEventY = currentMoveY
                 }
             }
-            break;
-            case MotionEvent.ACTION_UP: {
-                removeChangeCurrentByOneFromLongPress();
-                VelocityTracker velocityTracker = mVelocityTracker;
-                velocityTracker.computeCurrentVelocity(1000, mMaximumFlingVelocity);
-                if (isHorizontalMode()) {
-                    int initialVelocity = (int) velocityTracker.getXVelocity();
+
+            MotionEvent.ACTION_UP -> {
+                removeChangeCurrentByOneFromLongPress()
+                val velocityTracker = mVelocityTracker
+                velocityTracker!!.computeCurrentVelocity(1000, mMaximumFlingVelocity.toFloat())
+                if (isHorizontalMode) {
+                    val initialVelocity = velocityTracker.xVelocity.toInt()
                     if (Math.abs(initialVelocity) > mMinimumFlingVelocity) {
-                        fling(initialVelocity);
-                        onScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
+                        fling(initialVelocity)
+                        onScrollStateChange(OnScrollListener.SCROLL_STATE_FLING)
                     } else {
-                        int eventX = (int) event.getX();
-                        int deltaMoveX = (int) Math.abs(eventX - mLastDownEventX);
+                        val eventX = event.x.toInt()
+                        val deltaMoveX = Math.abs(eventX - mLastDownEventX).toInt()
                         if (deltaMoveX <= mTouchSlop) {
-                            int selectorIndexOffset = (eventX / mSelectorElementSize)
-                                    - mWheelMiddleItemIndex;
+                            val selectorIndexOffset = (eventX / mSelectorElementSize
+                                    - mWheelMiddleItemIndex)
                             if (selectorIndexOffset > 0) {
-                                changeValueByOne(true);
+                                changeValueByOne(true)
                             } else if (selectorIndexOffset < 0) {
-                                changeValueByOne(false);
+                                changeValueByOne(false)
                             } else {
-                                ensureScrollWheelAdjusted();
+                                ensureScrollWheelAdjusted()
                             }
                         } else {
-                            ensureScrollWheelAdjusted();
+                            ensureScrollWheelAdjusted()
                         }
-                        onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+                        onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE)
                     }
                 } else {
-                    int initialVelocity = (int) velocityTracker.getYVelocity();
+                    val initialVelocity = velocityTracker.yVelocity.toInt()
                     if (Math.abs(initialVelocity) > mMinimumFlingVelocity) {
-                        fling(initialVelocity);
-                        onScrollStateChange(OnScrollListener.SCROLL_STATE_FLING);
+                        fling(initialVelocity)
+                        onScrollStateChange(OnScrollListener.SCROLL_STATE_FLING)
                     } else {
-                        int eventY = (int) event.getY();
-                        int deltaMoveY = (int) Math.abs(eventY - mLastDownEventY);
+                        val eventY = event.y.toInt()
+                        val deltaMoveY = Math.abs(eventY - mLastDownEventY).toInt()
                         if (deltaMoveY <= mTouchSlop) {
-                            int selectorIndexOffset = (eventY / mSelectorElementSize)
-                                    - mWheelMiddleItemIndex;
+                            val selectorIndexOffset = (eventY / mSelectorElementSize
+                                    - mWheelMiddleItemIndex)
                             if (selectorIndexOffset > 0) {
-                                changeValueByOne(true);
+                                changeValueByOne(true)
                             } else if (selectorIndexOffset < 0) {
-                                changeValueByOne(false);
+                                changeValueByOne(false)
                             } else {
-                                ensureScrollWheelAdjusted();
+                                ensureScrollWheelAdjusted()
                             }
                         } else {
-                            ensureScrollWheelAdjusted();
+                            ensureScrollWheelAdjusted()
                         }
-                        onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+                        onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE)
                     }
                 }
-                mVelocityTracker.recycle();
-                mVelocityTracker = null;
+                mVelocityTracker!!.recycle()
+                mVelocityTracker = null
             }
-            break;
         }
-        return true;
+        return true
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        final int action = event.getAction() & MotionEvent.ACTION_MASK;
-        switch (action) {
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_UP:
-                removeAllCallbacks();
-                break;
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        val action = event.action and MotionEvent.ACTION_MASK
+        when (action) {
+            MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> removeAllCallbacks()
         }
-        return super.dispatchTouchEvent(event);
+        return super.dispatchTouchEvent(event)
     }
 
-    @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        final int keyCode = event.getKeyCode();
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_DPAD_CENTER:
-            case KeyEvent.KEYCODE_ENTER:
-                removeAllCallbacks();
-                break;
-            case KeyEvent.KEYCODE_DPAD_DOWN:
-            case KeyEvent.KEYCODE_DPAD_UP:
-                switch (event.getAction()) {
-                    case KeyEvent.ACTION_DOWN:
-                        if (mWrapSelectorWheel || ((keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
-                                ? getValue() < getMaxValue() : getValue() > getMinValue())) {
-                            requestFocus();
-                            mLastHandledDownDpadKeyCode = keyCode;
-                            removeAllCallbacks();
-                            if (mFlingScroller.isFinished()) {
-                                changeValueByOne(keyCode == KeyEvent.KEYCODE_DPAD_DOWN);
-                            }
-                            return true;
-                        }
-                        break;
-                    case KeyEvent.ACTION_UP:
-                        if (mLastHandledDownDpadKeyCode == keyCode) {
-                            mLastHandledDownDpadKeyCode = -1;
-                            return true;
-                        }
-                        break;
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        val keyCode = event.keyCode
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> removeAllCallbacks()
+            KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_DPAD_UP -> when (event.action) {
+                KeyEvent.ACTION_DOWN -> if (mWrapSelectorWheel || (if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) value < maxValue else value > minValue)) {
+                    requestFocus()
+                    mLastHandledDownDpadKeyCode = keyCode
+                    removeAllCallbacks()
+                    if (mFlingScroller.isFinished) {
+                        changeValueByOne(keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+                    }
+                    return true
                 }
-        }
-        return super.dispatchKeyEvent(event);
-    }
 
-    @Override
-    public boolean dispatchTrackballEvent(MotionEvent event) {
-        final int action = event.getAction() & MotionEvent.ACTION_MASK;
-        switch (action) {
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_UP:
-                removeAllCallbacks();
-                break;
-        }
-        return super.dispatchTrackballEvent(event);
-    }
-
-    @Override
-    public void computeScroll() {
-        if (!isScrollerEnabled()) {
-            return;
-        }
-
-        Scroller scroller = mFlingScroller;
-        if (scroller.isFinished()) {
-            scroller = mAdjustScroller;
-            if (scroller.isFinished()) {
-                return;
+                KeyEvent.ACTION_UP -> if (mLastHandledDownDpadKeyCode == keyCode) {
+                    mLastHandledDownDpadKeyCode = -1
+                    return true
+                }
             }
         }
-        scroller.computeScrollOffset();
-        if (isHorizontalMode()) {
-            int currentScrollerX = scroller.getCurrX();
+        return super.dispatchKeyEvent(event)
+    }
+
+    override fun dispatchTrackballEvent(event: MotionEvent): Boolean {
+        val action = event.action and MotionEvent.ACTION_MASK
+        when (action) {
+            MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> removeAllCallbacks()
+        }
+        return super.dispatchTrackballEvent(event)
+    }
+
+    override fun computeScroll() {
+        if (!isScrollerEnabled) {
+            return
+        }
+        var scroller = mFlingScroller
+        if (scroller.isFinished) {
+            scroller = mAdjustScroller
+            if (scroller.isFinished) {
+                return
+            }
+        }
+        scroller.computeScrollOffset()
+        if (isHorizontalMode) {
+            val currentScrollerX = scroller.currX
             if (mPreviousScrollerX == 0) {
-                mPreviousScrollerX = scroller.getStartX();
+                mPreviousScrollerX = scroller.startX
             }
-            scrollBy(currentScrollerX - mPreviousScrollerX, 0);
-            mPreviousScrollerX = currentScrollerX;
+            scrollBy(currentScrollerX - mPreviousScrollerX, 0)
+            mPreviousScrollerX = currentScrollerX
         } else {
-            int currentScrollerY = scroller.getCurrY();
+            val currentScrollerY = scroller.currY
             if (mPreviousScrollerY == 0) {
-                mPreviousScrollerY = scroller.getStartY();
+                mPreviousScrollerY = scroller.startY
             }
-            scrollBy(0, currentScrollerY - mPreviousScrollerY);
-            mPreviousScrollerY = currentScrollerY;
+            scrollBy(0, currentScrollerY - mPreviousScrollerY)
+            mPreviousScrollerY = currentScrollerY
         }
-        if (scroller.isFinished()) {
-            onScrollerFinished(scroller);
+        if (scroller.isFinished) {
+            onScrollerFinished(scroller)
         } else {
-            postInvalidate();
+            postInvalidate()
         }
     }
 
-    @Override
-    public void setEnabled(boolean enabled) {
-        super.setEnabled(enabled);
-        mSelectedText.setEnabled(enabled);
+    override fun setEnabled(enabled: Boolean) {
+        super.setEnabled(enabled)
+        mSelectedText.isEnabled = enabled
     }
 
-    @Override
-    public void scrollBy(int x, int y) {
-        int SELECTOR_MIDDLE_ITEM_INDEX = 3/2;
-        int mSelectorElementHeight = mSelectorElementSize;
-        int[] selectorIndices = mSelectorIndices;
-        int startScrollOffset = mCurrentScrollOffset;
-        if (!mWrapSelectorWheel && y > 0
-                && selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX] <= mMinValue) {
-            mCurrentScrollOffset = mInitialScrollOffset;
-            return;
+    override fun scrollBy(x: Int, y: Int) {
+        val SELECTOR_MIDDLE_ITEM_INDEX = 3 / 2
+        val mSelectorElementHeight = mSelectorElementSize
+        val selectorIndices = selectorIndices
+        val startScrollOffset = mCurrentScrollOffset
+        if (!mWrapSelectorWheel && y > 0 && selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX] <= mMinValue) {
+            mCurrentScrollOffset = mInitialScrollOffset
+            return
         }
-        if (!mWrapSelectorWheel && y < 0
-                && selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX] >= mMaxValue) {
-            mCurrentScrollOffset = mInitialScrollOffset;
-            return;
+        if (!mWrapSelectorWheel && y < 0 && selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX] >= mMaxValue) {
+            mCurrentScrollOffset = mInitialScrollOffset
+            return
         }
-        mCurrentScrollOffset += y;
+        mCurrentScrollOffset += y
         while (mCurrentScrollOffset - mInitialScrollOffset > mSelectorTextGapHeight) {
-            mCurrentScrollOffset -= mSelectorElementHeight;
-            decrementSelectorIndices(selectorIndices);
-            setValueInternal(selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX], true);
+            mCurrentScrollOffset -= mSelectorElementHeight
+            decrementSelectorIndices(selectorIndices)
+            setValueInternal(selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX], true)
             if (!mWrapSelectorWheel && selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX] <= mMinValue) {
-                mCurrentScrollOffset = mInitialScrollOffset;
+                mCurrentScrollOffset = mInitialScrollOffset
             }
         }
         while (mCurrentScrollOffset - mInitialScrollOffset < -mSelectorTextGapHeight) {
-            mCurrentScrollOffset += mSelectorElementHeight;
-            incrementSelectorIndices(selectorIndices);
-            setValueInternal(selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX], true);
+            mCurrentScrollOffset += mSelectorElementHeight
+            incrementSelectorIndices(selectorIndices)
+            setValueInternal(selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX], true)
             if (!mWrapSelectorWheel && selectorIndices[SELECTOR_MIDDLE_ITEM_INDEX] >= mMaxValue) {
-                mCurrentScrollOffset = mInitialScrollOffset;
+                mCurrentScrollOffset = mInitialScrollOffset
             }
         }
         if (startScrollOffset != mCurrentScrollOffset) {
-            onScrollChanged(0, mCurrentScrollOffset, 0, startScrollOffset);
+            onScrollChanged(0, mCurrentScrollOffset, 0, startScrollOffset)
         }
     }
 
-    private int computeScrollOffset(boolean isHorizontalMode) {
-        return isHorizontalMode ? mCurrentScrollOffset : 0;
+    private fun computeScrollOffset(isHorizontalMode: Boolean): Int {
+        return if (isHorizontalMode) mCurrentScrollOffset else 0
     }
 
-    private int computeScrollRange(boolean isHorizontalMode) {
-        return isHorizontalMode ? (mMaxValue - mMinValue + 1) * mSelectorElementSize : 0;
+    private fun computeScrollRange(isHorizontalMode: Boolean): Int {
+        return if (isHorizontalMode) (mMaxValue - mMinValue + 1) * mSelectorElementSize else 0
     }
 
-    private int computeScrollExtent(boolean isHorizontalMode) {
-        return isHorizontalMode ? getWidth() : getHeight();
+    private fun computeScrollExtent(isHorizontalMode: Boolean): Int {
+        return if (isHorizontalMode) width else height
     }
 
-    @Override
-    protected int computeHorizontalScrollOffset() {
-        return computeScrollOffset(isHorizontalMode());
+    override fun computeHorizontalScrollOffset(): Int {
+        return computeScrollOffset(isHorizontalMode)
     }
 
-    @Override
-    protected int computeHorizontalScrollRange() {
-        return computeScrollRange(isHorizontalMode());
+    override fun computeHorizontalScrollRange(): Int {
+        return computeScrollRange(isHorizontalMode)
     }
 
-    @Override
-    protected int computeHorizontalScrollExtent() {
-        return computeScrollExtent(isHorizontalMode());
+    override fun computeHorizontalScrollExtent(): Int {
+        return computeScrollExtent(isHorizontalMode)
     }
 
-    @Override
-    protected int computeVerticalScrollOffset() {
-        return computeScrollOffset(!isHorizontalMode());
+    override fun computeVerticalScrollOffset(): Int {
+        return computeScrollOffset(!isHorizontalMode)
     }
 
-    @Override
-    protected int computeVerticalScrollRange() {
-        return computeScrollRange(!isHorizontalMode());
+    override fun computeVerticalScrollRange(): Int {
+        return computeScrollRange(!isHorizontalMode)
     }
 
-    @Override
-    protected int computeVerticalScrollExtent() {
-        return computeScrollExtent(isHorizontalMode());
+    override fun computeVerticalScrollExtent(): Int {
+        return computeScrollExtent(isHorizontalMode)
     }
 
-    @Override
-    protected void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mNumberFormatter = NumberFormat.getInstance();
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        mNumberFormatter = NumberFormat.getInstance()
     }
 
     /**
@@ -1219,8 +1097,8 @@ public class NumberPicker extends LinearLayout {
      *
      * @param onClickListener The listener.
      */
-    public void setOnClickListener(OnClickListener onClickListener) {
-        mOnClickListener = onClickListener;
+    override fun setOnClickListener(onClickListener: OnClickListener?) {
+        mOnClickListener = onClickListener
     }
 
     /**
@@ -1228,484 +1106,456 @@ public class NumberPicker extends LinearLayout {
      *
      * @param onValueChangedListener The listener.
      */
-    public void setOnValueChangedListener(OnValueChangeListener onValueChangedListener) {
-        mOnValueChangeListener = onValueChangedListener;
+    fun setOnValueChangedListener(onValueChangedListener: OnValueChangeListener?) {
+        mOnValueChangeListener = onValueChangedListener
     }
 
     /**
      * Set the formatter to be used for formatting the current value.
-     * <p>
+     *
+     *
      * Note: If you have provided alternative values for the values this
      * formatter is never invoked.
-     * </p>
      *
-     * @param formatter The formatter object. If formatter is <code>null</code>,
-     *                  {@link String#valueOf(int)} will be used.
-     * @see #setDisplayedValues(String[])
+     *
+     * @param formatter The formatter object. If formatter is `null`,
+     * [String.valueOf] will be used.
+     * @see .setDisplayedValues
      */
-    public void setFormatter(Formatter formatter) {
-        if (formatter == mFormatter) {
-            return;
+    fun setFormatter(formatter: Formatter?) {
+        if (formatter === mFormatter) {
+            return
         }
-        mFormatter = formatter;
-        initializeSelectorWheelIndices();
-        updateInputTextView();
+        mFormatter = formatter
+        initializeSelectorWheelIndices()
+        updateInputTextView()
     }
 
-    public void setValue(int value) {
-        setValueInternal(value, false);
-    }
+    private val maxTextSize: Float
+        private get() = Math.max(mTextSize, mSelectedTextSize)
 
-    private float getMaxTextSize() {
-        return Math.max(mTextSize, mSelectedTextSize);
-    }
-
-    private float getPaintCenterY(Paint.FontMetrics fontMetrics) {
-        if (fontMetrics == null) {
-            return 0;
-        }
-        return Math.abs(fontMetrics.top + fontMetrics.bottom) / 2;
+    private fun getPaintCenterY(fontMetrics: Paint.FontMetrics?): Float {
+        return if (fontMetrics == null) {
+            0
+        } else Math.abs(fontMetrics.top + fontMetrics.bottom) / 2
     }
 
     /**
      * Computes the max width if no such specified as an attribute.
      */
-    private void tryComputeMaxWidth() {
+    private fun tryComputeMaxWidth() {
         if (!mComputeMaxWidth) {
-            return;
+            return
         }
-        mSelectorWheelPaint.setTextSize(getMaxTextSize());
-        int maxTextWidth = 0;
+        mSelectorWheelPaint.textSize = maxTextSize
+        var maxTextWidth = 0
         if (mDisplayedValues == null) {
-            float maxDigitWidth = 0;
-            for (int i = 0; i <= 9; i++) {
-                final float digitWidth = mSelectorWheelPaint.measureText(formatNumber(i));
+            var maxDigitWidth = 0f
+            for (i in 0..9) {
+                val digitWidth = mSelectorWheelPaint.measureText(formatNumber(i))
                 if (digitWidth > maxDigitWidth) {
-                    maxDigitWidth = digitWidth;
+                    maxDigitWidth = digitWidth
                 }
             }
-            int numberOfDigits = 0;
-            int current = mMaxValue;
+            var numberOfDigits = 0
+            var current = mMaxValue
             while (current > 0) {
-                numberOfDigits++;
-                current = current / 10;
+                numberOfDigits++
+                current = current / 10
             }
-            maxTextWidth = (int) (numberOfDigits * maxDigitWidth);
+            maxTextWidth = (numberOfDigits * maxDigitWidth).toInt()
         } else {
-            for (String displayedValue : mDisplayedValues) {
-                final float textWidth = mSelectorWheelPaint.measureText(displayedValue);
+            for (displayedValue in mDisplayedValues!!) {
+                val textWidth = mSelectorWheelPaint.measureText(displayedValue)
                 if (textWidth > maxTextWidth) {
-                    maxTextWidth = (int) textWidth;
+                    maxTextWidth = textWidth.toInt()
                 }
             }
         }
-        maxTextWidth += mSelectedText.getPaddingLeft() + mSelectedText.getPaddingRight();
+        maxTextWidth += mSelectedText.paddingLeft + mSelectedText.paddingRight
         if (mMaxWidth != maxTextWidth) {
-            mMaxWidth = Math.max(maxTextWidth, mMinWidth);
-            invalidate();
+            mMaxWidth = Math.max(maxTextWidth, mMinWidth)
+            invalidate()
         }
     }
 
     /**
      * Sets whether the selector wheel shown during flinging/scrolling should
-     * wrap around the {@link NumberPicker#getMinValue()} and
-     * {@link NumberPicker#getMaxValue()} values.
-     * <p>
+     * wrap around the [NumberPicker.getMinValue] and
+     * [NumberPicker.getMaxValue] values.
+     *
+     *
      * By default if the range (max - min) is more than the number of items shown
      * on the selector wheel the selector wheel wrapping is enabled.
-     * </p>
-     * <p>
-     * <strong>Note:</strong> If the number of items, i.e. the range (
-     * {@link #getMaxValue()} - {@link #getMinValue()}) is less than
+     *
+     *
+     *
+     * **Note:** If the number of items, i.e. the range (
+     * [.getMaxValue] - [.getMinValue]) is less than
      * the number of items shown on the selector wheel, the selector wheel will
      * not wrap. Hence, in such a case calling this method is a NOP.
-     * </p>
+     *
      *
      * @param wrapSelectorWheel Whether to wrap.
      */
-    public void setWrapSelectorWheel(boolean wrapSelectorWheel) {
-        mWrapSelectorWheelPreferred = wrapSelectorWheel;
-        updateWrapSelectorWheel();
+    fun setWrapSelectorWheel(wrapSelectorWheel: Boolean) {
+        mWrapSelectorWheelPreferred = wrapSelectorWheel
+        updateWrapSelectorWheel()
     }
 
     /**
      * Whether or not the selector wheel should be wrapped is determined by user choice and whether
-     * the choice is allowed. The former comes from {@link #setWrapSelectorWheel(boolean)}, the
+     * the choice is allowed. The former comes from [.setWrapSelectorWheel], the
      * latter is calculated based on min & max value set vs selector's visual length. Therefore,
      * this method should be called any time any of the 3 values (i.e. user choice, min and max
      * value) gets updated.
      */
-    private void updateWrapSelectorWheel() {
-        mWrapSelectorWheel = isWrappingAllowed() && mWrapSelectorWheelPreferred;
+    private fun updateWrapSelectorWheel() {
+        mWrapSelectorWheel = isWrappingAllowed && mWrapSelectorWheelPreferred
     }
 
-    private boolean isWrappingAllowed() {
-        return mMaxValue - mMinValue >= mSelectorIndices.length - 1;
-    }
-
-    /**
-     * Returns the value of the picker.
-     *
-     * @return The value.
-     */
-    public int getValue() {
-        return mValue;
-    }
-
-    /**
-     * Returns the min value of the picker.
-     *
-     * @return The min value
-     */
-    public int getMinValue() {
-        return mMinValue;
-    }
-
-    /**
-     * Sets the min value of the picker.
-     *
-     * @param minValue The min value inclusive.
-     *                 <strong>Note:</strong> The length of the displayed values array
-     *                 set via {@link #setDisplayedValues(String[])} must be equal to the
-     *                 range of selectable numbers which is equal to
-     *                 {@link #getMaxValue()} - {@link #getMinValue()} + 1.
-     */
-    public void setMinValue(int minValue) {
-        mMinValue = minValue;
-        if (mMinValue > mValue) {
-            mValue = mMinValue;
+    private val isWrappingAllowed: Boolean
+        private get() = mMaxValue - mMinValue >= selectorIndices.size - 1
+    var value: Int
+        /**
+         * Returns the value of the picker.
+         *
+         * @return The value.
+         */
+        get() = mValue
+        set(value) {
+            setValueInternal(value, false)
         }
-
-        updateWrapSelectorWheel();
-        initializeSelectorWheelIndices();
-        updateInputTextView();
-        tryComputeMaxWidth();
-        invalidate();
-    }
-
-    /**
-     * Returns the max value of the picker.
-     *
-     * @return The max value.
-     */
-    public int getMaxValue() {
-        return mMaxValue;
-    }
-
-    /**
-     * Sets the max value of the picker.
-     *
-     * @param maxValue The max value inclusive.
-     *                 <strong>Note:</strong> The length of the displayed values array
-     *                 set via {@link #setDisplayedValues(String[])} must be equal to the
-     *                 range of selectable numbers which is equal to
-     *                 {@link #getMaxValue()} - {@link #getMinValue()} + 1.
-     */
-    public void setMaxValue(int maxValue) {
-        if (maxValue < 0) {
-            throw new IllegalArgumentException("maxValue must be >= 0");
+    var minValue: Int
+        /**
+         * Returns the min value of the picker.
+         *
+         * @return The min value
+         */
+        get() = mMinValue
+        /**
+         * Sets the min value of the picker.
+         *
+         * @param minValue The min value inclusive.
+         * **Note:** The length of the displayed values array
+         * set via [.setDisplayedValues] must be equal to the
+         * range of selectable numbers which is equal to
+         * [.getMaxValue] - [.getMinValue] + 1.
+         */
+        set(minValue) {
+            mMinValue = minValue
+            if (mMinValue > mValue) {
+                mValue = mMinValue
+            }
+            updateWrapSelectorWheel()
+            initializeSelectorWheelIndices()
+            updateInputTextView()
+            tryComputeMaxWidth()
+            invalidate()
         }
-        mMaxValue = maxValue;
-        if (mMaxValue < mValue) {
-            mValue = mMaxValue;
+    var maxValue: Int
+        /**
+         * Returns the max value of the picker.
+         *
+         * @return The max value.
+         */
+        get() = mMaxValue
+        /**
+         * Sets the max value of the picker.
+         *
+         * @param maxValue The max value inclusive.
+         * **Note:** The length of the displayed values array
+         * set via [.setDisplayedValues] must be equal to the
+         * range of selectable numbers which is equal to
+         * [.getMaxValue] - [.getMinValue] + 1.
+         */
+        set(maxValue) {
+            require(maxValue >= 0) { "maxValue must be >= 0" }
+            mMaxValue = maxValue
+            if (mMaxValue < mValue) {
+                mValue = mMaxValue
+            }
+            updateWrapSelectorWheel()
+            initializeSelectorWheelIndices()
+            updateInputTextView()
+            tryComputeMaxWidth()
+            invalidate()
         }
-
-        updateWrapSelectorWheel();
-        initializeSelectorWheelIndices();
-        updateInputTextView();
-        tryComputeMaxWidth();
-        invalidate();
-    }
 
     /**
      * Sets the values to be displayed.
      *
      * @param displayedValues The displayed values.
-     *                        <strong>Note:</strong> The length of the displayed values array
-     *                        must be equal to the range of selectable numbers which is equal to
-     *                        {@link #getMaxValue()} - {@link #getMinValue()} + 1.
+     * **Note:** The length of the displayed values array
+     * must be equal to the range of selectable numbers which is equal to
+     * [.getMaxValue] - [.getMinValue] + 1.
      */
-    public void setDisplayedValues(String[] displayedValues) {
+    fun setDisplayedValues(displayedValues: Array<String>) {
         if (mDisplayedValues == displayedValues) {
-            return;
+            return
         }
-        mDisplayedValues = displayedValues;
+        mDisplayedValues = displayedValues
         if (mDisplayedValues != null) {
             // Allow text entry rather than strictly numeric entry.
-            mSelectedText.setRawInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE
-                    | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+            mSelectedText.setRawInputType(
+                InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                        or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+            )
         } else {
-            mSelectedText.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+            mSelectedText.setRawInputType(InputType.TYPE_CLASS_NUMBER)
         }
-        updateInputTextView();
-        initializeSelectorWheelIndices();
-        tryComputeMaxWidth();
+        updateInputTextView()
+        initializeSelectorWheelIndices()
+        tryComputeMaxWidth()
     }
 
-    private float getFadingEdgeStrength(boolean isHorizontalMode) {
-        return isHorizontalMode && mFadingEdgeEnabled ? mFadingEdgeStrength : 0;
+    private fun getFadingEdgeStrength(isHorizontalMode: Boolean): Float {
+        return if (isHorizontalMode && mFadingEdgeEnabled) mFadingEdgeStrength else 0
     }
 
-    @Override
-    protected float getTopFadingEdgeStrength() {
-        return getFadingEdgeStrength(!isHorizontalMode());
+    override fun getTopFadingEdgeStrength(): Float {
+        return getFadingEdgeStrength(!isHorizontalMode)
     }
 
-    @Override
-    protected float getBottomFadingEdgeStrength() {
-        return getFadingEdgeStrength(!isHorizontalMode());
+    override fun getBottomFadingEdgeStrength(): Float {
+        return getFadingEdgeStrength(!isHorizontalMode)
     }
 
-    @Override
-    protected float getLeftFadingEdgeStrength() {
-        return getFadingEdgeStrength(isHorizontalMode());
+    override fun getLeftFadingEdgeStrength(): Float {
+        return getFadingEdgeStrength(isHorizontalMode)
     }
 
-    @Override
-    protected float getRightFadingEdgeStrength() {
-        return getFadingEdgeStrength(isHorizontalMode());
+    override fun getRightFadingEdgeStrength(): Float {
+        return getFadingEdgeStrength(isHorizontalMode)
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        removeAllCallbacks();
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        removeAllCallbacks()
     }
 
     @CallSuper
-    @Override
-    protected void drawableStateChanged() {
-        super.drawableStateChanged();
-        if (mDividerDrawable != null && mDividerDrawable.isStateful()
-                && mDividerDrawable.setState(getDrawableState())) {
-            invalidateDrawable(mDividerDrawable);
+    override fun drawableStateChanged() {
+        super.drawableStateChanged()
+        if (mDividerDrawable != null && mDividerDrawable!!.isStateful
+            && mDividerDrawable!!.setState(drawableState)
+        ) {
+            invalidateDrawable(mDividerDrawable!!)
         }
     }
 
     @CallSuper
-    @Override
-    public void jumpDrawablesToCurrentState() {
-        super.jumpDrawablesToCurrentState();
+    override fun jumpDrawablesToCurrentState() {
+        super.jumpDrawablesToCurrentState()
         if (mDividerDrawable != null) {
-            mDividerDrawable.jumpToCurrentState();
+            mDividerDrawable!!.jumpToCurrentState()
         }
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
+    override fun onDraw(canvas: Canvas) {
         // save canvas
-        canvas.save();
-
-        final boolean showSelectorWheel = !mHideWheelUntilFocused || hasFocus();
-        float x, y;
-        if (isHorizontalMode()) {
-            x = mCurrentScrollOffset;
-            y = mSelectedText.getBaseline() + mSelectedText.getTop();
+        canvas.save()
+        val showSelectorWheel = !mHideWheelUntilFocused || hasFocus()
+        var x: Float
+        var y: Float
+        if (isHorizontalMode) {
+            x = mCurrentScrollOffset.toFloat()
+            y = (mSelectedText.baseline + mSelectedText.top).toFloat()
             if (mRealWheelItemCount < DEFAULT_WHEEL_ITEM_COUNT) {
-                canvas.clipRect(mLeftDividerLeft, 0, mRightDividerRight, getBottom());
+                canvas.clipRect(mLeftDividerLeft, 0, mRightDividerRight, bottom)
             }
         } else {
-            x = (getRight() - getLeft()) / 2f;
-            y = mCurrentScrollOffset;
+            x = (right - left) / 2f
+            y = mCurrentScrollOffset.toFloat()
             if (mRealWheelItemCount < DEFAULT_WHEEL_ITEM_COUNT) {
-                canvas.clipRect(0, mTopDividerTop, getRight(), mBottomDividerBottom);
+                canvas.clipRect(0, mTopDividerTop, right, mBottomDividerBottom)
             }
         }
 
         // draw the selector wheel
-        int[] selectorIndices = getSelectorIndices();
-        for (int i = 0; i < selectorIndices.length; i++) {
+        val selectorIndices = selectorIndices
+        for (i in selectorIndices.indices) {
             if (i == mWheelMiddleItemIndex) {
-                mSelectorWheelPaint.setTextAlign(Paint.Align.values()[mSelectedTextAlign]);
-                mSelectorWheelPaint.setTextSize(mSelectedTextSize);
-                mSelectorWheelPaint.setColor(mSelectedTextColor);
-                mSelectorWheelPaint.setStrikeThruText(mSelectedTextStrikeThru);
-                mSelectorWheelPaint.setUnderlineText(mSelectedTextUnderline);
-                mSelectorWheelPaint.setTypeface(mSelectedTypeface);
+                mSelectorWheelPaint.textAlign = Paint.Align.values()[mSelectedTextAlign]
+                mSelectorWheelPaint.textSize = mSelectedTextSize
+                mSelectorWheelPaint.color = mSelectedTextColor
+                mSelectorWheelPaint.isStrikeThruText = mSelectedTextStrikeThru
+                mSelectorWheelPaint.isUnderlineText = mSelectedTextUnderline
+                mSelectorWheelPaint.typeface = mSelectedTypeface
             } else {
-                mSelectorWheelPaint.setTextAlign(Paint.Align.values()[mTextAlign]);
-                mSelectorWheelPaint.setTextSize(mTextSize);
-                mSelectorWheelPaint.setColor(mTextColor);
-                mSelectorWheelPaint.setStrikeThruText(mTextStrikeThru);
-                mSelectorWheelPaint.setUnderlineText(mTextUnderline);
-                mSelectorWheelPaint.setTypeface(mTypeface);
+                mSelectorWheelPaint.textAlign = Paint.Align.values()[mTextAlign]
+                mSelectorWheelPaint.textSize = mTextSize
+                mSelectorWheelPaint.color = mTextColor
+                mSelectorWheelPaint.isStrikeThruText = mTextStrikeThru
+                mSelectorWheelPaint.isUnderlineText = mTextUnderline
+                mSelectorWheelPaint.typeface = mTypeface
             }
-
-            int selectorIndex = selectorIndices[isAscendingOrder()
-                    ? i : selectorIndices.length - i - 1];
-            String scrollSelectorValue = mSelectorIndexToStringCache.get(selectorIndex);
-            if (scrollSelectorValue == null) {
-                continue;
-            }
+            val selectorIndex = selectorIndices[if (isAscendingOrder) i else selectorIndices.size - i - 1]
+            val scrollSelectorValue = mSelectorIndexToStringCache[selectorIndex] ?: continue
             // Do not draw the middle item if input is visible since the input
             // is shown only if the wheel is static and it covers the middle
             // item. Otherwise, if the user starts editing the text via the
             // IME he may see a dimmed version of the old value intermixed
             // with the new one.
-            if ((showSelectorWheel && i != mWheelMiddleItemIndex)
-                    || (i == mWheelMiddleItemIndex && mSelectedText.getVisibility() != VISIBLE)) {
-                float textY = y;
-                if (!isHorizontalMode()) {
-                    textY += getPaintCenterY(mSelectorWheelPaint.getFontMetrics());
+            if (showSelectorWheel && i != mWheelMiddleItemIndex || i == mWheelMiddleItemIndex && mSelectedText.visibility != VISIBLE) {
+                var textY = y
+                if (!isHorizontalMode) {
+                    textY += getPaintCenterY(mSelectorWheelPaint.fontMetrics)
                 }
-
-                int xOffset = 0;
-                int yOffset = 0;
-
+                var xOffset = 0
+                var yOffset = 0
                 if (i != mWheelMiddleItemIndex && mItemSpacing != 0) {
-                    if (isHorizontalMode()) {
-                        if (i > mWheelMiddleItemIndex) {
-                            xOffset = mItemSpacing;
+                    if (isHorizontalMode) {
+                        xOffset = if (i > mWheelMiddleItemIndex) {
+                            mItemSpacing
                         } else {
-                            xOffset = -mItemSpacing;
+                            -mItemSpacing
                         }
                     } else {
-                        if (i > mWheelMiddleItemIndex) {
-                            yOffset = mItemSpacing;
+                        yOffset = if (i > mWheelMiddleItemIndex) {
+                            mItemSpacing
                         } else {
-                            yOffset = -mItemSpacing;
+                            -mItemSpacing
                         }
                     }
                 }
-
-                drawText(scrollSelectorValue, x + xOffset, textY + yOffset, mSelectorWheelPaint, canvas);
+                drawText(scrollSelectorValue, x + xOffset, textY + yOffset, mSelectorWheelPaint, canvas)
             }
-
-            if (isHorizontalMode()) {
-                x += mSelectorElementSize;
+            if (isHorizontalMode) {
+                x += mSelectorElementSize.toFloat()
             } else {
-                y += mSelectorElementSize;
+                y += mSelectorElementSize.toFloat()
             }
         }
 
         // restore canvas
-        canvas.restore();
+        canvas.restore()
 
         // draw the dividers
         if (showSelectorWheel && mDividerDrawable != null) {
-            if (isHorizontalMode())
-                drawHorizontalDividers(canvas);
-            else
-                drawVerticalDividers(canvas);
+            if (isHorizontalMode) drawHorizontalDividers(canvas) else drawVerticalDividers(canvas)
         }
     }
 
-    private void drawHorizontalDividers(Canvas canvas) {
-        switch (mDividerType) {
-            case SIDE_LINES:
-                final int top;
-                final int bottom;
+    private fun drawHorizontalDividers(canvas: Canvas) {
+        when (mDividerType) {
+            SIDE_LINES -> {
+                val top: Int
+                val bottom: Int
                 if (mDividerLength > 0 && mDividerLength <= mMaxHeight) {
-                    top = (mMaxHeight - mDividerLength) / 2;
-                    bottom = top + mDividerLength;
+                    top = (mMaxHeight - mDividerLength) / 2
+                    bottom = top + mDividerLength
                 } else {
-                    top = 0;
-                    bottom = getBottom();
+                    top = 0
+                    bottom = getBottom()
                 }
                 // draw the left divider
-                final int leftOfLeftDivider = mLeftDividerLeft;
-                final int rightOfLeftDivider = leftOfLeftDivider + mDividerThickness;
-                mDividerDrawable.setBounds(leftOfLeftDivider, top, rightOfLeftDivider, bottom);
-                mDividerDrawable.draw(canvas);
+                val leftOfLeftDivider = mLeftDividerLeft
+                val rightOfLeftDivider = leftOfLeftDivider + mDividerThickness
+                mDividerDrawable!!.setBounds(leftOfLeftDivider, top, rightOfLeftDivider, bottom)
+                mDividerDrawable!!.draw(canvas)
                 // draw the right divider
-                final int rightOfRightDivider = mRightDividerRight;
-                final int leftOfRightDivider = rightOfRightDivider - mDividerThickness;
-                mDividerDrawable.setBounds(leftOfRightDivider, top, rightOfRightDivider, bottom);
-                mDividerDrawable.draw(canvas);
-                break;
-            case UNDERLINE:
-                final int left;
-                final int right;
+                val rightOfRightDivider = mRightDividerRight
+                val leftOfRightDivider = rightOfRightDivider - mDividerThickness
+                mDividerDrawable!!.setBounds(leftOfRightDivider, top, rightOfRightDivider, bottom)
+                mDividerDrawable!!.draw(canvas)
+            }
+
+            UNDERLINE -> {
+                val left: Int
+                val right: Int
                 if (mDividerLength > 0 && mDividerLength <= mMaxWidth) {
-                    left = (mMaxWidth - mDividerLength) / 2;
-                    right = left + mDividerLength;
+                    left = (mMaxWidth - mDividerLength) / 2
+                    right = left + mDividerLength
                 } else {
-                    left = mLeftDividerLeft;
-                    right = mRightDividerRight;
+                    left = mLeftDividerLeft
+                    right = mRightDividerRight
                 }
-                final int bottomOfUnderlineDivider = mBottomDividerBottom;
-                final int topOfUnderlineDivider = bottomOfUnderlineDivider - mDividerThickness;
-                mDividerDrawable.setBounds(
-                        left,
-                        topOfUnderlineDivider,
-                        right,
-                        bottomOfUnderlineDivider
-                );
-                mDividerDrawable.draw(canvas);
-                break;
+                val bottomOfUnderlineDivider = mBottomDividerBottom
+                val topOfUnderlineDivider = bottomOfUnderlineDivider - mDividerThickness
+                mDividerDrawable!!.setBounds(
+                    left,
+                    topOfUnderlineDivider,
+                    right,
+                    bottomOfUnderlineDivider
+                )
+                mDividerDrawable!!.draw(canvas)
+            }
         }
     }
 
-    private void drawVerticalDividers(Canvas canvas) {
-        final int left;
-        final int right;
+    private fun drawVerticalDividers(canvas: Canvas) {
+        val left: Int
+        val right: Int
         if (mDividerLength > 0 && mDividerLength <= mMaxWidth) {
-            left = (mMaxWidth - mDividerLength) / 2;
-            right = left + mDividerLength;
+            left = (mMaxWidth - mDividerLength) / 2
+            right = left + mDividerLength
         } else {
-            left = 0;
-            right = getRight();
+            left = 0
+            right = getRight()
         }
-        switch (mDividerType) {
-            case SIDE_LINES:
+        when (mDividerType) {
+            SIDE_LINES -> {
                 // draw the top divider
-                final int topOfTopDivider = mTopDividerTop;
-                final int bottomOfTopDivider = topOfTopDivider + mDividerThickness;
-                mDividerDrawable.setBounds(left, topOfTopDivider, right, bottomOfTopDivider);
-                mDividerDrawable.draw(canvas);
+                val topOfTopDivider = mTopDividerTop
+                val bottomOfTopDivider = topOfTopDivider + mDividerThickness
+                mDividerDrawable!!.setBounds(left, topOfTopDivider, right, bottomOfTopDivider)
+                mDividerDrawable!!.draw(canvas)
                 // draw the bottom divider
-                final int bottomOfBottomDivider = mBottomDividerBottom;
-                final int topOfBottomDivider = bottomOfBottomDivider - mDividerThickness;
-                mDividerDrawable.setBounds(
-                        left,
-                        topOfBottomDivider,
-                        right,
-                        bottomOfBottomDivider);
-                mDividerDrawable.draw(canvas);
-                break;
-            case UNDERLINE:
-                final int bottomOfUnderlineDivider = mBottomDividerBottom;
-                final int topOfUnderlineDivider = bottomOfUnderlineDivider - mDividerThickness;
-                mDividerDrawable.setBounds(
-                        left,
-                        topOfUnderlineDivider,
-                        right,
-                        bottomOfUnderlineDivider
-                );
-                mDividerDrawable.draw(canvas);
-                break;
+                val bottomOfBottomDivider = mBottomDividerBottom
+                val topOfBottomDivider = bottomOfBottomDivider - mDividerThickness
+                mDividerDrawable!!.setBounds(
+                    left,
+                    topOfBottomDivider,
+                    right,
+                    bottomOfBottomDivider
+                )
+                mDividerDrawable!!.draw(canvas)
+            }
+
+            UNDERLINE -> {
+                val bottomOfUnderlineDivider = mBottomDividerBottom
+                val topOfUnderlineDivider = bottomOfUnderlineDivider - mDividerThickness
+                mDividerDrawable!!.setBounds(
+                    left,
+                    topOfUnderlineDivider,
+                    right,
+                    bottomOfUnderlineDivider
+                )
+                mDividerDrawable!!.draw(canvas)
+            }
         }
     }
 
-    private void drawText(String text, float x, float y, Paint paint, Canvas canvas) {
+    private fun drawText(text: String, x: Float, y: Float, paint: Paint, canvas: Canvas) {
+        var y = y
         if (text.contains("\n")) {
-            final String[] lines = text.split("\n");
-            final float height = Math.abs(paint.descent() + paint.ascent())
-                    * mLineSpacingMultiplier;
-            final float diff = (lines.length - 1) * height / 2;
-            y -= diff;
-            for (String line : lines) {
-                canvas.drawText(line, x, y, paint);
-                y += height;
+            val lines = text.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val height = (Math.abs(paint.descent() + paint.ascent())
+                    * mLineSpacingMultiplier)
+            val diff = (lines.size - 1) * height / 2
+            y -= diff
+            for (line in lines) {
+                canvas.drawText(line, x, y, paint)
+                y += height
             }
         } else {
-            canvas.drawText(text, x, y, paint);
+            canvas.drawText(text, x, y, paint)
         }
     }
 
-    @Override
-    public void onInitializeAccessibilityEvent(AccessibilityEvent event) {
-        super.onInitializeAccessibilityEvent(event);
-        event.setClassName(NumberPicker.class.getName());
-        event.setScrollable(isScrollerEnabled());
-        final int scroll = (mMinValue + mValue) * mSelectorElementSize;
-        final int maxScroll = (mMaxValue - mMinValue) * mSelectorElementSize;
-        if (isHorizontalMode()) {
-            event.setScrollX(scroll);
-            event.setMaxScrollX(maxScroll);
+    override fun onInitializeAccessibilityEvent(event: AccessibilityEvent) {
+        super.onInitializeAccessibilityEvent(event)
+        event.className = NumberPicker::class.java.name
+        event.isScrollable = isScrollerEnabled
+        val scroll = (mMinValue + mValue) * mSelectorElementSize
+        val maxScroll = (mMaxValue - mMinValue) * mSelectorElementSize
+        if (isHorizontalMode) {
+            event.scrollX = scroll
+            event.maxScrollX = maxScroll
         } else {
-            event.setScrollY(scroll);
-            event.setMaxScrollY(maxScroll);
+            event.scrollY = scroll
+            event.maxScrollY = maxScroll
         }
     }
 
@@ -1716,21 +1566,27 @@ public class NumberPicker extends LinearLayout {
      * @param maxSize     The max value for the size.
      * @return A measure spec greedily imposing the max size.
      */
-    private int makeMeasureSpec(int measureSpec, int maxSize) {
+    private fun makeMeasureSpec(measureSpec: Int, maxSize: Int): Int {
         if (maxSize == SIZE_UNSPECIFIED) {
-            return measureSpec;
+            return measureSpec
         }
-        final int size = MeasureSpec.getSize(measureSpec);
-        final int mode = MeasureSpec.getMode(measureSpec);
-        switch (mode) {
-            case MeasureSpec.EXACTLY:
-                return measureSpec;
-            case MeasureSpec.AT_MOST:
-                return MeasureSpec.makeMeasureSpec(Math.min(size, maxSize), MeasureSpec.EXACTLY);
-            case MeasureSpec.UNSPECIFIED:
-                return MeasureSpec.makeMeasureSpec(maxSize, MeasureSpec.EXACTLY);
-            default:
-                throw new IllegalArgumentException("Unknown measure mode: " + mode);
+        val size = MeasureSpec.getSize(measureSpec)
+        val mode = MeasureSpec.getMode(measureSpec)
+        return when (mode) {
+            MeasureSpec.EXACTLY -> measureSpec
+            MeasureSpec.AT_MOST -> MeasureSpec.makeMeasureSpec(
+                Math.min(
+                    size,
+                    maxSize
+                ), MeasureSpec.EXACTLY
+            )
+
+            MeasureSpec.UNSPECIFIED -> MeasureSpec.makeMeasureSpec(
+                maxSize,
+                MeasureSpec.EXACTLY
+            )
+
+            else -> throw IllegalArgumentException("Unknown measure mode: $mode")
         }
     }
 
@@ -1744,63 +1600,33 @@ public class NumberPicker extends LinearLayout {
      * @param measureSpec  The current measure spec.
      * @return The resolved size and state.
      */
-    private int resolveSizeAndStateRespectingMinSize(int minSize, int measuredSize,
-                                                     int measureSpec) {
-        if (minSize != SIZE_UNSPECIFIED) {
-            final int desiredWidth = Math.max(minSize, measuredSize);
-            return resolveSizeAndState(desiredWidth, measureSpec, 0);
+    private fun resolveSizeAndStateRespectingMinSize(
+        minSize: Int, measuredSize: Int,
+        measureSpec: Int
+    ): Int {
+        return if (minSize != SIZE_UNSPECIFIED) {
+            val desiredWidth = Math.max(minSize, measuredSize)
+            resolveSizeAndState(desiredWidth, measureSpec, 0)
         } else {
-            return measuredSize;
+            measuredSize
         }
-    }
-
-    /**
-     * Utility to reconcile a desired size and state, with constraints imposed
-     * by a MeasureSpec.  Will take the desired size, unless a different size
-     * is imposed by the constraints.  The returned value is a compound integer,
-     * with the resolved size in the {@link #MEASURED_SIZE_MASK} bits and
-     * optionally the bit {@link #MEASURED_STATE_TOO_SMALL} set if the resulting
-     * size is smaller than the size the view wants to be.
-     *
-     * @param size        How big the view wants to be
-     * @param measureSpec Constraints imposed by the parent
-     * @return Size information bit mask as defined by
-     * {@link #MEASURED_SIZE_MASK} and {@link #MEASURED_STATE_TOO_SMALL}.
-     */
-    public static int resolveSizeAndState(int size, int measureSpec, int childMeasuredState) {
-        int result = size;
-        int specMode = MeasureSpec.getMode(measureSpec);
-        int specSize = MeasureSpec.getSize(measureSpec);
-        switch (specMode) {
-            case MeasureSpec.UNSPECIFIED:
-                break;
-            case MeasureSpec.AT_MOST:
-                if (specSize < size) {
-                    result = specSize | MEASURED_STATE_TOO_SMALL;
-                }
-                break;
-            case MeasureSpec.EXACTLY:
-                result = specSize;
-                break;
-        }
-        return result | (childMeasuredState & MEASURED_STATE_MASK);
     }
 
     /**
      * Resets the selector indices and clear the cached string representation of
      * these indices.
      */
-    private void initializeSelectorWheelIndices() {
-        mSelectorIndexToStringCache.clear();
-        int[] selectorIndices = getSelectorIndices();
-        int current = getValue();
-        for (int i = 0; i < selectorIndices.length; i++) {
-            int selectorIndex = current + (i - mWheelMiddleItemIndex);
+    private fun initializeSelectorWheelIndices() {
+        mSelectorIndexToStringCache.clear()
+        val selectorIndices = selectorIndices
+        val current = value
+        for (i in selectorIndices.indices) {
+            var selectorIndex = current + (i - mWheelMiddleItemIndex)
             if (mWrapSelectorWheel) {
-                selectorIndex = getWrappedSelectorIndex(selectorIndex);
+                selectorIndex = getWrappedSelectorIndex(selectorIndex)
             }
-            selectorIndices[i] = selectorIndex;
-            ensureCachedScrollSelectorValue(selectorIndices[i]);
+            selectorIndices[i] = selectorIndex
+            ensureCachedScrollSelectorValue(selectorIndices[i])
         }
     }
 
@@ -1810,41 +1636,41 @@ public class NumberPicker extends LinearLayout {
      * @param current      The new value of the NumberPicker.
      * @param notifyChange Whether to notify if the current value changed.
      */
-    private void setValueInternal(int current, boolean notifyChange) {
+    private fun setValueInternal(current: Int, notifyChange: Boolean) {
+        var current = current
         if (mValue == current) {
-            return;
+            return
         }
         // Wrap around the values if we go past the start or end
         if (mWrapSelectorWheel) {
-            current = getWrappedSelectorIndex(current);
+            current = getWrappedSelectorIndex(current)
         } else {
-            current = Math.max(current, mMinValue);
-            current = Math.min(current, mMaxValue);
+            current = Math.max(current, mMinValue)
+            current = Math.min(current, mMaxValue)
         }
-        int previous = mValue;
-        mValue = current;
+        val previous = mValue
+        mValue = current
         // If we're flinging, we'll update the text view at the end when it becomes visible
         if (mScrollState != OnScrollListener.SCROLL_STATE_FLING) {
-            updateInputTextView();
+            updateInputTextView()
         }
         if (notifyChange) {
-            notifyChange(previous, current);
+            notifyChange(previous, current)
         }
-        initializeSelectorWheelIndices();
-        updateAccessibilityDescription();
-        invalidate();
+        initializeSelectorWheelIndices()
+        updateAccessibilityDescription()
+        invalidate()
     }
 
     /**
      * Updates the accessibility values of the view,
      * to the currently selected value
      */
-    private void updateAccessibilityDescription() {
+    private fun updateAccessibilityDescription() {
         if (!mAccessibilityDescriptionEnabled) {
-            return;
+            return
         }
-
-        this.setContentDescription(String.valueOf(getValue()));
+        this.contentDescription = value.toString()
     }
 
     /**
@@ -1854,11 +1680,11 @@ public class NumberPicker extends LinearLayout {
      *
      * @param increment True to increment, false to decrement.
      */
-    private void changeValueByOne(boolean increment) {
+    private fun changeValueByOne(increment: Boolean) {
         if (!moveToFinalScrollerPosition(mFlingScroller)) {
-            moveToFinalScrollerPosition(mAdjustScroller);
+            moveToFinalScrollerPosition(mAdjustScroller)
         }
-        smoothScroll(increment, 1);
+        smoothScroll(increment, 1)
     }
 
     /**
@@ -1867,250 +1693,240 @@ public class NumberPicker extends LinearLayout {
      * @param increment True to increment, false to decrement.
      * @param steps     The steps to scroll.
      */
-    public void smoothScroll(boolean increment, int steps) {
-        final int diffSteps = (increment ? -mSelectorElementSize : mSelectorElementSize) * steps;
-        if (isHorizontalMode()) {
-            mPreviousScrollerX = 0;
-            mFlingScroller.startScroll(0, 0, diffSteps, 0, SNAP_SCROLL_DURATION);
+    fun smoothScroll(increment: Boolean, steps: Int) {
+        val diffSteps = (if (increment) -mSelectorElementSize else mSelectorElementSize) * steps
+        if (isHorizontalMode) {
+            mPreviousScrollerX = 0
+            mFlingScroller.startScroll(0, 0, diffSteps, 0, SNAP_SCROLL_DURATION)
         } else {
-            mPreviousScrollerY = 0;
-            mFlingScroller.startScroll(0, 0, 0, diffSteps, SNAP_SCROLL_DURATION);
+            mPreviousScrollerY = 0
+            mFlingScroller.startScroll(0, 0, 0, diffSteps, SNAP_SCROLL_DURATION)
         }
-        invalidate();
+        invalidate()
     }
 
-    private void initializeSelectorWheel() {
-        initializeSelectorWheelIndices();
-        int[] selectorIndices = getSelectorIndices();
-        int totalTextSize = (int) ((selectorIndices.length - 1) * mTextSize + mSelectedTextSize);
-        float textGapCount = selectorIndices.length;
-        if (isHorizontalMode()) {
-            float totalTextGapWidth = (getRight() - getLeft()) - totalTextSize;
-            int mSelectorTextGapWidth = (int) (totalTextGapWidth / textGapCount);
-            mSelectorElementSize = (int) getMaxTextSize() + mSelectorTextGapWidth;
-            mInitialScrollOffset = (int) (mSelectedTextCenterX - mSelectorElementSize * mWheelMiddleItemIndex);
+    private fun initializeSelectorWheel() {
+        initializeSelectorWheelIndices()
+        val selectorIndices = selectorIndices
+        val totalTextSize = ((selectorIndices.size - 1) * mTextSize + mSelectedTextSize).toInt()
+        val textGapCount = selectorIndices.size.toFloat()
+        if (isHorizontalMode) {
+            val totalTextGapWidth = (right - left - totalTextSize).toFloat()
+            val mSelectorTextGapWidth = (totalTextGapWidth / textGapCount).toInt()
+            mSelectorElementSize = maxTextSize.toInt() + mSelectorTextGapWidth
+            mInitialScrollOffset = (mSelectedTextCenterX - mSelectorElementSize * mWheelMiddleItemIndex).toInt()
         } else {
-            float totalTextGapHeight = (getBottom() - getTop()) - totalTextSize;
-            mSelectorTextGapHeight = (int) (totalTextGapHeight / textGapCount);
-            mSelectorElementSize = (int) getMaxTextSize() + mSelectorTextGapHeight;
-            mInitialScrollOffset = (int) (mSelectedTextCenterY - mSelectorElementSize * mWheelMiddleItemIndex);
+            val totalTextGapHeight = (bottom - top - totalTextSize).toFloat()
+            mSelectorTextGapHeight = (totalTextGapHeight / textGapCount).toInt()
+            mSelectorElementSize = maxTextSize.toInt() + mSelectorTextGapHeight
+            mInitialScrollOffset = (mSelectedTextCenterY - mSelectorElementSize * mWheelMiddleItemIndex).toInt()
         }
-        mCurrentScrollOffset = mInitialScrollOffset;
-        updateInputTextView();
+        mCurrentScrollOffset = mInitialScrollOffset
+        updateInputTextView()
     }
 
-    private void initializeFadingEdges() {
-        if (isHorizontalMode()) {
-            setHorizontalFadingEdgeEnabled(true);
-            setVerticalFadingEdgeEnabled(false);
-            setFadingEdgeLength((getRight() - getLeft() - (int) mTextSize) / 2);
+    private fun initializeFadingEdges() {
+        if (isHorizontalMode) {
+            isHorizontalFadingEdgeEnabled = true
+            isVerticalFadingEdgeEnabled = false
+            setFadingEdgeLength((right - left - mTextSize.toInt()) / 2)
         } else {
-            setHorizontalFadingEdgeEnabled(false);
-            setVerticalFadingEdgeEnabled(true);
-            setFadingEdgeLength((getBottom() - getTop() - (int) mTextSize) / 2);
+            isHorizontalFadingEdgeEnabled = false
+            isVerticalFadingEdgeEnabled = true
+            setFadingEdgeLength((bottom - top - mTextSize.toInt()) / 2)
         }
     }
 
     /**
-     * Callback invoked upon completion of a given <code>scroller</code>.
+     * Callback invoked upon completion of a given `scroller`.
      */
-    private void onScrollerFinished(Scroller scroller) {
+    private fun onScrollerFinished(scroller: Scroller) {
         if (scroller == mFlingScroller) {
-            ensureScrollWheelAdjusted();
-            updateInputTextView();
-            onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE);
+            ensureScrollWheelAdjusted()
+            updateInputTextView()
+            onScrollStateChange(OnScrollListener.SCROLL_STATE_IDLE)
         } else if (mScrollState != OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-            updateInputTextView();
+            updateInputTextView()
         }
     }
 
     /**
-     * Handles transition to a given <code>scrollState</code>
+     * Handles transition to a given `scrollState`
      */
-    private void onScrollStateChange(int scrollState) {
+    private fun onScrollStateChange(scrollState: Int) {
         if (mScrollState == scrollState) {
-            return;
+            return
         }
-        mScrollState = scrollState;
+        mScrollState = scrollState
     }
 
     /**
-     * Flings the selector with the given <code>velocity</code>.
+     * Flings the selector with the given `velocity`.
      */
-    private void fling(int velocity) {
-        if (isHorizontalMode()) {
-            mPreviousScrollerX = 0;
+    private fun fling(velocity: Int) {
+        if (isHorizontalMode) {
+            mPreviousScrollerX = 0
             if (velocity > 0) {
-                mFlingScroller.fling(0, 0, velocity, 0, 0, Integer.MAX_VALUE, 0, 0);
+                mFlingScroller.fling(0, 0, velocity, 0, 0, Int.MAX_VALUE, 0, 0)
             } else {
-                mFlingScroller.fling(Integer.MAX_VALUE, 0, velocity, 0, 0, Integer.MAX_VALUE, 0, 0);
+                mFlingScroller.fling(Int.MAX_VALUE, 0, velocity, 0, 0, Int.MAX_VALUE, 0, 0)
             }
         } else {
-            mPreviousScrollerY = 0;
+            mPreviousScrollerY = 0
             if (velocity > 0) {
-                mFlingScroller.fling(0, 0, 0, velocity, 0, 0, 0, Integer.MAX_VALUE);
+                mFlingScroller.fling(0, 0, 0, velocity, 0, 0, 0, Int.MAX_VALUE)
             } else {
-                mFlingScroller.fling(0, Integer.MAX_VALUE, 0, velocity, 0, 0, 0, Integer.MAX_VALUE);
+                mFlingScroller.fling(0, Int.MAX_VALUE, 0, velocity, 0, 0, 0, Int.MAX_VALUE)
             }
         }
-
-        invalidate();
+        invalidate()
     }
 
     /**
-     * @return The wrapped index <code>selectorIndex</code> value.
+     * @return The wrapped index `selectorIndex` value.
      */
-    private int getWrappedSelectorIndex(int selectorIndex) {
+    private fun getWrappedSelectorIndex(selectorIndex: Int): Int {
         if (selectorIndex > mMaxValue) {
-            return mMinValue + (selectorIndex - mMaxValue) % (mMaxValue - mMinValue) - 1;
+            return mMinValue + (selectorIndex - mMaxValue) % (mMaxValue - mMinValue) - 1
         } else if (selectorIndex < mMinValue) {
-            return mMaxValue - (mMinValue - selectorIndex) % (mMaxValue - mMinValue) + 1;
+            return mMaxValue - (mMinValue - selectorIndex) % (mMaxValue - mMinValue) + 1
         }
-        return selectorIndex;
-    }
-
-    private int[] getSelectorIndices() {
-        return mSelectorIndices;
+        return selectorIndex
     }
 
     /**
-     * Increments the <code>selectorIndices</code> whose string representations
+     * Increments the `selectorIndices` whose string representations
      * will be displayed in the selector.
      */
-    private void incrementSelectorIndices(int[] selectorIndices) {
-        for (int i = 0; i < selectorIndices.length - 1; i++) {
-            selectorIndices[i] = selectorIndices[i + 1];
+    private fun incrementSelectorIndices(selectorIndices: IntArray) {
+        for (i in 0 until selectorIndices.size - 1) {
+            selectorIndices[i] = selectorIndices[i + 1]
         }
-        int nextScrollSelectorIndex = selectorIndices[selectorIndices.length - 2] + 1;
+        var nextScrollSelectorIndex = selectorIndices[selectorIndices.size - 2] + 1
         if (mWrapSelectorWheel && nextScrollSelectorIndex > mMaxValue) {
-            nextScrollSelectorIndex = mMinValue;
+            nextScrollSelectorIndex = mMinValue
         }
-        selectorIndices[selectorIndices.length - 1] = nextScrollSelectorIndex;
-        ensureCachedScrollSelectorValue(nextScrollSelectorIndex);
+        selectorIndices[selectorIndices.size - 1] = nextScrollSelectorIndex
+        ensureCachedScrollSelectorValue(nextScrollSelectorIndex)
     }
 
     /**
-     * Decrements the <code>selectorIndices</code> whose string representations
+     * Decrements the `selectorIndices` whose string representations
      * will be displayed in the selector.
      */
-    private void decrementSelectorIndices(int[] selectorIndices) {
-        for (int i = selectorIndices.length - 1; i > 0; i--) {
-            selectorIndices[i] = selectorIndices[i - 1];
+    private fun decrementSelectorIndices(selectorIndices: IntArray) {
+        for (i in selectorIndices.size - 1 downTo 1) {
+            selectorIndices[i] = selectorIndices[i - 1]
         }
-        int nextScrollSelectorIndex = selectorIndices[1] - 1;
+        var nextScrollSelectorIndex = selectorIndices[1] - 1
         if (mWrapSelectorWheel && nextScrollSelectorIndex < mMinValue) {
-            nextScrollSelectorIndex = mMaxValue;
+            nextScrollSelectorIndex = mMaxValue
         }
-        selectorIndices[0] = nextScrollSelectorIndex;
-        ensureCachedScrollSelectorValue(nextScrollSelectorIndex);
+        selectorIndices[0] = nextScrollSelectorIndex
+        ensureCachedScrollSelectorValue(nextScrollSelectorIndex)
     }
 
     /**
-     * Ensures we have a cached string representation of the given <code>
-     * selectorIndex</code> to avoid multiple instantiations of the same string.
+     * Ensures we have a cached string representation of the given `
+     * selectorIndex` to avoid multiple instantiations of the same string.
      */
-    private void ensureCachedScrollSelectorValue(int selectorIndex) {
-        SparseArray<String> cache = mSelectorIndexToStringCache;
-        String scrollSelectorValue = cache.get(selectorIndex);
+    private fun ensureCachedScrollSelectorValue(selectorIndex: Int) {
+        val cache = mSelectorIndexToStringCache
+        var scrollSelectorValue = cache[selectorIndex]
         if (scrollSelectorValue != null) {
-            return;
+            return
         }
-        if (selectorIndex < mMinValue || selectorIndex > mMaxValue) {
-            scrollSelectorValue = "";
+        scrollSelectorValue = if (selectorIndex < mMinValue || selectorIndex > mMaxValue) {
+            ""
         } else {
             if (mDisplayedValues != null) {
-                int displayedValueIndex = selectorIndex - mMinValue;
-                if (displayedValueIndex >= mDisplayedValues.length) {
-                    cache.remove(selectorIndex);
-                    return;
+                val displayedValueIndex = selectorIndex - mMinValue
+                if (displayedValueIndex >= mDisplayedValues!!.size) {
+                    cache.remove(selectorIndex)
+                    return
                 }
-                scrollSelectorValue = mDisplayedValues[displayedValueIndex];
+                mDisplayedValues!![displayedValueIndex]
             } else {
-                scrollSelectorValue = formatNumber(selectorIndex);
+                formatNumber(selectorIndex)
             }
         }
-        cache.put(selectorIndex, scrollSelectorValue);
+        cache.put(selectorIndex, scrollSelectorValue)
     }
 
-    private String formatNumber(int value) {
-        return (mFormatter != null) ? mFormatter.format(value) : formatNumberWithLocale(value);
+    private fun formatNumber(value: Int): String {
+        return if (mFormatter != null) mFormatter!!.format(value) else formatNumberWithLocale(value)
     }
 
     /**
      * Updates the view of this NumberPicker. If displayValues were specified in
      * the string corresponding to the index specified by the current value will
-     * be returned. Otherwise, the formatter specified in {@link #setFormatter}
+     * be returned. Otherwise, the formatter specified in [.setFormatter]
      * will be used to format the number.
      */
-    private void updateInputTextView() {
+    private fun updateInputTextView() {
         /*
          * If we don't have displayed values then use the current number else
          * find the correct value in the displayed values for the current
          * number.
          */
-        String text = (mDisplayedValues == null) ? formatNumber(mValue)
-                : mDisplayedValues[mValue - mMinValue];
+        val text = if (mDisplayedValues == null) formatNumber(mValue) else mDisplayedValues!![mValue - mMinValue]
         if (TextUtils.isEmpty(text)) {
-            return;
+            return
         }
-
-        CharSequence beforeText = mSelectedText.getText();
-        if (text.equals(beforeText.toString())) {
-            return;
+        val beforeText: CharSequence = mSelectedText.text
+        if (text == beforeText.toString()) {
+            return
         }
-
-        mSelectedText.setText(text);
+        mSelectedText.setText(text)
     }
 
     /**
      * Notifies the listener, if registered, of a change of the value of this
      * NumberPicker.
      */
-    private void notifyChange(int previous, int current) {
+    private fun notifyChange(previous: Int, current: Int) {
         if (mOnValueChangeListener != null) {
-            mOnValueChangeListener.onValueChange(this, previous, current);
+            mOnValueChangeListener!!.onValueChange(this, previous, current)
         }
     }
-
     /**
      * Posts a command for changing the current value by one.
      *
      * @param increment Whether to increment or decrement the value.
      */
-    private void postChangeCurrentByOneFromLongPress(boolean increment, long delayMillis) {
+    /**
+     * Posts a command for changing the current value by one.
+     *
+     * @param increment Whether to increment or decrement the value.
+     */
+    private fun postChangeCurrentByOneFromLongPress(
+        increment: Boolean,
+        delayMillis: Long = ViewConfiguration.getLongPressTimeout().toLong()
+    ) {
         if (mChangeCurrentByOneFromLongPressCommand == null) {
-            mChangeCurrentByOneFromLongPressCommand = new ChangeCurrentByOneFromLongPressCommand();
+            mChangeCurrentByOneFromLongPressCommand = ChangeCurrentByOneFromLongPressCommand()
         } else {
-            removeCallbacks(mChangeCurrentByOneFromLongPressCommand);
+            removeCallbacks(mChangeCurrentByOneFromLongPressCommand)
         }
-        mChangeCurrentByOneFromLongPressCommand.setStep(increment);
-        postDelayed(mChangeCurrentByOneFromLongPressCommand, delayMillis);
-    }
-
-    /**
-     * Posts a command for changing the current value by one.
-     *
-     * @param increment Whether to increment or decrement the value.
-     */
-    private void postChangeCurrentByOneFromLongPress(boolean increment) {
-        postChangeCurrentByOneFromLongPress(increment, ViewConfiguration.getLongPressTimeout());
+        mChangeCurrentByOneFromLongPressCommand!!.setStep(increment)
+        postDelayed(mChangeCurrentByOneFromLongPressCommand, delayMillis)
     }
 
     /**
      * Removes the command for changing the current value by one.
      */
-    private void removeChangeCurrentByOneFromLongPress() {
+    private fun removeChangeCurrentByOneFromLongPress() {
         if (mChangeCurrentByOneFromLongPressCommand != null) {
-            removeCallbacks(mChangeCurrentByOneFromLongPressCommand);
+            removeCallbacks(mChangeCurrentByOneFromLongPressCommand)
         }
     }
 
     /**
      * Removes all pending callback from the message queue.
      */
-    private void removeAllCallbacks() {
+    private fun removeAllCallbacks() {
         if (mChangeCurrentByOneFromLongPressCommand != null) {
-            removeCallbacks(mChangeCurrentByOneFromLongPressCommand);
+            removeCallbacks(mChangeCurrentByOneFromLongPressCommand)
         }
     }
 
@@ -2118,178 +1934,283 @@ public class NumberPicker extends LinearLayout {
      * Ensures that the scroll wheel is adjusted i.e. there is no offset and the
      * middle element is in the middle of the widget.
      */
-    private void ensureScrollWheelAdjusted() {
+    private fun ensureScrollWheelAdjusted() {
         // adjust to the closest value
-        int delta = mInitialScrollOffset - mCurrentScrollOffset;
+        var delta = mInitialScrollOffset - mCurrentScrollOffset
         if (delta == 0) {
-            return;
+            return
         }
-
         if (Math.abs(delta) > mSelectorElementSize / 2) {
-            delta += (delta > 0) ? -mSelectorElementSize : mSelectorElementSize;
+            delta += if (delta > 0) -mSelectorElementSize else mSelectorElementSize
         }
-        if (isHorizontalMode()) {
-            mPreviousScrollerX = 0;
-            mAdjustScroller.startScroll(0, 0, delta, 0, SELECTOR_ADJUSTMENT_DURATION_MILLIS);
+        if (isHorizontalMode) {
+            mPreviousScrollerX = 0
+            mAdjustScroller.startScroll(0, 0, delta, 0, SELECTOR_ADJUSTMENT_DURATION_MILLIS)
         } else {
-            mPreviousScrollerY = 0;
-            mAdjustScroller.startScroll(0, 0, 0, delta, SELECTOR_ADJUSTMENT_DURATION_MILLIS);
+            mPreviousScrollerY = 0
+            mAdjustScroller.startScroll(0, 0, 0, delta, SELECTOR_ADJUSTMENT_DURATION_MILLIS)
         }
-        invalidate();
+        invalidate()
     }
 
     /**
      * Command for changing the current value from a long press by one.
      */
-    class ChangeCurrentByOneFromLongPressCommand implements Runnable {
-        private boolean mIncrement;
-
-        private void setStep(boolean increment) {
-            mIncrement = increment;
+    internal inner class ChangeCurrentByOneFromLongPressCommand : Runnable {
+        private var mIncrement = false
+        fun setStep(increment: Boolean) {
+            mIncrement = increment
         }
 
-        @Override
-        public void run() {
-            changeValueByOne(mIncrement);
-            postDelayed(this, DEFAULT_LONG_PRESS_UPDATE_INTERVAL);
+        override fun run() {
+            changeValueByOne(mIncrement)
+            postDelayed(this, DEFAULT_LONG_PRESS_UPDATE_INTERVAL)
         }
     }
 
-    private String formatNumberWithLocale(int value) {
-        return mNumberFormatter.format(value);
+    private fun formatNumberWithLocale(value: Int): String {
+        return mNumberFormatter.format(value.toLong())
     }
 
-    private float dpToPx(float dp) {
-        return dp * getResources().getDisplayMetrics().density;
+    private fun dpToPx(dp: Float): Float {
+        return dp * resources.displayMetrics.density
     }
 
-    private float spToPx(float sp) {
-        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp,
-                getResources().getDisplayMetrics());
+    private fun spToPx(sp: Float): Float {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP, sp,
+            resources.displayMetrics
+        )
     }
 
-    private float pxToSp(float px) {
-        return px / getResources().getDisplayMetrics().scaledDensity;
+    private fun pxToSp(px: Float): Float {
+        return px / resources.displayMetrics.scaledDensity
     }
 
-    private Formatter stringToFormatter(final String formatter) {
-        if (TextUtils.isEmpty(formatter)) {
-            return null;
-        }
-
-        return new Formatter() {
-            @Override
-            public String format(int i) {
-                return String.format(Locale.getDefault(), formatter, i);
+    private fun stringToFormatter(formatter: String?): Formatter? {
+        return if (TextUtils.isEmpty(formatter)) {
+            null
+        } else object : Formatter {
+            override fun format(i: Int): String {
+                return String.format(Locale.getDefault(), formatter!!, i)
             }
-        };
+        }
     }
 
-    private void setWidthAndHeight() {
-        if (isHorizontalMode()) {
-            mMinHeight = SIZE_UNSPECIFIED;
-            mMaxHeight = (int) dpToPx(DEFAULT_MIN_WIDTH);
-            mMinWidth = (int) dpToPx(DEFAULT_MAX_HEIGHT);
-            mMaxWidth = SIZE_UNSPECIFIED;
+    private fun setWidthAndHeight() {
+        if (isHorizontalMode) {
+            mMinHeight = SIZE_UNSPECIFIED
+            mMaxHeight = dpToPx(DEFAULT_MIN_WIDTH.toFloat()).toInt()
+            mMinWidth = dpToPx(DEFAULT_MAX_HEIGHT.toFloat()).toInt()
+            mMaxWidth = SIZE_UNSPECIFIED
         } else {
-            mMinHeight = SIZE_UNSPECIFIED;
-            mMaxHeight = (int) dpToPx(DEFAULT_MAX_HEIGHT);
-            mMinWidth = (int) dpToPx(DEFAULT_MIN_WIDTH);
-            mMaxWidth = SIZE_UNSPECIFIED;
+            mMinHeight = SIZE_UNSPECIFIED
+            mMaxHeight = dpToPx(DEFAULT_MAX_HEIGHT.toFloat()).toInt()
+            mMinWidth = dpToPx(DEFAULT_MIN_WIDTH.toFloat()).toInt()
+            mMaxWidth = SIZE_UNSPECIFIED
         }
     }
 
-    public void setDividerColor(@ColorInt int color) {
-        mDividerColor = color;
-        mDividerDrawable = new ColorDrawable(color);
+    fun setDividerColor(@ColorInt color: Int) {
+        mDividerColor = color
+        mDividerDrawable = ColorDrawable(color)
     }
 
-    public void setOrientation(@Orientation int orientation) {
-        mOrientation = orientation;
-        setWidthAndHeight();
-        requestLayout();
+    override fun setOrientation(@Orientation orientation: Int) {
+        mOrientation = orientation
+        setWidthAndHeight()
+        requestLayout()
     }
 
-    public void setWheelItemCount(int count) {
-        if (count < 1) {
-            throw new IllegalArgumentException("Wheel item count must be >= 1");
-        }
-        mRealWheelItemCount = count;
-        mWheelItemCount = Math.max(count, DEFAULT_WHEEL_ITEM_COUNT);
-        mWheelMiddleItemIndex = mWheelItemCount / 2;
-        mSelectorIndices = new int[mWheelItemCount];
+    fun setWheelItemCount(count: Int) {
+        require(count >= 1) { "Wheel item count must be >= 1" }
+        mRealWheelItemCount = count
+        mWheelItemCount = Math.max(count, DEFAULT_WHEEL_ITEM_COUNT)
+        mWheelMiddleItemIndex = mWheelItemCount / 2
+        selectorIndices = IntArray(mWheelItemCount)
     }
 
-    public void setSelectedTextColor(@ColorInt int color) {
-        mSelectedTextColor = color;
-        mSelectedText.setTextColor(mSelectedTextColor);
+    fun setSelectedTextColor(@ColorInt color: Int) {
+        mSelectedTextColor = color
+        mSelectedText.setTextColor(mSelectedTextColor)
     }
 
-    public void setSelectedTextSize(float textSize) {
-        mSelectedTextSize = textSize;
-        mSelectedText.setTextSize(pxToSp(mSelectedTextSize));
+    fun setSelectedTextSize(textSize: Float) {
+        mSelectedTextSize = textSize
+        mSelectedText.textSize = pxToSp(mSelectedTextSize)
     }
 
-    public void setSelectedTypeface(Typeface typeface) {
-        mSelectedTypeface = typeface;
+    fun setSelectedTypeface(typeface: Typeface?) {
+        mSelectedTypeface = typeface
         if (mSelectedTypeface != null) {
-            mSelectorWheelPaint.setTypeface(mSelectedTypeface);
+            mSelectorWheelPaint.typeface = mSelectedTypeface
         } else if (mTypeface != null) {
-            mSelectorWheelPaint.setTypeface(mTypeface);
+            mSelectorWheelPaint.typeface = mTypeface
         } else {
-            mSelectorWheelPaint.setTypeface(Typeface.MONOSPACE);
+            mSelectorWheelPaint.typeface = Typeface.MONOSPACE
         }
     }
 
-    public void setTextColor(@ColorInt int color) {
-        mTextColor = color;
-        mSelectorWheelPaint.setColor(mTextColor);
+    fun setTextSize(@DimenRes dimenId: Int) {
+        textSize = resources.getDimension(dimenId)
     }
 
-    public void setTextSize(float textSize) {
-        mTextSize = textSize;
-        mSelectorWheelPaint.setTextSize(mTextSize);
-    }
-
-    public void setTextSize(@DimenRes int dimenId) {
-        setTextSize(getResources().getDimension(dimenId));
-    }
-
-    public void setTypeface(Typeface typeface) {
-        mTypeface = typeface;
+    fun setTypeface(typeface: Typeface?) {
+        mTypeface = typeface
         if (mTypeface != null) {
-            mSelectedText.setTypeface(mTypeface);
-            setSelectedTypeface(mSelectedTypeface);
+            mSelectedText.typeface = mTypeface
+            setSelectedTypeface(mSelectedTypeface)
         } else {
-            mSelectedText.setTypeface(Typeface.MONOSPACE);
+            mSelectedText.typeface = Typeface.MONOSPACE
         }
     }
 
-    public boolean isHorizontalMode() {
-        return getOrientation() == HORIZONTAL;
+    val isHorizontalMode: Boolean
+        get() = orientation == HORIZONTAL
+    val isAscendingOrder: Boolean
+        get() = order == ASCENDING
+
+    override fun getOrientation(): Int {
+        return mOrientation
     }
 
-    public boolean isAscendingOrder() {
-        return getOrder() == ASCENDING;
-    }
+    var textColor: Int
+        get() = mTextColor
+        set(color) {
+            mTextColor = color
+            mSelectorWheelPaint.color = mTextColor
+        }
+    var textSize: Float
+        get() = spToPx(mTextSize)
+        set(textSize) {
+            mTextSize = textSize
+            mSelectorWheelPaint.textSize = mTextSize
+        }
 
-    public int getOrder() {
-        return mOrder;
-    }
+    companion object {
+        const val VERTICAL = LinearLayout.VERTICAL
+        const val HORIZONTAL = LinearLayout.HORIZONTAL
+        const val ASCENDING = 0
+        const val CENTER = 1
+        const val SIDE_LINES = 0
+        const val UNDERLINE = 1
 
-    public int getOrientation() {
-        return mOrientation;
-    }
+        /**
+         * The default update interval during long press.
+         */
+        private const val DEFAULT_LONG_PRESS_UPDATE_INTERVAL: Long = 300
 
-    public boolean isScrollerEnabled() {
-        return mScrollerEnabled;
-    }
+        /**
+         * The default coefficient to adjust (divide) the max fling velocity.
+         */
+        private const val DEFAULT_MAX_FLING_VELOCITY_COEFFICIENT = 8
 
-    public int getTextColor() {
-        return mTextColor;
-    }
+        /**
+         * The the duration for adjusting the selector wheel.
+         */
+        private const val SELECTOR_ADJUSTMENT_DURATION_MILLIS = 800
 
-    public float getTextSize() {
-        return spToPx(mTextSize);
+        /**
+         * The duration of scrolling while snapping to a given position.
+         */
+        private const val SNAP_SCROLL_DURATION = 300
+
+        /**
+         * The default strength of fading edge while drawing the selector.
+         */
+        private const val DEFAULT_FADING_EDGE_STRENGTH = 0.9f
+
+        /**
+         * The default unscaled height of the divider.
+         */
+        private const val UNSCALED_DEFAULT_DIVIDER_THICKNESS = 2
+
+        /**
+         * The default unscaled distance between the dividers.
+         */
+        private const val UNSCALED_DEFAULT_DIVIDER_DISTANCE = 48
+
+        /**
+         * Constant for unspecified size.
+         */
+        private const val SIZE_UNSPECIFIED = -1
+
+        /**
+         * The default color of divider.
+         */
+        private const val DEFAULT_DIVIDER_COLOR = -0x1000000
+
+        /**
+         * The default max value of this widget.
+         */
+        private const val DEFAULT_MAX_VALUE = 100
+
+        /**
+         * The default min value of this widget.
+         */
+        private const val DEFAULT_MIN_VALUE = 1
+
+        /**
+         * The default wheel item count of this widget.
+         */
+        private const val DEFAULT_WHEEL_ITEM_COUNT = 3
+
+        /**
+         * The default max height of this widget.
+         */
+        private const val DEFAULT_MAX_HEIGHT = 180
+
+        /**
+         * The default min width of this widget.
+         */
+        private const val DEFAULT_MIN_WIDTH = 64
+
+        /**
+         * The default align of text.
+         */
+        private const val DEFAULT_TEXT_ALIGN = CENTER
+
+        /**
+         * The default color of text.
+         */
+        private const val DEFAULT_TEXT_COLOR = -0x1000000
+
+        /**
+         * The default size of text.
+         */
+        private const val DEFAULT_TEXT_SIZE = 25f
+
+        /**
+         * The default line spacing multiplier of text.
+         */
+        private const val DEFAULT_LINE_SPACING_MULTIPLIER = 1f
+
+        /**
+         * Utility to reconcile a desired size and state, with constraints imposed
+         * by a MeasureSpec.  Will take the desired size, unless a different size
+         * is imposed by the constraints.  The returned value is a compound integer,
+         * with the resolved size in the [.MEASURED_SIZE_MASK] bits and
+         * optionally the bit [.MEASURED_STATE_TOO_SMALL] set if the resulting
+         * size is smaller than the size the view wants to be.
+         *
+         * @param size        How big the view wants to be
+         * @param measureSpec Constraints imposed by the parent
+         * @return Size information bit mask as defined by
+         * [.MEASURED_SIZE_MASK] and [.MEASURED_STATE_TOO_SMALL].
+         */
+        fun resolveSizeAndState(size: Int, measureSpec: Int, childMeasuredState: Int): Int {
+            var result = size
+            val specMode = MeasureSpec.getMode(measureSpec)
+            val specSize = MeasureSpec.getSize(measureSpec)
+            when (specMode) {
+                MeasureSpec.UNSPECIFIED -> {}
+                MeasureSpec.AT_MOST -> if (specSize < size) {
+                    result = specSize or MEASURED_STATE_TOO_SMALL
+                }
+
+                MeasureSpec.EXACTLY -> result = specSize
+            }
+            return result or (childMeasuredState and MEASURED_STATE_MASK)
+        }
     }
 }
