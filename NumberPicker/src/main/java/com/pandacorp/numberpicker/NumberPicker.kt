@@ -148,7 +148,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     /**
      * The values to be displayed instead the indices.
      */
-    private var mDisplayedValues: Array<String>?
+    private var mDisplayedValues: Array<String>? = null
 
     /**
      * Lower value of the range of numbers allowed for the NumberPicker
@@ -163,7 +163,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     /**
      * Current value of this NumberPicker
      */
-    private var mValue: Int
+    private var mValue: Int = 0
 
     /**
      * Listener to be notified upon current value click.
@@ -293,7 +293,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     /**
      * Flag whether the selector should wrap around.
      */
-    private var mWrapSelectorWheel: Boolean
+    private var mWrapSelectorWheel: Boolean = false
 
     /**
      * User choice on whether the selector wheel should be wrapped.
@@ -388,7 +388,87 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     /**
      * Flag whether the scroller should enabled.
      */
-    var isScrollerEnabled = true
+    private var isScrollerEnabled = true
+
+    var textColor: Int
+        get() = mTextColor
+        set(color) {
+            mTextColor = color
+            mSelectorWheelPaint.color = mTextColor
+        }
+    var textSize: Float
+        get() = spToPx(mTextSize)
+        set(textSize) {
+            mTextSize = textSize
+            mSelectorWheelPaint.textSize = mTextSize
+        }
+
+    var value: Int
+        /**
+         * Returns the value of the picker.
+         *
+         * @return The value.
+         */
+        get() = mValue
+        set(value) {
+            setValueInternal(value, false)
+        }
+    var minValue: Int
+        /**
+         * Returns the min value of the picker.
+         *
+         * @return The min value
+         */
+        get() = mMinValue
+        /**
+         * Sets the min value of the picker.
+         *
+         * @param minValue The min value inclusive.
+         * **Note:** The length of the displayed values array
+         * set via [.setDisplayedValues] must be equal to the
+         * range of selectable numbers which is equal to
+         * [.getMaxValue] - [.getMinValue] + 1.
+         */
+        set(minValue) {
+            mMinValue = minValue
+            if (mMinValue > mValue) {
+                mValue = mMinValue
+            }
+            updateWrapSelectorWheel()
+            initializeSelectorWheelIndices()
+            updateInputTextView()
+            tryComputeMaxWidth()
+            invalidate()
+        }
+    var maxValue: Int
+        /**
+         * Returns the max value of the picker.
+         *
+         * @return The max value.
+         */
+        get() = mMaxValue
+        /**
+         * Sets the max value of the picker.
+         *
+         * @param maxValue The max value inclusive.
+         * **Note:** The length of the displayed values array
+         * set via [.setDisplayedValues] must be equal to the
+         * range of selectable numbers which is equal to
+         * [.getMaxValue] - [.getMinValue] + 1.
+         */
+        set(maxValue) {
+            require(maxValue >= 0) { "maxValue must be >= 0" }
+            mMaxValue = maxValue
+            if (mMaxValue < mValue) {
+                mValue = mMaxValue
+            }
+            updateWrapSelectorWheel()
+            initializeSelectorWheelIndices()
+            updateInputTextView()
+            tryComputeMaxWidth()
+            invalidate()
+        }
+
 
     /**
      * The line spacing multiplier of the text.
@@ -408,7 +488,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     /**
      * Interface to listen for changes of the current value.
      */
-    interface OnValueChangeListener {
+    fun interface OnValueChangeListener {
         /**
          * Called upon a change of the current value.
          *
@@ -545,10 +625,10 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
             spToPx(mSelectedTextSize)
         )
         mSelectedTextStrikeThru = attributes.getBoolean(
-            R.styleable.NumberPicker_np_selectedTextStrikeThru, mSelectedTextStrikeThru
+            R.styleable.NumberPicker_np_selectedTextStrikeThru, false
         )
         mSelectedTextUnderline = attributes.getBoolean(
-            R.styleable.NumberPicker_np_selectedTextUnderline, mSelectedTextUnderline
+            R.styleable.NumberPicker_np_selectedTextUnderline, false
         )
         mSelectedTypeface = Typeface.create(
             attributes.getString(
@@ -562,10 +642,10 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
             spToPx(mTextSize)
         )
         mTextStrikeThru = attributes.getBoolean(
-            R.styleable.NumberPicker_np_textStrikeThru, mTextStrikeThru
+            R.styleable.NumberPicker_np_textStrikeThru, false
         )
         mTextUnderline = attributes.getBoolean(
-            R.styleable.NumberPicker_np_textUnderline, mTextUnderline
+            R.styleable.NumberPicker_np_textUnderline, false
         )
         mTypeface = Typeface.create(
             attributes.getString(R.styleable.NumberPicker_np_typeface),
@@ -1136,7 +1216,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     private fun getPaintCenterY(fontMetrics: Paint.FontMetrics?): Float {
         return if (fontMetrics == null) {
-            0
+            0f
         } else Math.abs(fontMetrics.top + fontMetrics.bottom) / 2
     }
 
@@ -1216,71 +1296,6 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     private val isWrappingAllowed: Boolean
         private get() = mMaxValue - mMinValue >= selectorIndices.size - 1
-    var value: Int
-        /**
-         * Returns the value of the picker.
-         *
-         * @return The value.
-         */
-        get() = mValue
-        set(value) {
-            setValueInternal(value, false)
-        }
-    var minValue: Int
-        /**
-         * Returns the min value of the picker.
-         *
-         * @return The min value
-         */
-        get() = mMinValue
-        /**
-         * Sets the min value of the picker.
-         *
-         * @param minValue The min value inclusive.
-         * **Note:** The length of the displayed values array
-         * set via [.setDisplayedValues] must be equal to the
-         * range of selectable numbers which is equal to
-         * [.getMaxValue] - [.getMinValue] + 1.
-         */
-        set(minValue) {
-            mMinValue = minValue
-            if (mMinValue > mValue) {
-                mValue = mMinValue
-            }
-            updateWrapSelectorWheel()
-            initializeSelectorWheelIndices()
-            updateInputTextView()
-            tryComputeMaxWidth()
-            invalidate()
-        }
-    var maxValue: Int
-        /**
-         * Returns the max value of the picker.
-         *
-         * @return The max value.
-         */
-        get() = mMaxValue
-        /**
-         * Sets the max value of the picker.
-         *
-         * @param maxValue The max value inclusive.
-         * **Note:** The length of the displayed values array
-         * set via [.setDisplayedValues] must be equal to the
-         * range of selectable numbers which is equal to
-         * [.getMaxValue] - [.getMinValue] + 1.
-         */
-        set(maxValue) {
-            require(maxValue >= 0) { "maxValue must be >= 0" }
-            mMaxValue = maxValue
-            if (mMaxValue < mValue) {
-                mValue = mMaxValue
-            }
-            updateWrapSelectorWheel()
-            initializeSelectorWheelIndices()
-            updateInputTextView()
-            tryComputeMaxWidth()
-            invalidate()
-        }
 
     /**
      * Sets the values to be displayed.
@@ -1310,7 +1325,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     private fun getFadingEdgeStrength(isHorizontalMode: Boolean): Float {
-        return if (isHorizontalMode && mFadingEdgeEnabled) mFadingEdgeStrength else 0
+        return if (isHorizontalMode && mFadingEdgeEnabled) mFadingEdgeStrength else 0f
     }
 
     override fun getTopFadingEdgeStrength(): Float {
@@ -2073,19 +2088,6 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     override fun getOrientation(): Int {
         return mOrientation
     }
-
-    var textColor: Int
-        get() = mTextColor
-        set(color) {
-            mTextColor = color
-            mSelectorWheelPaint.color = mTextColor
-        }
-    var textSize: Float
-        get() = spToPx(mTextSize)
-        set(textSize) {
-            mTextSize = textSize
-            mSelectorWheelPaint.textSize = mTextSize
-        }
 
     companion object {
         const val VERTICAL = LinearLayout.VERTICAL
