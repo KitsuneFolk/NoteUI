@@ -26,7 +26,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorInt
-import androidx.annotation.DimenRes
 import androidx.annotation.IntDef
 import java.text.NumberFormat
 import java.util.Locale
@@ -538,24 +537,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
          */
         fun format(value: Int): String
     }
-    /**
-     * Create a new number picker
-     *
-     * @param context  the application environment.
-     * @param attrs    a collection of attributes.
-     * @param defStyle The default style to apply to this view.
-     */
-    /**
-     * Create a new number picker.
-     *
-     * @param context The application environment.
-     * @param attrs   A collection of attributes.
-     */
-    /**
-     * Create a new number picker.
-     *
-     * @param context The application environment.
-     */
+
     init {
         mNumberFormatter = NumberFormat.getInstance()
         val attributes = context.obtainStyledAttributes(
@@ -1198,8 +1180,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
      * formatter is never invoked.
      *
      *
-     * @param formatter The formatter object. If formatter is `null`,
-     * [String.valueOf] will be used.
+     * @param formatter The formatter object.
      * @see .setDisplayedValues
      */
     fun setFormatter(formatter: Formatter?) {
@@ -1212,7 +1193,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     private val maxTextSize: Float
-        private get() = Math.max(mTextSize, mSelectedTextSize)
+        get() = Math.max(mTextSize, mSelectedTextSize)
 
     private fun getPaintCenterY(fontMetrics: Paint.FontMetrics?): Float {
         return if (fontMetrics == null) {
@@ -1261,8 +1242,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     /**
      * Sets whether the selector wheel shown during flinging/scrolling should
-     * wrap around the [NumberPicker.getMinValue] and
-     * [NumberPicker.getMaxValue] values.
+     * wrap values.
      *
      *
      * By default if the range (max - min) is more than the number of items shown
@@ -1295,7 +1275,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     private val isWrappingAllowed: Boolean
-        private get() = mMaxValue - mMinValue >= selectorIndices.size - 1
+        get() = mMaxValue - mMinValue >= selectorIndices.size - 1
 
     /**
      * Sets the values to be displayed.
@@ -1305,8 +1285,8 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
      * must be equal to the range of selectable numbers which is equal to
      * [.getMaxValue] - [.getMinValue] + 1.
      */
-    fun setDisplayedValues(displayedValues: Array<String>) {
-        if (mDisplayedValues == displayedValues) {
+    fun setDisplayedValues(displayedValues: Array<String>?) {
+        if (mDisplayedValues.contentEquals(displayedValues)) {
             return
         }
         mDisplayedValues = displayedValues
@@ -1543,19 +1523,19 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     private fun drawText(text: String, x: Float, y: Float, paint: Paint, canvas: Canvas) {
-        var y = y
+        var mY = y
         if (text.contains("\n")) {
             val lines = text.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             val height = (Math.abs(paint.descent() + paint.ascent())
                     * mLineSpacingMultiplier)
             val diff = (lines.size - 1) * height / 2
-            y -= diff
+            mY -= diff
             for (line in lines) {
-                canvas.drawText(line, x, y, paint)
-                y += height
+                canvas.drawText(line, x, mY, paint)
+                mY += height
             }
         } else {
-            canvas.drawText(text, x, y, paint)
+            canvas.drawText(text, x, mY, paint)
         }
     }
 
@@ -1652,25 +1632,25 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
      * @param notifyChange Whether to notify if the current value changed.
      */
     private fun setValueInternal(current: Int, notifyChange: Boolean) {
-        var current = current
-        if (mValue == current) {
+        var mCurrent = current
+        if (mValue == mCurrent) {
             return
         }
         // Wrap around the values if we go past the start or end
         if (mWrapSelectorWheel) {
-            current = getWrappedSelectorIndex(current)
+            mCurrent = getWrappedSelectorIndex(mCurrent)
         } else {
-            current = Math.max(current, mMinValue)
-            current = Math.min(current, mMaxValue)
+            mCurrent = Math.max(mCurrent, mMinValue)
+            mCurrent = Math.min(mCurrent, mMaxValue)
         }
         val previous = mValue
-        mValue = current
+        mValue = mCurrent
         // If we're flinging, we'll update the text view at the end when it becomes visible
         if (mScrollState != OnScrollListener.SCROLL_STATE_FLING) {
             updateInputTextView()
         }
         if (notifyChange) {
-            notifyChange(previous, current)
+            notifyChange(previous, mCurrent)
         }
         initializeSelectorWheelIndices()
         updateAccessibilityDescription()
@@ -1904,11 +1884,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
             mOnValueChangeListener!!.onValueChange(this, previous, current)
         }
     }
-    /**
-     * Posts a command for changing the current value by one.
-     *
-     * @param increment Whether to increment or decrement the value.
-     */
+
     /**
      * Posts a command for changing the current value by one.
      *
@@ -2006,8 +1982,8 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         return if (TextUtils.isEmpty(formatter)) {
             null
         } else object : Formatter {
-            override fun format(i: Int): String {
-                return String.format(Locale.getDefault(), formatter!!, i)
+            override fun format(value: Int): String {
+                return String.format(Locale.getDefault(), formatter!!, value)
             }
         }
     }
@@ -2064,10 +2040,6 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         } else {
             mSelectorWheelPaint.typeface = Typeface.MONOSPACE
         }
-    }
-
-    fun setTextSize(@DimenRes dimenId: Int) {
-        textSize = resources.getDimension(dimenId)
     }
 
     fun setTypeface(typeface: Typeface?) {
