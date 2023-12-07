@@ -29,6 +29,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.IntDef
 import java.text.NumberFormat
 import java.util.Locale
+import kotlin.math.abs
 
 /**
  * A widget that enables the user to select a number from a predefined range.
@@ -372,7 +373,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     /**
      * The order of this widget.
      */
-    val order: Int
+    private val order: Int
 
     /**
      * Flag whether the fading edge should enabled.
@@ -805,7 +806,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
             val futureScrollOffset = (mCurrentScrollOffset + amountToScroll) % mSelectorElementSize
             var overshootAdjustment = mInitialScrollOffset - futureScrollOffset
             if (overshootAdjustment != 0) {
-                if (Math.abs(overshootAdjustment) > mSelectorElementSize / 2) {
+                if (abs(overshootAdjustment) > mSelectorElementSize / 2) {
                     if (overshootAdjustment > 0) {
                         overshootAdjustment -= mSelectorElementSize
                     } else {
@@ -821,7 +822,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
             val futureScrollOffset = (mCurrentScrollOffset + amountToScroll) % mSelectorElementSize
             var overshootAdjustment = mInitialScrollOffset - futureScrollOffset
             if (overshootAdjustment != 0) {
-                if (Math.abs(overshootAdjustment) > mSelectorElementSize / 2) {
+                if (abs(overshootAdjustment) > mSelectorElementSize / 2) {
                     if (overshootAdjustment > 0) {
                         overshootAdjustment -= mSelectorElementSize
                     } else {
@@ -907,13 +908,12 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
             mVelocityTracker = VelocityTracker.obtain()
         }
         mVelocityTracker!!.addMovement(event)
-        val action = event.action and MotionEvent.ACTION_MASK
-        when (action) {
+        when (event.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_MOVE -> {
                 if (isHorizontalMode) {
                     val currentMoveX = event.x
                     if (mScrollState != OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                        val deltaDownX = Math.abs(currentMoveX - mLastDownEventX).toInt()
+                        val deltaDownX = abs(currentMoveX - mLastDownEventX).toInt()
                         if (deltaDownX > mTouchSlop) {
                             removeAllCallbacks()
                             onScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
@@ -927,7 +927,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
                 } else {
                     val currentMoveY = event.y
                     if (mScrollState != OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                        val deltaDownY = Math.abs(currentMoveY - mLastDownEventY).toInt()
+                        val deltaDownY = abs(currentMoveY - mLastDownEventY).toInt()
                         if (deltaDownY > mTouchSlop) {
                             removeAllCallbacks()
                             onScrollStateChange(OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
@@ -947,12 +947,12 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
                 velocityTracker!!.computeCurrentVelocity(1000, mMaximumFlingVelocity.toFloat())
                 if (isHorizontalMode) {
                     val initialVelocity = velocityTracker.xVelocity.toInt()
-                    if (Math.abs(initialVelocity) > mMinimumFlingVelocity) {
+                    if (abs(initialVelocity) > mMinimumFlingVelocity) {
                         fling(initialVelocity)
                         onScrollStateChange(OnScrollListener.SCROLL_STATE_FLING)
                     } else {
                         val eventX = event.x.toInt()
-                        val deltaMoveX = Math.abs(eventX - mLastDownEventX).toInt()
+                        val deltaMoveX = abs(eventX - mLastDownEventX).toInt()
                         if (deltaMoveX <= mTouchSlop) {
                             val selectorIndexOffset = (eventX / mSelectorElementSize
                                     - mWheelMiddleItemIndex)
@@ -970,12 +970,12 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
                     }
                 } else {
                     val initialVelocity = velocityTracker.yVelocity.toInt()
-                    if (Math.abs(initialVelocity) > mMinimumFlingVelocity) {
+                    if (abs(initialVelocity) > mMinimumFlingVelocity) {
                         fling(initialVelocity)
                         onScrollStateChange(OnScrollListener.SCROLL_STATE_FLING)
                     } else {
                         val eventY = event.y.toInt()
-                        val deltaMoveY = Math.abs(eventY - mLastDownEventY).toInt()
+                        val deltaMoveY = abs(eventY - mLastDownEventY).toInt()
                         if (deltaMoveY <= mTouchSlop) {
                             val selectorIndexOffset = (eventY / mSelectorElementSize
                                     - mWheelMiddleItemIndex)
@@ -1000,16 +1000,14 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        val action = event.action and MotionEvent.ACTION_MASK
-        when (action) {
+        when (event.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> removeAllCallbacks()
         }
         return super.dispatchTouchEvent(event)
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
-        val keyCode = event.keyCode
-        when (keyCode) {
+        when (val keyCode = event.keyCode) {
             KeyEvent.KEYCODE_DPAD_CENTER, KeyEvent.KEYCODE_ENTER -> removeAllCallbacks()
             KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_DPAD_UP -> when (event.action) {
                 KeyEvent.ACTION_DOWN -> if (mWrapSelectorWheel || (if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) value < maxValue else value > minValue)) {
@@ -1032,8 +1030,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     override fun dispatchTrackballEvent(event: MotionEvent): Boolean {
-        val action = event.action and MotionEvent.ACTION_MASK
-        when (action) {
+        when (event.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> removeAllCallbacks()
         }
         return super.dispatchTrackballEvent(event)
@@ -1079,7 +1076,6 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     override fun scrollBy(x: Int, y: Int) {
-        val SELECTOR_MIDDLE_ITEM_INDEX = 3 / 2
         val mSelectorElementHeight = mSelectorElementSize
         val selectorIndices = selectorIndices
         val startScrollOffset = mCurrentScrollOffset
@@ -1183,7 +1179,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
      * @param formatter The formatter object.
      * @see .setDisplayedValues
      */
-    fun setFormatter(formatter: Formatter?) {
+    private fun setFormatter(formatter: Formatter?) {
         if (formatter === mFormatter) {
             return
         }
@@ -1193,12 +1189,12 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     private val maxTextSize: Float
-        get() = Math.max(mTextSize, mSelectedTextSize)
+        get() = mTextSize.coerceAtLeast(mSelectedTextSize)
 
     private fun getPaintCenterY(fontMetrics: Paint.FontMetrics?): Float {
         return if (fontMetrics == null) {
             0f
-        } else Math.abs(fontMetrics.top + fontMetrics.bottom) / 2
+        } else abs(fontMetrics.top + fontMetrics.bottom) / 2
     }
 
     /**
@@ -1222,7 +1218,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
             var current = mMaxValue
             while (current > 0) {
                 numberOfDigits++
-                current = current / 10
+                current /= 10
             }
             maxTextWidth = (numberOfDigits * maxDigitWidth).toInt()
         } else {
@@ -1235,7 +1231,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         }
         maxTextWidth += mSelectedText.paddingLeft + mSelectedText.paddingRight
         if (mMaxWidth != maxTextWidth) {
-            mMaxWidth = Math.max(maxTextWidth, mMinWidth)
+            mMaxWidth = maxTextWidth.coerceAtLeast(mMinWidth)
             invalidate()
         }
     }
@@ -1258,7 +1254,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
      *
      * @param wrapSelectorWheel Whether to wrap.
      */
-    fun setWrapSelectorWheel(wrapSelectorWheel: Boolean) {
+    private fun setWrapSelectorWheel(wrapSelectorWheel: Boolean) {
         mWrapSelectorWheelPreferred = wrapSelectorWheel
         updateWrapSelectorWheel()
     }
@@ -1437,7 +1433,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
             SIDE_LINES -> {
                 val top: Int
                 val bottom: Int
-                if (mDividerLength > 0 && mDividerLength <= mMaxHeight) {
+                if (mDividerLength in 1..mMaxHeight) {
                     top = (mMaxHeight - mDividerLength) / 2
                     bottom = top + mDividerLength
                 } else {
@@ -1459,7 +1455,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
             UNDERLINE -> {
                 val left: Int
                 val right: Int
-                if (mDividerLength > 0 && mDividerLength <= mMaxWidth) {
+                if (mDividerLength in 1..mMaxWidth) {
                     left = (mMaxWidth - mDividerLength) / 2
                     right = left + mDividerLength
                 } else {
@@ -1482,7 +1478,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     private fun drawVerticalDividers(canvas: Canvas) {
         val left: Int
         val right: Int
-        if (mDividerLength > 0 && mDividerLength <= mMaxWidth) {
+        if (mDividerLength in 1..mMaxWidth) {
             left = (mMaxWidth - mDividerLength) / 2
             right = left + mDividerLength
         } else {
@@ -1526,7 +1522,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         var mY = y
         if (text.contains("\n")) {
             val lines = text.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            val height = (Math.abs(paint.descent() + paint.ascent())
+            val height = (abs(paint.descent() + paint.ascent())
                     * mLineSpacingMultiplier)
             val diff = (lines.size - 1) * height / 2
             mY -= diff
@@ -1566,14 +1562,10 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
             return measureSpec
         }
         val size = MeasureSpec.getSize(measureSpec)
-        val mode = MeasureSpec.getMode(measureSpec)
-        return when (mode) {
+        return when (val mode = MeasureSpec.getMode(measureSpec)) {
             MeasureSpec.EXACTLY -> measureSpec
             MeasureSpec.AT_MOST -> MeasureSpec.makeMeasureSpec(
-                Math.min(
-                    size,
-                    maxSize
-                ), MeasureSpec.EXACTLY
+                size.coerceAtMost(maxSize), MeasureSpec.EXACTLY
             )
 
             MeasureSpec.UNSPECIFIED -> MeasureSpec.makeMeasureSpec(
@@ -1600,7 +1592,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         measureSpec: Int
     ): Int {
         return if (minSize != SIZE_UNSPECIFIED) {
-            val desiredWidth = Math.max(minSize, measuredSize)
+            val desiredWidth = minSize.coerceAtLeast(measuredSize)
             resolveSizeAndState(desiredWidth, measureSpec, 0)
         } else {
             measuredSize
@@ -1640,8 +1632,8 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         if (mWrapSelectorWheel) {
             mCurrent = getWrappedSelectorIndex(mCurrent)
         } else {
-            mCurrent = Math.max(mCurrent, mMinValue)
-            mCurrent = Math.min(mCurrent, mMaxValue)
+            mCurrent = mCurrent.coerceAtLeast(mMinValue)
+            mCurrent = mCurrent.coerceAtMost(mMaxValue)
         }
         val previous = mValue
         mValue = mCurrent
@@ -1679,17 +1671,16 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         if (!moveToFinalScrollerPosition(mFlingScroller)) {
             moveToFinalScrollerPosition(mAdjustScroller)
         }
-        smoothScroll(increment, 1)
+        smoothScroll(increment)
     }
 
     /**
      * Starts a smooth scroll
      *
      * @param increment True to increment, false to decrement.
-     * @param steps     The steps to scroll.
      */
-    fun smoothScroll(increment: Boolean, steps: Int) {
-        val diffSteps = (if (increment) -mSelectorElementSize else mSelectorElementSize) * steps
+    private fun smoothScroll(increment: Boolean) {
+        val diffSteps = (if (increment) -mSelectorElementSize else mSelectorElementSize) * 1
         if (isHorizontalMode) {
             mPreviousScrollerX = 0
             mFlingScroller.startScroll(0, 0, diffSteps, 0, SNAP_SCROLL_DURATION)
@@ -1931,7 +1922,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         if (delta == 0) {
             return
         }
-        if (Math.abs(delta) > mSelectorElementSize / 2) {
+        if (abs(delta) > mSelectorElementSize / 2) {
             delta += if (delta > 0) -mSelectorElementSize else mSelectorElementSize
         }
         if (isHorizontalMode) {
@@ -2013,10 +2004,10 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         requestLayout()
     }
 
-    fun setWheelItemCount(count: Int) {
+    private fun setWheelItemCount(count: Int) {
         require(count >= 1) { "Wheel item count must be >= 1" }
         mRealWheelItemCount = count
-        mWheelItemCount = Math.max(count, DEFAULT_WHEEL_ITEM_COUNT)
+        mWheelItemCount = count.coerceAtLeast(DEFAULT_WHEEL_ITEM_COUNT)
         mWheelMiddleItemIndex = mWheelItemCount / 2
         selectorIndices = IntArray(mWheelItemCount)
     }
@@ -2026,12 +2017,12 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         mSelectedText.setTextColor(mSelectedTextColor)
     }
 
-    fun setSelectedTextSize(textSize: Float) {
+    private fun setSelectedTextSize(textSize: Float) {
         mSelectedTextSize = textSize
         mSelectedText.textSize = pxToSp(mSelectedTextSize)
     }
 
-    fun setSelectedTypeface(typeface: Typeface?) {
+    private fun setSelectedTypeface(typeface: Typeface?) {
         mSelectedTypeface = typeface
         if (mSelectedTypeface != null) {
             mSelectorWheelPaint.typeface = mSelectedTypeface
@@ -2042,7 +2033,7 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         }
     }
 
-    fun setTypeface(typeface: Typeface?) {
+    private fun setTypeface(typeface: Typeface?) {
         mTypeface = typeface
         if (mTypeface != null) {
             mSelectedText.typeface = mTypeface
@@ -2052,9 +2043,9 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
         }
     }
 
-    val isHorizontalMode: Boolean
+    private val isHorizontalMode: Boolean
         get() = orientation == HORIZONTAL
-    val isAscendingOrder: Boolean
+    private val isAscendingOrder: Boolean
         get() = order == ASCENDING
 
     override fun getOrientation(): Int {
@@ -2062,10 +2053,11 @@ class NumberPicker @JvmOverloads constructor(context: Context, attrs: AttributeS
     }
 
     companion object {
+        private const val SELECTOR_MIDDLE_ITEM_INDEX = 3 / 2
         const val VERTICAL = LinearLayout.VERTICAL
         const val HORIZONTAL = LinearLayout.HORIZONTAL
         const val ASCENDING = 0
-        const val CENTER = 1
+        private const val CENTER = 1
         const val SIDE_LINES = 0
         const val UNDERLINE = 1
 
