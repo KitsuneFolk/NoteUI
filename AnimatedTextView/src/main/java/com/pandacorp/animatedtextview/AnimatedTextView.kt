@@ -211,7 +211,6 @@ class AnimatedTextView(context: Context, attrs: AttributeSet? = null, defStyleAt
                                 x += fullWidth - currentWidth
                             }
                         }
-                        //                        boolean isAppeared = currentLayoutToOldIndex != null && i < currentLayoutToOldIndex.length && currentLayoutToOldIndex[i] < 0;
                         canvas.translate(x, 0f)
                         currentPart.layout!!.draw(canvas)
                         canvas.restore()
@@ -313,7 +312,6 @@ class AnimatedTextView(context: Context, attrs: AttributeSet? = null, defStyleAt
                 val from = if (splitByWords) WordSequence(oldText) else oldText!!
                 val to = if (splitByWords) WordSequence(currentText) else currentText!!
                 diff(from, to, onEqualRegion, onNewPart, onOldPart)
-                //                betterDiff(from, to, onEqualRegion, onNewPart, onOldPart);
                 if (this.currentParts == null || this.currentParts!!.size != currentParts.size) {
                     this.currentParts = arrayOfNulls(currentParts.size)
                 }
