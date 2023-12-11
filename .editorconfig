@@ -3,7 +3,6 @@ root = true
 [*.{kt,kts}]
 indent_size = 4
 insert_final_newline = false
-ij_kotlin_code_style_defaults = KOTLIN_OFFICIAL
 
 # noinspection EditorConfigKeyCorrectness
 ktlint_standard_no-wildcard-imports = disabled
