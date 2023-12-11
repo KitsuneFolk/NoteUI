@@ -28,8 +28,11 @@ import kotlin.math.max
 import kotlin.math.min
 
 @SuppressLint("RtlHardcoded")
-class AnimatedTextView(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) :
-    View(context, attrs, defStyleAttr) {
+class AnimatedTextView(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
     private val splitByWords: Boolean = false
     private val preserveIndex: Boolean = false
     private val startFromEnd: Boolean = false
