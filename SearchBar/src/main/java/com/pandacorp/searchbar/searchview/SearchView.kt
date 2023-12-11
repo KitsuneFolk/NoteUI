@@ -100,12 +100,12 @@ class SearchView
         private val transitionListeners: MutableSet<TransitionListener> = LinkedHashSet()
 
         /**
-         * Returns whether the navigation icon should be animated from the [SearchBar] to [ ].
+         * Returns whether the navigation icon should be animated from the [SearchBar] to [SearchView].
          */
         val isAnimatedNavigationIcon: Boolean
 
         /**
-         * Returns whether the menu items should be animated from the [SearchBar] to [ ].
+         * Returns whether the menu items should be animated from the [SearchBar] to [SearchView].
          */
         val isMenuItemsAnimated: Boolean
         private val autoShowKeyboard: Boolean
@@ -365,12 +365,10 @@ class SearchView
         /**
          * Listens to [WindowInsetsCompat] and adjusts layouts accordingly.
          *
-         *
          * **NOTE**: window insets are only delivered if no other layout consumed them before. E.g.:
          *
-         *
-         *  * by declaring `fitsSystemWindows=true`
-         *  * by consuming insets via specific consume-methods (e.g. [       ][WindowInsetsCompat.consumeSystemWindowInsets]
+         *  by declaring `fitsSystemWindows=true`
+         *  by consuming insets via specific consume-methods (e.g [WindowInsetsCompat.consumeSystemWindowInsets])
          *
          */
         private fun setUpInsetListeners() {
@@ -432,10 +430,12 @@ class SearchView
              */
             get() = searchBar != null
 
-        /**
-         * Sets up this [SearchView] with an [SearchBar], which will result in the [ ] being shown when the [SearchBar] is clicked. This behavior will be set up
-         * automatically if the [SearchBar] and [SearchView] are in a [ ] and the [SearchView] is anchored to the [SearchBar].
-         */
+       /**
+        * Sets up this [SearchView] with an [SearchBar], which will result in the
+        * [SearchView] being shown when the [SearchBar] is clicked. This behavior will be set up
+        * automatically if the [SearchBar] and [SearchView] are in a
+        * [CoordinatorLayout] and the [SearchView] is anchored to the [SearchBar].
+        */
         fun setupWithSearchBar(searchBar: SearchBar?) {
             this.searchBar = searchBar
             searchViewAnimationHelper.setSearchBar(searchBar)
@@ -457,7 +457,6 @@ class SearchView
 
         /**
          * Add a header view to this [SearchView], which will be placed above the search text area.
-         *
          *
          * Note: due to complications with the expand/collapse animation, a header view is intended to
          * be used with a standalone [SearchView] which slides up/down instead of morphing from an
@@ -507,7 +506,8 @@ class SearchView
         }
 
         /**
-         * Sets the soft input mode for this [SearchView]. This is important because the [ ] will use this to determine whether the keyboard should be shown/hidden at the same
+         * Sets the soft input mode for this [SearchView]. This is important because the [SearchView]
+         * will use this to determine whether the keyboard should be shown/hidden at the same
          * time as the expand/collapse animation, or if the keyboard should be staggered with the
          * animation to avoid glitchiness due to a resize of the screen. This will be set automatically by
          * the [SearchView] during initial render but make sure to invoke this if you are changing
@@ -716,7 +716,7 @@ class SearchView
          */
         fun interface TransitionListener {
             /**
-             * Called when the given [SearchView&#39;s][SearchView] transition state has changed.
+             * Called when the given [SearchView] transition state has changed.
              */
             fun onStateChanged(
                 searchView: SearchView,
