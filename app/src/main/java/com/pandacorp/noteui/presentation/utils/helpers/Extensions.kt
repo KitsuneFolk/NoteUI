@@ -32,10 +32,7 @@ val Fragment.app get() = (requireActivity().application as App)
  * @param root The Root view of the layout
  * @param fitsSystemWindows True to fit system windows, false otherwise.
  */
-fun Fragment.setDecorFitsSystemWindows(
-    root: View,
-    fitsSystemWindows: Boolean
-) {
+fun Fragment.setDecorFitsSystemWindows(root: View, fitsSystemWindows: Boolean) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         requireActivity().window.setDecorFitsSystemWindows(fitsSystemWindows)
 
@@ -87,10 +84,7 @@ fun Toolbar.setTransparent(transparent: Boolean) {
  * @param flags Additional flags to control the behavior of the method.
  * @return A PackageInfo object containing information about the specified package.
  */
-fun PackageManager.getPackageInfoCompat(
-    packageName: String,
-    flags: Int = 0
-): PackageInfo =
+fun PackageManager.getPackageInfoCompat(packageName: String, flags: Int = 0): PackageInfo =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(flags.toLong()))
     } else {
@@ -106,10 +100,7 @@ fun PackageManager.getPackageInfoCompat(
  * @param clazz The class of the extra to retrieve.
  * @return The Parcelable extra with the specified name and class, or null if it does not exist.
  */
-inline fun <reified T : Parcelable> Bundle.getParcelableExtraSupport(
-    name: String,
-    clazz: Class<T>
-): T? {
+inline fun <reified T : Parcelable> Bundle.getParcelableExtraSupport(name: String, clazz: Class<T>): T? {
     val extra =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getParcelable(name, clazz)

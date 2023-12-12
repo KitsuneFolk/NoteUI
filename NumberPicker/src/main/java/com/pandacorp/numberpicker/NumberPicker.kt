@@ -500,11 +500,7 @@ class NumberPicker @JvmOverloads constructor(
          * @param oldVal The previous value.
          * @param newVal The new value.
          */
-        fun onValueChange(
-            picker: NumberPicker?,
-            oldVal: Int,
-            newVal: Int
-        )
+        fun onValueChange(picker: NumberPicker?, oldVal: Int, newVal: Int)
     }
 
     /**
@@ -554,11 +550,11 @@ class NumberPicker @JvmOverloads constructor(
                 attrs,
                 R.styleable.NumberPicker,
                 defStyle,
-                0,
+                0
             )
         val selectionDivider =
             attributes.getDrawable(
-                R.styleable.NumberPicker_np_divider,
+                R.styleable.NumberPicker_np_divider
             )
         if (selectionDivider != null) {
             selectionDivider.callback = this
@@ -570,7 +566,7 @@ class NumberPicker @JvmOverloads constructor(
             mDividerColor =
                 attributes.getColor(
                     R.styleable.NumberPicker_np_dividerColor,
-                    mDividerColor,
+                    mDividerColor
                 )
             setDividerColor(mDividerColor)
         }
@@ -579,25 +575,25 @@ class NumberPicker @JvmOverloads constructor(
             TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 UNSCALED_DEFAULT_DIVIDER_DISTANCE.toFloat(),
-                displayMetrics,
+                displayMetrics
             ).toInt()
         val defDividerThickness =
             TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
                 UNSCALED_DEFAULT_DIVIDER_THICKNESS.toFloat(),
-                displayMetrics,
+                displayMetrics
             ).toInt()
         mDividerDistance =
             attributes.getDimensionPixelSize(
-                R.styleable.NumberPicker_np_dividerDistance, defDividerDistance,
+                R.styleable.NumberPicker_np_dividerDistance, defDividerDistance
             )
         mDividerLength =
             attributes.getDimensionPixelSize(
-                R.styleable.NumberPicker_np_dividerLength, 0,
+                R.styleable.NumberPicker_np_dividerLength, 0
             )
         mDividerThickness =
             attributes.getDimensionPixelSize(
-                R.styleable.NumberPicker_np_dividerThickness, defDividerThickness,
+                R.styleable.NumberPicker_np_dividerThickness, defDividerThickness
             )
         mDividerType = attributes.getInt(R.styleable.NumberPicker_np_dividerType, SIDE_LINES)
         order = attributes.getInt(R.styleable.NumberPicker_np_order, ASCENDING)
@@ -605,12 +601,12 @@ class NumberPicker @JvmOverloads constructor(
         val width =
             attributes.getDimensionPixelSize(
                 R.styleable.NumberPicker_np_width,
-                SIZE_UNSPECIFIED,
+                SIZE_UNSPECIFIED
             ).toFloat()
         val height =
             attributes.getDimensionPixelSize(
                 R.styleable.NumberPicker_np_height,
-                SIZE_UNSPECIFIED,
+                SIZE_UNSPECIFIED
             ).toFloat()
         setWidthAndHeight()
         mComputeMaxWidth = true
@@ -620,94 +616,94 @@ class NumberPicker @JvmOverloads constructor(
         mSelectedTextAlign =
             attributes.getInt(
                 R.styleable.NumberPicker_np_selectedTextAlign,
-                mSelectedTextAlign,
+                mSelectedTextAlign
             )
         mSelectedTextColor =
             attributes.getColor(
                 R.styleable.NumberPicker_np_selectedTextColor,
-                mSelectedTextColor,
+                mSelectedTextColor
             )
         mSelectedTextSize =
             attributes.getDimension(
                 R.styleable.NumberPicker_np_selectedTextSize,
-                spToPx(mSelectedTextSize),
+                spToPx(mSelectedTextSize)
             )
         mSelectedTextStrikeThru =
             attributes.getBoolean(
-                R.styleable.NumberPicker_np_selectedTextStrikeThru, false,
+                R.styleable.NumberPicker_np_selectedTextStrikeThru, false
             )
         mSelectedTextUnderline =
             attributes.getBoolean(
-                R.styleable.NumberPicker_np_selectedTextUnderline, false,
+                R.styleable.NumberPicker_np_selectedTextUnderline, false
             )
         mSelectedTypeface =
             Typeface.create(
                 attributes.getString(
-                    R.styleable.NumberPicker_np_selectedTypeface,
+                    R.styleable.NumberPicker_np_selectedTypeface
                 ),
-                Typeface.NORMAL,
+                Typeface.NORMAL
             )
         mTextAlign = attributes.getInt(R.styleable.NumberPicker_np_textAlign, mTextAlign)
         mTextColor = attributes.getColor(R.styleable.NumberPicker_np_textColor, mTextColor)
         mTextSize =
             attributes.getDimension(
                 R.styleable.NumberPicker_np_textSize,
-                spToPx(mTextSize),
+                spToPx(mTextSize)
             )
         mTextStrikeThru =
             attributes.getBoolean(
-                R.styleable.NumberPicker_np_textStrikeThru, false,
+                R.styleable.NumberPicker_np_textStrikeThru, false
             )
         mTextUnderline =
             attributes.getBoolean(
-                R.styleable.NumberPicker_np_textUnderline, false,
+                R.styleable.NumberPicker_np_textUnderline, false
             )
         mTypeface =
             Typeface.create(
                 attributes.getString(R.styleable.NumberPicker_np_typeface),
-                Typeface.NORMAL,
+                Typeface.NORMAL
             )
         mFormatter = stringToFormatter(attributes.getString(R.styleable.NumberPicker_np_formatter))
         mFadingEdgeEnabled =
             attributes.getBoolean(
                 R.styleable.NumberPicker_np_fadingEdgeEnabled,
-                mFadingEdgeEnabled,
+                mFadingEdgeEnabled
             )
         mFadingEdgeStrength =
             attributes.getFloat(
                 R.styleable.NumberPicker_np_fadingEdgeStrength,
-                mFadingEdgeStrength,
+                mFadingEdgeStrength
             )
         isScrollerEnabled =
             attributes.getBoolean(
                 R.styleable.NumberPicker_np_scrollerEnabled,
-                isScrollerEnabled,
+                isScrollerEnabled
             )
         mWheelItemCount =
             attributes.getInt(
                 R.styleable.NumberPicker_np_wheelItemCount,
-                mWheelItemCount,
+                mWheelItemCount
             )
         mLineSpacingMultiplier =
             attributes.getFloat(
-                R.styleable.NumberPicker_np_lineSpacingMultiplier, mLineSpacingMultiplier,
+                R.styleable.NumberPicker_np_lineSpacingMultiplier, mLineSpacingMultiplier
             )
         val mMaxFlingVelocityCoefficient =
             attributes.getInt(
                 R.styleable.NumberPicker_np_maxFlingVelocityCoefficient,
-                DEFAULT_MAX_FLING_VELOCITY_COEFFICIENT,
+                DEFAULT_MAX_FLING_VELOCITY_COEFFICIENT
             )
         mHideWheelUntilFocused =
             attributes.getBoolean(
-                R.styleable.NumberPicker_np_hideWheelUntilFocused, false,
+                R.styleable.NumberPicker_np_hideWheelUntilFocused, false
             )
         mAccessibilityDescriptionEnabled =
             attributes.getBoolean(
-                R.styleable.NumberPicker_np_accessibilityDescriptionEnabled, true,
+                R.styleable.NumberPicker_np_accessibilityDescriptionEnabled, true
             )
         mItemSpacing =
             attributes.getDimensionPixelSize(
-                R.styleable.NumberPicker_np_itemSpacing, 0,
+                R.styleable.NumberPicker_np_itemSpacing, 0
             )
         // By default LinearLayout that we extend is not drawn. This is
         // its draw() method is not called but dispatchDraw() is called
@@ -717,7 +713,7 @@ class NumberPicker @JvmOverloads constructor(
         setWillNotDraw(false)
         val inflater =
             context.getSystemService(
-                Context.LAYOUT_INFLATER_SERVICE,
+                Context.LAYOUT_INFLATER_SERVICE
             ) as LayoutInflater
         inflater.inflate(R.layout.number_picker_material, this, true)
 
@@ -747,7 +743,7 @@ class NumberPicker @JvmOverloads constructor(
         mWrapSelectorWheel =
             attributes.getBoolean(
                 R.styleable.NumberPicker_np_wrapSelectorWheel,
-                mWrapSelectorWheel,
+                mWrapSelectorWheel
             )
         setWrapSelectorWheel(mWrapSelectorWheel)
         if (width != SIZE_UNSPECIFIED.toFloat() && height != SIZE_UNSPECIFIED.toFloat()) {
@@ -770,7 +766,7 @@ class NumberPicker @JvmOverloads constructor(
         mMaximumFlingVelocity = (
             mViewConfiguration.scaledMaximumFlingVelocity /
                 mMaxFlingVelocityCoefficient
-        )
+            )
 
         // create the fling and adjust scrollers
         mFlingScroller = Scroller(context, null, true)
@@ -790,13 +786,7 @@ class NumberPicker @JvmOverloads constructor(
         attributes.recycle()
     }
 
-    override fun onLayout(
-        changed: Boolean,
-        left: Int,
-        top: Int,
-        right: Int,
-        bottom: Int
-    ) {
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val msrdWdth = measuredWidth
         val msrdHght = measuredHeight
 
@@ -826,10 +816,7 @@ class NumberPicker @JvmOverloads constructor(
         }
     }
 
-    override fun onMeasure(
-        widthMeasureSpec: Int,
-        heightMeasureSpec: Int
-    ) {
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         // Try greedily to fit the max width and height.
         val newWidthMeasureSpec = makeMeasureSpec(widthMeasureSpec, mMaxWidth)
         val newHeightMeasureSpec = makeMeasureSpec(heightMeasureSpec, mMaxHeight)
@@ -839,13 +826,13 @@ class NumberPicker @JvmOverloads constructor(
             resolveSizeAndStateRespectingMinSize(
                 mMinWidth,
                 measuredWidth,
-                widthMeasureSpec,
+                widthMeasureSpec
             )
         val heightSize =
             resolveSizeAndStateRespectingMinSize(
                 mMinHeight,
                 measuredHeight,
-                heightMeasureSpec,
+                heightMeasureSpec
             )
         setMeasuredDimension(widthSize, heightSize)
     }
@@ -1016,7 +1003,7 @@ class NumberPicker @JvmOverloads constructor(
                             val selectorIndexOffset = (
                                 eventX / mSelectorElementSize -
                                     mWheelMiddleItemIndex
-                            )
+                                )
                             if (selectorIndexOffset > 0) {
                                 changeValueByOne(true)
                             } else if (selectorIndexOffset < 0) {
@@ -1041,7 +1028,7 @@ class NumberPicker @JvmOverloads constructor(
                             val selectorIndexOffset = (
                                 eventY / mSelectorElementSize -
                                     mWheelMiddleItemIndex
-                            )
+                                )
                             if (selectorIndexOffset > 0) {
                                 changeValueByOne(true)
                             } else if (selectorIndexOffset < 0) {
@@ -1141,10 +1128,7 @@ class NumberPicker @JvmOverloads constructor(
         mSelectedText.isEnabled = enabled
     }
 
-    override fun scrollBy(
-        x: Int,
-        y: Int
-    ) {
+    override fun scrollBy(x: Int, y: Int) {
         val mSelectorElementHeight = mSelectorElementSize
         val selectorIndices = selectorIndices
         val startScrollOffset = mCurrentScrollOffset
@@ -1361,7 +1345,7 @@ class NumberPicker @JvmOverloads constructor(
             // Allow text entry rather than strictly numeric entry.
             mSelectedText.setRawInputType(
                 InputType.TYPE_TEXT_FLAG_MULTI_LINE
-                    or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS,
+                    or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
             )
         } else {
             mSelectedText.setRawInputType(InputType.TYPE_CLASS_NUMBER)
@@ -1541,7 +1525,7 @@ class NumberPicker @JvmOverloads constructor(
                     left,
                     topOfUnderlineDivider,
                     right,
-                    bottomOfUnderlineDivider,
+                    bottomOfUnderlineDivider
                 )
                 mDividerDrawable!!.draw(canvas)
             }
@@ -1572,7 +1556,7 @@ class NumberPicker @JvmOverloads constructor(
                     left,
                     topOfBottomDivider,
                     right,
-                    bottomOfBottomDivider,
+                    bottomOfBottomDivider
                 )
                 mDividerDrawable!!.draw(canvas)
             }
@@ -1584,27 +1568,21 @@ class NumberPicker @JvmOverloads constructor(
                     left,
                     topOfUnderlineDivider,
                     right,
-                    bottomOfUnderlineDivider,
+                    bottomOfUnderlineDivider
                 )
                 mDividerDrawable!!.draw(canvas)
             }
         }
     }
 
-    private fun drawText(
-        text: String,
-        x: Float,
-        y: Float,
-        paint: Paint,
-        canvas: Canvas
-    ) {
+    private fun drawText(text: String, x: Float, y: Float, paint: Paint, canvas: Canvas) {
         var mY = y
         if (text.contains("\n")) {
             val lines = text.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             val height = (
                 abs(paint.descent() + paint.ascent()) *
                     mLineSpacingMultiplier
-            )
+                )
             val diff = (lines.size - 1) * height / 2
             mY -= diff
             for (line in lines) {
@@ -1638,10 +1616,7 @@ class NumberPicker @JvmOverloads constructor(
      * @param maxSize     The max value for the size.
      * @return A measure spec greedily imposing the max size.
      */
-    private fun makeMeasureSpec(
-        measureSpec: Int,
-        maxSize: Int
-    ): Int {
+    private fun makeMeasureSpec(measureSpec: Int, maxSize: Int): Int {
         if (maxSize == SIZE_UNSPECIFIED) {
             return measureSpec
         }
@@ -1651,13 +1626,13 @@ class NumberPicker @JvmOverloads constructor(
             MeasureSpec.AT_MOST ->
                 MeasureSpec.makeMeasureSpec(
                     size.coerceAtMost(maxSize),
-                    MeasureSpec.EXACTLY,
+                    MeasureSpec.EXACTLY
                 )
 
             MeasureSpec.UNSPECIFIED ->
                 MeasureSpec.makeMeasureSpec(
                     maxSize,
-                    MeasureSpec.EXACTLY,
+                    MeasureSpec.EXACTLY
                 )
 
             else -> throw IllegalArgumentException("Unknown measure mode: $mode")
@@ -1674,11 +1649,7 @@ class NumberPicker @JvmOverloads constructor(
      * @param measureSpec  The current measure spec.
      * @return The resolved size and state.
      */
-    private fun resolveSizeAndStateRespectingMinSize(
-        minSize: Int,
-        measuredSize: Int,
-        measureSpec: Int
-    ): Int {
+    private fun resolveSizeAndStateRespectingMinSize(minSize: Int, measuredSize: Int, measureSpec: Int): Int {
         return if (minSize != SIZE_UNSPECIFIED) {
             val desiredWidth = minSize.coerceAtLeast(measuredSize)
             resolveSizeAndState(desiredWidth, measureSpec, 0)
@@ -1711,10 +1682,7 @@ class NumberPicker @JvmOverloads constructor(
      * @param current      The new value of the NumberPicker.
      * @param notifyChange Whether to notify if the current value changed.
      */
-    private fun setValueInternal(
-        current: Int,
-        notifyChange: Boolean
-    ) {
+    private fun setValueInternal(current: Int, notifyChange: Boolean) {
         var mCurrent = current
         if (mValue == mCurrent) {
             return
@@ -1962,10 +1930,7 @@ class NumberPicker @JvmOverloads constructor(
      * Notifies the listener, if registered, of a change of the value of this
      * NumberPicker.
      */
-    private fun notifyChange(
-        previous: Int,
-        current: Int
-    ) {
+    private fun notifyChange(previous: Int, current: Int) {
         if (mOnValueChangeListener != null) {
             mOnValueChangeListener!!.onValueChange(this, previous, current)
         }
@@ -2058,7 +2023,7 @@ class NumberPicker @JvmOverloads constructor(
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_SP,
             sp,
-            resources.displayMetrics,
+            resources.displayMetrics
         )
     }
 
@@ -2092,16 +2057,12 @@ class NumberPicker @JvmOverloads constructor(
         }
     }
 
-    fun setDividerColor(
-        @ColorInt color: Int
-    ) {
+    fun setDividerColor(@ColorInt color: Int) {
         mDividerColor = color
         mDividerDrawable = ColorDrawable(color)
     }
 
-    override fun setOrientation(
-        @Orientation orientation: Int
-    ) {
+    override fun setOrientation(@Orientation orientation: Int) {
         mOrientation = orientation
         setWidthAndHeight()
         requestLayout()
@@ -2115,9 +2076,7 @@ class NumberPicker @JvmOverloads constructor(
         selectorIndices = IntArray(mWheelItemCount)
     }
 
-    fun setSelectedTextColor(
-        @ColorInt color: Int
-    ) {
+    fun setSelectedTextColor(@ColorInt color: Int) {
         mSelectedTextColor = color
         mSelectedText.setTextColor(mSelectedTextColor)
     }
@@ -2269,11 +2228,7 @@ class NumberPicker @JvmOverloads constructor(
          * @return Size information bit mask as defined by
          * [.MEASURED_SIZE_MASK] and [.MEASURED_STATE_TOO_SMALL].
          */
-        fun resolveSizeAndState(
-            size: Int,
-            measureSpec: Int,
-            childMeasuredState: Int
-        ): Int {
+        fun resolveSizeAndState(size: Int, measureSpec: Int, childMeasuredState: Int): Int {
             var result = size
             val specMode = MeasureSpec.getMode(measureSpec)
             val specSize = MeasureSpec.getSize(measureSpec)

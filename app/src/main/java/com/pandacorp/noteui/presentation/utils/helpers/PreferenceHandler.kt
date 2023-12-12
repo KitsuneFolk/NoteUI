@@ -14,8 +14,8 @@ import com.pandacorp.noteui.presentation.utils.themes.BlueTheme
 import com.pandacorp.noteui.presentation.utils.themes.DarkTheme
 import com.pandacorp.noteui.presentation.utils.themes.LightTheme
 import com.pandacorp.noteui.presentation.utils.themes.PurpleTheme
-import java.util.Locale
 import com.pandacorp.noteui.presentation.utils.themes.Theme as CurrentTheme
+import java.util.Locale
 
 object PreferenceHandler {
     private object Theme {
@@ -37,10 +37,7 @@ object PreferenceHandler {
         return getThemeByKey(context, theme)
     }
 
-    fun getThemeByKey(
-        context: Context,
-        key: String
-    ): CurrentTheme {
+    fun getThemeByKey(context: Context, key: String): CurrentTheme {
         return when (key) {
             Theme.FOLLOW_SYSTEM -> {
                 if (isDeviceDarkMode(context)) {
@@ -64,7 +61,7 @@ object PreferenceHandler {
             PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(
                     Constants.Preferences.Key.LANGUAGE,
-                    context.resources.getString(R.string.settings_language_default_value),
+                    context.resources.getString(R.string.settings_language_default_value)
                 )!!,
     ) {
         Locale.setDefault(Locale(language))
@@ -103,14 +100,11 @@ object PreferenceHandler {
     fun isShowThemeBackground(context: Context): Boolean {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
             Constants.Preferences.Key.SHOW_THEME_BACKGROUND,
-            Constants.Preferences.DefaultValue.SHOW_THEME_BACKGROUND,
+            Constants.Preferences.DefaultValue.SHOW_THEME_BACKGROUND
         )
     }
 
-    fun setShowThemeBackground(
-        context: Context,
-        value: Boolean
-    ) {
+    fun setShowThemeBackground(context: Context, value: Boolean) {
         val editor = PreferenceManager.getDefaultSharedPreferences(context).edit()
         editor.putBoolean(Constants.Preferences.Key.SHOW_THEME_BACKGROUND, value)
         editor.apply()

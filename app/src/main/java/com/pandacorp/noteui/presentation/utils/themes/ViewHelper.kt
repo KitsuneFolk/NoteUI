@@ -17,13 +17,13 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.children
 import com.dolatkia.animatedThemeManager.AppTheme
+import com.google.android.material.R as materialR
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
 import com.pandacorp.numberpicker.NumberPicker
-import com.google.android.material.R as materialR
 
 object ViewHelper {
     private var materialThemeColorsThumbTintList: ColorStateList? = null
@@ -31,17 +31,11 @@ object ViewHelper {
     lateinit var currentTheme: AppTheme
     private val themes = mutableListOf(BlueTheme(), DarkTheme(), LightTheme(), PurpleTheme())
 
-    fun applyTheme(
-        newTheme: AppTheme,
-        viewGroup: ViewGroup
-    ) {
+    fun applyTheme(newTheme: AppTheme, viewGroup: ViewGroup) {
         applyTheme(newTheme as Theme, viewGroup)
     }
 
-    private fun applyTheme(
-        newTheme: Theme,
-        viewGroup: ViewGroup
-    ) {
+    private fun applyTheme(newTheme: Theme, viewGroup: ViewGroup) {
         val context = viewGroup.context
         val views = viewGroup.children
         val themesColorSurface = themes.map { it.getColorSurface(context) }
@@ -152,13 +146,10 @@ object ViewHelper {
             intArrayOf(android.R.attr.state_enabled, android.R.attr.state_checked),
             intArrayOf(android.R.attr.state_enabled, -android.R.attr.state_checked),
             intArrayOf(-android.R.attr.state_enabled, android.R.attr.state_checked),
-            intArrayOf(-android.R.attr.state_enabled, -android.R.attr.state_checked),
+            intArrayOf(-android.R.attr.state_enabled, -android.R.attr.state_checked)
         )
 
-    private fun getMaterialThemeColorsThumbTintList(
-        newTheme: Theme,
-        switch: SwitchCompat
-    ): ColorStateList? {
+    private fun getMaterialThemeColorsThumbTintList(newTheme: Theme, switch: SwitchCompat): ColorStateList? {
         val elevationOverlayProvider = ElevationOverlayProvider(switch.context)
         val colorSurface = newTheme.getColorSurface(switch.context)
         val colorControlActivated = newTheme.getColorAccent(switch.context)
@@ -181,10 +172,7 @@ object ViewHelper {
         return materialThemeColorsThumbTintList
     }
 
-    private fun getMaterialThemeColorsTrackTintList(
-        newTheme: Theme,
-        switch: SwitchCompat
-    ): ColorStateList? {
+    private fun getMaterialThemeColorsTrackTintList(newTheme: Theme, switch: SwitchCompat): ColorStateList? {
         val colorSurface = newTheme.getColorSurface(switch.context)
         val colorControlActivated = newTheme.getColorAccent(switch.context)
         val colorOnSurface = newTheme.getTextColor()
@@ -195,7 +183,7 @@ object ViewHelper {
         switchTrackColorsList[1] = MaterialColors.layer(colorSurface, colorOnSurface, MaterialColors.ALPHA_LOW)
         switchTrackColorsList[2] =
             MaterialColors.layer(
-                colorSurface, colorControlActivated, MaterialColors.ALPHA_DISABLED_LOW,
+                colorSurface, colorControlActivated, MaterialColors.ALPHA_DISABLED_LOW
             )
         switchTrackColorsList[3] =
             MaterialColors.layer(colorSurface, colorOnSurface, MaterialColors.ALPHA_DISABLED_LOW)

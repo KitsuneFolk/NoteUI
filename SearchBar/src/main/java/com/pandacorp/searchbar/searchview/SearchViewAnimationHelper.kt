@@ -77,10 +77,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         contentContainer = searchView.contentContainer
     }
 
-    fun setAnimationDuration(
-        showDurationMs: Long,
-        hideDurationMs: Long
-    ) {
+    fun setAnimationDuration(showDurationMs: Long, hideDurationMs: Long) {
         this.showDurationMs = showDurationMs
         showContentScaleDurationMs = showDurationMs
         this.hideDurationMs = hideDurationMs
@@ -131,7 +128,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
                         }
                         searchView.setTransitionState(SearchView.TransitionState.SHOWN)
                     }
-                },
+                }
             )
             animatorSet.start()
         }
@@ -155,7 +152,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
                     }
                     searchView.setTransitionState(SearchView.TransitionState.HIDDEN)
                 }
-            },
+            }
         )
         animatorSet.start()
     }
@@ -164,7 +161,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         if (searchView.isAdjustNothingSoftInputMode) {
             searchView.postDelayed(
                 { searchView.requestFocusAndShowKeyboardIfNeeded() },
-                SHOW_TRANSLATE_KEYBOARD_START_DELAY_MS,
+                SHOW_TRANSLATE_KEYBOARD_START_DELAY_MS
             )
         }
         rootView.visibility = View.INVISIBLE
@@ -184,7 +181,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
                         }
                         searchView.setTransitionState(SearchView.TransitionState.SHOWN)
                     }
-                },
+                }
             )
             animatorSet.start()
         }
@@ -208,7 +205,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
                     }
                     searchView.setTransitionState(SearchView.TransitionState.HIDDEN)
                 }
-            },
+            }
         )
         animatorSet.start()
     }
@@ -220,7 +217,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         animatorSet.interpolator =
             ReversableAnimatedValueInterpolator.of(
                 show,
-                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
             )
         animatorSet.duration =
             if (show) SHOW_TRANSLATE_DURATION_MS else HIDE_TRANSLATE_DURATION_MS
@@ -246,7 +243,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
             getDummyToolbarAnimator(show),
             getActionMenuViewsAlphaAnimator(show),
             getEditTextAnimator(show),
-            getSearchPrefixAnimator(show),
+            getSearchPrefixAnimator(show)
         )
         animatorSet.addListener(
             object : AnimatorListenerAdapter() {
@@ -262,7 +259,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
                         rootView.resetClipBoundsAndCornerRadius()
                     }
                 }
-            },
+            }
         )
         return animatorSet
     }
@@ -296,7 +293,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
     private fun getRootViewAnimator(show: Boolean): Animator {
         val toClipBounds =
             ViewUtils.calculateRectFromBounds(
-                searchView,
+                searchView
             )
         val fromClipBounds = calculateFromClipBounds()
         val clipBounds = Rect(fromClipBounds)
@@ -339,7 +336,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         animator.interpolator =
             ReversableAnimatedValueInterpolator.of(
                 show,
-                AnimationUtils.LINEAR_INTERPOLATOR,
+                AnimationUtils.LINEAR_INTERPOLATOR
             )
         animator.addUpdateListener(MultiViewUpdateListener.alphaListener(clearButton))
         return animator
@@ -354,7 +351,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         animatorSet.interpolator =
             ReversableAnimatedValueInterpolator.of(
                 show,
-                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
             )
         return animatorSet
     }
@@ -379,10 +376,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         }
     }
 
-    private fun addDrawerArrowDrawableAnimatorIfNeeded(
-        animatorSet: AnimatorSet,
-        drawable: Drawable
-    ) {
+    private fun addDrawerArrowDrawableAnimatorIfNeeded(animatorSet: AnimatorSet, drawable: Drawable) {
         if (drawable is DrawerArrowDrawable) {
             val animator = ValueAnimator.ofFloat(0f, 1f)
             animator.addUpdateListener { animation: ValueAnimator -> drawable.progress = animation.animatedFraction }
@@ -390,10 +384,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         }
     }
 
-    private fun addFadeThroughDrawableAnimatorIfNeeded(
-        animatorSet: AnimatorSet,
-        drawable: Drawable
-    ) {
+    private fun addFadeThroughDrawableAnimatorIfNeeded(animatorSet: AnimatorSet, drawable: Drawable) {
         if (drawable is FadeThroughDrawable) {
             val animator = ValueAnimator.ofFloat(0f, 1f)
             animator.addUpdateListener { animation: ValueAnimator -> drawable.setProgress(animation.animatedFraction) }
@@ -414,11 +405,11 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         val actionMenuView = ToolbarUtils.getActionMenuView(toolbar) ?: return
         val actionMenuViewAnimatorX = ValueAnimator.ofFloat(getFromTranslationXEnd(actionMenuView).toFloat(), 0f)
         actionMenuViewAnimatorX.addUpdateListener(
-            MultiViewUpdateListener.translationXListener(actionMenuView),
+            MultiViewUpdateListener.translationXListener(actionMenuView)
         )
         val actionMenuViewAnimatorY = ValueAnimator.ofFloat(fromTranslationY.toFloat(), 0f)
         actionMenuViewAnimatorY.addUpdateListener(
-            MultiViewUpdateListener.translationYListener(actionMenuView),
+            MultiViewUpdateListener.translationYListener(actionMenuView)
         )
         animatorSet.playTogether(actionMenuViewAnimatorX, actionMenuViewAnimatorY)
     }
@@ -437,13 +428,13 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         animator.interpolator =
             ReversableAnimatedValueInterpolator.of(
                 show,
-                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
             )
         if (searchView.isMenuItemsAnimated) {
             val dummyActionMenuView = ToolbarUtils.getActionMenuView(dummyToolbar)
             val actionMenuView = ToolbarUtils.getActionMenuView(toolbar)
             animator.addUpdateListener(
-                FadeThroughUpdateListener(dummyActionMenuView, actionMenuView),
+                FadeThroughUpdateListener(dummyActionMenuView, actionMenuView)
             )
         }
         return animator
@@ -462,7 +453,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         animatorSet.playTogether(
             getContentAlphaAnimator(show),
             getDividerAnimator(show),
-            getContentScaleAnimator(show),
+            getContentScaleAnimator(show)
         )
         return animatorSet
     }
@@ -476,10 +467,10 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         animatorAlpha.interpolator =
             ReversableAnimatedValueInterpolator.of(
                 show,
-                AnimationUtils.LINEAR_INTERPOLATOR,
+                AnimationUtils.LINEAR_INTERPOLATOR
             )
         animatorAlpha.addUpdateListener(
-            MultiViewUpdateListener.alphaListener(divider, contentContainer),
+            MultiViewUpdateListener.alphaListener(divider, contentContainer)
         )
         return animatorAlpha
     }
@@ -491,7 +482,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         animatorDivider.interpolator =
             ReversableAnimatedValueInterpolator.of(
                 show,
-                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
             )
         animatorDivider.addUpdateListener(MultiViewUpdateListener.translationYListener(divider))
         return animatorDivider
@@ -503,17 +494,13 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         animatorScale.interpolator =
             ReversableAnimatedValueInterpolator.of(
                 show,
-                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
             )
         animatorScale.addUpdateListener(MultiViewUpdateListener.scaleListener(contentContainer))
         return animatorScale
     }
 
-    private fun getTranslationAnimator(
-        show: Boolean,
-        anchoredToStart: Boolean,
-        view: View
-    ): Animator {
+    private fun getTranslationAnimator(show: Boolean, anchoredToStart: Boolean, view: View): Animator {
         val startX = if (anchoredToStart) getFromTranslationXStart(view) else getFromTranslationXEnd(view)
         val animatorX = ValueAnimator.ofFloat(startX.toFloat(), 0f)
         animatorX.addUpdateListener(MultiViewUpdateListener.translationXListener(view))
@@ -525,7 +512,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         animatorSet.interpolator =
             ReversableAnimatedValueInterpolator.of(
                 show,
-                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR,
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
             )
         return animatorSet
     }
@@ -534,7 +521,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         val marginStart = MarginLayoutParamsCompat.getMarginStart((view.layoutParams as ViewGroup.MarginLayoutParams))
         val paddingStart = ViewCompat.getPaddingStart(searchBar!!)
         return if (ViewUtils.isLayoutRtl(
-                searchBar,
+                searchBar
             )
         ) {
             searchBar!!.width - searchBar!!.right + marginStart - paddingStart
@@ -545,7 +532,14 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
 
     private fun getFromTranslationXEnd(view: View): Int {
         val marginEnd = MarginLayoutParamsCompat.getMarginEnd((view.layoutParams as ViewGroup.MarginLayoutParams))
-        return if (ViewUtils.isLayoutRtl(searchBar)) searchBar!!.left - marginEnd else searchBar!!.right - searchView.width + marginEnd
+        return if (ViewUtils.isLayoutRtl(
+                searchBar
+            )
+        ) {
+            searchBar!!.left - marginEnd
+        } else {
+            searchBar!!.right - searchView.width + marginEnd
+        }
     }
 
     private val fromTranslationY: Int

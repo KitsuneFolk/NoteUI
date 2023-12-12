@@ -12,11 +12,7 @@ object AndroidUtilities {
     var displaySize = Point()
     private var density = 1f
 
-    fun lerp(
-        a: Float,
-        b: Float,
-        f: Float
-    ): Float {
+    fun lerp(a: Float, b: Float, f: Float): Float {
         return a + f * (b - a)
     }
 
@@ -42,10 +38,7 @@ object AndroidUtilities {
         }
     }
 
-    fun checkDisplaySize(
-        context: Context,
-        newConfiguration: Configuration?
-    ) {
+    fun checkDisplaySize(context: Context, newConfiguration: Configuration?) {
         try {
             density = context.resources.displayMetrics.density
             var configuration: Configuration? = newConfiguration

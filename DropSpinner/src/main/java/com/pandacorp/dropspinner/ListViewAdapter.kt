@@ -15,10 +15,7 @@ class ListViewAdapter(context: Context, items: List<DropDownItem>) : ArrayAdapte
     private var textColor: Int? = null
     private var arrowColor: Int? = null
 
-    fun setSelection(
-        index: Int,
-        item: DropDownItem?
-    ) {
+    fun setSelection(index: Int, item: DropDownItem?) {
         if (selectedIndex != -1 && selectedIndex < count) {
             getItem(selectedIndex)?.toggleState()
         }
@@ -35,11 +32,7 @@ class ListViewAdapter(context: Context, items: List<DropDownItem>) : ArrayAdapte
         this.arrowColor = arrowColor
     }
 
-    override fun getView(
-        index: Int,
-        convertView: View?,
-        viewGroup: ViewGroup
-    ): View {
+    override fun getView(index: Int, convertView: View?, viewGroup: ViewGroup): View {
         var view: View? = convertView
         val context: Context = viewGroup.context
         if (view == null) {

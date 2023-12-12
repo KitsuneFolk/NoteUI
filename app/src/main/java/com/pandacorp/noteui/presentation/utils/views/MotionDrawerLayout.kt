@@ -24,10 +24,7 @@ class MotionDrawerLayout : MotionLayout, DrawerLayout.DrawerListener {
 
     override fun onDrawerStateChanged(newState: Int) {}
 
-    override fun onDrawerSlide(
-        drawerView: View,
-        slideOffset: Float
-    ) {
+    override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
         if (isDisableAnimation()) return
         progress = slideOffset
     }
@@ -45,10 +42,7 @@ class MotionDrawerLayout : MotionLayout, DrawerLayout.DrawerListener {
      * Attach EditText to observe the characters limit
      * @param maxValue - the maximum value when animation will work
      */
-    fun attachEditText(
-        editText: EditText,
-        maxValue: Int
-    ) {
+    fun attachEditText(editText: EditText, maxValue: Int) {
         this.editText = editText
         this.maxValue = maxValue
     }

@@ -38,8 +38,10 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window?.apply {
-            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT)) // remove the default background so that dialog can be rounded
-            clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND) // remove the shadow
+            // Remove the default background so that dialog can be rounded
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            // Remove the shadow
+            clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         }
     }
 

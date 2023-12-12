@@ -167,7 +167,7 @@ class NoteScreen : Fragment() {
     private val isHideToolbarWhileScrolling by lazy {
         sp.getBoolean(
             Constants.Preferences.Key.HIDE_ACTIONBAR_ON_SCROLL,
-            Constants.Preferences.DefaultValue.HIDE_ACTIONBAR_ON_SCROLL,
+            Constants.Preferences.DefaultValue.HIDE_ACTIONBAR_ON_SCROLL
         )
     }
 
@@ -176,7 +176,7 @@ class NoteScreen : Fragment() {
 
     private val pickNoteBackgroundImageResult =
         registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
+            ActivityResultContracts.StartActivityForResult()
         ) {
             if (it.resultCode == AppCompatActivity.RESULT_OK) {
                 val imageUri = it.data!!.data
@@ -188,7 +188,7 @@ class NoteScreen : Fragment() {
 
     private val pickImageToAddResult =
         registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
+            ActivityResultContracts.StartActivityForResult()
         ) {
             if (it.resultCode == AppCompatActivity.RESULT_OK) {
                 val imageUri = it.data!!.data
@@ -215,15 +215,11 @@ class NoteScreen : Fragment() {
             }
         requireActivity().onBackPressedDispatcher.addCallback(
             this,
-            callback,
+            callback
         )
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,): View {
         _binding = ScreenNoteBinding.inflate(layoutInflater.cloneInContext(requireContext()))
 
         initViews()
@@ -294,7 +290,7 @@ class NoteScreen : Fragment() {
         Utils.changeNoteBackground(
             currentNoteViewModel.note.value!!.background,
             binding.noteBackgroundImageView,
-            isUseGlide = false,
+            isUseGlide = false
         )
 
         val isHorizontal = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -303,7 +299,7 @@ class NoteScreen : Fragment() {
             if (isHorizontal) {
                 // Don't resize in the landscape orientation, due to small screen size
                 requireActivity().window?.setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN,
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
                 )
             } else {
                 ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -326,12 +322,12 @@ class NoteScreen : Fragment() {
             if (isHorizontal) {
                 // Don't resize in the landscape orientation, due to small screen size
                 requireActivity().window?.setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN,
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
                 )
             } else {
                 @Suppress("DEPRECATION")
                 requireActivity().window?.setSoftInputMode(
-                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE,
+                    WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                 )
             }
         }
@@ -362,10 +358,7 @@ class NoteScreen : Fragment() {
         binding.toolbar.hideToolbarWhileScrolling(isHideToolbarWhileScrolling)
         binding.toolbar.addMenuProvider(
             object : MenuProvider {
-                override fun onCreateMenu(
-                    menu: Menu,
-                    menuInflater: MenuInflater
-                ) {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.menu_note, menu)
                 }
 
@@ -411,7 +404,7 @@ class NoteScreen : Fragment() {
                     return true
                 }
             },
-            viewLifecycleOwner,
+            viewLifecycleOwner
         )
         binding.titleEditText.setOnFocusChangeListener { _, hasFocus ->
             if (isHideToolbarWhileScrolling) {
@@ -443,12 +436,12 @@ class NoteScreen : Fragment() {
         binding.contentEditText.textSize =
             sp.getInt(
                 Constants.Preferences.Key.CONTENT_TEXT_SIZE,
-                Constants.Preferences.DefaultValue.CONTENT_TEXT_SIZE,
+                Constants.Preferences.DefaultValue.CONTENT_TEXT_SIZE
             ).toFloat()
         binding.titleEditText.textSize =
             sp.getInt(
                 Constants.Preferences.Key.TITLE_TEXT_SIZE,
-                Constants.Preferences.DefaultValue.TITLE_TEXT_SIZE,
+                Constants.Preferences.DefaultValue.TITLE_TEXT_SIZE
             ).toFloat()
 
         binding.titleEditText.setSpannableFromJson(currentNoteViewModel.note.value!!.title)
@@ -472,8 +465,8 @@ class NoteScreen : Fragment() {
                 binding.contentEditText,
                 sp.getInt(
                     Constants.Preferences.Key.DRAWER_ANIMATION,
-                    Constants.Preferences.DefaultValue.DRAWER_ANIMATION,
-                ),
+                    Constants.Preferences.DefaultValue.DRAWER_ANIMATION
+                )
             )
             it.post { // The animation doesn't work outside of post
                 it.loadLayoutDescription(R.xml.drawer_layout_motion_scene) // Set programmatically to remove lags
@@ -490,10 +483,7 @@ class NoteScreen : Fragment() {
                     swipeBackFragment.setScrollingEnabled(true)
                 }
 
-                override fun onDrawerSlide(
-                    drawerView: View,
-                    slideOffset: Float
-                ) {
+                override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
                 }
 
                 override fun onDrawerStateChanged(newState: Int) {
@@ -501,15 +491,11 @@ class NoteScreen : Fragment() {
                         swipeBackFragment.setScrollingEnabled(false)
                     }
                 }
-            },
+            }
         )
 
         binding.expandChangeBackgroundButton.apply {
-            fun rotateIcon(
-                fromDegrees: Float,
-                toDegrees: Float,
-                duration: Long = 400
-            ) {
+            fun rotateIcon(fromDegrees: Float, toDegrees: Float, duration: Long = 400) {
                 val rotate =
                     RotateAnimation(
                         fromDegrees,
@@ -517,7 +503,7 @@ class NoteScreen : Fragment() {
                         Animation.RELATIVE_TO_SELF,
                         0.5f,
                         Animation.RELATIVE_TO_SELF,
-                        0.5f,
+                        0.5f
                     )
                 rotate.duration = duration
                 rotate.fillAfter = true
@@ -558,7 +544,7 @@ class NoteScreen : Fragment() {
             requireContext().theme.resolveAttribute(android.R.attr.colorBackground, tv, true)
             val colorBackground = tv.data
             binding.noteBackgroundImageView.setImageDrawable(
-                ColorDrawable(colorBackground),
+                ColorDrawable(colorBackground)
             )
             currentNoteViewModel.note.value!!.background = colorBackground.toString()
         }
@@ -579,10 +565,7 @@ class NoteScreen : Fragment() {
             // Code needed to resolve the bug when RecyclerView is not scrollable inside of ViewPager
             binding.colorsRecyclerView.addOnItemTouchListener(
                 object : RecyclerView.OnItemTouchListener {
-                    override fun onInterceptTouchEvent(
-                        view: RecyclerView,
-                        event: MotionEvent
-                    ): Boolean {
+                    override fun onInterceptTouchEvent(view: RecyclerView, event: MotionEvent): Boolean {
                         when (event.action) {
                             MotionEvent.ACTION_DOWN ->
                                 binding.colorsRecyclerView.parent?.requestDisallowInterceptTouchEvent(true)
@@ -590,14 +573,11 @@ class NoteScreen : Fragment() {
                         return false
                     }
 
-                    override fun onTouchEvent(
-                        view: RecyclerView,
-                        event: MotionEvent
-                    ) {
+                    override fun onTouchEvent(view: RecyclerView, event: MotionEvent) {
                     }
 
                     override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
-                },
+                }
             )
         }
 

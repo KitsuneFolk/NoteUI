@@ -87,7 +87,7 @@ internal class SearchBarAnimationHelper {
                     override fun onAnimationEnd(animation: Animator) {
                         runningExpandOrCollapseAnimator = null
                     }
-                },
+                }
             )
             for (listener in expandAnimationListeners) {
                 fadeAndExpandAnimatorSet.addListener(listener)
@@ -100,11 +100,7 @@ internal class SearchBarAnimationHelper {
         }
     }
 
-    private fun getExpandAnimator(
-        searchBar: SearchBar,
-        expandedView: View,
-        appBarLayout: AppBarLayout?,
-    ): Animator {
+    private fun getExpandAnimator(searchBar: SearchBar, expandedView: View, appBarLayout: AppBarLayout?,): Animator {
         return getExpandCollapseAnimationHelper(searchBar, expandedView, appBarLayout)
             .setDuration(EXPAND_DURATION_MS)
             .addListener(
@@ -116,7 +112,7 @@ internal class SearchBarAnimationHelper {
                     override fun onAnimationEnd(animation: Animator) {
                         isExpanding = false
                     }
-                },
+                }
             )
             .expandAnimator
     }
@@ -142,7 +138,7 @@ internal class SearchBarAnimationHelper {
                 override fun onAnimationEnd(animation: Animator) {
                     runningExpandOrCollapseAnimator = null
                 }
-            },
+            }
         )
         for (listener in collapseAnimationListeners) {
             collapseAndFadeAnimatorSet.addListener(listener)
@@ -154,11 +150,7 @@ internal class SearchBarAnimationHelper {
         runningExpandOrCollapseAnimator = collapseAndFadeAnimatorSet
     }
 
-    private fun getCollapseAnimator(
-        searchBar: SearchBar,
-        expandedView: View,
-        appBarLayout: AppBarLayout?,
-    ): Animator {
+    private fun getCollapseAnimator(searchBar: SearchBar, expandedView: View, appBarLayout: AppBarLayout?,): Animator {
         return getExpandCollapseAnimationHelper(searchBar, expandedView, appBarLayout)
             .setDuration(COLLAPSE_DURATION_MS)
             .addListener(
@@ -171,7 +163,7 @@ internal class SearchBarAnimationHelper {
                         searchBar.visibility = View.VISIBLE
                         isCollapsing = false
                     }
-                },
+                }
             )
             .collapseAnimator
     }
@@ -183,7 +175,7 @@ internal class SearchBarAnimationHelper {
     ): ExpandCollapseAnimationHelper {
         return ExpandCollapseAnimationHelper(searchBar, expandedView)
             .setAdditionalUpdateListener(
-                getExpandedViewBackgroundUpdateListener(searchBar, expandedView),
+                getExpandedViewBackgroundUpdateListener(searchBar, expandedView)
             )
             .setCollapsedViewOffsetY(appBarLayout?.top ?: 0)
             .addEndAnchoredViews(getEndAnchoredViews(expandedView))
@@ -205,10 +197,7 @@ internal class SearchBarAnimationHelper {
         }
     }
 
-    private fun getFadeOutChildrenAnimator(
-        searchBar: SearchBar,
-        expandedView: View
-    ): Animator {
+    private fun getFadeOutChildrenAnimator(searchBar: SearchBar, expandedView: View): Animator {
         val children = getFadeChildren(searchBar)
         val animator = ValueAnimator.ofFloat(1f, 0f)
         animator.addUpdateListener(MultiViewUpdateListener.alphaListener(children))

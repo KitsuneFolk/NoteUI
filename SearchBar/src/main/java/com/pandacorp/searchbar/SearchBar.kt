@@ -71,10 +71,7 @@ class SearchBar @JvmOverloads constructor(
     internal class SavedState(superState: Parcelable?) : AbsSavedState(superState!!) {
         var text: String? = null
 
-        override fun writeToParcel(
-            dest: Parcel,
-            flags: Int
-        ) {
+        override fun writeToParcel(dest: Parcel, flags: Int) {
             super.writeToParcel(dest, flags)
             dest.writeString(text)
         }
@@ -87,7 +84,7 @@ class SearchBar @JvmOverloads constructor(
                 or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
                 or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP
                 or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP_MARGINS
-        )
+            )
         private const val NAMESPACE_APP = "http://schemas.android.com/apk/res-auto"
     }
 
@@ -149,7 +146,7 @@ class SearchBar @JvmOverloads constructor(
             // right from left and bottom from top
             val bounds = RectF(width.toFloat(), height.toFloat(), width.toFloat() * 2, height.toFloat() * 2)
             return (backgroundShape!!.shapeAppearanceModel.bottomLeftCornerSize as RelativeCornerSize).getCornerSize(
-                bounds,
+                bounds
             )
         }
 
@@ -169,7 +166,7 @@ class SearchBar @JvmOverloads constructor(
                 attrs,
                 R.styleable.SearchBar,
                 defStyleAttr,
-                DEF_STYLE_RES,
+                DEF_STYLE_RES
             )
         val shapeAppearanceModel =
             ShapeAppearanceModel.builder(ensuredContext, attrs, defStyleAttr, DEF_STYLE_RES).build()
@@ -209,20 +206,12 @@ class SearchBar @JvmOverloads constructor(
         setupTouchExplorationStateChangeListener()
     }
 
-    fun setText(
-        text: CharSequence?,
-        withAnimation: Boolean = true,
-        moveDown: Boolean = true
-    ) {
+    fun setText(text: CharSequence?, withAnimation: Boolean = true, moveDown: Boolean = true) {
         this.text = text
         textView.setText(text, withAnimation, moveDown)
     }
 
-    fun setHint(
-        hint: CharSequence?,
-        withAnimation: Boolean = true,
-        moveDown: Boolean = true
-    ) {
+    fun setHint(hint: CharSequence?, withAnimation: Boolean = true, moveDown: Boolean = true) {
         this.hint = hint
         textView.setHint(hint, withAnimation, moveDown)
     }
@@ -239,12 +228,7 @@ class SearchBar @JvmOverloads constructor(
         searchBarAnimationHelper.stopOnLoadAnimation(this)
     }
 
-    fun startCountMode(
-        withAnimation: Boolean,
-        count: Int,
-        @MenuRes menuId: Int,
-        onBackArrowClick: () -> Unit = {}
-    ) {
+    fun startCountMode(withAnimation: Boolean, count: Int, @MenuRes menuId: Int, onBackArrowClick: () -> Unit = {}) {
         isCountModeEnabled = true
         if (withAnimation) {
             navigationIcon?.animateAlpha(255, 0, 200) {
@@ -271,11 +255,7 @@ class SearchBar @JvmOverloads constructor(
         }
     }
 
-    fun stopCountMode(
-        restoredText: String?,
-        restoredHint: CharSequence,
-        @MenuRes menuId: Int
-    ) {
+    fun stopCountMode(restoredText: String?, restoredHint: CharSequence, @MenuRes menuId: Int) {
         isCountModeEnabled = false
         navigationIcon?.animateAlpha(255, 0, 200) {
             navigationIcon = defaultNavigationIcon
@@ -295,11 +275,7 @@ class SearchBar @JvmOverloads constructor(
         }
     }
 
-    override fun addView(
-        child: View,
-        index: Int,
-        params: ViewGroup.LayoutParams
-    ) {
+    override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
         if (layoutInflated && centerView == null && child !is ActionMenuView) {
             centerView = child
             centerView!!.alpha = 0f
@@ -340,28 +316,17 @@ class SearchBar @JvmOverloads constructor(
         super.setNavigationIcon(maybeTintNavigationIcon(navigationIcon))
     }
 
-    override fun inflateMenu(
-        @MenuRes resId: Int
-    ) {
+    override fun inflateMenu(@MenuRes resId: Int) {
         super.inflateMenu(resId)
         menuResId = resId
     }
 
-    override fun onMeasure(
-        widthMeasureSpec: Int,
-        heightMeasureSpec: Int
-    ) {
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         measureCenterView(widthMeasureSpec, heightMeasureSpec)
     }
 
-    override fun onLayout(
-        changed: Boolean,
-        left: Int,
-        top: Int,
-        right: Int,
-        bottom: Int
-    ) {
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
         layoutCenterView()
     }
@@ -416,7 +381,7 @@ class SearchBar @JvmOverloads constructor(
         val navigationIconColor: Int =
             navigationIconTint ?: MaterialColors.getColor(
                 this,
-                if (navigationIcon === defaultNavigationIcon) R.attr.colorOnSurfaceVariant else R.attr.colorOnSurface,
+                if (navigationIcon === defaultNavigationIcon) R.attr.colorOnSurfaceVariant else R.attr.colorOnSurface
             )
         val wrappedNavigationIcon = DrawableCompat.wrap(navigationIcon.mutate())
         DrawableCompat.setTint(wrappedNavigationIcon, navigationIconColor)
@@ -450,10 +415,7 @@ class SearchBar @JvmOverloads constructor(
         }
     }
 
-    private fun defaultIfZero(
-        value: Int,
-        defValue: Int
-    ) = if (value == 0) defValue else value
+    private fun defaultIfZero(value: Int, defValue: Int) = if (value == 0) defValue else value
 
     private fun setOrClearDefaultScrollFlags() {
         if (layoutParams is AppBarLayout.LayoutParams) {
@@ -470,10 +432,7 @@ class SearchBar @JvmOverloads constructor(
         }
     }
 
-    private fun measureCenterView(
-        widthMeasureSpec: Int,
-        heightMeasureSpec: Int
-    ) {
+    private fun measureCenterView(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         centerView?.measure(widthMeasureSpec, heightMeasureSpec)
     }
 
@@ -490,13 +449,7 @@ class SearchBar @JvmOverloads constructor(
         layoutChild(centerView!!, left, top, right, bottom)
     }
 
-    private fun layoutChild(
-        child: View,
-        left: Int,
-        top: Int,
-        right: Int,
-        bottom: Int
-    ) {
+    private fun layoutChild(child: View, left: Int, top: Int, right: Int, bottom: Int) {
         if (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) {
             child.layout(measuredWidth - right, top, measuredWidth - left, bottom)
         } else {
@@ -510,10 +463,7 @@ class SearchBar @JvmOverloads constructor(
     }
 
     /** See [SearchBar.expand].  */
-    private fun expand(
-        expandedView: View,
-        appBarLayout: AppBarLayout?
-    ): Boolean {
+    private fun expand(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
         return expand(expandedView, appBarLayout, false)
     }
 
@@ -527,11 +477,7 @@ class SearchBar @JvmOverloads constructor(
      *
      * @return whether or not the expand animation was started
      */
-    private fun expand(
-        expandedView: View,
-        appBarLayout: AppBarLayout?,
-        skipAnimation: Boolean,
-    ): Boolean {
+    private fun expand(expandedView: View, appBarLayout: AppBarLayout?, skipAnimation: Boolean,): Boolean {
         // Start the expand if the expanded view is not already showing or in the process of expanding,
         // or if the expanded view is collapsing since the final state should be expanded.
         if (expandedView.visibility != VISIBLE && !isExpanding || isCollapsing) {
@@ -539,7 +485,7 @@ class SearchBar @JvmOverloads constructor(
                 this,
                 expandedView,
                 appBarLayout,
-                skipAnimation,
+                skipAnimation
             )
             return true
         }
@@ -556,10 +502,7 @@ class SearchBar @JvmOverloads constructor(
     }
 
     /** See [SearchBar.collapse].  */
-    private fun collapse(
-        expandedView: View,
-        appBarLayout: AppBarLayout?
-    ): Boolean {
+    private fun collapse(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
         return collapse(expandedView, appBarLayout, false)
     }
 
@@ -573,11 +516,7 @@ class SearchBar @JvmOverloads constructor(
      *
      * @return whether or not the collapse animation was started
      */
-    private fun collapse(
-        expandedView: View,
-        appBarLayout: AppBarLayout?,
-        skipAnimation: Boolean,
-    ): Boolean {
+    private fun collapse(expandedView: View, appBarLayout: AppBarLayout?, skipAnimation: Boolean,): Boolean {
         // Start the collapse if the expanded view is showing and not in the process of collapsing, or
         // if the expanded view is expanding since the final state should be collapsed.
         if (expandedView.visibility == VISIBLE && !isCollapsing || isExpanding) {
@@ -585,7 +524,7 @@ class SearchBar @JvmOverloads constructor(
                 this,
                 expandedView,
                 appBarLayout,
-                skipAnimation,
+                skipAnimation
             )
             return true
         }
@@ -605,17 +544,17 @@ class SearchBar @JvmOverloads constructor(
                     override fun onViewAttachedToWindow(ignored: View) {
                         AccessibilityManagerCompat.addTouchExplorationStateChangeListener(
                             accessibilityManager,
-                            touchExplorationStateChangeListener,
+                            touchExplorationStateChangeListener
                         )
                     }
 
                     override fun onViewDetachedFromWindow(ignored: View) {
                         AccessibilityManagerCompat.removeTouchExplorationStateChangeListener(
                             accessibilityManager,
-                            touchExplorationStateChangeListener,
+                            touchExplorationStateChangeListener
                         )
                     }
-                },
+                }
             )
         }
     }
@@ -626,12 +565,12 @@ class SearchBar @JvmOverloads constructor(
         }
         if (attributeSet.getAttributeValue(NAMESPACE_APP, "title") != null) {
             throw UnsupportedOperationException(
-                "SearchBar does not support title. Use hint or text instead.",
+                "SearchBar does not support title. Use hint or text instead."
             )
         }
         if (attributeSet.getAttributeValue(NAMESPACE_APP, "subtitle") != null) {
             throw UnsupportedOperationException(
-                "SearchBar does not support subtitle. Use hint or text instead.",
+                "SearchBar does not support subtitle. Use hint or text instead."
             )
         }
     }
@@ -659,7 +598,7 @@ class SearchBar @JvmOverloads constructor(
             MarginLayoutParamsCompat.setMarginStart(
                 (textView.layoutParams as MarginLayoutParams),
                 resources
-                    .getDimensionPixelSize(R.dimen.m3_searchbar_text_margin_start_no_navigation_icon),
+                    .getDimensionPixelSize(R.dimen.m3_searchbar_text_margin_start_no_navigation_icon)
             )
         }
     }

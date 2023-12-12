@@ -30,7 +30,7 @@ val dataModule =
                                 get<ColorRepository>().insert(Utils.getDefaultColorsList(get()))
                             }
                         }
-                    },
+                    }
                 )
                 .build()
         }

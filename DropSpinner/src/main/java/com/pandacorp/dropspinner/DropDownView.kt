@@ -25,10 +25,7 @@ class DropDownView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : MaterialCardView(context, attrs, defStyleAttr), View.OnClickListener {
     fun interface ItemClickListener {
-        fun onItemClick(
-            position: Int,
-            item: DropDownItem
-        )
+        fun onItemClick(position: Int, item: DropDownItem)
     }
 
     private var listener: ItemClickListener? = null
@@ -46,7 +43,7 @@ class DropDownView @JvmOverloads constructor(
             LayoutInflater.from(context).inflate(
                 R.layout.dropsy_layout_drop_down,
                 this,
-                false,
+                false
             ) as LinearLayout
         addView(dropDownBody)
         expandableLayout = findViewById(R.id.expandableLayout)
@@ -61,7 +58,7 @@ class DropDownView @JvmOverloads constructor(
                 attrs,
                 R.styleable.DropDownView,
                 0,
-                0,
+                0
             )
         initData(dropsyAttrs)
         setStyles(dropsyAttrs)
@@ -126,12 +123,12 @@ class DropDownView @JvmOverloads constructor(
         val dropsyLabelColor =
             dropsyAttrs.getColor(
                 R.styleable.DropDownView_dropsyLabelColor,
-                ContextCompat.getColor(context, R.color.dropsy_text_color_secondary),
+                ContextCompat.getColor(context, R.color.dropsy_text_color_secondary)
             )
         val dropsyValueColor =
             dropsyAttrs.getColor(
                 R.styleable.DropDownView_dropsyValueColor,
-                Color.BLACK,
+                Color.BLACK
             )
         val dropsyElevation =
             dropsyAttrs.getDimension(R.styleable.DropDownView_dropsyElevation, 0.0f)
@@ -201,7 +198,7 @@ class DropDownView @JvmOverloads constructor(
                 Animation.RELATIVE_TO_SELF,
                 0.5f,
                 Animation.RELATIVE_TO_SELF,
-                0.5f,
+                0.5f
             )
         rotate.duration = if (withAnimation) 300 else 0
         rotate.fillAfter = true
@@ -217,7 +214,7 @@ class DropDownView @JvmOverloads constructor(
                 Animation.RELATIVE_TO_SELF,
                 0.5f,
                 Animation.RELATIVE_TO_SELF,
-                0.5f,
+                0.5f
             )
         rotate.duration = if (withAnimation) 300 else 0
         rotate.fillAfter = true

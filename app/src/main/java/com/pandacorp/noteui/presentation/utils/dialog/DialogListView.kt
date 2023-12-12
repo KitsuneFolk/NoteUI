@@ -28,7 +28,7 @@ class DialogListView(private val context: Context, private val preferenceKey: St
                 Constants.Preferences.Key.THEME -> R.string.theme
                 Constants.Preferences.Key.LANGUAGE -> R.string.language
                 else -> throw IllegalArgumentException("PreferenceKey = $preferenceKey")
-            },
+            }
         )
 
         val itemsList: MutableList<SettingsItem> =
@@ -61,8 +61,8 @@ class DialogListView(private val context: Context, private val preferenceKey: St
                 SettingsItem(
                     keysList[i],
                     titlesList[i],
-                    itemsList.getDrawable(i)!!,
-                ),
+                    itemsList.getDrawable(i)!!
+                )
             )
         }
         itemsList.recycle()
@@ -80,8 +80,8 @@ class DialogListView(private val context: Context, private val preferenceKey: St
                 SettingsItem(
                     keysList[i],
                     titlesList[i],
-                    drawablesList.getDrawable(i)!!,
-                ),
+                    drawablesList.getDrawable(i)!!
+                )
             )
         }
         drawablesList.recycle()

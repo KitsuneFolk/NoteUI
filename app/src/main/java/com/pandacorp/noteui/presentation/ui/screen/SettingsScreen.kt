@@ -79,11 +79,7 @@ class SettingsScreen : ThemeFragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = ScreenSettingsBinding.inflate(layoutInflater.cloneInContext(requireContext()))
         ViewHelper.applyTheme(ViewHelper.currentTheme, binding.root)
 
@@ -193,7 +189,7 @@ class SettingsScreen : ThemeFragment() {
                 val themeKey =
                     sp.getString(
                         Constants.Preferences.Key.THEME,
-                        requireContext().resources.getString(R.string.settings_theme_default_value),
+                        requireContext().resources.getString(R.string.settings_theme_default_value)
                     )!!
                 text = getThemeFromKey(themeKey)
             }
@@ -203,7 +199,7 @@ class SettingsScreen : ThemeFragment() {
                 val languageKey =
                     sp.getString(
                         Constants.Preferences.Key.LANGUAGE,
-                        requireContext().resources.getString(R.string.settings_language_default_value),
+                        requireContext().resources.getString(R.string.settings_language_default_value)
                     )!!
                 text = getLanguageFromKey(languageKey)
             }
@@ -229,7 +225,7 @@ class SettingsScreen : ThemeFragment() {
             binding.showFabTextSwitch.isChecked =
                 sp.getBoolean(
                     Constants.Preferences.Key.SHOW_FAB,
-                    Constants.Preferences.DefaultValue.SHOW_FAB,
+                    Constants.Preferences.DefaultValue.SHOW_FAB
                 )
             setOnClickListener {
                 val newValue = !binding.showFabTextSwitch.isChecked
@@ -244,14 +240,14 @@ class SettingsScreen : ThemeFragment() {
             binding.hideActionBarSwitch.isChecked =
                 sp.getBoolean(
                     Constants.Preferences.Key.HIDE_ACTIONBAR_ON_SCROLL,
-                    Constants.Preferences.DefaultValue.HIDE_ACTIONBAR_ON_SCROLL,
+                    Constants.Preferences.DefaultValue.HIDE_ACTIONBAR_ON_SCROLL
                 )
             setOnClickListener {
                 val newValue = !binding.hideActionBarSwitch.isChecked
                 sp.edit()
                     .putBoolean(
                         Constants.Preferences.Key.HIDE_ACTIONBAR_ON_SCROLL,
-                        newValue,
+                        newValue
                     )
                     .apply()
                 binding.hideActionBarSwitch.isChecked = newValue
@@ -263,7 +259,7 @@ class SettingsScreen : ThemeFragment() {
             binding.drawerAnimationtTextView.text =
                 sp.getInt(
                     Constants.Preferences.Key.DRAWER_ANIMATION,
-                    Constants.Preferences.DefaultValue.DRAWER_ANIMATION,
+                    Constants.Preferences.DefaultValue.DRAWER_ANIMATION
                 ).toString()
             setOnClickListener {
                 drawerAnimationDialog.show()
@@ -273,7 +269,7 @@ class SettingsScreen : ThemeFragment() {
             binding.titleSizeTextView.text =
                 sp.getInt(
                     Constants.Preferences.Key.TITLE_TEXT_SIZE,
-                    Constants.Preferences.DefaultValue.TITLE_TEXT_SIZE,
+                    Constants.Preferences.DefaultValue.TITLE_TEXT_SIZE
                 ).toString()
             setOnClickListener {
                 titleDialog.show()
@@ -283,7 +279,7 @@ class SettingsScreen : ThemeFragment() {
             binding.contentSizeTextView.text =
                 sp.getInt(
                     Constants.Preferences.Key.CONTENT_TEXT_SIZE,
-                    Constants.Preferences.DefaultValue.CONTENT_TEXT_SIZE,
+                    Constants.Preferences.DefaultValue.CONTENT_TEXT_SIZE
                 ).toString()
             setOnClickListener {
                 contentDialog.show()

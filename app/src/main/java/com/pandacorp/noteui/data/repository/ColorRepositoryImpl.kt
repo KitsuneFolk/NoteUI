@@ -8,12 +8,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class ColorRepositoryImpl(private val dao: ColorDao, private val mapper: ColorMapper) : ColorRepository {
-    override fun getAll(): Flow<List<ColorItem>> =
-        dao.getAll().map { flow ->
-            flow.map { item ->
-                mapper.toColorItem(item)
-            }
+    override fun getAll(): Flow<List<ColorItem>> = dao.getAll().map { flow ->
+        flow.map { item ->
+            mapper.toColorItem(item)
         }
+    }
 
     override fun update(item: ColorItem) {
         dao.update(mapper.toColorDataItem(item))

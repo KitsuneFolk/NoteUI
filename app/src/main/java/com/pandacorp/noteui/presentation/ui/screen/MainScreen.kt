@@ -39,6 +39,7 @@ import com.pandacorp.noteui.presentation.utils.themes.ViewHelper
 import com.pandacorp.noteui.presentation.viewModels.CurrentNoteViewModel
 import com.pandacorp.noteui.presentation.viewModels.NotesViewModel
 import com.pandacorp.searchbar.searchview.SearchView
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -47,7 +48,6 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Locale
 
 class MainScreen : Fragment() {
     private var _binding: ScreenMainBinding? = null
@@ -62,10 +62,7 @@ class MainScreen : Fragment() {
         NotesAdapter().apply {
             setOnClickListener(
                 object : NotesAdapter.OnNoteItemClickListener {
-                    override fun onClick(
-                        noteItem: NoteItem,
-                        position: Int
-                    ) {
+                    override fun onClick(noteItem: NoteItem, position: Int) {
                         if (binding.searchBar.isCountModeEnabled) {
                             select(position)
                         } else {
@@ -74,10 +71,7 @@ class MainScreen : Fragment() {
                         }
                     }
 
-                    override fun onLongClick(
-                        noteItem: NoteItem,
-                        position: Int
-                    ) {
+                    override fun onLongClick(noteItem: NoteItem, position: Int) {
                         select(position)
                     }
 
@@ -92,7 +86,7 @@ class MainScreen : Fragment() {
                             notesViewModel.selectedNotes.postValue(this)
                         }
                     }
-                },
+                }
             )
         }
     }
@@ -102,20 +96,14 @@ class MainScreen : Fragment() {
             isSelectionEnabled = false
             setOnClickListener(
                 object : NotesAdapter.OnNoteItemClickListener {
-                    override fun onClick(
-                        noteItem: NoteItem,
-                        position: Int
-                    ) {
+                    override fun onClick(noteItem: NoteItem, position: Int) {
                         currentNoteViewModel.setNote(notesViewModel.getNoteById(noteItem.id))
                         navController.navigate(R.id.nav_note_screen)
                     }
 
-                    override fun onLongClick(
-                        noteItem: NoteItem,
-                        position: Int
-                    ) {
+                    override fun onLongClick(noteItem: NoteItem, position: Int) {
                     }
-                },
+                }
             )
         }
     }
@@ -126,11 +114,7 @@ class MainScreen : Fragment() {
 
     private var searchJob: Job? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,): View {
         val lf = layoutInflater.cloneInContext(requireContext())
         _binding = ScreenMainBinding.inflate(lf)
 
@@ -147,7 +131,7 @@ class MainScreen : Fragment() {
             val isShowFab =
                 sp.getBoolean(
                     Constants.Preferences.Key.SHOW_FAB,
-                    Constants.Preferences.DefaultValue.SHOW_FAB,
+                    Constants.Preferences.DefaultValue.SHOW_FAB
                 )
             if (!isShowFab) {
                 binding.addFAB.shrink()
@@ -256,7 +240,9 @@ class MainScreen : Fragment() {
             }
         binding.searchView.apply {
             setAnimationDuration(600, 550)
-            setupWithSearchBar(binding.searchBar) // Setup programmatically, because we don't use CoordinatorLayout in xml
+            setupWithSearchBar(
+                binding.searchBar
+            ) // Setup programmatically, because we don't use CoordinatorLayout in xml
             editText.addTextChangedListener {
                 notesViewModel.searchViewText.postValue(binding.searchView.text.toString())
             }
@@ -268,11 +254,7 @@ class MainScreen : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), onBackPressedCallback)
         binding.notesRecyclerView.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(
-                    recyclerView: RecyclerView,
-                    dx: Int,
-                    dy: Int
-                ) {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
                     if (binding.searchBar.isCountModeEnabled) {
                         return
@@ -284,7 +266,7 @@ class MainScreen : Fragment() {
                         binding.addFAB.show()
                     }
                 }
-            },
+            }
         )
         val viewAdapter = ViewAdapter(filterSpinner)
         binding.notesRecyclerView.adapter = ConcatAdapter(viewAdapter, notesAdapter)
@@ -310,7 +292,7 @@ class MainScreen : Fragment() {
         }
         if (!sp.getBoolean(
                 Constants.Preferences.Key.SHOW_FAB,
-                Constants.Preferences.DefaultValue.SHOW_FAB,
+                Constants.Preferences.DefaultValue.SHOW_FAB
             )
         ) {
             binding.addFAB.shrink()
@@ -445,10 +427,7 @@ class MainScreen : Fragment() {
         return filteredList ?: emptyList()
     }
 
-    private fun getSearchedNotes(
-        text: String?,
-        notesList: List<NoteItem>?
-    ): MutableList<NoteItem>? {
+    private fun getSearchedNotes(text: String?, notesList: List<NoteItem>?): MutableList<NoteItem>? {
         return if (text.isNullOrEmpty()) {
             null // Clear and show all notes
         } else {
@@ -470,10 +449,7 @@ class MainScreen : Fragment() {
         }
     }
 
-    private fun showEmptyImage(
-        recyclerView: RecyclerView,
-        hint: View
-    ) {
+    private fun showEmptyImage(recyclerView: RecyclerView, hint: View) {
         val transition =
             Fade().apply {
                 duration = Constants.ANIMATION_DURATION
@@ -485,10 +461,7 @@ class MainScreen : Fragment() {
         hint.visibility = View.VISIBLE
     }
 
-    private fun hideEmptyImage(
-        recyclerView: RecyclerView,
-        hint: View
-    ) {
+    private fun hideEmptyImage(recyclerView: RecyclerView, hint: View) {
         val transition =
             Fade().apply {
                 duration = Constants.ANIMATION_DURATION

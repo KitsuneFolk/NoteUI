@@ -20,14 +20,14 @@ class CubicBezierInterpolator(start: PointF, end: PointF) : Interpolator {
 
     constructor(startX: Float, startY: Float, endX: Float, endY: Float) : this(
         PointF(startX, startY),
-        PointF(endX, endY),
+        PointF(endX, endY)
     )
 
     constructor(startX: Double, startY: Double, endX: Double, endY: Double) : this(
         startX.toFloat(),
         startY.toFloat(),
         endX.toFloat(),
-        endY.toFloat(),
+        endY.toFloat()
     )
 
     override fun getInterpolation(time: Float): Float {

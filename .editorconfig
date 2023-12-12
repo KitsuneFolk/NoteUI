@@ -2,6 +2,7 @@ root = true
 
 # noinspection EditorConfigKeyCorrectness
 [*.{kt,kts}]
+max_line_length = 120
 indent_size = 4
 insert_final_newline = false
 ktlint_code_style = android_studio

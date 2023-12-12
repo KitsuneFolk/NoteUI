@@ -154,7 +154,7 @@ class Scroller(
                 * 39.37f * // inch/meter
                 mPpi // pixels per inch
                 * friction
-        )
+            )
     }
 
     /**
@@ -282,13 +282,7 @@ class Scroller(
      * content up.
      */
     @JvmOverloads
-    fun startScroll(
-        startX: Int,
-        startY: Int,
-        dx: Int,
-        dy: Int,
-        duration: Int = DEFAULT_DURATION
-    ) {
+    fun startScroll(startX: Int, startY: Int, dx: Int, dy: Int, duration: Int = DEFAULT_DURATION) {
         mMode = SCROLL_MODE
         isFinished = false
         this.duration = duration
@@ -321,16 +315,7 @@ class Scroller(
      * @param maxY Maximum Y value. The scroller will not scroll past this
      * point.
      */
-    fun fling(
-        startX: Int,
-        startY: Int,
-        velocityX: Int,
-        velocityY: Int,
-        minX: Int,
-        maxX: Int,
-        minY: Int,
-        maxY: Int
-    ) {
+    fun fling(startX: Int, startY: Int, velocityX: Int, velocityY: Int, minX: Int, maxX: Int, minY: Int, maxY: Int) {
         // Continue a scroll or fling in progress
         var mVelocityX = velocityX
         var mVelocityY = velocityY

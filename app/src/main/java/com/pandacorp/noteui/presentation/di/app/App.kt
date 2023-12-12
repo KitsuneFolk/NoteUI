@@ -27,8 +27,8 @@ class App : Application() {
                 listOf(
                     viewModelModule,
                     dataModule,
-                    domainModule,
-                ),
+                    domainModule
+                )
             )
         }
     }

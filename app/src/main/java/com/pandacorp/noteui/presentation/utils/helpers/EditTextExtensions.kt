@@ -52,16 +52,14 @@ fun EditText.getSelectedLineEnd(): Int {
     return selectedLineEnd
 }
 
-fun EditText.changeTextForegroundColor(
-    @ColorInt foregroundColor: Int? = null
-) {
+fun EditText.changeTextForegroundColor(@ColorInt foregroundColor: Int? = null) {
     val spannable = text.toSpannable()
 
     val spans: Array<ForegroundColorSpan> =
         spannable.getSpans(
             selectionStart,
             selectionEnd,
-            ForegroundColorSpan::class.java,
+            ForegroundColorSpan::class.java
         )
     spans.forEach {
         val selectedSpanStart = spannable.getSpanStart(it)
@@ -73,7 +71,7 @@ fun EditText.changeTextForegroundColor(
         ForegroundColorSpan((foregroundColor ?: currentTextColor)),
         selectionStart,
         selectionEnd,
-        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
     )
 
     val savedSelectionStart = selectionStart
@@ -82,16 +80,14 @@ fun EditText.changeTextForegroundColor(
     setSelection(savedSelectionStart, savedSelectionEnd)
 }
 
-fun EditText.changeTextBackgroundColor(
-    @ColorInt backgroundColor: Int? = null
-) {
+fun EditText.changeTextBackgroundColor(@ColorInt backgroundColor: Int? = null) {
     val spannable = text.toSpannable()
 
     val spans: Array<BackgroundColorSpan> =
         spannable.getSpans(
             selectionStart,
             selectionEnd,
-            BackgroundColorSpan::class.java,
+            BackgroundColorSpan::class.java
         )
     spans.forEach {
         val selectedSpanStart = spannable.getSpanStart(it)
@@ -105,7 +101,7 @@ fun EditText.changeTextBackgroundColor(
         BackgroundColorSpan((backgroundColor ?: Color.TRANSPARENT)),
         selectionStart,
         selectionEnd,
-        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
     )
 
     val savedSelectionStart = selectionStart
@@ -123,7 +119,7 @@ fun EditText.changeTextGravity(gravity: Int) {
         spannable.getSpans(
             selectedLineStart,
             selectedLineEnd,
-            AlignmentSpan::class.java,
+            AlignmentSpan::class.java
         )
     spans.forEach {
         val selectedSpanStart = spannable.getSpanStart(it)
@@ -142,7 +138,7 @@ fun EditText.changeTextGravity(gravity: Int) {
         AlignmentSpan.Standard(alignment),
         selectedLineStart,
         selectedLineEnd,
-        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
     )
 
     val savedSelectionStart = selectionStart
@@ -188,7 +184,7 @@ fun EditText.makeTextBold() {
             StyleSpan(Typeface.BOLD),
             selectionStart,
             selectionEnd,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     } else {
         // remove the spans, what we do above
@@ -222,7 +218,7 @@ fun EditText.makeTextItalic() {
             StyleSpan(Typeface.ITALIC),
             selectionStart,
             selectionEnd,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     } else {
         // remove the spans, what we do above
@@ -241,7 +237,7 @@ fun EditText.makeTextUnderline() {
         spannable.getSpans(
             selectionStart,
             selectionEnd,
-            CustomUnderlineSpan::class.java,
+            CustomUnderlineSpan::class.java
         )
     spans.forEach { span ->
         if (spannable.getSpanStart(span) >= selectionStart && spannable.getSpanEnd(span) <= selectionEnd) {
@@ -253,7 +249,7 @@ fun EditText.makeTextUnderline() {
             CustomUnderlineSpan(),
             selectionStart,
             selectionEnd,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     } else {
         // remove the spans, what we do above

@@ -138,23 +138,13 @@ class UndoRedoHelper(
         private var mBeforeChange: CharSequence? = null
         private var mAfterChange: CharSequence? = null
 
-        override fun beforeTextChanged(
-            s: CharSequence,
-            start: Int,
-            count: Int,
-            after: Int
-        ) {
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             if (mIsUndoOrRedo) return
 
             mBeforeChange = s.subSequence(start, start + count)
         }
 
-        override fun onTextChanged(
-            s: CharSequence,
-            start: Int,
-            before: Int,
-            count: Int
-        ) {
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             if (mIsUndoOrRedo) return
             mAfterChange = s.subSequence(start, start + count)
             editHistory.add(EditItem(start, mBeforeChange, mAfterChange))

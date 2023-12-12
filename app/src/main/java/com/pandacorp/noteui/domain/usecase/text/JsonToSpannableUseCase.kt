@@ -19,10 +19,7 @@ import org.json.JSONObject
 
 class JsonToSpannableUseCase(private val context: Context) {
     @Throws(JSONException::class)
-    operator fun invoke(
-        type: Int,
-        jsonString: String
-    ): Spannable? {
+    operator fun invoke(type: Int, jsonString: String): Spannable? {
         val json: JSONObject?
         try {
             // Check if jsonString is empty
@@ -78,10 +75,7 @@ class JsonToSpannableUseCase(private val context: Context) {
         return builder
     }
 
-    private fun addForegroundSpans(
-        jsonArray: JSONArray,
-        spannableString: Spannable
-    ) {
+    private fun addForegroundSpans(jsonArray: JSONArray, spannableString: Spannable) {
         for (i in 0 until jsonArray.length()) {
             val foregroundSpan = jsonArray.getJSONObject(i)
             val foregroundColor = foregroundSpan.getInt(Constants.ForegroundSpans.COLOR)
@@ -91,15 +85,12 @@ class JsonToSpannableUseCase(private val context: Context) {
                 ForegroundColorSpan(foregroundColor),
                 foregroundStart,
                 foregroundEnd,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
     }
 
-    private fun addBackgroundSpans(
-        jsonArray: JSONArray,
-        spannableString: Spannable
-    ) {
+    private fun addBackgroundSpans(jsonArray: JSONArray, spannableString: Spannable) {
         for (i in 0 until jsonArray.length()) {
             val backgroundSpan = jsonArray.getJSONObject(i)
             val backgroundColor = backgroundSpan.getInt(Constants.BackgroundSpans.COLOR)
@@ -109,15 +100,12 @@ class JsonToSpannableUseCase(private val context: Context) {
                 BackgroundColorSpan(backgroundColor),
                 backgroundStart,
                 backgroundEnd,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
     }
 
-    private fun addAlignmentSpans(
-        jsonArray: JSONArray,
-        spannableString: Spannable
-    ) {
+    private fun addAlignmentSpans(jsonArray: JSONArray, spannableString: Spannable) {
         for (i in 0 until jsonArray.length()) {
             val alignmentSpan = jsonArray.getJSONObject(i)
             val alignment =
@@ -135,16 +123,12 @@ class JsonToSpannableUseCase(private val context: Context) {
                 AlignmentSpan.Standard(alignment),
                 alignmentStart,
                 alignmentEnd,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
     }
 
-    private fun addImagesSpans(
-        type: Int,
-        jsonArray: JSONArray,
-        text: SpannableStringBuilder
-    ) {
+    private fun addImagesSpans(type: Int, jsonArray: JSONArray, text: SpannableStringBuilder) {
         for (i in 0 until jsonArray.length()) {
             val imageJson = jsonArray.getJSONObject(i)
             val stringUri = imageJson.getString(Constants.ImageSpans.URI)
@@ -196,10 +180,7 @@ class JsonToSpannableUseCase(private val context: Context) {
         }
     }
 
-    private fun addBoldSpans(
-        jsonArray: JSONArray,
-        spannableString: Spannable
-    ) {
+    private fun addBoldSpans(jsonArray: JSONArray, spannableString: Spannable) {
         for (i in 0 until jsonArray.length()) {
             val boldSpan = jsonArray.getJSONObject(i)
             val start = boldSpan.getInt(Constants.BoldSpans.START)
@@ -208,10 +189,7 @@ class JsonToSpannableUseCase(private val context: Context) {
         }
     }
 
-    private fun addItalicSpans(
-        jsonArray: JSONArray,
-        spannableString: Spannable
-    ) {
+    private fun addItalicSpans(jsonArray: JSONArray, spannableString: Spannable) {
         for (i in 0 until jsonArray.length()) {
             val boldSpan = jsonArray.getJSONObject(i)
             val start = boldSpan.getInt(Constants.ItalicSpans.START)
@@ -220,10 +198,7 @@ class JsonToSpannableUseCase(private val context: Context) {
         }
     }
 
-    private fun addUnderlineSpans(
-        jsonArray: JSONArray,
-        spannableString: Spannable
-    ) {
+    private fun addUnderlineSpans(jsonArray: JSONArray, spannableString: Spannable) {
         for (i in 0 until jsonArray.length()) {
             val span = jsonArray.getJSONObject(i)
             val start = span.getInt(Constants.UnderlineSpans.START)

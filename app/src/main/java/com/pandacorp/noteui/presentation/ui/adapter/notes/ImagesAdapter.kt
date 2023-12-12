@@ -11,15 +11,9 @@ import com.pandacorp.noteui.app.databinding.ItemImageBinding
 
 class ImagesAdapter : ListAdapter<Drawable, ImagesAdapter.ViewHolder>(DiffCallback()) {
     class DiffCallback : DiffUtil.ItemCallback<Drawable>() {
-        override fun areItemsTheSame(
-            oldItem: Drawable,
-            newItem: Drawable
-        ) = oldItem == newItem
+        override fun areItemsTheSame(oldItem: Drawable, newItem: Drawable) = oldItem == newItem
 
-        override fun areContentsTheSame(
-            oldItem: Drawable,
-            newItem: Drawable
-        ) = oldItem.toString() == newItem.toString()
+        override fun areContentsTheSame(oldItem: Drawable, newItem: Drawable) = oldItem.toString() == newItem.toString()
     }
 
     private var onImageItemClickListener: OnImageItemClickListener? = null
@@ -35,18 +29,12 @@ class ImagesAdapter : ListAdapter<Drawable, ImagesAdapter.ViewHolder>(DiffCallba
         }
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return ViewHolder(ItemImageBinding.inflate(inflater, parent, false))
     }
 
-    override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(currentList[position])
     }
 
@@ -59,9 +47,6 @@ class ImagesAdapter : ListAdapter<Drawable, ImagesAdapter.ViewHolder>(DiffCallba
     }
 
     fun interface OnImageItemClickListener {
-        fun onClick(
-            drawable: Drawable,
-            position: Int
-        )
+        fun onClick(drawable: Drawable, position: Int)
     }
 }

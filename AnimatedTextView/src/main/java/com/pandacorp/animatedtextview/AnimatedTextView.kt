@@ -61,7 +61,7 @@ class AnimatedTextView @JvmOverloads constructor(
                 attrs,
                 R.styleable.AnimatedTextView,
                 0,
-                0,
+                0
             )
         val textColor = mainAttrs.getColor(R.styleable.AnimatedTextView_textColor, Color.BLACK)
         setTextColor(textColor)
@@ -230,18 +230,11 @@ class AnimatedTextView @JvmOverloads constructor(
             setText(text, true)
         }
 
-        fun setText(
-            text: CharSequence?,
-            withAnimation: Boolean
-        ) {
+        fun setText(text: CharSequence?, withAnimation: Boolean) {
             setText(text, withAnimation, true)
         }
 
-        fun setText(
-            text: CharSequence?,
-            withAnimation: Boolean,
-            moveDown: Boolean
-        ) {
+        fun setText(text: CharSequence?, withAnimation: Boolean, moveDown: Boolean) {
             var newText = text
             var animated = withAnimation
             if (currentText == null || newText == null) {
@@ -283,8 +276,8 @@ class AnimatedTextView @JvmOverloads constructor(
                                 part,
                                 width -
                                     ceil(
-                                        currentWidth.coerceAtMost(oldWidth).toDouble(),
-                                    ).toInt(),
+                                        currentWidth.coerceAtMost(oldWidth).toDouble()
+                                    ).toInt()
                             )
                         val currentPart = Part(layout, currentWidth, oldParts.size)
                         val oldPart = Part(layout, oldWidth, oldParts.size)
@@ -351,7 +344,7 @@ class AnimatedTextView @JvmOverloads constructor(
                                         onAnimationFinishListener!!.run()
                                     }
                                 }
-                            },
+                            }
                         )
                         this.startDelay = animateDelay
                         this.duration = animateDuration
@@ -396,10 +389,7 @@ class AnimatedTextView @JvmOverloads constructor(
             }
         }
 
-        private fun makeLayout(
-            textPart: CharSequence,
-            width: Int
-        ): StaticLayout {
+        private fun makeLayout(textPart: CharSequence, width: Int): StaticLayout {
             var newWidth = width
             if (newWidth <= 0) {
                 newWidth = min(AndroidUtilities.displaySize.x, AndroidUtilities.displaySize.y)
@@ -424,7 +414,7 @@ class AnimatedTextView @JvmOverloads constructor(
                     0f,
                     false,
                     TextUtils.TruncateAt.END,
-                    newWidth,
+                    newWidth
                 )
             }
         }
@@ -477,10 +467,7 @@ class AnimatedTextView @JvmOverloads constructor(
                 return 0.toChar()
             }
 
-            override fun subSequence(
-                startIndex: Int,
-                endIndex: Int
-            ): CharSequence {
+            override fun subSequence(startIndex: Int, endIndex: Int): CharSequence {
                 return TextUtils.concat(*words.copyOfRange(startIndex, endIndex))
             }
 
@@ -644,11 +631,7 @@ class AnimatedTextView @JvmOverloads constructor(
         }
 
         private fun interface RegionCallback {
-            fun run(
-                part: CharSequence,
-                start: Int,
-                end: Int
-            )
+            fun run(part: CharSequence, start: Int, end: Int)
         }
 
         override fun setAlpha(alpha: Int) {
@@ -669,12 +652,7 @@ class AnimatedTextView @JvmOverloads constructor(
             this.bounds.set(bounds)
         }
 
-        override fun setBounds(
-            left: Int,
-            top: Int,
-            right: Int,
-            bottom: Int
-        ) {
+        override fun setBounds(left: Int, top: Int, right: Int, bottom: Int) {
             super.setBounds(left, top, right, bottom)
             bounds[left, top, right] = bottom
         }
@@ -684,12 +662,7 @@ class AnimatedTextView @JvmOverloads constructor(
         }
 
         companion object {
-            fun partEquals(
-                a: CharSequence?,
-                b: CharSequence?,
-                aIndex: Int,
-                bIndex: Int
-            ): Boolean {
+            fun partEquals(a: CharSequence?, b: CharSequence?, aIndex: Int, bIndex: Int): Boolean {
                 if (a is WordSequence && b is WordSequence) {
                     val wordA = a.wordAt(aIndex)
                     val wordB = b.wordAt(bIndex)
@@ -700,10 +673,7 @@ class AnimatedTextView @JvmOverloads constructor(
         }
     }
 
-    override fun onMeasure(
-        widthMeasureSpec: Int,
-        heightMeasureSpec: Int
-    ) {
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var width = MeasureSpec.getSize(widthMeasureSpec)
         var height = MeasureSpec.getSize(heightMeasureSpec)
         if (lastMaxWidth != width && layoutParams.width != 0) {
@@ -729,18 +699,11 @@ class AnimatedTextView @JvmOverloads constructor(
         setText(text, withAnimation = true, moveDown = true)
     }
 
-    fun setText(
-        text: CharSequence?,
-        withAnimation: Boolean = false
-    ) {
+    fun setText(text: CharSequence?, withAnimation: Boolean = false) {
         setText(text, withAnimation = withAnimation, moveDown = false)
     }
 
-    fun setText(
-        text: CharSequence?,
-        withAnimation: Boolean,
-        moveDown: Boolean
-    ) {
+    fun setText(text: CharSequence?, withAnimation: Boolean, moveDown: Boolean) {
         this.text = text
         if (this.text != null && this.text!!.isNotEmpty()) {
             setTextInternal(text, withAnimation, moveDown)
@@ -751,11 +714,7 @@ class AnimatedTextView @JvmOverloads constructor(
 
     private var first = true
 
-    private fun setTextInternal(
-        text: CharSequence?,
-        withAnimation: Boolean,
-        moveDown: Boolean
-    ) {
+    private fun setTextInternal(text: CharSequence?, withAnimation: Boolean, moveDown: Boolean) {
         var animated = withAnimation
         animated = !first && animated
         first = false
@@ -779,22 +738,14 @@ class AnimatedTextView @JvmOverloads constructor(
         }
     }
 
-    fun setHint(
-        hint: CharSequence?,
-        withAnimation: Boolean,
-        moveDown: Boolean
-    ) {
+    fun setHint(hint: CharSequence?, withAnimation: Boolean, moveDown: Boolean) {
         this.hint = TextUtils.stringOrSpannedString(hint)
         if (text == null || text!!.isEmpty()) {
             setHintInternal(hint, withAnimation, moveDown)
         }
     }
 
-    private fun setHintInternal(
-        hint: CharSequence?,
-        withAnimation: Boolean,
-        moveDown: Boolean
-    ) {
+    private fun setHintInternal(hint: CharSequence?, withAnimation: Boolean, moveDown: Boolean) {
         setTextInternal(hint, withAnimation, moveDown)
     }
 

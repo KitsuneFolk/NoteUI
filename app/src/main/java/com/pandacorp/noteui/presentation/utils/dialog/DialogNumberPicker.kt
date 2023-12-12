@@ -44,7 +44,7 @@ class DialogNumberPicker(context: Context, private val preferenceKey: String) :
                 }
 
                 else -> throw IllegalArgumentException("PreferenceKey = $preferenceKey")
-            },
+            }
         )
     }
     private val isShowEditText = preferenceKey == Constants.Preferences.Key.DRAWER_ANIMATION
@@ -80,7 +80,7 @@ class DialogNumberPicker(context: Context, private val preferenceKey: String) :
                 Constants.Preferences.Key.CONTENT_TEXT_SIZE -> R.string.contentTextSize
                 Constants.Preferences.Key.TITLE_TEXT_SIZE -> R.string.titleTextSize
                 else -> throw IllegalArgumentException("PreferenceKey = $preferenceKey")
-            },
+            }
         )
 
         binding.ok.setOnClickListener {
@@ -117,7 +117,7 @@ class DialogNumberPicker(context: Context, private val preferenceKey: String) :
                         R.string.content
                     } else {
                         R.string.title
-                    },
+                    }
                 )
             binding.sample.textSize = preferenceValue.toFloat()
             binding.sample.text = sampleText

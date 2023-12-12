@@ -17,12 +17,7 @@ import androidx.core.view.WindowInsetsCompat
  *
  * @throws IllegalArgumentException if [fromAlpha] or [toAlpha] is not within the range [0, 255].
  */
-fun Drawable.animateAlpha(
-    fromAlpha: Int,
-    toAlpha: Int,
-    duration: Long,
-    onAnimationEnd: (() -> Unit)? = null
-) {
+fun Drawable.animateAlpha(fromAlpha: Int, toAlpha: Int, duration: Long, onAnimationEnd: (() -> Unit)? = null) {
     val animator =
         ValueAnimator.ofInt(fromAlpha, toAlpha).apply {
             this.duration = duration
@@ -41,7 +36,7 @@ fun Drawable.animateAlpha(
                         override fun onAnimationEnd(animation: Animator) {
                             it.invoke()
                         }
-                    },
+                    }
                 )
             }
         }
@@ -86,7 +81,7 @@ fun View.animateAlpha(
                             override fun onAnimationEnd(animation: Animator) {
                                 it.invoke()
                             }
-                        },
+                        }
                     )
                 }
             }
@@ -99,32 +94,29 @@ fun View.animateAlpha(
 /**
  * Returns the top system window inset in pixels.
  */
-fun WindowInsetsCompat.top(): Int =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        this.getInsets(WindowInsetsCompat.Type.systemBars()).top
-    } else {
-        @Suppress("DEPRECATION")
-        this.systemWindowInsetTop
-    }
+fun WindowInsetsCompat.top(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    this.getInsets(WindowInsetsCompat.Type.systemBars()).top
+} else {
+    @Suppress("DEPRECATION")
+    this.systemWindowInsetTop
+}
 
 /**
  * Returns the right system window inset in pixels.
  */
-fun WindowInsetsCompat.right(): Int =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        this.getInsets(WindowInsetsCompat.Type.systemBars()).right
-    } else {
-        @Suppress("DEPRECATION")
-        this.systemWindowInsetRight
-    }
+fun WindowInsetsCompat.right(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    this.getInsets(WindowInsetsCompat.Type.systemBars()).right
+} else {
+    @Suppress("DEPRECATION")
+    this.systemWindowInsetRight
+}
 
 /**
  * Returns the left system window inset in pixels.
  */
-fun WindowInsetsCompat.left(): Int =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        this.getInsets(WindowInsetsCompat.Type.systemBars()).left
-    } else {
-        @Suppress("DEPRECATION")
-        this.systemWindowInsetLeft
-    }
+fun WindowInsetsCompat.left(): Int = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    this.getInsets(WindowInsetsCompat.Type.systemBars()).left
+} else {
+    @Suppress("DEPRECATION")
+    this.systemWindowInsetLeft
+}

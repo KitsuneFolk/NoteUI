@@ -12,15 +12,9 @@ import com.pandacorp.noteui.domain.model.ColorItem
 
 class ColorsAdapter : ListAdapter<ColorItem, ColorsAdapter.ViewHolder>(DiffCallback()) {
     class DiffCallback : DiffUtil.ItemCallback<ColorItem>() {
-        override fun areItemsTheSame(
-            oldItem: ColorItem,
-            newItem: ColorItem
-        ): Boolean = oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: ColorItem, newItem: ColorItem): Boolean = oldItem.id == newItem.id
 
-        override fun areContentsTheSame(
-            oldItem: ColorItem,
-            newItem: ColorItem
-        ): Boolean = oldItem == newItem
+        override fun areContentsTheSame(oldItem: ColorItem, newItem: ColorItem): Boolean = oldItem == newItem
     }
 
     inner class ViewHolder(private val binding: ItemColorBinding, private val viewType: Int) :
@@ -69,18 +63,12 @@ class ColorsAdapter : ListAdapter<ColorItem, ColorsAdapter.ViewHolder>(DiffCallb
 
     override fun getItemViewType(position: Int): Int = if (position == 0) ColorItem.ADD else ColorItem.COLOR
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return ViewHolder(ItemColorBinding.inflate(inflater, parent, false), viewType)
     }
 
-    override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(currentList[position])
     }
 }

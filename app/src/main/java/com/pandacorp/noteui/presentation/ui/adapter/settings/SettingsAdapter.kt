@@ -19,11 +19,7 @@ class SettingsAdapter(
 ) : ArrayAdapter<SettingsItem>(context, 0, languagesList) {
     private var onListItemClickListener: OnListItemClickListener? = null
 
-    override fun getView(
-        position: Int,
-        convertView: View?,
-        parent: ViewGroup
-    ): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var view = convertView
         if (view == null) view = LayoutInflater.from(context).inflate(R.layout.item_settings, parent, false)!!
         val listItem = getItem(position)!!

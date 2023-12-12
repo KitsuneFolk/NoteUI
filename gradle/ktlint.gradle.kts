@@ -16,7 +16,7 @@ tasks.register<JavaExec>("ktlint") {
     args(
         "**/src/**/*.kt",
         "**.kts",
-        "!**/build/**",
+        "!**/build/**"
     )
 }
 
@@ -30,6 +30,6 @@ tasks.register<JavaExec>("ktlintFormat") {
         "-F",
         "**/src/**/*.kt",
         "**.kts",
-        "!**/build/**",
+        "!**/build/**"
     )
 }

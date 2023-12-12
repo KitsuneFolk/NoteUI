@@ -31,10 +31,7 @@ fun ListView.setHeightBasedOnChildren() {
  * @param clazz The class of the extra to retrieve.
  * @return The Parcelable extra with the specified name and class, or null if it does not exist.
  */
-inline fun <reified T : Parcelable> Bundle.getParcelableExtraSupport(
-    name: String,
-    clazz: Class<T>
-): T? {
+inline fun <reified T : Parcelable> Bundle.getParcelableExtraSupport(name: String, clazz: Class<T>): T? {
     val extra =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             getParcelable(name, clazz)

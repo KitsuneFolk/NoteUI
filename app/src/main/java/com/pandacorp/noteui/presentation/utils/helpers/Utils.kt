@@ -43,22 +43,21 @@ class Utils {
                 R.drawable.image_nature,
                 R.drawable.image_mountain,
                 R.drawable.image_colors,
-                R.drawable.image_speed,
+                R.drawable.image_speed
             )
 
         /**
          * Get a list of default colors that will be shown on the database creation
          */
-        fun getDefaultColorsList(context: Context): List<ColorItem> =
-            mutableListOf(
-                ColorItem(id = 1, color = ContextCompat.getColor(context, R.color.light_yellow)),
-                ColorItem(id = 2, color = ContextCompat.getColor(context, R.color.light_green)),
-                ColorItem(id = 3, color = ContextCompat.getColor(context, R.color.light_lime)),
-                ColorItem(id = 4, color = ContextCompat.getColor(context, R.color.light_blue)),
-                ColorItem(id = 5, color = ContextCompat.getColor(context, R.color.light_pink)),
-                ColorItem(id = 6, color = ContextCompat.getColor(context, R.color.light_purple)),
-                ColorItem(id = 7, color = ContextCompat.getColor(context, R.color.light_red)),
-            )
+        fun getDefaultColorsList(context: Context): List<ColorItem> = mutableListOf(
+            ColorItem(id = 1, color = ContextCompat.getColor(context, R.color.light_yellow)),
+            ColorItem(id = 2, color = ContextCompat.getColor(context, R.color.light_green)),
+            ColorItem(id = 3, color = ContextCompat.getColor(context, R.color.light_lime)),
+            ColorItem(id = 4, color = ContextCompat.getColor(context, R.color.light_blue)),
+            ColorItem(id = 5, color = ContextCompat.getColor(context, R.color.light_pink)),
+            ColorItem(id = 6, color = ContextCompat.getColor(context, R.color.light_purple)),
+            ColorItem(id = 7, color = ContextCompat.getColor(context, R.color.light_red))
+        )
 
         /**
          * Changes the note background in adapter and NoteScreen
@@ -94,7 +93,7 @@ class Utils {
                     imageView.context.theme.resolveAttribute(
                         com.google.android.material.R.attr.colorSurface,
                         typedValue,
-                        true,
+                        true
                     )
                 } else {
                     imageView.context.theme.resolveAttribute(android.R.attr.colorBackground, typedValue, true)
@@ -129,10 +128,7 @@ class Utils {
         /**
          * Starts a sliding animation for 2 views
          */
-        fun animateViewSliding(
-            showingView: View,
-            hidingView: View,
-        ) {
+        fun animateViewSliding(showingView: View, hidingView: View,) {
             val parent = showingView.parent as ViewGroup
             val showingAnimation =
                 Slide(Gravity.BOTTOM).apply {
@@ -157,7 +153,7 @@ class Utils {
                         override fun onTransitionPause(transition: Transition) {}
 
                         override fun onTransitionResume(transition: Transition) {}
-                    },
+                    }
                 )
             TransitionManager.beginDelayedTransition(parent, hidingAnimation)
 
@@ -175,10 +171,7 @@ class Utils {
          *         returned Drawable will only contain the bottom part of the input Drawable. If the
          *         orientation is portrait, the input Drawable is returned unmodified.
          */
-        fun cropImage(
-            activity: Activity,
-            drawable: Drawable
-        ): Drawable {
+        fun cropImage(activity: Activity, drawable: Drawable): Drawable {
             if (drawable is ColorDrawable) return drawable
             if (activity.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                 return drawable

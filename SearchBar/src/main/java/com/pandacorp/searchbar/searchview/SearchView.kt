@@ -125,7 +125,7 @@ class SearchView @JvmOverloads constructor(
                 attrs,
                 R.styleable.SearchView,
                 defStyleAttr,
-                DEF_STYLE_RES,
+                DEF_STYLE_RES
             )
         val headerLayoutResId = a.getResourceId(R.styleable.SearchView_headerLayout, -1)
         val textAppearanceResId = a.getResourceId(R.styleable.SearchView_android_textAppearance, -1)
@@ -166,11 +166,7 @@ class SearchView @JvmOverloads constructor(
         setUpInsetListeners()
     }
 
-    override fun addView(
-        child: View,
-        index: Int,
-        params: ViewGroup.LayoutParams
-    ) {
+    override fun addView(child: View, index: Int, params: ViewGroup.LayoutParams) {
         if (layoutInflated) {
             contentContainer.addView(child, index, params)
         } else {
@@ -237,11 +233,7 @@ class SearchView @JvmOverloads constructor(
         }
     }
 
-    private fun setUpEditText(
-        @StyleRes textAppearanceResId: Int,
-        text: String?,
-        hint: String?
-    ) {
+    private fun setUpEditText(@StyleRes textAppearanceResId: Int, text: String?, hint: String?) {
         if (textAppearanceResId != -1) {
             TextViewCompat.setTextAppearance(editText, textAppearanceResId)
         }
@@ -249,10 +241,7 @@ class SearchView @JvmOverloads constructor(
         editText.hint = hint
     }
 
-    private fun setUpBackButton(
-        useDrawerArrowDrawable: Boolean,
-        hideNavigationIcon: Boolean
-    ) {
+    private fun setUpBackButton(useDrawerArrowDrawable: Boolean, hideNavigationIcon: Boolean) {
         if (hideNavigationIcon) {
             toolbar.navigationIcon = null
             return
@@ -272,25 +261,15 @@ class SearchView @JvmOverloads constructor(
         }
         editText.addTextChangedListener(
             object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 }
 
-                override fun onTextChanged(
-                    s: CharSequence,
-                    start: Int,
-                    before: Int,
-                    count: Int
-                ) {
+                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     clearButton.visibility = if (s.isNotEmpty()) VISIBLE else GONE
                 }
 
                 override fun afterTextChanged(s: Editable) {}
-            },
+            }
         )
     }
 
@@ -304,9 +283,7 @@ class SearchView @JvmOverloads constructor(
         }
     }
 
-    private fun setUpStatusBarSpacer(
-        @Px height: Int
-    ) {
+    private fun setUpStatusBarSpacer(@Px height: Int) {
         if (statusBarSpacer.layoutParams.height != height) {
             statusBarSpacer.layoutParams.height = height
             statusBarSpacer.requestLayout()
@@ -318,7 +295,7 @@ class SearchView @JvmOverloads constructor(
         get() {
             @SuppressLint(
                 "DiscouragedApi",
-                "InternalInsetResource",
+                "InternalInsetResource"
             )
             val resourceId = // Used for initial value. A WindowInsetsListener will apply correct insets later.
                 resources.getIdentifier("status_bar_height", "dimen", "android")
@@ -343,7 +320,7 @@ class SearchView @JvmOverloads constructor(
         } else {
             val navigationIconDrawable =
                 DrawableCompat.wrap(
-                    AppCompatResources.getDrawable(context, navigationIcon)!!.mutate(),
+                    AppCompatResources.getDrawable(context, navigationIcon)!!.mutate()
                 )
             if (toolbar.navigationIconTint != null) {
                 DrawableCompat.setTint(navigationIconDrawable, toolbar.navigationIconTint!!)
@@ -351,7 +328,7 @@ class SearchView @JvmOverloads constructor(
             toolbar.navigationIcon =
                 FadeThroughDrawable(
                     searchBar!!.navigationIcon!!,
-                    navigationIconDrawable,
+                    navigationIconDrawable
                 )
             updateNavigationIconProgressIfNeeded()
         }
@@ -378,7 +355,7 @@ class SearchView @JvmOverloads constructor(
 
     private fun setUpToolbarInsetListener() {
         ViewUtils.doOnApplyWindowInsets(
-            toolbar,
+            toolbar
         ) { _: View?, insets: WindowInsetsCompat, initialPadding: RelativePadding ->
             val isRtl = ViewUtils.isLayoutRtl(toolbar)
             val paddingLeft = if (isRtl) initialPadding.end else initialPadding.start
@@ -387,7 +364,7 @@ class SearchView @JvmOverloads constructor(
                 paddingLeft + insets.left(),
                 initialPadding.top,
                 paddingRight + insets.right(),
-                initialPadding.bottom,
+                initialPadding.bottom
             )
             insets
         }
@@ -399,7 +376,7 @@ class SearchView @JvmOverloads constructor(
 
         // Listen to system window insets on L+ and adjusts status bar height based on the top inset.
         ViewCompat.setOnApplyWindowInsetsListener(
-            statusBarSpacer,
+            statusBarSpacer
         ) { _: View?, insets: WindowInsetsCompat ->
             val systemWindowInsetTop = insets.top()
             setUpStatusBarSpacer(systemWindowInsetTop)
@@ -415,7 +392,7 @@ class SearchView @JvmOverloads constructor(
         val leftMargin = layoutParams.leftMargin
         val rightMargin = layoutParams.rightMargin
         ViewCompat.setOnApplyWindowInsetsListener(
-            divider,
+            divider
         ) { _: View?, insets: WindowInsetsCompat ->
             layoutParams.leftMargin = leftMargin + insets.left()
             layoutParams.rightMargin = rightMargin + insets.right()
@@ -447,10 +424,7 @@ class SearchView @JvmOverloads constructor(
         setUpBackgroundViewElevationOverlay()
     }
 
-    fun setAnimationDuration(
-        showDurationMs: Long,
-        hideDurationMs: Long
-    ) {
+    fun setAnimationDuration(showDurationMs: Long, hideDurationMs: Long) {
         searchViewAnimationHelper.setAnimationDuration(showDurationMs, hideDurationMs)
     }
 
@@ -613,7 +587,7 @@ class SearchView @JvmOverloads constructor(
                 }
                 ViewUtils.showKeyboard(editText, useWindowInsetsController)
             },
-            TALKBACK_FOCUS_CHANGE_DELAY_MS,
+            TALKBACK_FOCUS_CHANGE_DELAY_MS
         )
     }
 
@@ -668,7 +642,7 @@ class SearchView @JvmOverloads constructor(
                     // Restores the original important for accessibility value of the child view.
                     ViewCompat.setImportantForAccessibility(
                         child,
-                        childImportantForAccessibilityMap!![child]!!,
+                        childImportantForAccessibilityMap!![child]!!
                     )
                 }
             } else {
@@ -676,7 +650,7 @@ class SearchView @JvmOverloads constructor(
                 childImportantForAccessibilityMap!![child] = child.importantForAccessibility
                 ViewCompat.setImportantForAccessibility(
                     child,
-                    ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS,
+                    ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                 )
             }
         }
@@ -717,22 +691,14 @@ class SearchView @JvmOverloads constructor(
         /**
          * Called when the given [SearchView] transition state has changed.
          */
-        fun onStateChanged(
-            searchView: SearchView,
-            previousState: TransitionState,
-            newState: TransitionState
-        )
+        fun onStateChanged(searchView: SearchView, previousState: TransitionState, newState: TransitionState)
     }
 
     /**
      * Behavior that sets up an [SearchView] with an [SearchBar].
      */
     class Behavior : CoordinatorLayout.Behavior<SearchView>() {
-        override fun onDependentViewChanged(
-            parent: CoordinatorLayout,
-            child: SearchView,
-            dependency: View
-        ): Boolean {
+        override fun onDependentViewChanged(parent: CoordinatorLayout, child: SearchView, dependency: View): Boolean {
             if (!child.isSetupWithSearchBar && dependency is SearchBar) {
                 child.setupWithSearchBar(dependency)
             }
@@ -744,10 +710,7 @@ class SearchView @JvmOverloads constructor(
         var text: String? = null
         var visibility = 0
 
-        override fun writeToParcel(
-            dest: Parcel,
-            flags: Int
-        ) {
+        override fun writeToParcel(dest: Parcel, flags: Int) {
             super.writeToParcel(dest, flags)
             dest.writeString(text)
             dest.writeInt(visibility)
