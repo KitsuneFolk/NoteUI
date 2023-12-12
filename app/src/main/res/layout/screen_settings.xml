@@ -20,8 +20,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginTop="@dimen/smallMargin"
+            android:orientation="vertical"
             android:paddingBottom="60dp">
 
             <LinearLayout
@@ -73,9 +73,9 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:contentDescription="@string/theme"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:contentDescription="@string/theme"
                                 android:src="@drawable/ic_theme" />
 
                             <LinearLayout
@@ -118,10 +118,10 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:contentDescription="@string/language"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_language"
-                                android:contentDescription="@string/language" />
+                                android:src="@drawable/ic_language" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -163,28 +163,28 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:contentDescription="@string/showThemeBackground"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_image"
-                                android:contentDescription="@string/showThemeBackground" />
+                                android:src="@drawable/ic_image" />
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
                                 android:id="@+id/themeBackgroundSwitch"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:checked="true"
                                 android:clickable="false"
                                 android:focusable="false"
                                 android:focusableInTouchMode="false"
-                                android:textSize="@dimen/mediumText"
-                                android:checked="true"
                                 android:gravity="start"
-                                android:textColor="?android:textColor"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingTop="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/smallMargin"
                                 android:paddingBottom="@dimen/mediumMargin"
                                 android:text="@string/showThemeBackground"
-                                tools:checked="false"/>
+                                android:textColor="?android:textColor"
+                                android:textSize="@dimen/mediumText"
+                                tools:checked="false" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -240,27 +240,27 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:contentDescription="@string/preferencesIsShowAddNoteFABText"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_short_text"
-                                android:contentDescription="@string/preferencesIsShowAddNoteFABText" />
+                                android:src="@drawable/ic_short_text" />
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
                                 android:id="@+id/showFabTextSwitch"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:checked="true"
                                 android:clickable="false"
                                 android:focusable="false"
-                                android:textColor="?android:textColor"
                                 android:focusableInTouchMode="false"
-                                android:textSize="@dimen/mediumText"
-                                android:checked="true"
                                 android:gravity="start"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingTop="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/smallMargin"
                                 android:paddingBottom="@dimen/mediumMargin"
-                                android:text="@string/preferencesIsShowAddNoteFABText" />
+                                android:text="@string/preferencesIsShowAddNoteFABText"
+                                android:textColor="?android:textColor"
+                                android:textSize="@dimen/mediumText" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -280,27 +280,27 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:contentDescription="@string/preferencesIsHideActionBarOnScroll"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_actionbar"
-                                android:contentDescription="@string/preferencesIsHideActionBarOnScroll" />
+                                android:src="@drawable/ic_actionbar" />
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
                                 android:id="@+id/hideActionBarSwitch"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:checked="true"
-                                android:textColor="?android:textColor"
                                 android:clickable="false"
                                 android:focusable="false"
                                 android:focusableInTouchMode="false"
                                 android:gravity="start"
-                                android:textSize="@dimen/mediumText"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingTop="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/smallMargin"
                                 android:paddingBottom="@dimen/mediumMargin"
-                                android:text="@string/preferencesIsHideActionBarOnScroll" />
+                                android:text="@string/preferencesIsHideActionBarOnScroll"
+                                android:textColor="?android:textColor"
+                                android:textSize="@dimen/mediumText" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -320,10 +320,10 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:contentDescription="@string/preferencesDisableDrawerMenuAnimation"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_menu_animation"
-                                android:contentDescription="@string/preferencesDisableDrawerMenuAnimation" />
+                                android:src="@drawable/ic_menu_animation" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -365,10 +365,10 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:contentDescription="@string/titleTextSize"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_title"
-                                android:contentDescription="@string/titleTextSize" />
+                                android:src="@drawable/ic_title" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -410,10 +410,10 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
+                                android:contentDescription="@string/contentTextSize"
                                 android:paddingStart="@dimen/mediumMargin"
                                 android:paddingEnd="@dimen/mediumMargin"
-                                android:src="@drawable/ic_content"
-                                android:contentDescription="@string/contentTextSize" />
+                                android:src="@drawable/ic_content" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -472,9 +472,9 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="?selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:background="?selectableItemBackground"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingStart="@dimen/smallMargin"
@@ -485,10 +485,10 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:contentDescription="@string/version"
                             android:paddingStart="@dimen/mediumMargin"
                             android:paddingEnd="@dimen/mediumMargin"
-                            android:src="@drawable/ic_version"
-                            android:contentDescription="@string/version" />
+                            android:src="@drawable/ic_version" />
 
                         <TextView
                             android:id="@+id/versionTextView"

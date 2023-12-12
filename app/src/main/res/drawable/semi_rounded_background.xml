@@ -9,6 +9,6 @@
         android:topRightRadius="35dp" />
 
     <stroke
-        android:color="?android:textColor"
-        android:width="@dimen/stroke" />
+        android:width="@dimen/stroke"
+        android:color="?android:textColor" />
 </shape>

@@ -87,9 +87,11 @@ object ViewHelper {
                     in themesColorSurface -> {
                         view.setBackgroundColor(newTheme.getColorSurface(context))
                     }
+
                     in themesColorPrimary -> {
                         view.setBackgroundColor(newTheme.getColorPrimary(context))
                     }
+
                     in themesColorPrimaryDark -> {
                         view.setBackgroundColor(newTheme.getColorPrimaryDark(context))
                     }

@@ -3,16 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:foreground="?selectableItemBackground"
+    android:layout_gravity="center_horizontal"
     android:layout_marginStart="5dp"
     android:layout_marginBottom="5dp"
-    android:layout_gravity="center_horizontal">
+    android:foreground="?selectableItemBackground">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="120dp"
         android:layout_height="160dp"
+        android:importantForAccessibility="no"
         android:scaleType="centerCrop"
-        tools:src="@drawable/image_night_sky"
-        android:importantForAccessibility="no" />
+        tools:src="@drawable/image_night_sky" />
 </FrameLayout>

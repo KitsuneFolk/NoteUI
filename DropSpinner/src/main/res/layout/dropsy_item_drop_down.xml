@@ -23,5 +23,5 @@
         android:layout_height="wrap_content"
         android:src="@drawable/dropsy_ic_check"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 </LinearLayout>

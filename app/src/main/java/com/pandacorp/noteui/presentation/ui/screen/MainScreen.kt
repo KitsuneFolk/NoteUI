@@ -155,7 +155,8 @@ class MainScreen : Fragment() {
                 binding.addFAB.extend()
             }
             if (PreferenceHandler.isShowThemeBackground(requireContext())) {
-                binding.root.background = cropImage(requireActivity(), PreferenceHandler.getThemeBackground(requireContext()))
+                binding.root.background =
+                    cropImage(requireActivity(), PreferenceHandler.getThemeBackground(requireContext()))
             } else {
                 binding.root.setBackgroundColor((ViewHelper.currentTheme as Theme).getColorBackground(requireContext()))
             }

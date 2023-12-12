@@ -91,7 +91,11 @@ class Utils {
                 // note.background is a color.
                 val typedValue = TypedValue()
                 if (isAdapter) {
-                    imageView.context.theme.resolveAttribute(com.google.android.material.R.attr.colorSurface, typedValue, true)
+                    imageView.context.theme.resolveAttribute(
+                        com.google.android.material.R.attr.colorSurface,
+                        typedValue,
+                        true,
+                    )
                 } else {
                     imageView.context.theme.resolveAttribute(android.R.attr.colorBackground, typedValue, true)
                 }

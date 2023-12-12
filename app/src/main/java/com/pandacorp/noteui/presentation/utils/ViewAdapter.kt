@@ -22,5 +22,6 @@ class ViewAdapter(private val view: View) : RecyclerView.Adapter<ViewAdapter.Vie
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int
-    ) {}
+    ) {
+    }
 }

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:padding="@dimen/mediumMargin"
-    android:layout_gravity="bottom|center_horizontal">
+    android:layout_gravity="bottom|center_horizontal"
+    android:padding="@dimen/mediumMargin">
 
     <LinearLayout
         android:id="@+id/addButtonLayout"

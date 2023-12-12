@@ -49,13 +49,14 @@ class DialogNumberPicker(context: Context, private val preferenceKey: String) :
     }
     private val isShowEditText = preferenceKey == Constants.Preferences.Key.DRAWER_ANIMATION
 
-    val selectedValue: Int get() {
-        return if (isShowEditText) {
-            binding.editText.text.toString().toIntOrNull() ?: 0
-        } else {
-            values[binding.numberPicker.value]
+    val selectedValue: Int
+        get() {
+            return if (isShowEditText) {
+                binding.editText.text.toString().toIntOrNull() ?: 0
+            } else {
+                values[binding.numberPicker.value]
+            }
         }
-    }
 
     fun restoreValue(selectedValue: Int) {
         binding.numberPicker.value = values.indexOf(selectedValue)
