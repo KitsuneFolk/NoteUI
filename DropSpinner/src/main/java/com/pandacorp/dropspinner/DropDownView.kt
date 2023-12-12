@@ -19,7 +19,7 @@ import com.google.android.material.card.MaterialCardView
 import com.pandacorp.animatedtextview.AnimatedTextView
 import net.cachapa.expandablelayout.ExpandableLayout
 
-class DropDownView(
+class DropDownView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,

@@ -34,7 +34,7 @@ import kotlin.math.abs
 /**
  * A widget that enables the user to select a number from a predefined range.
  */
-class NumberPicker(
+class NumberPicker @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0

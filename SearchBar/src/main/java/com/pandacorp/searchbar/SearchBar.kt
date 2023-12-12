@@ -63,7 +63,7 @@ import com.pandacorp.animatedtextview.CubicBezierInterpolator
 import com.pandacorp.searchbar.R as nativeR
 
 @SuppressLint("RestrictedApi", "PrivateResource")
-class SearchBar(
+class SearchBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.materialSearchBarStyle,

@@ -28,7 +28,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 @SuppressLint("RtlHardcoded")
-class AnimatedTextView(
+class AnimatedTextView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

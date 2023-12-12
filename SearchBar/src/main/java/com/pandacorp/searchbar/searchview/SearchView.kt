@@ -69,7 +69,7 @@ import com.pandacorp.searchbar.top
  */
 
 @SuppressLint("RestrictedApi", "PrivateResource")
-class SearchView(
+class SearchView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = R.attr.materialSearchViewStyle
