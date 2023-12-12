@@ -1,8 +1,10 @@
 root = true
 
+# noinspection EditorConfigKeyCorrectness
 [*.{kt,kts}]
 indent_size = 4
 insert_final_newline = false
+ktlint_code_style = android_studio
 
 # noinspection EditorConfigKeyCorrectness
 ktlint_standard_no-wildcard-imports = disabled
