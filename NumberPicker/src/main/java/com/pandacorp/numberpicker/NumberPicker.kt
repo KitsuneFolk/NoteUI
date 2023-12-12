@@ -1062,7 +1062,10 @@ class NumberPicker @JvmOverloads constructor(
             KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_DPAD_UP ->
                 when (event.action) {
                     KeyEvent.ACTION_DOWN ->
-                        if (mWrapSelectorWheel || (if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) value < maxValue else value > minValue)) {
+                        if (mWrapSelectorWheel || (
+                                if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) value < maxValue else value > minValue
+                                )
+                        ) {
                             requestFocus()
                             mLastHandledDownDpadKeyCode = keyCode
                             removeAllCallbacks()
@@ -1443,7 +1446,9 @@ class NumberPicker @JvmOverloads constructor(
             // item. Otherwise, if the user starts editing the text via the
             // IME he may see a dimmed version of the old value intermixed
             // with the new one.
-            if (showSelectorWheel && i != mWheelMiddleItemIndex || i == mWheelMiddleItemIndex && mSelectedText.visibility != VISIBLE) {
+            if (showSelectorWheel && i != mWheelMiddleItemIndex || i == mWheelMiddleItemIndex &&
+                mSelectedText.visibility != VISIBLE
+            ) {
                 var textY = y
                 if (!isHorizontalMode) {
                     textY += getPaintCenterY(mSelectorWheelPaint.fontMetrics)

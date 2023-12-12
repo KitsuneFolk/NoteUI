@@ -128,7 +128,7 @@ class Utils {
         /**
          * Starts a sliding animation for 2 views
          */
-        fun animateViewSliding(showingView: View, hidingView: View,) {
+        fun animateViewSliding(showingView: View, hidingView: View) {
             val parent = showingView.parent as ViewGroup
             val showingAnimation =
                 Slide(Gravity.BOTTOM).apply {

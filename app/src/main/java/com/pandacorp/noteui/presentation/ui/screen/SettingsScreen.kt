@@ -38,8 +38,8 @@ class SettingsScreen : ThemeFragment() {
     private val themeDialog by lazy {
         DialogListView(requireContext(), Constants.Preferences.Key.THEME).apply {
             // Using Java reflection remove MainScreen from backstack to recreate it
-            val swipeBackFragment =
-                (requireActivity() as MainActivity).navHostFragment!!.childFragmentManager.fragments.first() as SwipeBackFragment
+            val swipeBackFragment = (requireActivity() as MainActivity)
+                .navHostFragment!!.childFragmentManager.fragments.first() as SwipeBackFragment
             val adapterField = swipeBackFragment.javaClass.getDeclaredField("navBackStackAdapter")
             adapterField.isAccessible = true
             val adapter = adapterField.get(swipeBackFragment) as NavBackStackAdapter

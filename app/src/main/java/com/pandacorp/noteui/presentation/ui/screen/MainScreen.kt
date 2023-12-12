@@ -114,7 +114,7 @@ class MainScreen : Fragment() {
 
     private var searchJob: Job? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val lf = layoutInflater.cloneInContext(requireContext())
         _binding = ScreenMainBinding.inflate(lf)
 

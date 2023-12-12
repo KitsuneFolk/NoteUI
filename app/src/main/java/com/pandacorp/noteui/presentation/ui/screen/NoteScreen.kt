@@ -219,7 +219,7 @@ class NoteScreen : Fragment() {
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = ScreenNoteBinding.inflate(layoutInflater.cloneInContext(requireContext()))
 
         initViews()
@@ -583,17 +583,20 @@ class NoteScreen : Fragment() {
 
         binding.gravityStartButton.setOnClickListener {
             val editText = getFocusedEditText()
-            if (editText != binding.contentEditText) return@setOnClickListener // Don't change the gravity for titleEditText
+            // Don't change the gravity for titleEditText
+            if (editText != binding.contentEditText) return@setOnClickListener
             editText.changeTextGravity(Gravity.START)
         }
         binding.gravityCenterButton.setOnClickListener {
             val editText = getFocusedEditText()
-            if (editText != binding.contentEditText) return@setOnClickListener // Don't change gravity for titleEditText
+            // Don't change gravity for titleEditText
+            if (editText != binding.contentEditText) return@setOnClickListener
             editText.changeTextGravity(Gravity.CENTER)
         }
         binding.gravityEndButton.setOnClickListener {
             val editText = getFocusedEditText()
-            if (editText != binding.contentEditText) return@setOnClickListener // Don't change gravity for titleEditText
+            // Don't change gravity for titleEditText
+            if (editText != binding.contentEditText) return@setOnClickListener
             editText.changeTextGravity(Gravity.END)
         }
 

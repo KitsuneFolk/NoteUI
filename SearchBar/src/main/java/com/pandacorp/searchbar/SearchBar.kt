@@ -477,7 +477,7 @@ class SearchBar @JvmOverloads constructor(
      *
      * @return whether or not the expand animation was started
      */
-    private fun expand(expandedView: View, appBarLayout: AppBarLayout?, skipAnimation: Boolean,): Boolean {
+    private fun expand(expandedView: View, appBarLayout: AppBarLayout?, skipAnimation: Boolean): Boolean {
         // Start the expand if the expanded view is not already showing or in the process of expanding,
         // or if the expanded view is collapsing since the final state should be expanded.
         if (expandedView.visibility != VISIBLE && !isExpanding || isCollapsing) {
@@ -516,7 +516,7 @@ class SearchBar @JvmOverloads constructor(
      *
      * @return whether or not the collapse animation was started
      */
-    private fun collapse(expandedView: View, appBarLayout: AppBarLayout?, skipAnimation: Boolean,): Boolean {
+    private fun collapse(expandedView: View, appBarLayout: AppBarLayout?, skipAnimation: Boolean): Boolean {
         // Start the collapse if the expanded view is showing and not in the process of collapsing, or
         // if the expanded view is expanding since the final state should be collapsed.
         if (expandedView.visibility == VISIBLE && !isCollapsing || isExpanding) {
