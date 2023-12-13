@@ -243,7 +243,7 @@ internal class SearchBarAnimationHelper {
     }
 
     companion object {
-        // Expand and collapse animation constants
+        // Expand and collapse animation constants.
         private const val EXPAND_DURATION_MS: Long = 300
         private const val EXPAND_FADE_OUT_CHILDREN_DURATION_MS: Long = 75
         private const val COLLAPSE_DURATION_MS: Long = 250
