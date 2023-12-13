@@ -143,7 +143,7 @@ class SearchBar @JvmOverloads constructor(
         get() {
             // Create bounds based on doubled width and height for right and bottom, because the
             // corner size is relative to the width and height, which are calculated based on subtraction of
-            // right from left and bottom from top
+            // right from left and bottom from top.
             val bounds = RectF(width.toFloat(), height.toFloat(), width.toFloat() * 2, height.toFloat() * 2)
             return (backgroundShape!!.shapeAppearanceModel.bottomLeftCornerSize as RelativeCornerSize).getCornerSize(
                 bounds
