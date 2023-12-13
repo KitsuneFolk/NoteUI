@@ -33,44 +33,44 @@ class JsonToSpannableUseCase(private val context: Context) {
             val foregroundSpansJsonArray = json.getJSONArray(Constants.ForegroundSpans.KEY)
             addForegroundSpans(foregroundSpansJsonArray, builder)
         } catch (e: Exception) {
-            // foregroundSpansJsonArray == null
+            // ForegroundSpansJsonArray = null
         }
 
         try {
             val backgroundSpansJsonArray = json.getJSONArray(Constants.BackgroundSpans.KEY)
             addBackgroundSpans(backgroundSpansJsonArray, builder)
         } catch (e: Exception) {
-            // backgroundSpansJsonArray == null
+            // BackgroundSpansJsonArray = null
         }
         try {
             val alignmentSpansJsonArray = json.getJSONArray(Constants.AlignmentSpans.KEY)
             addAlignmentSpans(alignmentSpansJsonArray, builder)
         } catch (e: Exception) {
-            // alignmentSpansJsonArray == null
+            // AlignmentSpansJsonArray = null
         }
         try {
             val imagesSpansJsonArray = json.getJSONArray(Constants.ImageSpans.KEY)
             addImagesSpans(type, imagesSpansJsonArray, builder)
         } catch (e: Exception) {
-            // imagesSpansJsonArray == null
+            // ImagesSpansJsonArray = null
         }
         try {
             val boldSpansJsonArray = json.getJSONArray(Constants.BoldSpans.KEY)
             addBoldSpans(boldSpansJsonArray, builder)
         } catch (e: Exception) {
-            // boldSpansJsonArray == null
+            // BoldSpansJsonArray = null
         }
         try {
             val italicSpansJsonArray = json.getJSONArray(Constants.ItalicSpans.KEY)
             addItalicSpans(italicSpansJsonArray, builder)
         } catch (e: Exception) {
-            // italicSpansJsonArray == null
+            // ItalicSpansJsonArray = null
         }
         try {
             val underlineSpansJsonArray = json.getJSONArray(Constants.UnderlineSpans.KEY)
             addUnderlineSpans(underlineSpansJsonArray, builder)
         } catch (e: Exception) {
-            // underlineSpansJsonArray == null
+            // UnderlineSpansJsonArray = null
         }
         return builder
     }
