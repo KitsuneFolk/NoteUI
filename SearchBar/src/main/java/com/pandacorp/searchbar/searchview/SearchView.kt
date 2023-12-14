@@ -582,7 +582,7 @@ class SearchView @JvmOverloads constructor(
         editText.postDelayed(
             {
                 if (editText.requestFocus()) {
-                    // Workaround for talkback issue when clear button is clicked
+                    // Workaround for talkback issue when clear button is clicked.
                     editText.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
                 }
                 ViewUtils.showKeyboard(editText, useWindowInsetsController)
