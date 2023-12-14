@@ -574,24 +574,24 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
     }
 
     companion object {
-        // Constants for show expand animation
+        // Constants for show expand animation.
         private const val SHOW_CLEAR_BUTTON_ALPHA_DURATION_MS: Long = 50
         private const val SHOW_CLEAR_BUTTON_ALPHA_START_DELAY_MS: Long = 250
         private const val SHOW_CONTENT_ALPHA_DURATION_MS: Long = 150
         private const val SHOW_CONTENT_ALPHA_START_DELAY_MS: Long = 75
 
-        // Constants for hide collapse animation
+        // Constants for hide collapse animation.
         private const val HIDE_CLEAR_BUTTON_ALPHA_DURATION_MS: Long = 42
         private const val HIDE_CLEAR_BUTTON_ALPHA_START_DELAY_MS: Long = 0
         private const val HIDE_CONTENT_ALPHA_DURATION_MS: Long = 83
         private const val HIDE_CONTENT_ALPHA_START_DELAY_MS: Long = 0
         private const val CONTENT_FROM_SCALE = 0.95f
 
-        // Constants for show translate animation
+        // Constants for show translate animation.
         private const val SHOW_TRANSLATE_DURATION_MS: Long = 350
         private const val SHOW_TRANSLATE_KEYBOARD_START_DELAY_MS: Long = 150
 
-        // Constants for hide translate animation
+        // Constants for hide translate animation.
         private const val HIDE_TRANSLATE_DURATION_MS: Long = 300
     }
 }
