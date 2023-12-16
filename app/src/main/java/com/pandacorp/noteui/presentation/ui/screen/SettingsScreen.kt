@@ -1,7 +1,11 @@
 package com.pandacorp.noteui.presentation.ui.screen
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -176,11 +180,31 @@ class SettingsScreen : ThemeFragment() {
         }
 
         // Retrieve the version from build.gradle and assign it to the TextView
-        binding.versionTextView.apply {
-            val version =
-                requireContext().packageManager.getPackageInfoCompat(requireContext().packageName).versionName
-            text = resources.getString(R.string.version, version)
+        binding.versionLayout.apply {
+            val vib =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val vibratorManager =
+                        context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                    vibratorManager.defaultVibrator
+                } else {
+                    @Suppress("DEPRECATION")
+                    context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                }
+            setOnClickListener {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vib.vibrate(VibrationEffect.createOneShot(50L, 20))
+                } else {
+                    @Suppress("DEPRECATION")
+                    vib.vibrate(50L)
+                }
+            }
+            binding.versionTextView.apply {
+                val version =
+                    requireContext().packageManager.getPackageInfoCompat(requireContext().packageName).versionName
+                text = resources.getString(R.string.version, version)
+            }
         }
+
         binding.themeLayout.apply {
             setOnClickListener {
                 themeDialog.show()
