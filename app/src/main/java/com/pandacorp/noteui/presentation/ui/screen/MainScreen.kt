@@ -31,7 +31,7 @@ import com.pandacorp.noteui.presentation.ui.adapter.notes.NotesAdapter
 import com.pandacorp.noteui.presentation.utils.ViewAdapter
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 import com.pandacorp.noteui.presentation.utils.helpers.PreferenceHandler
-import com.pandacorp.noteui.presentation.utils.helpers.Utils.Companion.cropImage
+import com.pandacorp.noteui.presentation.utils.helpers.Utils.cropImage
 import com.pandacorp.noteui.presentation.utils.helpers.app
 import com.pandacorp.noteui.presentation.utils.helpers.sp
 import com.pandacorp.noteui.presentation.utils.themes.Theme
