@@ -34,7 +34,7 @@
                     android:id="@+id/appearanceTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/mediumMargin"
+                    android:layout_marginTop="@dimen/smallMargin"
                     android:padding="@dimen/smallMargin"
                     android:text="@string/appearance"
                     android:textSize="@dimen/normalText"
