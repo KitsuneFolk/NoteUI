@@ -7,7 +7,6 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -31,6 +30,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout.AttachedBehavior
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.children
 import androidx.core.widget.TextViewCompat
 import androidx.customview.view.AbsSavedState
 import com.google.android.material.R
@@ -255,22 +255,15 @@ class SearchView @JvmOverloads constructor(
     }
 
     private fun setUpClearButton() {
+        searchBar?.let {
+            val icon = it.menu.children.lastOrNull() ?: return@let
+            clearButton.setImageDrawable(FadeThroughDrawable(icon.icon!!, clearButton.drawable))
+        }
+        clearButton.visibility = View.VISIBLE
         clearButton.setOnClickListener {
             editText.setText("")
             requestFocusAndShowKeyboardIfNeeded()
         }
-        editText.addTextChangedListener(
-            object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                }
-
-                override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                    clearButton.visibility = if (s.isNotEmpty()) VISIBLE else GONE
-                }
-
-                override fun afterTextChanged(s: Editable) {}
-            }
-        )
     }
 
     @SuppressLint("ClickableViewAccessibility") // Will be handled by accessibility delegate.
@@ -420,6 +413,7 @@ class SearchView @JvmOverloads constructor(
                 show()
             }
         }
+        setUpClearButton()
         updateNavigationIconIfNeeded()
         setUpBackgroundViewElevationOverlay()
     }

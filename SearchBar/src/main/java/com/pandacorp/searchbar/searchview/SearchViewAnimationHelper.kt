@@ -265,7 +265,6 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
     }
 
     private fun setContentViewsAlpha(alpha: Float) {
-        clearButton.alpha = alpha
         divider.alpha = alpha
         contentContainer.alpha = alpha
         setActionMenuViewAlphaIfNeeded(alpha)
@@ -327,19 +326,20 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         return Rect(fromLeft, fromTop, fromRight, fromBottom)
     }
 
-    private fun getClearButtonAnimator(show: Boolean): Animator {
-        val animator = ValueAnimator.ofFloat(0f, 1f)
-        animator.duration =
-            if (show) SHOW_CLEAR_BUTTON_ALPHA_DURATION_MS else HIDE_CLEAR_BUTTON_ALPHA_DURATION_MS
-        animator.startDelay =
-            if (show) SHOW_CLEAR_BUTTON_ALPHA_START_DELAY_MS else HIDE_CLEAR_BUTTON_ALPHA_START_DELAY_MS
-        animator.interpolator =
+    private fun getClearButtonAnimator(show: Boolean): AnimatorSet {
+        val animatorSet = AnimatorSet()
+        if (searchView.isAnimatedNavigationIcon) {
+            val drawable = clearButton.drawable
+            addFadeThroughDrawableAnimatorIfNeeded(animatorSet, drawable)
+        }
+        animatorSet.duration =
+            if (show) showDurationMs else hideDurationMs
+        animatorSet.interpolator =
             ReversableAnimatedValueInterpolator.of(
                 show,
-                AnimationUtils.LINEAR_INTERPOLATOR
+                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
             )
-        animator.addUpdateListener(MultiViewUpdateListener.alphaListener(clearButton))
-        return animator
+        return animatorSet
     }
 
     private fun getButtonsAnimator(show: Boolean): Animator {
@@ -387,7 +387,9 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
     private fun addFadeThroughDrawableAnimatorIfNeeded(animatorSet: AnimatorSet, drawable: Drawable) {
         if (drawable is FadeThroughDrawable) {
             val animator = ValueAnimator.ofFloat(0f, 1f)
-            animator.addUpdateListener { animation: ValueAnimator -> drawable.setProgress(animation.animatedFraction) }
+            animator.addUpdateListener { animation: ValueAnimator ->
+                drawable.setProgress(animation.animatedFraction)
+            }
             animatorSet.playTogether(animator)
         }
     }
@@ -575,14 +577,10 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
 
     companion object {
         // Constants for show expand animation.
-        private const val SHOW_CLEAR_BUTTON_ALPHA_DURATION_MS: Long = 50
-        private const val SHOW_CLEAR_BUTTON_ALPHA_START_DELAY_MS: Long = 250
         private const val SHOW_CONTENT_ALPHA_DURATION_MS: Long = 150
         private const val SHOW_CONTENT_ALPHA_START_DELAY_MS: Long = 75
 
         // Constants for hide collapse animation.
-        private const val HIDE_CLEAR_BUTTON_ALPHA_DURATION_MS: Long = 42
-        private const val HIDE_CLEAR_BUTTON_ALPHA_START_DELAY_MS: Long = 0
         private const val HIDE_CONTENT_ALPHA_DURATION_MS: Long = 83
         private const val HIDE_CONTENT_ALPHA_START_DELAY_MS: Long = 0
         private const val CONTENT_FROM_SCALE = 0.95f
