@@ -248,11 +248,11 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         animatorSet.addListener(
             object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    setContentViewsAlpha((if (show) 0 else 1).toFloat())
+                    setActionMenuViewAlphaIfNeeded((if (show) 0 else 1).toFloat())
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
-                    setContentViewsAlpha((if (show) 1 else 0).toFloat())
+                    setActionMenuViewAlphaIfNeeded((if (show) 1 else 0).toFloat())
                     if (show) {
                         // After expanding, we should reset the clip bounds so it can react to screen or
                         // layout changes. Otherwise it will result in wrong clipping on the layout.
@@ -262,12 +262,6 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
             }
         )
         return animatorSet
-    }
-
-    private fun setContentViewsAlpha(alpha: Float) {
-        divider.alpha = alpha
-        contentContainer.alpha = alpha
-        setActionMenuViewAlphaIfNeeded(alpha)
     }
 
     private fun setActionMenuViewAlphaIfNeeded(alpha: Float) {
@@ -454,28 +448,10 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
     private fun getContentAnimator(show: Boolean): Animator {
         val animatorSet = AnimatorSet()
         animatorSet.playTogether(
-            getContentAlphaAnimator(show),
             getDividerAnimator(show),
             getContentScaleAnimator(show)
         )
         return animatorSet
-    }
-
-    private fun getContentAlphaAnimator(show: Boolean): Animator {
-        val animatorAlpha = ValueAnimator.ofFloat(0f, 1f)
-        animatorAlpha.duration =
-            if (show) SHOW_CONTENT_ALPHA_DURATION_MS else HIDE_CONTENT_ALPHA_DURATION_MS
-        animatorAlpha.startDelay =
-            if (show) SHOW_CONTENT_ALPHA_START_DELAY_MS else HIDE_CONTENT_ALPHA_START_DELAY_MS
-        animatorAlpha.interpolator =
-            ReversableAnimatedValueInterpolator.of(
-                show,
-                AnimationUtils.LINEAR_INTERPOLATOR
-            )
-        animatorAlpha.addUpdateListener(
-            MultiViewUpdateListener.alphaListener(divider, contentContainer)
-        )
-        return animatorAlpha
     }
 
     private fun getDividerAnimator(show: Boolean): Animator {
@@ -577,13 +553,7 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
     }
 
     companion object {
-        // Constants for show expand animation.
-        private const val SHOW_CONTENT_ALPHA_DURATION_MS: Long = 150
-        private const val SHOW_CONTENT_ALPHA_START_DELAY_MS: Long = 75
-
         // Constants for hide collapse animation.
-        private const val HIDE_CONTENT_ALPHA_DURATION_MS: Long = 83
-        private const val HIDE_CONTENT_ALPHA_START_DELAY_MS: Long = 0
         private const val CONTENT_FROM_SCALE = 0.95f
 
         // Constants for show translate animation.
