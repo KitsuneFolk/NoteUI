@@ -328,10 +328,6 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
 
     private fun getClearButtonAnimator(show: Boolean): AnimatorSet {
         val animatorSet = AnimatorSet()
-        if (searchView.isAnimatedNavigationIcon) {
-            val drawable = clearButton.drawable
-            addFadeThroughDrawableAnimatorIfNeeded(animatorSet, drawable)
-        }
         animatorSet.duration =
             if (show) showDurationMs else hideDurationMs
         animatorSet.interpolator =
@@ -339,6 +335,11 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
                 show,
                 AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
             )
+        if (searchView.isAnimatedNavigationIcon) {
+            val drawable = clearButton.drawable
+            addFadeThroughDrawableAnimatorIfNeeded(animatorSet, drawable)
+            animatorSet.playTogether(getTranslationAnimator(show, false, clearButton))
+        }
         return animatorSet
     }
 
