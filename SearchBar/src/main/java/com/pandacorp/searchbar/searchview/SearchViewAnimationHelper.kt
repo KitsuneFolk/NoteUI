@@ -447,24 +447,8 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
 
     private fun getContentAnimator(show: Boolean): Animator {
         val animatorSet = AnimatorSet()
-        animatorSet.playTogether(
-            getDividerAnimator(show),
-            getContentScaleAnimator(show)
-        )
+        animatorSet.playTogether(getContentScaleAnimator(show))
         return animatorSet
-    }
-
-    private fun getDividerAnimator(show: Boolean): Animator {
-        val dividerTranslationY = contentContainer.height.toFloat() * (1f - CONTENT_FROM_SCALE) / 2f
-        val animatorDivider = ValueAnimator.ofFloat(dividerTranslationY, 0f)
-        animatorDivider.duration = if (show) showContentScaleDurationMs else hideContentScaleDurationMs
-        animatorDivider.interpolator =
-            ReversableAnimatedValueInterpolator.of(
-                show,
-                AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
-            )
-        animatorDivider.addUpdateListener(MultiViewUpdateListener.translationYListener(divider))
-        return animatorDivider
     }
 
     private fun getContentScaleAnimator(show: Boolean): Animator {
