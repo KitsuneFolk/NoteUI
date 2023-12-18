@@ -89,7 +89,6 @@ class SearchBar @JvmOverloads constructor(
     private val textView: AnimatedTextView
     private val layoutInflated: Boolean
     private val defaultMarginsEnabled: Boolean
-    private val searchBarAnimationHelper: SearchBarAnimationHelper
     private val defaultNavigationIcon: Drawable?
     private val defaultCountModeIcon: Drawable?
     private val tintNavigationIcon: Boolean
@@ -105,10 +104,6 @@ class SearchBar @JvmOverloads constructor(
             isFocusableInTouchMode = enabled
         }
     private var hint: CharSequence?
-
-    /** Returns whether the expand animation is running.  */
-    private val isExpanding: Boolean
-        get() = searchBarAnimationHelper.isExpanding
 
     var isCountModeEnabled = false
 
@@ -156,7 +151,6 @@ class SearchBar @JvmOverloads constructor(
         validateAttributes(attrs)
         defaultNavigationIcon = AppCompatResources.getDrawable(ensuredContext, R.drawable.ic_search_black_24)
         defaultCountModeIcon = AppCompatResources.getDrawable(ensuredContext, R.drawable.ic_arrow_back_black_24)
-        searchBarAnimationHelper = SearchBarAnimationHelper()
         val a =
             ThemeEnforcement.obtainStyledAttributes(
                 ensuredContext,
@@ -209,18 +203,6 @@ class SearchBar @JvmOverloads constructor(
     fun setHint(hint: CharSequence?, withAnimation: Boolean = true, moveDown: Boolean = true) {
         this.hint = hint
         textView.setHint(hint, withAnimation, moveDown)
-    }
-
-    /** Returns the optional centered child view of this [SearchBar]  */
-    fun getCenterView(): View? {
-        return centerView
-    }
-
-    /**
-     * Stops the on load animation which transitions from the center view to the hint [ ].
-     */
-    fun stopOnLoadAnimation() {
-        searchBarAnimationHelper.stopOnLoadAnimation(this)
     }
 
     fun startCountMode(withAnimation: Boolean, count: Int, @MenuRes menuId: Int, onBackArrowClick: () -> Unit = {}) {
@@ -450,80 +432,6 @@ class SearchBar @JvmOverloads constructor(
         } else {
             child.layout(left, top, right, bottom)
         }
-    }
-
-    /** See [SearchBar.expand].  */
-    private fun expand(expandedView: View): Boolean {
-        return expand(expandedView, null)
-    }
-
-    /** See [SearchBar.expand].  */
-    private fun expand(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
-        return expand(expandedView, appBarLayout, false)
-    }
-
-    /**
-     * Starts an expand animation, if it's not already started, which transitions from the [ ] to the `expandedView`, e.g., a contextual [Toolbar].
-     *
-     *
-     * Note: If you are using an [AppBarLayout] in conjunction with the [SearchBar],
-     * you may pass in a reference to your [AppBarLayout] so that its visibility and offset can
-     * be taken into account for the animation.
-     *
-     * @return whether or not the expand animation was started
-     */
-    private fun expand(expandedView: View, appBarLayout: AppBarLayout?, skipAnimation: Boolean): Boolean {
-        // Start the expand if the expanded view is not already showing or in the process of expanding,
-        // or if the expanded view is collapsing since the final state should be expanded.
-        if (expandedView.visibility != VISIBLE && !isExpanding || isCollapsing) {
-            searchBarAnimationHelper.startExpandAnimation(
-                this,
-                expandedView,
-                appBarLayout,
-                skipAnimation
-            )
-            return true
-        }
-        return false
-    }
-
-    private val isCollapsing: Boolean
-        /** Returns whether the collapse animation is running.  */
-        get() = searchBarAnimationHelper.isCollapsing
-
-    /** See [SearchBar.collapse].  */
-    private fun collapse(expandedView: View): Boolean {
-        return collapse(expandedView, null)
-    }
-
-    /** See [SearchBar.collapse].  */
-    private fun collapse(expandedView: View, appBarLayout: AppBarLayout?): Boolean {
-        return collapse(expandedView, appBarLayout, false)
-    }
-
-    /**
-     * Starts a collapse animation, if it's not already started, which transitions from the `expandedView`, e.g., a contextual [Toolbar], to the [SearchBar].
-     *
-     *
-     * Note: If you are using an [AppBarLayout] in conjunction with the [SearchBar],
-     * you may pass in a reference to your [AppBarLayout] so that its visibility and offset can
-     * be taken into account for the animation.
-     *
-     * @return whether or not the collapse animation was started
-     */
-    private fun collapse(expandedView: View, appBarLayout: AppBarLayout?, skipAnimation: Boolean): Boolean {
-        // Start the collapse if the expanded view is showing and not in the process of collapsing, or
-        // if the expanded view is expanding since the final state should be collapsed.
-        if (expandedView.visibility == VISIBLE && !isCollapsing || isExpanding) {
-            searchBarAnimationHelper.startCollapseAnimation(
-                this,
-                expandedView,
-                appBarLayout,
-                skipAnimation
-            )
-            return true
-        }
-        return false
     }
 
     private fun setupTouchExplorationStateChangeListener() {

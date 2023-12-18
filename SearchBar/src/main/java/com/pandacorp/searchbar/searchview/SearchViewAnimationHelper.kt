@@ -119,7 +119,6 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
                 object : AnimatorListenerAdapter() {
                     override fun onAnimationStart(animation: Animator) {
                         rootView.visibility = View.VISIBLE
-                        searchBar!!.stopOnLoadAnimation()
                     }
 
                     override fun onAnimationEnd(animation: Animator) {
