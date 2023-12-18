@@ -31,11 +31,9 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.accessibility.AccessibilityManager
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.EditText
-import android.widget.FrameLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.Dimension
 import androidx.annotation.MenuRes
@@ -57,7 +55,6 @@ import com.google.android.material.shape.MaterialShapeUtils
 import com.google.android.material.shape.RelativeCornerSize
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.theme.overlay.MaterialThemeOverlay
-import com.pandacorp.animatedtextview.AndroidUtilities
 import com.pandacorp.animatedtextview.AnimatedTextView
 import com.pandacorp.animatedtextview.CubicBezierInterpolator
 import com.pandacorp.searchbar.R as nativeR
@@ -195,10 +192,8 @@ class SearchBar @JvmOverloads constructor(
 
         LayoutInflater.from(ensuredContext).inflate(R.layout.mtrl_search_bar, this)
         layoutInflated = true
-        textView = AnimatedTextView(context)
+        textView = findViewById(nativeR.id.textView)
         initTextView()
-        val frameLayout = findViewById<FrameLayout>(nativeR.id.frameLayout)
-        frameLayout.addView(textView)
 
         ViewCompat.setElevation(this, elevation)
         initBackground(shapeAppearanceModel, elevation, strokeWidth, strokeColor)
@@ -586,13 +581,8 @@ class SearchBar @JvmOverloads constructor(
     }
 
     private fun initTextView() {
-        textView.layoutParams = LayoutParams(WRAP_CONTENT, WRAP_CONTENT)
-        textView.setPadding(AndroidUtilities.dp(5f), 0, AndroidUtilities.dp(5f), 0)
         textView.setAnimationProperties(1f, 0, 800, CubicBezierInterpolator.EASE_OUT_QUINT)
-        textView.setTextSize(16f)
         textView.setHint(hint, withAnimation = false, moveDown = false)
-        textView.textAlignment = View.TEXT_ALIGNMENT_CENTER
-        textView.setTextColor(MaterialColors.getColor(this, R.attr.colorOnSurface))
 
         if (navigationIcon == null) {
             MarginLayoutParamsCompat.setMarginStart(
