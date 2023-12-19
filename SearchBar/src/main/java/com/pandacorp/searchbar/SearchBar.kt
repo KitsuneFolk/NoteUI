@@ -109,8 +109,6 @@ class SearchBar @JvmOverloads constructor(
 
     var text: CharSequence?
 
-    var menuResId = -1
-
     @get:ColorInt
     var strokeColor: Int
         /** Returns the color of the [SearchBar] outline stroke.  */
@@ -291,11 +289,6 @@ class SearchBar @JvmOverloads constructor(
 
     override fun setNavigationIcon(navigationIcon: Drawable?) {
         super.setNavigationIcon(maybeTintNavigationIcon(navigationIcon))
-    }
-
-    override fun inflateMenu(@MenuRes resId: Int) {
-        super.inflateMenu(resId)
-        menuResId = resId
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

@@ -20,7 +20,6 @@ import androidx.core.view.ViewCompat
 import com.google.android.material.animation.AnimationUtils
 import com.google.android.material.internal.ClippableRoundedCornerLayout
 import com.google.android.material.internal.FadeThroughDrawable
-import com.google.android.material.internal.FadeThroughUpdateListener
 import com.google.android.material.internal.MultiViewUpdateListener
 import com.google.android.material.internal.RectEvaluator
 import com.google.android.material.internal.ReversableAnimatedValueInterpolator
@@ -59,7 +58,6 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
     private val headerContainer = searchView.headerContainer
     private val toolbarContainer = searchView.toolbarContainer
     private val toolbar: Toolbar
-    private val dummyToolbar: Toolbar
     private val searchPrefix: TextView
     private val editText: EditText
     private val clearButton: ImageButton
@@ -69,7 +67,6 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
 
     init {
         toolbar = searchView.toolbar
-        dummyToolbar = searchView.dummyToolbar
         searchPrefix = searchView.searchPrefix
         editText = searchView.editText
         clearButton = searchView.clearButton
@@ -109,7 +106,6 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
             searchView.requestFocusAndShowKeyboardIfNeeded()
         }
         searchView.setTransitionState(SearchView.TransitionState.SHOWING)
-        setUpDummyToolbarIfNeeded()
         editText.setText(searchBar!!.text)
         editText.setSelection(editText.text.length)
         rootView.visibility = View.INVISIBLE
@@ -239,7 +235,6 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
             getContentAnimator(show),
             getButtonsAnimator(show),
             getHeaderContainerAnimator(show),
-            getDummyToolbarAnimator(show),
             getActionMenuViewsAlphaAnimator(show),
             getEditTextAnimator(show),
             getSearchPrefixAnimator(show)
@@ -410,10 +405,6 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
         animatorSet.playTogether(actionMenuViewAnimatorX, actionMenuViewAnimatorY)
     }
 
-    private fun getDummyToolbarAnimator(show: Boolean): Animator {
-        return getTranslationAnimator(show, false, dummyToolbar)
-    }
-
     private fun getHeaderContainerAnimator(show: Boolean): Animator {
         return getTranslationAnimator(show, false, headerContainer)
     }
@@ -426,13 +417,6 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
                 show,
                 AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR
             )
-        if (searchView.isMenuItemsAnimated) {
-            val dummyActionMenuView = ToolbarUtils.getActionMenuView(dummyToolbar)
-            val actionMenuView = ToolbarUtils.getActionMenuView(toolbar)
-            animator.addUpdateListener(
-                FadeThroughUpdateListener(dummyActionMenuView, actionMenuView)
-            )
-        }
         return animator
     }
 
@@ -510,30 +494,6 @@ internal class SearchViewAnimationHelper(private val searchView: SearchView) {
             val searchBarMiddleY = (searchBar!!.top + searchBar!!.bottom) / 2
             return searchBarMiddleY - toolbarMiddleY
         }
-
-    private fun setUpDummyToolbarIfNeeded() {
-        val menu = dummyToolbar.menu
-        menu?.clear()
-        if (searchBar!!.menuResId != -1 && searchView.isMenuItemsAnimated) {
-            dummyToolbar.inflateMenu(searchBar!!.menuResId)
-            setMenuItemsNotClickable(dummyToolbar)
-            dummyToolbar.visibility = View.VISIBLE
-        } else {
-            dummyToolbar.visibility = View.GONE
-        }
-    }
-
-    private fun setMenuItemsNotClickable(toolbar: Toolbar) {
-        val actionMenuView = ToolbarUtils.getActionMenuView(toolbar)
-        if (actionMenuView != null) {
-            for (i in 0 until actionMenuView.childCount) {
-                val menuItem = actionMenuView.getChildAt(i)
-                menuItem.isClickable = false
-                menuItem.isFocusable = false
-                menuItem.isFocusableInTouchMode = false
-            }
-        }
-    }
 
     companion object {
         // Constants for hide collapse animation.

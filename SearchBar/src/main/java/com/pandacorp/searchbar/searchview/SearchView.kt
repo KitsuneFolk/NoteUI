@@ -82,7 +82,6 @@ class SearchView @JvmOverloads constructor(
     val headerContainer: FrameLayout
     val toolbarContainer: FrameLayout
     val toolbar: MaterialToolbar
-    val dummyToolbar: Toolbar
     val searchPrefix: TextView
 
     /**
@@ -147,7 +146,6 @@ class SearchView @JvmOverloads constructor(
         headerContainer = findViewById(R.id.open_search_view_header_container)
         toolbarContainer = findViewById(R.id.open_search_view_toolbar_container)
         toolbar = findViewById(R.id.open_search_view_toolbar)
-        dummyToolbar = findViewById(R.id.open_search_view_dummy_toolbar)
         searchPrefix = findViewById(R.id.open_search_view_search_prefix)
         editText = findViewById(R.id.open_search_view_edit_text)
         clearButton = findViewById(R.id.open_search_view_clear_button)
