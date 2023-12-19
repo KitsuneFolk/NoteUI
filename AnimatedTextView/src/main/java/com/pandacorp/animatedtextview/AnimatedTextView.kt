@@ -19,6 +19,7 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
@@ -66,12 +67,7 @@ class AnimatedTextView @JvmOverloads constructor(
         val textColor = mainAttrs.getColor(R.styleable.AnimatedTextView_textColor, Color.BLACK)
         setTextColor(textColor)
 
-        val textSize = mainAttrs.getDimension(R.styleable.AnimatedTextView_textSize, 16f)
-        if (textSize == 16f) {
-            setTextSize(textSize)
-        } else {
-            setTextSizePx(textSize)
-        }
+        setTextSize(mainAttrs.getDimension(R.styleable.AnimatedTextView_textSize, 16f))
 
         val text = mainAttrs.getString(R.styleable.AnimatedTextView_text)
         drawable.setText(text, false)
@@ -759,12 +755,7 @@ class AnimatedTextView @JvmOverloads constructor(
     }
 
     fun setTextSize(textSizeSp: Float) {
-        val screenDensity = context.resources.displayMetrics.density
-        drawable.textSize = textSizeSp * screenDensity
-    }
-
-    private fun setTextSizePx(textSizeSp: Float) {
-        drawable.textSize = textSizeSp
+        drawable.textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, textSizeSp, context.resources.displayMetrics)
     }
 
     fun setAnimationProperties(
