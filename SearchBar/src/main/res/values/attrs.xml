@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="materialSearchViewStyle" format="reference" />
+
+    <declare-styleable name="SearchBar">
+
+        <attr name="android:textAppearance" />
+
+        <attr name="android:text" />
+
+        <attr name="android:hint" />
+
+        <attr name="backgroundTint" />
+
+        <attr name="elevation" />
+
+        <attr name="defaultMarginsEnabled" format="boolean" />
+
+        <attr name="defaultScrollFlagsEnabled" format="boolean" />
+
+        <attr name="hideNavigationIcon" />
+
+        <attr name="forceDefaultNavigationOnClickListener" format="boolean" />
+
+        <attr name="tintNavigationIcon" format="boolean" />
+
+        <attr name="navigationIconTint" />
+
+        <attr name="strokeColor" />
+
+        <attr name="strokeWidth" />
+    </declare-styleable>
+</resources>

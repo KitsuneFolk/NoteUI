@@ -153,28 +153,28 @@ class SearchBar @JvmOverloads constructor(
             ThemeEnforcement.obtainStyledAttributes(
                 ensuredContext,
                 attrs,
-                R.styleable.SearchBar,
+                nativeR.styleable.SearchBar,
                 defStyleAttr,
                 DEF_STYLE_RES
             )
         val shapeAppearanceModel =
             ShapeAppearanceModel.builder(ensuredContext, attrs, defStyleAttr, DEF_STYLE_RES).build()
-        val elevation = a.getDimension(R.styleable.SearchBar_elevation, 0f)
-        defaultMarginsEnabled = a.getBoolean(R.styleable.SearchBar_defaultMarginsEnabled, true)
-        defaultScrollFlagsEnabled = a.getBoolean(R.styleable.SearchBar_defaultScrollFlagsEnabled, true)
-        val hideNavigationIcon = a.getBoolean(R.styleable.SearchBar_hideNavigationIcon, false)
+        val elevation = a.getDimension(nativeR.styleable.SearchBar_elevation, 0f)
+        defaultMarginsEnabled = a.getBoolean(nativeR.styleable.SearchBar_defaultMarginsEnabled, true)
+        defaultScrollFlagsEnabled = a.getBoolean(nativeR.styleable.SearchBar_defaultScrollFlagsEnabled, true)
+        val hideNavigationIcon = a.getBoolean(nativeR.styleable.SearchBar_hideNavigationIcon, false)
         forceDefaultNavigationOnClickListener =
-            a.getBoolean(R.styleable.SearchBar_forceDefaultNavigationOnClickListener, false)
-        tintNavigationIcon = a.getBoolean(R.styleable.SearchBar_tintNavigationIcon, true)
-        if (a.hasValue(R.styleable.SearchBar_navigationIconTint)) {
-            navigationIconTint = a.getColor(R.styleable.SearchBar_navigationIconTint, -1)
+            a.getBoolean(nativeR.styleable.SearchBar_forceDefaultNavigationOnClickListener, false)
+        tintNavigationIcon = a.getBoolean(nativeR.styleable.SearchBar_tintNavigationIcon, true)
+        if (a.hasValue(nativeR.styleable.SearchBar_navigationIconTint)) {
+            navigationIconTint = a.getColor(nativeR.styleable.SearchBar_navigationIconTint, -1)
         }
-        val text = a.getString(R.styleable.SearchBar_android_text)
-        val hint = a.getString(R.styleable.SearchBar_android_hint)
+        val text = a.getString(nativeR.styleable.SearchBar_android_text)
+        val hint = a.getString(nativeR.styleable.SearchBar_android_hint)
         this.text = text
         this.hint = hint
-        val strokeWidth = a.getDimension(R.styleable.SearchBar_strokeWidth, -1f)
-        val strokeColor = a.getColor(R.styleable.SearchBar_strokeColor, Color.TRANSPARENT)
+        val strokeWidth = a.getDimension(nativeR.styleable.SearchBar_strokeWidth, -1f)
+        val strokeColor = a.getColor(nativeR.styleable.SearchBar_strokeColor, Color.TRANSPARENT)
         a.recycle()
         if (!hideNavigationIcon) {
             initNavigationIcon()
