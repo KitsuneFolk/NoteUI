@@ -23,7 +23,8 @@
             android:hint="@string/search_hint"
             app:defaultScrollFlagsEnabled="false"
             app:strokeColor="?strokeColor"
-            app:strokeWidth="@dimen/stroke" />
+            app:strokeWidth="@dimen/stroke"
+            app:textColor="#ffe6e1e5" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.pandacorp.searchbar.searchview.SearchView
