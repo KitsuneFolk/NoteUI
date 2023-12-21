@@ -29,5 +29,7 @@
         <attr name="strokeColor" />
 
         <attr name="strokeWidth" />
+
+        <attr name="textColor" format="color" />
     </declare-styleable>
 </resources>

@@ -129,6 +129,14 @@ class SearchBar @JvmOverloads constructor(
                 backgroundShape!!.strokeWidth = strokeWidth
             }
         }
+
+    var textColor: Int = 0
+        set(textColor) {
+            if (this.textColor != textColor) {
+                textView.setTextColor(textColor)
+            }
+        }
+
     val cornerSize: Float
         get() {
             // Create bounds based on doubled width and height for right and bottom, because the
@@ -185,6 +193,7 @@ class SearchBar @JvmOverloads constructor(
         LayoutInflater.from(ensuredContext).inflate(R.layout.mtrl_search_bar, this)
         layoutInflated = true
         textView = findViewById(nativeR.id.textView)
+        textColor = a.getColor(nativeR.styleable.SearchBar_textColor, 0)
         initTextView()
 
         ViewCompat.setElevation(this, elevation)
