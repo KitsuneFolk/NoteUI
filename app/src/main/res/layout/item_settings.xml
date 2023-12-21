@@ -16,6 +16,7 @@
         android:layout_marginStart="30dp"
         app:cardBackgroundColor="@android:color/transparent"
         app:cardElevation="0dp"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -25,7 +26,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:importantForAccessibility="no"
-            tools:src="@drawable/flag_uk" />
+            tools:src="@color/light_red" />
 
     </androidx.cardview.widget.CardView>
 
