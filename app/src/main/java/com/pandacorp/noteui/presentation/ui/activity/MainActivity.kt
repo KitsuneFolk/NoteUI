@@ -25,7 +25,6 @@ class MainActivity : ThemeActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
-        Thread.setDefaultUncaughtExceptionHandler { _, throwable -> throw (throwable) } // Throw uncaught exceptions
         PreferenceHandler.setLanguage(this)
         setTheme(R.style.DarkTheme)
         super.onCreate(savedInstanceState)

@@ -15,6 +15,7 @@ class App : Application() {
     var isSettingsChanged = false
 
     override fun onCreate() {
+        Thread.setDefaultUncaughtExceptionHandler { _, throwable -> throw (throwable) } // Throw uncaught exceptions
         super.onCreate()
 
         ViewHelper.currentTheme = PreferenceHandler.getTheme(applicationContext)
