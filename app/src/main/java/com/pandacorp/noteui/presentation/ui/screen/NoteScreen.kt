@@ -143,7 +143,7 @@ class NoteScreen : Fragment() {
 
     private val addColorDialog by lazy {
         DialogColorPicker(requireActivity()).apply {
-            setOnPositiveButtonClick { envelope, _ ->
+            setOnColorSelect { envelope, _ ->
                 colorsViewModel.addColor(ColorItem(color = envelope.color))
             }
         }

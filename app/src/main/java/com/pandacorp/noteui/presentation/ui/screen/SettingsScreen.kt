@@ -34,7 +34,7 @@ class SettingsScreen : ThemeFragment() {
 
     private val languageDialog by lazy {
         DialogListView(requireContext(), Constants.Preferences.Key.LANGUAGE).apply {
-            setOnValueAppliedListener {
+            onValueAppliedListener = {
                 PreferenceHandler.setLanguage(requireContext(), it)
             }
         }
@@ -52,7 +52,7 @@ class SettingsScreen : ThemeFragment() {
             @Suppress("UNCHECKED_CAST")
             val currentList = listField.get(adapter) as MutableList<NavBackStackEntry>
             val mainScreen = currentList[0]
-            setOnValueAppliedListener {
+            onValueAppliedListener = {
                 binding.themeTextView.text = getThemeFromKey(it)
                 ThemeManager.instance.changeTheme(PreferenceHandler.getThemeByKey(requireContext(), it), binding.root)
                 currentList.removeAt(0)
@@ -63,21 +63,21 @@ class SettingsScreen : ThemeFragment() {
     }
     private val titleDialog by lazy {
         DialogNumberPicker(requireContext(), Constants.Preferences.Key.TITLE_TEXT_SIZE).apply {
-            setOnValueAppliedListener {
+            onValueAppliedListener = {
                 binding.titleSizeTextView.text = it
             }
         }
     }
     private val contentDialog by lazy {
         DialogNumberPicker(requireContext(), Constants.Preferences.Key.CONTENT_TEXT_SIZE).apply {
-            setOnValueAppliedListener {
+            onValueAppliedListener = {
                 binding.contentSizeTextView.text = it
             }
         }
     }
     private val drawerAnimationDialog by lazy {
         DialogNumberPicker(requireContext(), Constants.Preferences.Key.DRAWER_ANIMATION).apply {
-            setOnValueAppliedListener {
+            onValueAppliedListener = {
                 binding.drawerAnimationtTextView.text = it
             }
         }

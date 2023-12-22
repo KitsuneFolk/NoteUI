@@ -7,10 +7,17 @@ import com.pandacorp.noteui.app.R
 import com.pandacorp.noteui.app.databinding.DialogNumberPickerBinding
 import com.pandacorp.noteui.presentation.utils.helpers.Constants
 
-class DialogNumberPicker(context: Context, private val preferenceKey: String) :
-    CustomDialog(context) {
-    private var _binding: DialogNumberPickerBinding? = null
-    private val binding get() = _binding!!
+class DialogNumberPicker(context: Context, private val preferenceKey: String) : CustomDialog(context) {
+    val selectedValue: Int
+        get() {
+            return if (isShowEditText) {
+                binding.editText.text.toString().toIntOrNull() ?: 0
+            } else {
+                values[binding.numberPicker.value]
+            }
+        }
+
+    private lateinit var binding: DialogNumberPickerBinding
 
     private val values by lazy {
         when (preferenceKey) {
@@ -49,15 +56,6 @@ class DialogNumberPicker(context: Context, private val preferenceKey: String) :
     }
     private val isShowEditText = preferenceKey == Constants.Preferences.Key.DRAWER_ANIMATION
 
-    val selectedValue: Int
-        get() {
-            return if (isShowEditText) {
-                binding.editText.text.toString().toIntOrNull() ?: 0
-            } else {
-                values[binding.numberPicker.value]
-            }
-        }
-
     fun restoreValue(selectedValue: Int) {
         binding.numberPicker.value = values.indexOf(selectedValue)
         if (isShowEditText) {
@@ -67,7 +65,7 @@ class DialogNumberPicker(context: Context, private val preferenceKey: String) :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = DialogNumberPickerBinding.inflate(layoutInflater)
+        binding = DialogNumberPickerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initViews()
@@ -121,8 +119,8 @@ class DialogNumberPicker(context: Context, private val preferenceKey: String) :
                 )
             binding.sample.textSize = preferenceValue.toFloat()
             binding.sample.text = sampleText
-            binding.editText.visibility = View.GONE
             binding.sample.visibility = View.VISIBLE
+            binding.editText.visibility = View.GONE
         }
     }
 }

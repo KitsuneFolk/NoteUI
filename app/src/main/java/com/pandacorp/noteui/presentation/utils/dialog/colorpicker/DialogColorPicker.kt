@@ -9,10 +9,26 @@ import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import com.skydoves.colorpickerview.preference.ColorPickerPreferenceManager
 
 class DialogColorPicker(private val context: Context) : CustomDialog(context) {
-    private var _binding: DialogColorPickerBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: DialogColorPickerBinding
 
     private var colorEnvelopeListener: ColorEnvelopeListener? = null
+
+    fun setOnColorSelect(colorEnvelopeListener: ColorEnvelopeListener) {
+        this.colorEnvelopeListener = colorEnvelopeListener
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DialogColorPickerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        initViews()
+    }
+
+    override fun onSaveInstanceState(): Bundle {
+        ColorPickerPreferenceManager.getInstance(context).saveColorPickerData(binding.colorPicker)
+        return super.onSaveInstanceState()
+    }
 
     private fun initViews() {
         binding.title.setText(R.string.addColor)
@@ -25,23 +41,6 @@ class DialogColorPicker(private val context: Context) : CustomDialog(context) {
         binding.colorPicker.flagView = CustomBubbleFlag(context)
 
         restoreInstanceState()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = DialogColorPickerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        initViews()
-    }
-
-    fun setOnPositiveButtonClick(colorEnvelopeListener: ColorEnvelopeListener) {
-        this.colorEnvelopeListener = colorEnvelopeListener
-    }
-
-    override fun onSaveInstanceState(): Bundle {
-        ColorPickerPreferenceManager.getInstance(context).saveColorPickerData(binding.colorPicker)
-        return super.onSaveInstanceState()
     }
 
     private fun restoreInstanceState() {

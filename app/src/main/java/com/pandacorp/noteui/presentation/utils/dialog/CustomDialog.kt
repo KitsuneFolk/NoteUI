@@ -23,32 +23,21 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
         private const val VIBRATION_DURATION = 50L
     }
 
+    var onValueAppliedListener: (value: String) -> Unit = {}
+
     protected val sp: SharedPreferences by lazy {
         PreferenceManager.getDefaultSharedPreferences(context)
-    }
-
-    @JvmField
-    protected var onValueAppliedListener: (value: String) -> Unit = {}
-
-    fun setOnValueAppliedListener(listener: (value: String) -> Unit) {
-        onValueAppliedListener = listener
     }
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window?.apply {
-            // Remove the default background so that dialog can be rounded
+            // Remove the default background
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             // Remove the shadow
             clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         }
-    }
-
-    private fun syncTheme() {
-        val appTheme = ViewHelper.currentTheme
-        val decorView = window!!.decorView as ViewGroup
-        ViewHelper.applyTheme(newTheme = appTheme, viewGroup = decorView.children.first() as ViewGroup)
     }
 
     override fun show() {
@@ -57,21 +46,24 @@ abstract class CustomDialog(context: Context) : Dialog(context) {
     }
 
     protected fun vibrate() {
-        val vib =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val vibratorManager =
-                    context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                vibratorManager.defaultVibrator
-            } else {
-                @Suppress("DEPRECATION")
-                context.getSystemService(VIBRATOR_SERVICE) as Vibrator
-            }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vib.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION, 20))
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            (context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager).defaultVibrator
         } else {
             @Suppress("DEPRECATION")
-            vib.vibrate(VIBRATION_DURATION)
+            context.getSystemService(VIBRATOR_SERVICE) as Vibrator
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(VIBRATION_DURATION, 20))
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(VIBRATION_DURATION)
+        }
+    }
+
+    private fun syncTheme() {
+        val appTheme = ViewHelper.currentTheme
+        val decorView = window!!.decorView as ViewGroup
+        ViewHelper.applyTheme(newTheme = appTheme, viewGroup = decorView.children.first() as ViewGroup)
     }
 }
