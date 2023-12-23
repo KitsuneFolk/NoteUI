@@ -755,7 +755,8 @@ class AnimatedTextView @JvmOverloads constructor(
     }
 
     fun setTextSize(textSizeSp: Float) {
-        drawable.textSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, textSizeSp, context.resources.displayMetrics)
+        drawable.textSize =
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX, textSizeSp, context.resources.displayMetrics)
     }
 
     fun setAnimationProperties(
