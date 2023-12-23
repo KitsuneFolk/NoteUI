@@ -345,12 +345,15 @@ class MainScreen : Fragment() {
                             searchBar.stopCountMode(restoredText, restoredHint, R.menu.menu_main)
                         }
                     } else {
-                        if (!searchBar.isCountModeEnabled) {
-                            searchBar.startCountMode(startWithAnimation, count, R.menu.menu_notes_selection) {
-                                notesViewModel.selectedNotes.postValue(SparseBooleanArray())
+                        // Use inside of post to ensure correct work after rotation
+                        searchBar.post {
+                            if (!searchBar.isCountModeEnabled) {
+                                searchBar.startCountMode(startWithAnimation, count, R.menu.menu_notes_selection) {
+                                    notesViewModel.selectedNotes.postValue(SparseBooleanArray())
+                                }
+                            } else {
+                                searchBar.setHint(count.toString(), true, moveDown)
                             }
-                        } else {
-                            searchBar.setHint(count.toString(), true, moveDown)
                         }
                         searchBar.setNavigationOnClickListener {
                             notesViewModel.selectedNotes.postValue(SparseBooleanArray())
